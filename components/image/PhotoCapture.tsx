@@ -1,13 +1,16 @@
-import React, { ReactNode } from "react";
-import Button from "./Button";
+import React, { ChangeEventHandler, ReactNode } from "react";
+import Button from "../Button";
 
 type Props = {
   id: string;
   className?: string;
   children?: ReactNode;
+  onChange: any;
 };
 
-const PhotoUpload = ({id, className, children }: Props) => {
+const PhotoCapture = ({id, className, children, onChange }: Props) => {
+
+
   return (
     <Button className={className}>
       <label className="font-bold text-2xl" htmlFor={id}>{children}</label>
@@ -18,9 +21,10 @@ const PhotoUpload = ({id, className, children }: Props) => {
         name={id}
         accept="image/*"
         capture="environment"
+        onChange={onChange}
       />
     </Button>
   );
 };
 
-export default PhotoUpload;
+export default PhotoCapture;

@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { getDictionary } from "./dictionaries";
-import ImageUpload from "@/components/ImageUpload";
 import wrenchPic from "./wrench.png";
-import PhotoUpload from "@/components/PhotoUpload";
+import Upload from "@/components/image/Upload";
 
 export default async function Home() {
   const dictionary = await getDictionary("en");
+
   return (
     <main className="flex min-h-full flex-col items-center justify-between p-4">
       <div className="z-10 w-full max-w-5xl items-center justify-between mt-2">
@@ -21,8 +21,7 @@ export default async function Home() {
             ></Image>
           </div>
         </div>
-        <PhotoUpload className="mt-4 xl:hidden" id="capture">{dictionary.capturePhoto}</PhotoUpload>
-        <ImageUpload className="mt-4" id="upload">{dictionary.uploadPicture}</ImageUpload>
+        <Upload dictionary={dictionary}></Upload>
         <h2 className="mt-6 text-center">{dictionary.learnMore}</h2>
       </div>
     </main>

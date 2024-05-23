@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ImageProvider } from "@/context/ImageContext";
 
 export const metadata: Metadata = {
   title: "Outline App",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body >{children}</body>
+      <body>
+        <ImageProvider>{children}</ImageProvider>
+      </body>
     </html>
   );
 }

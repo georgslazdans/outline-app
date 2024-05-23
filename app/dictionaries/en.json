@@ -1,7 +1,7 @@
 {
   "description": "Make an SVG path for any tool only from a picture!",
   "capturePhoto": "Use camera",
-  "uploadPicture": "Upload picture",
+  "uploadPicture": "From images",
   "learnMore": "Learn more about setting up environment for most optimal results",
   "pictureAlt": "Picture of a wrench"
 }
