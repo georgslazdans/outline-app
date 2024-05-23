@@ -15,12 +15,8 @@ const LoadedImage = () => {
   const imageUrl = URL.createObjectURL(imageFile);
 
   return (
-    <div>
-      <img
-        src={imageUrl}
-        alt="Newly added image"
-        style={{ maxWidth: "100%", height: "auto" }}
-      />
+    <div className="flex items-center">
+      {imageUrl && <img className="mx-auto max-h-[20vh]" src={imageUrl} alt="Newly added image" />}
     </div>
   );
 };

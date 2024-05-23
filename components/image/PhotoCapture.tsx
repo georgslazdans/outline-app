@@ -8,12 +8,10 @@ type Props = {
   onChange: any;
 };
 
-const PhotoCapture = ({id, className, children, onChange }: Props) => {
-
-
+const PhotoCapture = ({ id, className, children, onChange }: Props) => {
   return (
     <Button className={className}>
-      <label className="font-bold text-2xl" htmlFor={id}>{children}</label>
+      <label htmlFor={id}>{children}</label>
       <input
         className="hidden"
         type="file"

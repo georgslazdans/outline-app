@@ -3,5 +3,17 @@
   "capturePhoto": "Use camera",
   "uploadPicture": "From images",
   "learnMore": "Learn more about setting up environment for most optimal results",
-  "pictureAlt": "Picture of a wrench"
+  "pictureAlt": "Picture of a wrench",
+  "details": {
+    "name": "Name",
+    "orientation": "Orientation",
+    "paperSize": "Paper Size",
+    "width": "Width",
+    "height": "Height",
+    "findOutline": "Find Outline" 
+  },
+  "orientation": {
+    "landscape": "Landscape",
+    "portrait": "Portrait"
+  }
 }

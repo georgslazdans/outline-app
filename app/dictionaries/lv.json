@@ -3,6 +3,18 @@
     "capturePhoto": "Uzņemt jaunu bildi",
     "uploadPicture": "No esošām",
     "learnMore": "Uzzināt vairāk par vides uzstādīšanu priekš labākajiem rezultātiem",
-    "pictureAlt": "Bilde ar uzgriežņu atslēgu"
+    "pictureAlt": "Bilde ar uzgriežņu atslēgu",
+    "details": {
+      "name": "Nosaukums",
+      "orientation": "Orientācija",
+      "paperSize": "Papīra Izmērs",
+      "width": "Platums",
+      "height": "Garums",
+      "findOutline": "Atrast Kontūru" 
+    },
+    "orientation": {
+      "landscape": "Ainava",
+      "portrait": "Portrets"
+    }
   }
   
