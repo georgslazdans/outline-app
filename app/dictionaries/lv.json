@@ -1,6 +1,7 @@
 {
     "description": "Izveido SVG līniju no jebkura instrumenta, izmantojot tikai bildi!",
-    "addPicture": "Pievienot bildi",
+    "capturePhoto": "Uzņemt ar kameru",
+    "uploadPicture": "Augšupieladēt bildi",
     "learnMore": "Uzzināt vairāk par vides uzstādīšanu priekš labākajiem rezultātiem",
     "pictureAlt": "Bilde ar uzgriežņu atslēgu"
   }

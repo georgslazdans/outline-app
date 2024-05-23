@@ -7,7 +7,7 @@ type Props = {
   children?: ReactNode;
 };
 
-const ImageUpload = ({id, className, children }: Props) => {
+const PhotoUpload = ({id, className, children }: Props) => {
   return (
     <Button className={className}>
       <label className="font-bold text-2xl" htmlFor={id}>{children}</label>
@@ -17,9 +17,10 @@ const ImageUpload = ({id, className, children }: Props) => {
         id={id}
         name={id}
         accept="image/*"
+        capture="environment"
       />
     </Button>
   );
 };
 
-export default ImageUpload;
+export default PhotoUpload;
