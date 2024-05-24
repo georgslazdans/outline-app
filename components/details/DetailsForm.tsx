@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import InputField from "../InputField";
 import Button from "../Button";
 import SelectField from "../SelectField";
-import { orientationOptionsFor } from "@/lib/Orientation";
+import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSize, { PaperDimensions, paperSizeOptionsFor } from "@/lib/PaperSize";
 
 type Props = {
@@ -22,7 +22,7 @@ const DetailsForm = ({ dictionary }: Props) => {
   const [paperSize, setPaperSize] = useState("A4");
   const [formData, setFormData] = useState<Form>({
     name: "",
-    orientation: dictionary.orientation.portrait,
+    orientation: Orientation.PORTRAIT,
     width: 210,
     height: 297,
   });
