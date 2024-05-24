@@ -10,6 +10,7 @@ const LoadedImage = () => {
   if (!imageFile) {
     console.error("No image file loaded!");
     router.push("/");
+    return (<></>)
   }
 
   const imageUrl = URL.createObjectURL(imageFile);
