@@ -1,6 +1,5 @@
 import LoadedImage from "@/components/image/LoadedImage";
 import { getDictionary } from "../dictionaries";
-import InputField from "@/components/Field";
 import DetailsForm from "@/components/details/DetailsForm";
 
 export default async function Details() {

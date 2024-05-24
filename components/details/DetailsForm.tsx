@@ -3,6 +3,8 @@
 import { useState } from "react";
 import InputField from "../InputField";
 import Button from "../Button";
+import SelectField from "../SelectField";
+import { orientationOptionsFor } from "@/lib/Orientation";
 
 type Props = {
   dictionary: any;
@@ -26,13 +28,13 @@ const DetailsForm = ({ dictionary }: Props) => {
         name={"name"}
         type={"string"}
       ></InputField>
-      <InputField
-        value={orientation}
-        setValue={setOrientation}
+      <SelectField
         label={dictionary.details.orientation}
         name={"orientation"}
-        type={"string"}
-      ></InputField>
+        options={orientationOptionsFor(dictionary)}
+        value={orientation}
+        setValue={setOrientation}
+      ></SelectField>
       <InputField
         value={paperSize}
         setValue={setPaperSize}
@@ -54,7 +56,7 @@ const DetailsForm = ({ dictionary }: Props) => {
         name={"height"}
         type={"number"}
       ></InputField>
-      <Button>
+      <Button className="mt-4">
         <label>{dictionary.details.findOutline}</label>
       </Button>
     </form>
