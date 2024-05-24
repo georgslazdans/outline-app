@@ -5,6 +5,7 @@ import InputField from "../InputField";
 import Button from "../Button";
 import SelectField from "../SelectField";
 import { orientationOptionsFor } from "@/lib/Orientation";
+import { paperSizeOptionsFor } from "@/lib/PaperSize";
 
 type Props = {
   dictionary: any;
@@ -35,13 +36,13 @@ const DetailsForm = ({ dictionary }: Props) => {
         value={orientation}
         setValue={setOrientation}
       ></SelectField>
-      <InputField
-        value={paperSize}
-        setValue={setPaperSize}
+      <SelectField
         label={dictionary.details.paperSize}
         name={"paperSize"}
-        type={"string"}
-      ></InputField>
+        options={paperSizeOptionsFor(dictionary)}
+        value={paperSize}
+        setValue={setPaperSize}
+      ></SelectField>
       <InputField
         value={width}
         setValue={setWidth}

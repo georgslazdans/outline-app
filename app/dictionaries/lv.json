@@ -15,6 +15,12 @@
     "orientation": {
       "landscape": "Ainava",
       "portrait": "Portrets"
+    },
+    "paperSizes": {
+      "a4": "A4",
+      "a3": "A3",
+      "us-letter": "US Letter",
+      "us-legal": "US Legal"
     }
   }
   

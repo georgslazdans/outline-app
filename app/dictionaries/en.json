@@ -15,5 +15,11 @@
   "orientation": {
     "landscape": "Landscape",
     "portrait": "Portrait"
+  },
+  "paperSize": {
+    "a4": "A4",
+    "a3": "A3",
+    "us-letter": "US Letter",
+    "us-legal": "US Legal"
   }
 }
