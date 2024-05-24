@@ -24,9 +24,9 @@ const InputField = ({
   return (
     <div className="flex flex-col">
       {label && 
-      <label className="ml-4" htmlFor={name}>{label}</label>}
+      <label className="ml-4 mb-0.5" htmlFor={name}>{label}</label>}
       <input
-        className="border-4 rounded-[64px] border-black dark:border-white p-1.5 pl-6 "
+        className="border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white p-1.5 pl-6 "
         id={name}
         type={type ? type : "text"}
         value={value ? value : ""}

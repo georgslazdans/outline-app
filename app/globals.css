@@ -14,10 +14,12 @@
   }
 }
 
-body {
+body, select {
   color: var(--foreground);
   background: var(--background);
 }
+
+
 
 @layer utilities {
   .text-balance {
