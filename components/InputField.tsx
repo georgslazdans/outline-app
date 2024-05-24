@@ -6,7 +6,7 @@ type Props = {
   name: string;
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
-  setValue: (val: any) => void;
+  onChange: (val: any) => void;
 };
 
 const InputField = ({
@@ -15,11 +15,8 @@ const InputField = ({
   name,
   placeholder,
   type,
-  setValue,
+  onChange,
 }: Props) => {
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
 
   return (
     <div className="flex flex-col">
@@ -32,7 +29,7 @@ const InputField = ({
         value={value ? value : ""}
         name={name}
         placeholder={placeholder}
-        onChange={handleChange}
+        onChange={event => onChange(event)}
       />
     </div>
   );

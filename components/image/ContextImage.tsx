@@ -3,7 +3,7 @@
 import { useImage } from "@/context/ImageContext";
 import { useRouter } from "next/navigation";
 
-const LoadedImage = () => {
+const ContextImage = () => {
   const { imageFile } = useImage();
   const router = useRouter();
 
@@ -22,4 +22,4 @@ const LoadedImage = () => {
   );
 };
 
-export default LoadedImage;
+export default ContextImage;

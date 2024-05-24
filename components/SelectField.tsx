@@ -11,7 +11,7 @@ type Props = {
   name: string;
   placeholder?: string;
   options: Array<Option>;
-  setValue: (val: any) => void;
+  onChange: (val: any) => void;
 };
 
 const SelectField = ({
@@ -20,12 +20,8 @@ const SelectField = ({
   name,
   placeholder,
   options,
-  setValue,
+  onChange,
 }: Props) => {
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setValue(event.target.value);
-  };
-
   return (
     <div className="flex flex-col">
       {label && (
@@ -39,7 +35,7 @@ const SelectField = ({
         id={name}
         value={value ? value : ""}
         name={name}
-        onChange={handleChange}
+        onChange={event => onChange(event)}
       >
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((option, index) => (

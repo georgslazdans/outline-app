@@ -1,30 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import InputField from "../InputField";
 import Button from "../Button";
 import SelectField from "../SelectField";
 import { orientationOptionsFor } from "@/lib/Orientation";
-import { paperSizeOptionsFor } from "@/lib/PaperSize";
+import PaperSize, { PaperDimensions, paperSizeOptionsFor } from "@/lib/PaperSize";
 
 type Props = {
   dictionary: any;
 };
 
+type Form = {
+  name: string;
+  orientation: string;
+  width: number;
+  height: number;
+};
+
 const DetailsForm = ({ dictionary }: Props) => {
-  const [name, setName] = useState("");
-  const [orientation, setOrientation] = useState(
-    dictionary.orientation.landscape
-  );
   const [paperSize, setPaperSize] = useState("A4");
-  const [width, setWidth] = useState(210);
-  const [height, setHeight] = useState(297);
+  const [formData, setFormData] = useState<Form>({
+    name: "",
+    orientation: dictionary.orientation.portrait,
+    width: 210,
+    height: 297,
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handlePaperSizeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const size = event.target.value;
+    setPaperSize(size)
+    const dimensions = PaperDimensions[size as PaperSize];
+    setFormData({ ...formData, width: dimensions.width, height: dimensions.height });
+  };
+
+  const onFormSave = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("Form saved!", formData);
+  };
 
   return (
-    <form className="m-4 flex flex-col gap-4">
+    <form className="m-4 flex flex-col gap-4" onSubmit={onFormSave}>
       <InputField
-        value={name}
-        setValue={setName}
+        value={formData.name}
+        onChange={handleChange}
         label={dictionary.details.name}
         name={"name"}
         type={"string"}
@@ -33,26 +58,26 @@ const DetailsForm = ({ dictionary }: Props) => {
         label={dictionary.details.orientation}
         name={"orientation"}
         options={orientationOptionsFor(dictionary)}
-        value={orientation}
-        setValue={setOrientation}
+        value={formData.orientation}
+        onChange={handleChange}
       ></SelectField>
       <SelectField
         label={dictionary.details.paperSize}
         name={"paperSize"}
         options={paperSizeOptionsFor(dictionary)}
         value={paperSize}
-        setValue={setPaperSize}
+        onChange={handlePaperSizeChange}
       ></SelectField>
       <InputField
-        value={width}
-        setValue={setWidth}
+        value={formData.width}
+        onChange={handleChange}
         label={dictionary.details.width}
         name={"width"}
         type={"number"}
       ></InputField>
       <InputField
-        value={height}
-        setValue={setHeight}
+        value={formData.height}
+        onChange={handleChange}
         label={dictionary.details.height}
         name={"height"}
         type={"number"}
