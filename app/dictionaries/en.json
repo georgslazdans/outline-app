@@ -5,6 +5,7 @@
   "learnMore": "Learn more about setting up environment for most optimal results",
   "pictureAlt": "Picture of a wrench",
   "details": {
+    "title": "Details",
     "name": "Name",
     "orientation": "Orientation",
     "paperSize": "Paper Size",
