@@ -6,3 +6,5 @@ type Details = {
   width: number,
   height: number
 }
+
+export default Details;
