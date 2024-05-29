@@ -69,7 +69,7 @@ export const drawLargestContour = (
 ) => {
   const largestContourIndex = largestContourOf(contours);
 
-  let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
+  let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8U);
   for (let i = 0; i < contours.size(); ++i) {
     if (largestContourIndex != i) continue;
     console.log("Drawing contours", contours.get(i));

@@ -1,7 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import Settings from "./Settings";
 import { largestContourOf } from "./Contours";
-import Point, { pointsFrom } from "./Point";
+import { pointsFrom } from "./Point";
 
 export type ProcessingFunction = (image: cv.Mat, settings: Settings) => cv.Mat;
 

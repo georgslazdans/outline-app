@@ -5,7 +5,12 @@ import InputField from "../InputField";
 import Button from "../Button";
 import SelectField from "../SelectField";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
-import PaperSize, { PaperDimensions, paperSizeOptionsFor } from "@/lib/PaperSize";
+import PaperSize, {
+  PaperDimensions,
+  paperSizeOptionsFor,
+} from "@/lib/PaperSize";
+import { useDetails } from "@/context/DetailsContext";
+import { useRouter } from "next/navigation";
 
 type Props = {
   dictionary: any;
@@ -19,6 +24,9 @@ type Form = {
 };
 
 const DetailsForm = ({ dictionary }: Props) => {
+  const router = useRouter();
+  const { setDetailsContext } = useDetails();
+
   const [paperSize, setPaperSize] = useState("A4");
   const [formData, setFormData] = useState<Form>({
     name: "",
@@ -35,14 +43,29 @@ const DetailsForm = ({ dictionary }: Props) => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const size = event.target.value;
-    setPaperSize(size)
+    setPaperSize(size);
     const dimensions = PaperDimensions[size as PaperSize];
-    setFormData({ ...formData, width: dimensions.width, height: dimensions.height });
+    setFormData({
+      ...formData,
+      width: dimensions.width,
+      height: dimensions.height,
+    });
   };
 
   const onFormSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form saved!", formData);
+
+    setDetailsContext((ctx) => {
+      return {
+        ...ctx,
+        details: {
+          ...formData,
+          orientation: formData.orientation as Orientation
+        },
+      };
+    });
+
+    router.push("/editor");
   };
 
   return (

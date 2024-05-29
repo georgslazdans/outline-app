@@ -1,19 +1,19 @@
 "use client";
 
-import { useImage } from "@/context/ImageContext";
+import { useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
 
 const ContextImage = () => {
-  const { imageFile } = useImage();
+  const { detailsContext } = useDetails();
   const router = useRouter();
 
-  if (!imageFile) {
+  if (!detailsContext || !detailsContext.imageFile) {
     console.error("No image file loaded!");
     router.push("/");
     return (<></>)
   }
 
-  const imageUrl = URL.createObjectURL(imageFile);
+  const imageUrl = URL.createObjectURL(detailsContext.imageFile);
 
   return (
     <div className="flex items-center">

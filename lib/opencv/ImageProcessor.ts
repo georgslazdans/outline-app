@@ -12,7 +12,7 @@ import { pointsFrom } from "./Point";
 import Svg from "./Svg";
 
 export type OutlineResult = {
-  result: ImageData;
+  imageData: ImageData;
   svg: string;
 };
 
@@ -68,15 +68,22 @@ export const processImage = async (
   objectContours.delete();
 
   return {
-    result: resultImageData,
+    imageData: resultImageData,
     svg: Svg.from(points),
   };
 };
 
 const imageDataOf = (image: cv.Mat): ImageData => {
+  console.log("image", image, image.data.length);
+  console.log("image cols", image.cols, image.rows);
+  let dst = new cv.Mat();
+  // scale and shift are used to map the data to [0, 255].
+  image.convertTo(dst, cv.CV_8U);
+  // *** is GRAY, RGB, or RGBA, according to src.channels() is 1, 3 or 4.
+  cv.cvtColor(dst, dst, cv.COLOR_RGB2RGBA);
   return new ImageData(
-    new Uint8ClampedArray(image.data),
-    image.cols,
-    image.rows
+    new Uint8ClampedArray(dst.data),
+    dst.cols,
+    dst.rows
   );
 };
