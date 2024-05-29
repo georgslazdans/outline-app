@@ -14,6 +14,7 @@ import Svg from "./Svg";
 export type OutlineResult = {
   imageData: ImageData;
   svg: string;
+  intermediateData: ImageData[]; 
 };
 
 const processorOf = (
@@ -23,6 +24,8 @@ const processorOf = (
   if (!processingFunctions || processingFunctions.length === 0) {
     throw new Error("No functions supplied to image processor");
   }
+  const intermediateImageData: ImageData[] = [];
+
   return {
     process: (image: cv.Mat): cv.Mat => {
       const intermediateImages = [];
@@ -30,11 +33,15 @@ const processorOf = (
       for (const process of processingFunctions) {
         currentImage = process(currentImage, settings);
         intermediateImages.push(currentImage);
+        intermediateImageData.push(imageDataOf(currentImage));
       }
       const result = intermediateImages.pop();
       intermediateImages.forEach((it) => it.delete());
       return result!!;
     },
+    intermediateImageData: (): ImageData[] => {
+      return intermediateImageData;
+    }
   };
 };
 
@@ -49,7 +56,9 @@ export const processImage = async (
     cannyOf,
     extractPaperFrom,
   ];
-  const paperImage = processorOf(processingFunctions, settings).process(image);
+
+  const processor = processorOf(processingFunctions, settings);
+  const paperImage = processor.process(image);
 
   const objectContours = largestObjectContoursOf(paperImage);
   // TODO this image is only for debugging?
@@ -60,7 +69,8 @@ export const processImage = async (
     objectContours.contours,
     objectContours.hierarchy
   );
-  const resultImageData = imageDataOf(resultingImage);
+  // const resultImageData = imageDataOf(resultingImage);
+  const resultImageData = imageDataOf(paperImage);
   const points = pointsFrom(objectContours.largestContour);
 
   image.delete();
@@ -70,20 +80,26 @@ export const processImage = async (
   return {
     imageData: resultImageData,
     svg: Svg.from(points),
+    intermediateData: processor.intermediateImageData()
   };
 };
 
 const imageDataOf = (image: cv.Mat): ImageData => {
   console.log("image", image, image.data.length);
   console.log("image cols", image.cols, image.rows);
+  console.log("image channels", image.channels());
   let dst = new cv.Mat();
-  // scale and shift are used to map the data to [0, 255].
   image.convertTo(dst, cv.CV_8U);
-  // *** is GRAY, RGB, or RGBA, according to src.channels() is 1, 3 or 4.
-  cv.cvtColor(dst, dst, cv.COLOR_RGB2RGBA);
-  return new ImageData(
-    new Uint8ClampedArray(dst.data),
-    dst.cols,
-    dst.rows
-  );
+  cv.cvtColor(dst, dst, colorSpaceOf(image));
+  return new ImageData(new Uint8ClampedArray(dst.data), dst.cols, dst.rows);
+};
+
+const colorSpaceOf = (image: cv.Mat) => {
+  const channels = image.channels();
+  switch (channels) {
+    case 1:
+      return cv.COLOR_GRAY2RGBA;
+    case 3:
+      return cv.COLOR_RGB2RGBA;
+  }
 };
