@@ -8,6 +8,7 @@ import Settings from "@/lib/opencv/Settings";
 import PaperSize from "@/lib/PaperSize";
 import Orientation from "@/lib/Orientation";
 import { ImageSelector } from "./ImageSelector";
+import { IntermediateData } from "@/lib/opencv/ImageProcessor";
 
 type Props = {
   dictionary: any;
@@ -51,7 +52,7 @@ export const Editor = ({ dictionary }: Props) => {
       (typeof window !== "undefined" ? new ImageData(4, 4) : null);
     const settings: Settings = {
       blurWidth: 5,
-      threshold1: 75,
+      threshold1: 100,
       threshold2: 200,
       paper: {
         size: PaperSize.A4,
@@ -81,14 +82,14 @@ export const Editor = ({ dictionary }: Props) => {
     drawImage();
   }, [outline, outlineOf]);
 
-  const handleDataChange = (imageData: ImageData) => {
+  const handleDataChange = (data: IntermediateData) => {
     const drawImage = () => {
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
 
       if (canvas && ctx) {
-        ctx.putImageData(imageData, 0, 0);
-        setCurrentImageData(imageData);
+        ctx.putImageData(data.imageData, 0, 0);
+        setCurrentImageData(data.imageData);
       }
     };
     drawImage();

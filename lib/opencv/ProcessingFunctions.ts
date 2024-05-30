@@ -1,6 +1,6 @@
 import * as cv from "@techstark/opencv-js";
 import Settings from "./Settings";
-import { largestContourOf } from "./Contours";
+import { drawAllContours, largestContourOf } from "./Contours";
 import { pointsFrom } from "./Point";
 
 export type ProcessingFunction = (image: cv.Mat, settings: Settings) => cv.Mat;
@@ -38,6 +38,23 @@ export const cannyOf: ProcessingFunction = (
   let edged = new cv.Mat();
   cv.Canny(image, edged, settings.threshold1, settings.threshold2);
   return edged;
+};
+
+export const debugPaperOutline: ProcessingFunction = (
+  image: cv.Mat,
+  settings: Settings
+): cv.Mat => {
+  let contours = new cv.MatVector();
+  let hierarchy = new cv.Mat();
+  cv.findContours(
+    image,
+    contours,
+    hierarchy,
+    cv.RETR_EXTERNAL,
+    cv.CHAIN_APPROX_SIMPLE
+  );
+
+  return drawAllContours(image.size(), contours, hierarchy);
 };
 
 export const extractPaperFrom: ProcessingFunction = (
@@ -120,4 +137,3 @@ const wrapImage = (contour: cv.Mat, src: cv.Mat) => {
 
   return warped;
 };
-

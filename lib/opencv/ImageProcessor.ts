@@ -4,44 +4,72 @@ import {
   ProcessingFunction,
   blurOf,
   cannyOf,
+  debugPaperOutline,
   extractPaperFrom,
   grayScaleOf,
 } from "./ProcessingFunctions";
-import { drawLargestContour, largestObjectContoursOf } from "./Contours";
+import {
+  drawAllContours,
+  drawLargestContour,
+  largestObjectContoursOf,
+} from "./Contours";
 import { pointsFrom } from "./Point";
 import Svg from "./Svg";
 
 export type OutlineResult = {
   imageData: ImageData;
   svg: string;
-  intermediateData: ImageData[]; 
+  intermediateData: IntermediateData[];
+};
+
+export type IntermediateData = {
+  imageData: ImageData;
+  stepName: string;
 };
 
 const processorOf = (
   processingFunctions: ProcessingFunction[],
-  settings: Settings
+  settings: Settings,
+  debugSteps: any
 ) => {
   if (!processingFunctions || processingFunctions.length === 0) {
     throw new Error("No functions supplied to image processor");
   }
-  const intermediateImageData: ImageData[] = [];
+  const intermediateImageData: IntermediateData[] = [];
+  const drawDebugSteps = (image: cv.Mat, process: ProcessingFunction) => {
+    if (debugSteps[process.name]) {
+      for (const debugStep of debugSteps[process.name]) {
+        const debugImage = debugStep(image, settings);
+        intermediateImageData.push({
+          imageData: imageDataOf(debugImage),
+          stepName: debugStep.name,
+        });
+      }
+    }
+  }
 
   return {
     process: (image: cv.Mat): cv.Mat => {
       const intermediateImages = [];
       let currentImage = image;
       for (const process of processingFunctions) {
+        drawDebugSteps(currentImage, process)
+
         currentImage = process(currentImage, settings);
         intermediateImages.push(currentImage);
-        intermediateImageData.push(imageDataOf(currentImage));
+
+        intermediateImageData.push({
+          imageData: imageDataOf(currentImage),
+          stepName: process.name,
+        });
       }
       const result = intermediateImages.pop();
       intermediateImages.forEach((it) => it.delete());
       return result!!;
     },
-    intermediateImageData: (): ImageData[] => {
+    intermediateImageData: (): IntermediateData[] => {
       return intermediateImageData;
-    }
+    },
   };
 };
 
@@ -57,7 +85,11 @@ export const processImage = async (
     extractPaperFrom,
   ];
 
-  const processor = processorOf(processingFunctions, settings);
+  const debugSteps = {
+    [extractPaperFrom.name]: [debugPaperOutline],
+  };
+
+  const processor = processorOf(processingFunctions, settings, debugSteps);
   const paperImage = processor.process(image);
 
   const objectContours = largestObjectContoursOf(paperImage);
@@ -69,9 +101,17 @@ export const processImage = async (
     objectContours.contours,
     objectContours.hierarchy
   );
-  // const resultImageData = imageDataOf(resultingImage);
-  const resultImageData = imageDataOf(paperImage);
+  const resultImageData = imageDataOf(resultingImage);
   const points = pointsFrom(objectContours.largestContour);
+
+  const test = drawAllContours(
+    paperImage.size(),
+    objectContours.contours,
+    objectContours.hierarchy
+  );
+  processor
+    .intermediateImageData()
+    .push({ imageData: imageDataOf(test), stepName: "test-outline" });
 
   image.delete();
   paperImage.delete();
@@ -80,14 +120,11 @@ export const processImage = async (
   return {
     imageData: resultImageData,
     svg: Svg.from(points),
-    intermediateData: processor.intermediateImageData()
+    intermediateData: processor.intermediateImageData(),
   };
 };
 
 const imageDataOf = (image: cv.Mat): ImageData => {
-  console.log("image", image, image.data.length);
-  console.log("image cols", image.cols, image.rows);
-  console.log("image channels", image.channels());
   let dst = new cv.Mat();
   image.convertTo(dst, cv.CV_8U);
   cv.cvtColor(dst, dst, colorSpaceOf(image));

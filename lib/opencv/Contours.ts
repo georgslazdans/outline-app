@@ -72,7 +72,6 @@ export const drawLargestContour = (
   let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3 );
   for (let i = 0; i < contours.size(); ++i) {
     if (largestContourIndex != i) continue;
-    console.log("Drawing contours", contours.get(i));
     let color = new cv.Scalar(
       Math.round(Math.random() * 255),
       Math.round(Math.random() * 255),
@@ -94,7 +93,7 @@ export const drawLargestContour = (
 
 // Debug drawing
 
-const drawAllContours = (
+export const drawAllContours = (
   imageSize: cv.Size,
   contours: cv.MatVector,
   hierarchy: cv.Mat
@@ -102,7 +101,6 @@ const drawAllContours = (
   // Create a color image to draw contours
   let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
   for (let i = 0; i < contours.size(); ++i) {
-    console.log("Drawing contours", contours.get(i));
     let color = new cv.Scalar(
       Math.round(Math.random() * 255),
       Math.round(Math.random() * 255),

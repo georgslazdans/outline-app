@@ -1,10 +1,11 @@
 "use client";
 
+import { IntermediateData } from "@/lib/opencv/ImageProcessor";
 import { ChangeEvent, ChangeEventHandler } from "react";
 
 type Props = {
-  imageData: ImageData[];
-  onDataChange: (data: ImageData) => void;
+  imageData: IntermediateData[];
+  onDataChange: (data: IntermediateData) => void;
 };
 
 export const ImageSelector = ({ imageData, onDataChange }: Props) => {
@@ -32,7 +33,7 @@ export const ImageSelector = ({ imageData, onDataChange }: Props) => {
       >
         {imageData.map((option, index) => (
           <option key={index} value={index}>
-            {index}
+            {option.stepName}
           </option>
         ))}
       </select>
