@@ -1,6 +1,6 @@
 import * as cv from "@techstark/opencv-js";
 import Settings from "./Settings";
-import { drawAllContours, largestContourOf } from "./Contours";
+import { contoursOf, drawAllContours, drawLargestContour, largestContourOf } from "./Contours";
 import { pointsFrom } from "./Point";
 
 export type ProcessingFunction = (image: cv.Mat, settings: Settings) => cv.Mat;
@@ -29,6 +29,15 @@ export const grayScaleOf: ProcessingFunction = (
   let gray = new cv.Mat();
   cv.cvtColor(image, gray, cv.COLOR_RGBA2GRAY, 0);
   return gray;
+};
+
+export const threshold: ProcessingFunction = (
+  image: cv.Mat,
+  settings: Settings
+): cv.Mat => {
+  let threshold = new cv.Mat();
+  cv.threshold(image, threshold, 100, 200, cv.THRESH_BINARY);
+  return threshold;
 };
 
 export const bilateralFilter: ProcessingFunction = (
@@ -78,7 +87,8 @@ export const debugFindCountours: ProcessingFunction = (
   return drawAllContours(image.size(), contours, hierarchy);
 };
 
-export const extractPaperFrom: ProcessingFunction = (
+
+export const debugFindLargestCountour: ProcessingFunction = (
   image: cv.Mat,
   settings: Settings
 ): cv.Mat => {
@@ -92,6 +102,16 @@ export const extractPaperFrom: ProcessingFunction = (
     cv.CHAIN_APPROX_SIMPLE
   );
 
+  return drawLargestContour(image.size(), contours, hierarchy);
+};
+
+export const extractPaperFrom: ProcessingFunction = (
+  image: cv.Mat,
+  settings: Settings
+): cv.Mat => {
+  const canny = cannyOf(image, settings);
+  const {contours, hierarchy} = contoursOf(canny);
+
   const contourIndex = largestContourOf(contours);
   if (!contourIndex) {
     console.log("Contours not found!", this);
@@ -103,6 +123,7 @@ export const extractPaperFrom: ProcessingFunction = (
 
   contours.delete();
   hierarchy.delete();
+  canny.delete();
   return result;
 };
 

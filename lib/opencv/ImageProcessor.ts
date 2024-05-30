@@ -6,14 +6,16 @@ import {
   blurOf,
   cannyOf,
   debugFindCountours,
+  debugFindLargestCountour,
   extractPaperFrom,
   grayScaleOf,
+  threshold,
 } from "./ProcessingFunctions";
 import {
   drawAllContours,
   drawLargestContour,
   largestContourOf,
-  largestObjectContoursOf,
+  contoursOf,
   smoothOf,
 } from "./Contours";
 import { pointsFrom } from "./Point";
@@ -81,12 +83,12 @@ export const processImage = async (
     bilateralFilter,
     grayScaleOf,
     blurOf,
-    cannyOf,
+    threshold,    
     extractPaperFrom,
   ];
 
   const debugSteps = {
-    [extractPaperFrom.name]: [debugFindCountours],
+    [extractPaperFrom.name]: [debugFindCountours, debugFindLargestCountour],
     // [grayScaleOf.name]: [debugFindCountours],
   };
 
@@ -95,7 +97,7 @@ export const processImage = async (
 
   const paperImage = processor.process(image);
 
-  const objectContours = largestObjectContoursOf(paperImage);
+  const objectContours = contoursOf(cannyOf(paperImage,settings));
 
   const countourIndex = largestContourOf(objectContours.contours);
   if (!countourIndex) {

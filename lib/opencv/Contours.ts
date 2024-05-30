@@ -18,7 +18,7 @@ class ImageContours {
   }
 }
 
-export const largestObjectContoursOf = (image: cv.Mat): ImageContours => {
+export const contoursOf = (image: cv.Mat): ImageContours => {
   const contours = new cv.MatVector();
   const hierarchy = new cv.Mat();
   cv.findContours(
