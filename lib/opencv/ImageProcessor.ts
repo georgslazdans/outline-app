@@ -18,17 +18,9 @@ import {
 } from "./Contours";
 import { pointsFrom } from "./Point";
 import Svg from "./Svg";
+import OutlineResult, { IntermediateData } from "./OutlineResult";
 
-export type OutlineResult = {
-  imageData: ImageData;
-  svg: string;
-  intermediateData: IntermediateData[];
-};
 
-export type IntermediateData = {
-  imageData: ImageData;
-  stepName: string;
-};
 
 const processorOf = (
   processingFunctions: ProcessingFunction[],

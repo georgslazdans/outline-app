@@ -7,8 +7,8 @@ import { useDetails } from "@/context/DetailsContext";
 import Settings from "@/lib/opencv/Settings";
 import PaperSize from "@/lib/PaperSize";
 import Orientation from "@/lib/Orientation";
-import { ImageSelector } from "./ImageSelector";
-import { IntermediateData } from "@/lib/opencv/ImageProcessor";
+import { OpenCvDebugger } from "./OpenCvDebugger";
+import { OutlineResult } from "@/lib/opencv/OutlineResult";
 
 type Props = {
   dictionary: any;
@@ -16,11 +16,9 @@ type Props = {
 
 export const Editor = ({ dictionary }: Props) => {
   const router = useRouter();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const workerRef = useRef<Worker>();
-  const [currentImageData, setCurrentImageData] = useState<ImageData>(new ImageData(1, 1));
 
-  const [outline, setOutline] = useState({
+  const [outline, setOutline] = useState<OutlineResult>({
     imageData: new ImageData(1, 1),
     svg: "",
     intermediateData: [],
@@ -67,33 +65,7 @@ export const Editor = ({ dictionary }: Props) => {
     if (workerRef.current) {
       outlineOf();
     }
-    const drawImage = () => {
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-
-      // TODO outline needs to be of some type
-      if (canvas && ctx && outline) {
-        console.log("Drawing image", outline);
-        ctx.putImageData(outline.imageData, 0, 0);
-        setCurrentImageData(outline.imageData);
-      }
-    };
-
-    drawImage();
   }, [outline, outlineOf]);
-
-  const handleDataChange = (data: IntermediateData) => {
-    const drawImage = () => {
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-
-      if (canvas && ctx) {
-        ctx.putImageData(data.imageData, 0, 0);
-        setCurrentImageData(data.imageData);
-      }
-    };
-    drawImage();
-  };
 
   return (
     <>
@@ -101,16 +73,7 @@ export const Editor = ({ dictionary }: Props) => {
         <span>Is processing: </span>
       </div>
       <p>{detailsContext && JSON.stringify(detailsContext.details)}</p>
-      <ImageSelector
-        imageData={outline.intermediateData}
-        onDataChange={handleDataChange}
-      ></ImageSelector>
-      <canvas
-        className="max-w-full max-h-[80vh]"
-        ref={canvasRef}
-        width={currentImageData.width}
-        height={currentImageData.height}
-      />
+      <OpenCvDebugger outline={outline}></OpenCvDebugger>
     </>
   );
 };

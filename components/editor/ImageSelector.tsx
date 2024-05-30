@@ -1,7 +1,7 @@
 "use client";
 
-import { IntermediateData } from "@/lib/opencv/ImageProcessor";
-import { ChangeEvent, ChangeEventHandler } from "react";
+import { IntermediateData } from "@/lib/opencv/OutlineResult";
+import { ChangeEvent } from "react";
 
 type Props = {
   imageData: IntermediateData[];
