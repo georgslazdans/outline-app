@@ -21,7 +21,6 @@ const Upload = ({ dictionary }: Props) => {
     if (file) {
       const imageData = await getImageData(file);
 
-      console.log("Image data!", imageData)
       setDetailsContext((context) => {
         return { ...context, imageFile: file, imageData };
       });

@@ -19,10 +19,8 @@ export const OpenCvDebugger = ({ outline }: Props) => {
   };
 
   const drawImage = useCallback(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-
-    if (canvas && ctx) {
+    const ctx = getContext();
+    if (ctx) {
       ctx.putImageData(currentImageData, 0, 0);
     }
   }, [currentImageData]);
@@ -34,44 +32,14 @@ export const OpenCvDebugger = ({ outline }: Props) => {
   const handleDataChange = (data: IntermediateData) => {
     setCurrentImageData(data.imageData);
   };
-
-  const handleScroll = (event: {
-    preventDefault: () => void;
-    deltaY: number;
-    detail: number;
-  }) => {
-    //event.preventDefault();
-    console.log("Scrolling!");
-    var delta = event.deltaY
-      ? event.deltaY / 40
-      : event.detail
-      ? -event.detail
-      : 0;
-    if (delta) {
-      zoom(delta);
-    }
-  };
-  let scaleFactor = 1.1;
-  const zoom = (clicks: number) => {
-    const ctx = getContext();
-    if (!ctx) {
-      return;
-    }
-    //var pt = ctx.transformedPoint(lastX, lastY);
-    //ctx.translate(pt.x, pt.y);
-    var factor = Math.pow(scaleFactor, clicks);
-    ctx.scale(factor, factor);
-    //ctx.translate(-pt.x, -pt.y);
-    drawImage();
-  };
-
+  console.log("SVG", outline.svg);
   return (
     <div>
       <ImageSelector
         imageData={outline.intermediateData}
         onDataChange={handleDataChange}
       ></ImageSelector>
-      <div>
+      <div className="mt-4">
         <TransformWrapper>
           <TransformComponent>
             <canvas
@@ -82,6 +50,9 @@ export const OpenCvDebugger = ({ outline }: Props) => {
             />
           </TransformComponent>
         </TransformWrapper>
+      </div>
+      <div className="mt-4">
+        <svg dangerouslySetInnerHTML={{ __html: outline.svg }}></svg>
       </div>
     </div>
   );

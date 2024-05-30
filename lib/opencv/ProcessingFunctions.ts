@@ -142,11 +142,8 @@ const wrapImage = (contour: cv.Mat, src: cv.Mat) => {
   let bottomRight = points[2].x > points[3].x ? points[2] : points[3];
 
   const scale = 4;
-  // Define the rectangle of the standard paper size
-  // let paperWidth = 210; // A4 paper width in mm
-  let paperWidth = 297 * scale; // A4 paper width in mm
-  // let paperHeight = 297; // A4 paper height in mm
-  let paperHeight = 210 * scale; // A4 paper height in mm
+  let paperWidth = 297 * scale; 
+  let paperHeight = 210 * scale;
   let dstCorners = cv.matFromArray(4, 1, cv.CV_32FC2, [
     0,
     0,
@@ -158,7 +155,6 @@ const wrapImage = (contour: cv.Mat, src: cv.Mat) => {
     paperHeight,
   ]);
 
-  // Get the perspective transformation matrix
   let srcCorners = cv.matFromArray(4, 1, cv.CV_32FC2, [
     topLeft.x,
     topLeft.y,
