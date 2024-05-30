@@ -2,16 +2,19 @@ import * as cv from "@techstark/opencv-js";
 import Settings from "./Settings";
 import {
   ProcessingFunction,
+  bilateralFilter,
   blurOf,
   cannyOf,
-  debugPaperOutline,
+  debugFindCountours,
   extractPaperFrom,
   grayScaleOf,
 } from "./ProcessingFunctions";
 import {
   drawAllContours,
   drawLargestContour,
+  largestContourOf,
   largestObjectContoursOf,
+  smoothOf,
 } from "./Contours";
 import { pointsFrom } from "./Point";
 import Svg from "./Svg";
@@ -46,14 +49,14 @@ const processorOf = (
         });
       }
     }
-  }
+  };
 
   return {
     process: (image: cv.Mat): cv.Mat => {
       const intermediateImages = [];
       let currentImage = image;
       for (const process of processingFunctions) {
-        drawDebugSteps(currentImage, process)
+        drawDebugSteps(currentImage, process);
 
         currentImage = process(currentImage, settings);
         intermediateImages.push(currentImage);
@@ -70,6 +73,10 @@ const processorOf = (
     intermediateImageData: (): IntermediateData[] => {
       return intermediateImageData;
     },
+    addIntermediateStep: (image: cv.Mat, name: string) => {
+      intermediateImageData
+      .push({ imageData: imageDataOf(image), stepName: name });
+    }
   };
 };
 
@@ -79,6 +86,7 @@ export const processImage = async (
 ): Promise<OutlineResult> => {
   const image = cv.matFromImageData(imageData);
   const processingFunctions: ProcessingFunction[] = [
+    bilateralFilter,
     grayScaleOf,
     blurOf,
     cannyOf,
@@ -86,36 +94,51 @@ export const processImage = async (
   ];
 
   const debugSteps = {
-    [extractPaperFrom.name]: [debugPaperOutline],
+    [extractPaperFrom.name]: [debugFindCountours],
+    // [grayScaleOf.name]: [debugFindCountours],
   };
 
   const processor = processorOf(processingFunctions, settings, debugSteps);
+  processor.addIntermediateStep(image, "Input")
+
   const paperImage = processor.process(image);
 
   const objectContours = largestObjectContoursOf(paperImage);
+
+  const countourIndex = largestContourOf(objectContours.contours);
+  if (!countourIndex) {
+    console.log("Object contour not found!", this);
+    return {
+      imageData: new ImageData(1, 1),
+      svg: "",
+      intermediateData: processor.intermediateImageData(),
+    };
+  }
+  let resultingContour = smoothOf(objectContours.contours.get(countourIndex));
+
   // TODO this image is only for debugging?
   // The SVG should be visible in the editor, but might need a preview, when skiping initializing threejs when just exporting svg?
   // Then just show the SVG with HTML, no?
   const resultingImage = drawLargestContour(
-    image.size(),
+    paperImage.size(),
     objectContours.contours,
     objectContours.hierarchy
   );
   const resultImageData = imageDataOf(resultingImage);
-  const points = pointsFrom(objectContours.largestContour);
+  const points = pointsFrom(resultingContour);
 
   const test = drawAllContours(
     paperImage.size(),
     objectContours.contours,
     objectContours.hierarchy
   );
-  processor
-    .intermediateImageData()
-    .push({ imageData: imageDataOf(test), stepName: "test-outline" });
+  processor.addIntermediateStep(test, "test-outline");
+  processor.addIntermediateStep(resultingImage, "Output");
 
   image.delete();
   paperImage.delete();
   objectContours.delete();
+  resultingImage.delete();
 
   return {
     imageData: resultImageData,
@@ -125,14 +148,26 @@ export const processImage = async (
 };
 
 const imageDataOf = (image: cv.Mat): ImageData => {
-  let dst = new cv.Mat();
-  image.convertTo(dst, cv.CV_8U);
-  cv.cvtColor(dst, dst, colorSpaceOf(image));
-  return new ImageData(new Uint8ClampedArray(dst.data), dst.cols, dst.rows);
+  var convertedImage = convertImage(image);
+  return new ImageData(
+    new Uint8ClampedArray(convertedImage.data),
+    convertedImage.cols,
+    convertedImage.rows
+  );
 };
 
-const colorSpaceOf = (image: cv.Mat) => {
+const convertImage = (image: cv.Mat): cv.Mat => {
   const channels = image.channels();
+  if (channels == 4) {
+    return image;
+  }
+  let destination = new cv.Mat();
+  image.convertTo(destination, cv.CV_8U);
+  cv.cvtColor(destination, destination, colorConversionOf(channels));
+  return destination;
+};
+
+const colorConversionOf = (channels: number) => {
   switch (channels) {
     case 1:
       return cv.COLOR_GRAY2RGBA;

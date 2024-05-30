@@ -3,22 +3,18 @@ import * as cv from "@techstark/opencv-js";
 class ImageContours {
   contours: cv.MatVector;
   hierarchy: cv.Mat;
-  largestContour: cv.Mat;
 
   constructor(
     contours: cv.MatVector,
     hierarchy: cv.Mat,
-    largestContour: cv.Mat
   ) {
     this.contours = contours;
     this.hierarchy = hierarchy;
-    this.largestContour = largestContour;
   }
 
   delete(): void {
     this.contours.delete();
     this.hierarchy.delete();
-    this.largestContour.delete();
   }
 }
 
@@ -33,12 +29,7 @@ export const largestObjectContoursOf = (image: cv.Mat): ImageContours => {
     cv.CHAIN_APPROX_SIMPLE
   );
 
-  const countourIndex = largestContourOf(contours);
-  if (!countourIndex) {
-    throw new Error("Object contour not found!");
-  }
-  let resultingContour = smoothOf(contours.get(countourIndex));
-  return new ImageContours(contours, hierarchy, resultingContour);
+  return new ImageContours(contours, hierarchy);
 };
 
 export const largestContourOf = (contours: cv.MatVector): number | null => {
@@ -55,7 +46,7 @@ export const largestContourOf = (contours: cv.MatVector): number | null => {
   return result;
 };
 
-const smoothOf = (contour: cv.Mat): cv.Mat => {
+export const smoothOf = (contour: cv.Mat): cv.Mat => {
   let smooth = new cv.Mat();
   const accuracy = 0.002 * cv.arcLength(contour, true);
   cv.approxPolyDP(contour, smooth, accuracy, true);

@@ -31,6 +31,27 @@ export const grayScaleOf: ProcessingFunction = (
   return gray;
 };
 
+export const bilateralFilter: ProcessingFunction = (
+  image: cv.Mat,
+  settings: Settings
+): cv.Mat => {
+  let converted = new cv.Mat();
+  let filtered = new cv.Mat();
+  cv.cvtColor(image, converted, cv.COLOR_RGBA2RGB, 0);
+
+  try {
+    // You can try more different parameters
+    cv.bilateralFilter(converted, filtered, 9, 75, 75, cv.BORDER_DEFAULT);
+  } catch (error) {
+    console.error(error);
+    console.error("Error, yo", error);
+  }
+
+  cv.cvtColor(filtered, converted, cv.COLOR_RGB2RGBA, 0);
+  filtered.delete();
+  return converted;
+};
+
 export const cannyOf: ProcessingFunction = (
   image: cv.Mat,
   settings: Settings
@@ -40,7 +61,7 @@ export const cannyOf: ProcessingFunction = (
   return edged;
 };
 
-export const debugPaperOutline: ProcessingFunction = (
+export const debugFindCountours: ProcessingFunction = (
   image: cv.Mat,
   settings: Settings
 ): cv.Mat => {
@@ -73,7 +94,10 @@ export const extractPaperFrom: ProcessingFunction = (
 
   const contourIndex = largestContourOf(contours);
   if (!contourIndex) {
-    throw new Error("Contours not found!");
+    console.log("Contours not found!", this);
+    const result = new cv.Mat();
+    image.copyTo(result);
+    return result;
   }
   const result = wrapImage(contours.get(contourIndex), image);
 
