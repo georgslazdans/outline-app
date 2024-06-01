@@ -7,7 +7,7 @@ import { useDetails } from "@/context/DetailsContext";
 import Settings, { defaultSettings } from "@/lib/opencv/Settings";
 import { OpenCvDebugger } from "./OpenCvDebugger";
 import StepResult from "@/lib/opencv/StepResult";
-import { OpenCvWork } from "@/lib/opencv/Worker";
+import { OpenCvResult, OpenCvWork } from "@/lib/opencv/Worker";
 
 type Props = {
   dictionary: any;
@@ -49,7 +49,12 @@ export const Editor = ({ dictionary }: Props) => {
       new URL("@/lib/opencv/Worker.ts", import.meta.url)
     );
     workerRef.current.onmessage = (event) => {
-      updateStepResults(event.data as StepResult[]);
+      const result = event.data as OpenCvResult;
+      if (result.status == "success") {
+        updateStepResults(result.stepResults);
+      } else {
+        // TODO show error, and give option to try again?
+      }
     };
     return () => {
       workerRef.current?.terminate();
