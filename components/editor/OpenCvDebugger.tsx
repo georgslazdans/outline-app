@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ImageSelector } from "./ImageSelector";
-import OutlineResult, { IntermediateData } from "@/lib/opencv/OutlineResult";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import StepResult from "@/lib/opencv/StepResult";
 
 type Props = {
-  outline: OutlineResult;
+  stepResults: StepResult[];
 };
 
-export const OpenCvDebugger = ({ outline }: Props) => {
+export const OpenCvDebugger = ({ stepResults: stepResult }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [currentImageData, setCurrentImageData] = useState<ImageData>(
     new ImageData(1, 1)
@@ -29,14 +29,14 @@ export const OpenCvDebugger = ({ outline }: Props) => {
     drawImage();
   }, [currentImageData, drawImage]);
 
-  const handleDataChange = (data: IntermediateData) => {
-    setCurrentImageData(data.imageData);
+  const handleDataChange = (result: StepResult) => {
+    setCurrentImageData(result.imageData);
   };
-  console.log("SVG", outline.svg);
+
   return (
     <div>
       <ImageSelector
-        imageData={outline.intermediateData}
+        stepResults={stepResult}
         onDataChange={handleDataChange}
       ></ImageSelector>
       <div className="mt-4">
@@ -51,9 +51,11 @@ export const OpenCvDebugger = ({ outline }: Props) => {
           </TransformComponent>
         </TransformWrapper>
       </div>
-      <div className="mt-4">
-        <svg dangerouslySetInnerHTML={{ __html: outline.svg }}></svg>
-      </div>
+      {/* <div className="mt-4">
+        <img
+          src={`data:image/svg+xml;utf8,${encodeURIComponent(outline.svg)}`}
+        />
+      </div> */}
     </div>
   );
 };

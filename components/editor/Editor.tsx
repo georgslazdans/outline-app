@@ -4,11 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useDetails } from "@/context/DetailsContext";
-import Settings from "@/lib/opencv/Settings";
-import PaperSize from "@/lib/PaperSize";
-import Orientation from "@/lib/Orientation";
+import Settings, { defaultSettings } from "@/lib/opencv/Settings";
 import { OpenCvDebugger } from "./OpenCvDebugger";
-import { OutlineResult } from "@/lib/opencv/OutlineResult";
+import StepResult from "@/lib/opencv/StepResult";
+import { OpenCvWork } from "@/lib/opencv/Worker";
 
 type Props = {
   dictionary: any;
@@ -18,13 +17,26 @@ export const Editor = ({ dictionary }: Props) => {
   const router = useRouter();
   const workerRef = useRef<Worker>();
 
-  const [outline, setOutline] = useState<OutlineResult>({
-    imageData: new ImageData(1, 1),
-    svg: "",
-    intermediateData: [],
-  });
+  const [stepResults, setStepResults] = useState<StepResult[]>([]);
 
   const { detailsContext } = useDetails();
+
+  const updateStepResults = (newResult: StepResult[]) => {
+    setStepResults((previousResult) => {
+      const updatedResult = [...previousResult];
+      newResult.forEach((newStep) => {
+        const index = updatedResult.findIndex(
+          (step) => step.stepName === newStep.stepName
+        );
+        if (index !== -1) {
+          updatedResult[index] = newStep;
+        } else {
+          updatedResult.push(newStep);
+        }
+      });
+      return updatedResult;
+    });
+  };
 
   useEffect(() => {
     if (!detailsContext) {
@@ -37,7 +49,7 @@ export const Editor = ({ dictionary }: Props) => {
       new URL("@/lib/opencv/Worker.ts", import.meta.url)
     );
     workerRef.current.onmessage = (event) => {
-      setOutline(event.data);
+      updateStepResults(event.data as StepResult[]);
     };
     return () => {
       workerRef.current?.terminate();
@@ -48,32 +60,27 @@ export const Editor = ({ dictionary }: Props) => {
     const imageData =
       detailsContext?.imageData ||
       (typeof window !== "undefined" ? new ImageData(4, 4) : null);
-    const settings: Settings = {
-      blurWidth: 5,
-      threshold1: 100,
-      threshold2: 200,
-      paper: {
-        size: PaperSize.A4,
-        orientation: Orientation.PORTRAIT,
+    const settings: Settings = defaultSettings();
+
+    const workData: OpenCvWork = {
+      type: "all",
+      data: {
+        imageData: imageData,
+        settings: settings,
       },
     };
-
-    workerRef.current?.postMessage({ imageData, settings });
+    workerRef.current?.postMessage(workData);
   }, [detailsContext?.imageData]);
 
   useEffect(() => {
     if (workerRef.current) {
       outlineOf();
     }
-  }, [outline, outlineOf]);
+  }, [outlineOf]);
 
   return (
     <>
-      <div>
-        <span>Is processing: </span>
-      </div>
-      <p>{detailsContext && JSON.stringify(detailsContext.details)}</p>
-      <OpenCvDebugger outline={outline}></OpenCvDebugger>
+      <OpenCvDebugger stepResults={stepResults}></OpenCvDebugger>
     </>
   );
 };

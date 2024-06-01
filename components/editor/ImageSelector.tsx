@@ -1,20 +1,20 @@
 "use client";
 
-import { IntermediateData } from "@/lib/opencv/OutlineResult";
+import StepResult from "@/lib/opencv/StepResult";
 import { ChangeEvent } from "react";
 
 type Props = {
-  imageData: IntermediateData[];
-  onDataChange: (data: IntermediateData) => void;
+  stepResults: StepResult[];
+  onDataChange: (data: StepResult) => void;
 };
 
-export const ImageSelector = ({ imageData, onDataChange }: Props) => {
+export const ImageSelector = ({ stepResults, onDataChange }: Props) => {
   const label = "Image selector";
   const name = "test-image-selector";
 
   const handleOnChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const index = Number.parseInt(event.target.value);
-    onDataChange(imageData[index]);
+    onDataChange(stepResults[index]);
   };
 
   return (
@@ -31,9 +31,9 @@ export const ImageSelector = ({ imageData, onDataChange }: Props) => {
         name={name}
         onChange={(event) => handleOnChange(event)}
       >
-        {imageData.map((option, index) => (
+        {stepResults.map((result, index) => (
           <option key={index} value={index}>
-            {option.stepName}
+            {result.stepName}
           </option>
         ))}
       </select>

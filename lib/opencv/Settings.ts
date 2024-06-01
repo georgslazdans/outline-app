@@ -1,16 +1,22 @@
-import Orientation from "../Orientation"
-import PaperSize from "../PaperSize"
+import { processingFunctions } from "./ImageProcessor";
+import { StepSettings } from "./steps/ProcessingFunction";
 
 type Settings = {
-    blurWidth:number,
-    threshold1: number,
-    threshold2: number,
-    paper: PaperSettings
-}
+  [key: string]: StepSettings;
+  paperSettings: PaperSettings;
+};
 
 type PaperSettings = {
-    size: PaperSize,
-    orientation: Orientation
-}
+  width: number;
+  height: number;
+};
 
-export default Settings
+export const defaultSettings = (): Settings => {
+  let settings = {};
+  for (const step of processingFunctions) {
+    settings = { ...settings, [step.name]: step.settings };
+  }
+  return settings as Settings;
+};
+
+export default Settings;
