@@ -12,8 +12,8 @@ export type OpenCvWork =
       data: ProccessStep;
     };
 
-// TODO add runtime status
 addEventListener("message", async (event: MessageEvent<OpenCvWork>) => {
+  // @ts-ignore
   cv.onRuntimeInitialized = async () => {
     const work = event.data;
     let result: StepResult[];
