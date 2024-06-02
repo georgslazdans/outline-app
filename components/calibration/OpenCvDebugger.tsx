@@ -9,6 +9,10 @@ type Props = {
   stepResults: StepResult[];
 };
 
+const isEmptyImage = (image: ImageData) => {
+  return image.height == 1 && image.width == 1;
+}
+
 export const OpenCvDebugger = ({ stepResults, dictionary }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [currentImageData, setCurrentImageData] = useState<ImageData>(
@@ -26,6 +30,12 @@ export const OpenCvDebugger = ({ stepResults, dictionary }: Props) => {
       ctx.putImageData(currentImageData, 0, 0);
     }
   }, [currentImageData]);
+
+  useEffect(() => {
+    if(isEmptyImage(currentImageData) && stepResults && stepResults.length > 0) {
+      setCurrentImageData(stepResults[0].imageData)
+    }
+  }, [currentImageData, stepResults])
 
   useEffect(() => {
     drawImage();

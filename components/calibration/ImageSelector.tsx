@@ -56,6 +56,7 @@ export const ImageSelector = ({
         id={name}
         name={name}
         onChange={(event) => handleOnChange(event)}
+        value={currentIndex}
       >
         {stepResults.map((result, index) => (
           <option key={index} value={index}>
