@@ -11,6 +11,7 @@ import PaperSize, {
 } from "@/lib/PaperSize";
 import { useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
+import { useLoading } from "@/context/LoadingContext";
 
 type Props = {
   dictionary: any;
@@ -26,6 +27,7 @@ type Form = {
 const DetailsForm = ({ dictionary }: Props) => {
   const router = useRouter();
   const { setDetailsContext } = useDetails();
+  const { setLoading } = useLoading();
 
   const [paperSize, setPaperSize] = useState("A4");
   const [formData, setFormData] = useState<Form>({
@@ -66,6 +68,7 @@ const DetailsForm = ({ dictionary }: Props) => {
     });
 
     router.push("/editor");
+    setLoading(true);
   };
 
   return (

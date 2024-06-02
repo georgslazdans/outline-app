@@ -14,6 +14,7 @@
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-loader-spinner": "^6.1.6",
     "react-zoom-pan-pinch": "^3.4.4"
   },
   "devDependencies": {

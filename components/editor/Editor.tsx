@@ -8,6 +8,7 @@ import Settings, { defaultSettings } from "@/lib/opencv/Settings";
 import { OpenCvDebugger } from "./OpenCvDebugger";
 import StepResult from "@/lib/opencv/StepResult";
 import { OpenCvResult, OpenCvWork } from "@/lib/opencv/Worker";
+import { useLoading } from "@/context/LoadingContext";
 
 type Props = {
   dictionary: any;
@@ -20,6 +21,7 @@ export const Editor = ({ dictionary }: Props) => {
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
 
   const { detailsContext } = useDetails();
+  const { setLoading } = useLoading();
 
   const updateStepResults = (newResult: StepResult[]) => {
     setStepResults((previousResult) => {
@@ -50,6 +52,7 @@ export const Editor = ({ dictionary }: Props) => {
     );
     workerRef.current.onmessage = (event) => {
       const result = event.data as OpenCvResult;
+      setLoading(false);
       if (result.status == "success") {
         updateStepResults(result.stepResults);
       } else {
@@ -59,7 +62,7 @@ export const Editor = ({ dictionary }: Props) => {
     return () => {
       workerRef.current?.terminate();
     };
-  }, []);
+  }, [setLoading]);
 
   const outlineOf = useCallback(async () => {
     const imageData =
@@ -75,7 +78,8 @@ export const Editor = ({ dictionary }: Props) => {
       },
     };
     workerRef.current?.postMessage(workData);
-  }, [detailsContext?.imageData]);
+    setLoading(true);
+  }, [detailsContext?.imageData, setLoading]);
 
   useEffect(() => {
     if (workerRef.current) {

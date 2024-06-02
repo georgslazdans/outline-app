@@ -51,11 +51,6 @@ export const OpenCvDebugger = ({ stepResults: stepResult }: Props) => {
           </TransformComponent>
         </TransformWrapper>
       </div>
-      {/* <div className="mt-4">
-        <img
-          src={`data:image/svg+xml;utf8,${encodeURIComponent(outline.svg)}`}
-        />
-      </div> */}
     </div>
   );
 };

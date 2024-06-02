@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --foreground-: theme(colors.black);
-  --background-: theme(colors.white);
+  --foreground: theme(colors.black);
+  --background: theme(colors.white);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,12 +14,11 @@
   }
 }
 
-body, select {
+body,
+select {
   color: var(--foreground);
   background: var(--background);
 }
-
-
 
 @layer utilities {
   .text-balance {
@@ -27,7 +26,8 @@ body, select {
   }
 }
 
-h1, h2 {
+h1,
+h2 {
   font-size: 1.5rem;
   font-weight: bold;
   line-height: 1.25;
@@ -41,4 +41,8 @@ label {
 
 p {
   font-size: 1rem;
+}
+
+.loader path {
+  stroke: var(--foreground);
 }
