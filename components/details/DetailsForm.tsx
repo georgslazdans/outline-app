@@ -12,6 +12,7 @@ import PaperSize, {
 import { useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
 import { useLoading } from "@/context/LoadingContext";
+import { useIndexedDB } from "react-indexed-db-hook";
 
 type Props = {
   dictionary: any;
@@ -26,8 +27,10 @@ type Form = {
 
 const DetailsForm = ({ dictionary }: Props) => {
   const router = useRouter();
-  const { setDetailsContext } = useDetails();
+  const { detailsContext, setDetailsContext } = useDetails();
   const { setLoading } = useLoading();
+  const { add } = useIndexedDB("details");
+
 
   const [paperSize, setPaperSize] = useState("A4");
   const [formData, setFormData] = useState<Form>({
@@ -56,19 +59,21 @@ const DetailsForm = ({ dictionary }: Props) => {
 
   const onFormSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    setDetailsContext((ctx) => {
-      return {
-        ...ctx,
-        details: {
-          ...formData,
-          orientation: formData.orientation as Orientation
-        },
-      };
-    });
-
-    router.push("/calibration");
     setLoading(true);
+
+    const newContext = {
+      ...detailsContext,
+      name: formData.name,
+      details: {
+        ...formData,
+        orientation: formData.orientation as Orientation,
+      },
+    };
+    add(newContext).then(() => {
+      setDetailsContext(newContext);
+      router.push("/calibration");
+    })
+  
   };
 
   return (

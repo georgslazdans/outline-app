@@ -91,7 +91,10 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
 
   return (
     <>
-      <OpenCvDebugger dictionary={dictionary} stepResults={stepResults}></OpenCvDebugger>
+      <OpenCvDebugger
+        dictionary={dictionary}
+        stepResults={stepResults}
+      ></OpenCvDebugger>
     </>
   );
 };
