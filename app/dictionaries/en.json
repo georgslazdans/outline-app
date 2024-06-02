@@ -12,7 +12,7 @@
     "paperSize": "Paper Size",
     "width": "Width",
     "height": "Height",
-    "findOutline": "Find Outline" 
+    "findOutline": "Find Outline"
   },
   "orientation": {
     "landscape": "Landscape",
@@ -23,5 +23,17 @@
     "a3": "A3",
     "us-letter": "US Letter",
     "us-legal": "US Legal"
+  },
+  "calibration": {
+    "title": "OpenCv Calibration",
+    "step": {
+      "bilateralFilter": "Bilateral Filter",
+      "blur": "Blur",
+      "canny": "Canny",
+      "extractObject": "Extract Object",
+      "extractPaper": "Extract Paper",
+      "grayScale": "Gray Scale",
+      "threshold": "Threshold"
+    }
   }
 }

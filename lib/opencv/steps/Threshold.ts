@@ -1,6 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
+import StepName from "./StepName";
 
 type ThresholdSettings = {
   threshold: number;
@@ -18,7 +19,7 @@ const thresholdOf: Process<ThresholdSettings> = (
   
 
 const thresholdFunction: ProcessingStep<ThresholdSettings> = {
-  name: "threshold",
+  name: StepName.THRESHOLD,
   settings: {
     threshold: 100,
     maxValue: 200,

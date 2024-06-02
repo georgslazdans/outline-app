@@ -2,12 +2,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ImageSelector } from "./ImageSelector";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import StepResult from "@/lib/opencv/StepResult";
+import { Dictionary } from "@/app/dictionaries";
 
 type Props = {
+  dictionary: Dictionary;
   stepResults: StepResult[];
 };
 
-export const OpenCvDebugger = ({ stepResults: stepResult }: Props) => {
+export const OpenCvDebugger = ({ stepResults, dictionary }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [currentImageData, setCurrentImageData] = useState<ImageData>(
     new ImageData(1, 1)
@@ -36,7 +38,8 @@ export const OpenCvDebugger = ({ stepResults: stepResult }: Props) => {
   return (
     <div>
       <ImageSelector
-        stepResults={stepResult}
+      dictionary={dictionary}
+        stepResults={stepResults}
         onDataChange={handleDataChange}
       ></ImageSelector>
       <div className="mt-4">

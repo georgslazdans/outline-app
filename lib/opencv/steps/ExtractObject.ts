@@ -9,6 +9,7 @@ import {
 } from "../Contours";
 import cannyFunction from "./Canny";
 import { pointsFrom } from "../../Point";
+import StepName from "./StepName";
 
 const cannyOf = cannyFunction.process;
 type CannySettings = typeof cannyFunction.settings;
@@ -48,7 +49,7 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
 };
 
 const extractObjectFunction: ProcessingStep<ExtractObjectSettings> = {
-  name: "extractObject",
+  name: StepName.EXTRACT_OBJECT,
   settings: {
     smoothOutline: true,
     cannySettings: {

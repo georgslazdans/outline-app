@@ -4,6 +4,7 @@ import ColorSpace from "../ColorSpace";
 import { pointsFrom } from "../../Point";
 import cannyFunction from "./Canny";
 import { contoursOf, largestContourOf } from "../Contours";
+import StepName from "./StepName";
 
 const cannyOf = cannyFunction.process;
 type CannySettings = typeof cannyFunction.settings
@@ -87,7 +88,7 @@ const wrapImage = (contour: cv.Mat, src: cv.Mat) => {
 };
 
 const extractPaperFunction: ProcessingStep<ExtractPaperSettings> = {
-  name: "extractPaper",
+  name: StepName.EXTRACT_PAPER,
   settings: {
     cannySettings: {
         firstThreshold: 100,

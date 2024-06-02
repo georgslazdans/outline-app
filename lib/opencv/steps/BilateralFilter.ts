@@ -1,6 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
+import StepName from "./StepName";
 
 type BilateralFilterSettings = {
   pixelDiameter: number;
@@ -31,7 +32,7 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
 };
 
 const bilateralFilterFunction: ProcessingStep<BilateralFilterSettings> = {
-  name: "bilateralFilter",
+  name: StepName.BILETERAL_FILTER,
   settings: {
     pixelDiameter: 9,
     sigmaColor: 75,

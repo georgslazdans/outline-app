@@ -1,5 +1,7 @@
+import StepName from "./steps/StepName";
+
 export type StepResult = {
-    stepName: string,
+    stepName: StepName,
     imageData: ImageData,
     debugSteps?: StepResult[]
 }

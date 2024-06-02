@@ -1,28 +1,39 @@
 {
-    "description": "Izveido SVG līniju no jebkura instrumenta, izmantojot tikai bildi!",
-    "capturePhoto": "Uzņemt jaunu bildi",
-    "uploadPicture": "No esošām",
-    "learnMore": "Uzzināt vairāk par vides uzstādīšanu priekš labākajiem rezultātiem",
-    "pictureAlt": "Bilde ar uzgriežņu atslēgu",
-    "processing": "Apstrādā...",
-    "details": {
-      "title": "Informācija",
-      "name": "Nosaukums",
-      "orientation": "Orientācija",
-      "paperSize": "Papīra Izmērs",
-      "width": "Platums",
-      "height": "Garums",
-      "findOutline": "Atrast Kontūru" 
-    },
-    "orientation": {
-      "landscape": "Ainava",
-      "portrait": "Portrets"
-    },
-    "paperSizes": {
-      "a4": "A4",
-      "a3": "A3",
-      "us-letter": "US Letter",
-      "us-legal": "US Legal"
+  "description": "Izveido SVG līniju no jebkura instrumenta, izmantojot tikai bildi!",
+  "capturePhoto": "Uzņemt jaunu bildi",
+  "uploadPicture": "No esošām",
+  "learnMore": "Uzzināt vairāk par vides uzstādīšanu priekš labākajiem rezultātiem",
+  "pictureAlt": "Bilde ar uzgriežņu atslēgu",
+  "processing": "Apstrādā...",
+  "details": {
+    "title": "Informācija",
+    "name": "Nosaukums",
+    "orientation": "Orientācija",
+    "paperSize": "Papīra Izmērs",
+    "width": "Platums",
+    "height": "Garums",
+    "findOutline": "Atrast Kontūru"
+  },
+  "orientation": {
+    "landscape": "Ainava",
+    "portrait": "Portrets"
+  },
+  "paperSizes": {
+    "a4": "A4",
+    "a3": "A3",
+    "us-letter": "US Letter",
+    "us-legal": "US Legal"
+  },
+  "calibration": {
+    "title": "OpenCv Kalibrēšana",
+    "step": {
+      "bilateralFilter": "Bilateral Filter",
+      "blur": "Aizmiglojums",
+      "canny": "Canny",
+      "extractObject": "Izvilkt Objektu",
+      "extractPaper": "Izvlikt Lapu",
+      "grayScale": "Pēlēkuma Skala",
+      "threshold": "Kontrastējošas Krāsas"
     }
   }
-  
+}

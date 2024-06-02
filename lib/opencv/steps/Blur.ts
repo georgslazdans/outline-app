@@ -1,6 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
+import StepName from "./StepName";
 
 type BlurSettings = {
   blurWidth: number;
@@ -24,7 +25,7 @@ const blurOf: Process<BlurSettings> = (
   };
 
 const blurFunction: ProcessingStep<BlurSettings> = {
-  name: "blur",
+  name: StepName.BLUR,
   settings: {
     blurWidth: 5,
   },

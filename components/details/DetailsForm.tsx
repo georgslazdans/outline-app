@@ -67,7 +67,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       };
     });
 
-    router.push("/editor");
+    router.push("/calibration");
     setLoading(true);
   };
 

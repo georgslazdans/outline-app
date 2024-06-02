@@ -1,6 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
+import StepName from "./StepName";
 
 type CannySettings = {
   firstThreshold: number;
@@ -17,7 +18,7 @@ const cannyOf: Process<CannySettings> = (
 };
 
 const cannyFunction: ProcessingStep<CannySettings> = {
-  name: "canny",
+  name: StepName.CANNY,
   settings: {
     firstThreshold: 100,
     secondThreshold: 200,

@@ -1,6 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
+import StepName from "./StepName";
 
 type GrayScaleSettings = {};
 
@@ -14,7 +15,7 @@ const grayScaleOf: Process<GrayScaleSettings> = (
 };
 
 const grayScaleFunction: ProcessingStep<GrayScaleSettings> = {
-  name: "grayScale",
+  name: StepName.GRAY_SCALE,
   settings: {},
   outputColorSpace: ColorSpace.GRAY_SCALE,
   process: grayScaleOf,

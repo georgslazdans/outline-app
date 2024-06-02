@@ -14,7 +14,7 @@ type Props = {
   dictionary: any;
 };
 
-export const Editor = ({ dictionary }: Props) => {
+export const OpenCvCalibration = ({ dictionary }: Props) => {
   const router = useRouter();
   const workerRef = useRef<Worker>();
 
@@ -42,9 +42,10 @@ export const Editor = ({ dictionary }: Props) => {
 
   useEffect(() => {
     if (!detailsContext) {
+      setLoading(false);
       router.push("/");
     }
-  }, [detailsContext, router]);
+  }, [detailsContext, router, setLoading]);
 
   useEffect(() => {
     workerRef.current = new Worker(
@@ -60,6 +61,7 @@ export const Editor = ({ dictionary }: Props) => {
       }
     };
     return () => {
+      setLoading(false);
       workerRef.current?.terminate();
     };
   }, [setLoading]);
@@ -89,7 +91,7 @@ export const Editor = ({ dictionary }: Props) => {
 
   return (
     <>
-      <OpenCvDebugger stepResults={stepResults}></OpenCvDebugger>
+      <OpenCvDebugger dictionary={dictionary} stepResults={stepResults}></OpenCvDebugger>
     </>
   );
 };
