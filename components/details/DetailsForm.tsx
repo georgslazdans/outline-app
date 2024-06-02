@@ -31,7 +31,6 @@ const DetailsForm = ({ dictionary }: Props) => {
   const { setLoading } = useLoading();
   const { add } = useIndexedDB("details");
 
-
   const [paperSize, setPaperSize] = useState("A4");
   const [formData, setFormData] = useState<Form>({
     name: "",
@@ -63,17 +62,20 @@ const DetailsForm = ({ dictionary }: Props) => {
 
     const newContext = {
       ...detailsContext,
-      name: formData.name,
       details: {
         ...formData,
         orientation: formData.orientation as Orientation,
       },
+      
     };
-    add(newContext).then(() => {
-      setDetailsContext(newContext);
-      router.push("/calibration");
-    })
-  
+    delete newContext.id;
+    add(newContext).then(
+      () => {
+        setDetailsContext(newContext);
+        router.push("/calibration");
+      },
+      (error) => console.error(error)
+    );
   };
 
   return (

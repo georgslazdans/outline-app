@@ -15,7 +15,6 @@ type Props = {
 };
 
 export const OpenCvCalibration = ({ dictionary }: Props) => {
-  const router = useRouter();
   const workerRef = useRef<Worker>();
 
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
@@ -39,13 +38,6 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
       return updatedResult;
     });
   };
-
-  useEffect(() => {
-    if (!detailsContext) {
-      setLoading(false);
-      router.push("/");
-    }
-  }, [detailsContext, router, setLoading]);
 
   useEffect(() => {
     workerRef.current = new Worker(

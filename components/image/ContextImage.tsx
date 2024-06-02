@@ -1,16 +1,13 @@
 "use client";
 
 import { useDetails } from "@/context/DetailsContext";
-import { useRouter } from "next/navigation";
 
 const ContextImage = () => {
   const { detailsContext } = useDetails();
-  const router = useRouter();
 
   if (!detailsContext || !detailsContext.imageFile) {
     console.error("No image file loaded!");
-    router.push("/");
-    return (<></>)
+    return null;
   }
 
   const imageUrl = URL.createObjectURL(detailsContext.imageFile);

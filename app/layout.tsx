@@ -3,6 +3,11 @@ import "./globals.css";
 import { DetailsProvider } from "@/context/DetailsContext";
 import { LoadingProvider } from "@/context/LoadingContext";
 import { getDictionary } from "./dictionaries";
+import IndexedDbContext from "@/context/IndexedDbContext";
+import { initDB } from "react-indexed-db-hook";
+import { DBConfig } from "@/lib/DbConfig";
+
+
 
 export const metadata: Metadata = {
   title: "Outline App",
@@ -19,6 +24,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
+        <IndexedDbContext></IndexedDbContext>
         <LoadingProvider dictionary={dictionary}>
           <DetailsProvider>{children}</DetailsProvider>
         </LoadingProvider>

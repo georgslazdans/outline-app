@@ -6,8 +6,9 @@ export const DBConfig: IndexedDBProps = {
   objectStoresMeta: [
     {
       store: "details",
-      storeConfig: { keyPath: "name", autoIncrement: false },
+      storeConfig: { keyPath: "id", autoIncrement: true },
       storeSchema: [
+        { name: "name", keypath: "details.name", options: { unique: false } },
       ],
     },
   ],

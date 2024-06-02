@@ -1,7 +1,7 @@
 "use client";
 
-import { DBConfig } from "@/lib/DbConfig";
 import Details from "@/lib/Details";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useState,
@@ -9,8 +9,9 @@ import {
   ReactNode,
   SetStateAction,
   Dispatch,
+  useEffect,
 } from "react";
-import { initDB, useIndexedDB } from "react-indexed-db-hook";
+import {  useIndexedDB } from "react-indexed-db-hook";
 
 const DetailsContext = createContext<any>(null);
 
@@ -19,27 +20,29 @@ type Props = {
 };
 
 export type Context = {
-  name:string;
+  id?: number;
   imageFile: Blob;
   imageData: ImageData;
   details: Details;
 };
 
-initDB(DBConfig);
-
-
 export const DetailsProvider = ({ children }: Props) => {
+  const router = useRouter();
   const [detailsContext, setDetailsContext] = useState<Context>();
   const { getAll } = useIndexedDB("details");
-  
-  if (!detailsContext) {
-    getAll().then((allContexts) => {    
-      if (allContexts && allContexts.length > 0) {
-        const loadedContext = allContexts.pop();
-        setDetailsContext(loadedContext);
-      }
-    })
-  }
+
+  useEffect(() => {
+    if (!detailsContext) {
+      getAll().then((allContexts) => {
+        if (allContexts && allContexts.length > 0) {
+          const loadedContext = allContexts.pop();
+          setDetailsContext(loadedContext);
+        } else {
+          router.push("/");
+        }
+      });
+    }
+  }, [detailsContext, getAll, router]);
 
   return (
     <DetailsContext.Provider value={{ detailsContext, setDetailsContext }}>
