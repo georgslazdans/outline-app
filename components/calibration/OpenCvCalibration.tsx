@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { useDetails } from "@/context/DetailsContext";
 import Settings, { defaultSettings } from "@/lib/opencv/Settings";
@@ -9,15 +8,17 @@ import { OpenCvDebugger } from "./OpenCvDebugger";
 import StepResult from "@/lib/opencv/StepResult";
 import { OpenCvResult, OpenCvWork } from "@/lib/opencv/Worker";
 import { useLoading } from "@/context/LoadingContext";
+import { Dictionary } from "@/app/dictionaries";
+import { OpenCvWorker } from "./OpenCvWorker";
+import Button from "../Button";
 
 type Props = {
-  dictionary: any;
+  dictionary: Dictionary;
 };
 
 export const OpenCvCalibration = ({ dictionary }: Props) => {
-  const workerRef = useRef<Worker>();
-
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
+  const [openCvWork, setOpenCvWork] = useState<OpenCvWork>();
 
   const { detailsContext } = useDetails();
   const { setLoading } = useLoading();
@@ -39,29 +40,17 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
     });
   };
 
-  useEffect(() => {
-    workerRef.current = new Worker(
-      new URL("@/lib/opencv/Worker.ts", import.meta.url)
-    );
-    workerRef.current.onmessage = (event) => {
-      const result = event.data as OpenCvResult;
-      setLoading(false);
-      if (result.status == "success") {
-        updateStepResults(result.stepResults);
-      } else {
-        // TODO show error, and give option to try again?
-      }
-    };
-    return () => {
-      setLoading(false);
-      workerRef.current?.terminate();
-    };
-  }, [setLoading]);
+  const handleOpenCvWork = (newResult: StepResult[]) => {
+    console.log("Updating OpenCv Work Results", newResult);
+    setLoading(false)
+    updateStepResults(newResult);
+  }
 
-  const outlineOf = useCallback(async () => {
+  const updateWorkData = useCallback(() => {
+    setLoading(true);
     const imageData =
       detailsContext?.imageData ||
-      (typeof window !== "undefined" ? new ImageData(4, 4) : null);
+      (typeof window !== "undefined" ? new ImageData(1, 1) : null);
     const settings: Settings = defaultSettings();
 
     const workData: OpenCvWork = {
@@ -71,22 +60,27 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
         settings: settings,
       },
     };
-    workerRef.current?.postMessage(workData);
-    setLoading(true);
+    setOpenCvWork(workData);
   }, [detailsContext?.imageData, setLoading]);
 
   useEffect(() => {
-    if (workerRef.current) {
-      outlineOf();
-    }
-  }, [outlineOf]);
+    updateWorkData();
+  }, [updateWorkData]);
 
   return (
     <>
+      <OpenCvWorker
+        message={openCvWork}
+        onWorkerMessage={handleOpenCvWork}
+      ></OpenCvWorker>
       <OpenCvDebugger
         dictionary={dictionary}
         stepResults={stepResults}
       ></OpenCvDebugger>
+      <div className="flex gap-4 mt-4">
+        <Button onClick={() => updateWorkData()}><label>Rerun</label></Button>
+        <Button onClick={() => updateWorkData()}><label>Done</label></Button>
+      </div>
     </>
   );
 };

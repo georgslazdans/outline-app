@@ -26,7 +26,7 @@ export const Loading = ({ dictionary }: Props) => {
           wrapperStyle={{}}
           wrapperClass="loader"
         />
-        <h2 className="mt-1">{dictionary.processing}</h2>
+        <h2 className="mt-2">{dictionary.processing}</h2>
       </div>
     </div>
   );
