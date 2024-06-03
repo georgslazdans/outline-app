@@ -19,6 +19,32 @@ type Props = {
   dictionary: Dictionary;
 };
 
+const indexOfStep = (
+  allSteps: StepResult[],
+  currentStep: StepResult
+): number => {
+  let index = 0;
+  for (const step of allSteps) {
+    if (step.stepName == currentStep.stepName) {
+      break;
+    }
+    index += 1;
+  }
+  if (index >= allSteps.length) {
+    throw new Error("Index not found for step: " + currentStep.stepName);
+  }
+  return index;
+};
+
+const previousStep = (allSteps: StepResult[], currentStep: StepResult) => {
+  const stepIndex = indexOfStep(allSteps, currentStep);
+  if (stepIndex == 0) {
+    return allSteps[stepIndex];
+  } else {
+    return allSteps[stepIndex - 1];
+  }
+};
+
 export const OpenCvCalibration = ({ dictionary }: Props) => {
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
   const [openCvWork, setOpenCvWork] = useState<OpenCvWork>();
@@ -41,17 +67,37 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
           updatedResult.push(newStep);
         }
       });
+      if (newResult.length == 1) {
+        setCurrentStep(newResult[0]);
+      }
       return updatedResult;
     });
   }, []);
 
-  const handleOpenCvWork = useCallback((newResult: StepResult[]) => {
-    console.log("Updating OpenCv Work Results", newResult);
-    setLoading(false);
-    updateStepResults(newResult);
-  }, [setLoading, updateStepResults]);
+  const handleOpenCvWork = useCallback(
+    (newResult: StepResult[]) => {
+      setLoading(false);
+      updateStepResults(newResult);
+    },
+    [setLoading, updateStepResults]
+  );
 
-  const updateWorkData = useCallback(() => {
+  const updateCurrentStepData = useCallback(() => {
+    setLoading(true);
+    const step = previousStep(stepResults, currentStep!);
+    const workData: OpenCvWork = {
+      type: "step",
+      data: {
+        stepName: currentStep!.stepName,
+        imageData: step.imageData,
+        imageColorSpace: step.imageColorSpace,
+        settings: settings,
+      },
+    };
+    setOpenCvWork(workData);
+  }, [currentStep, setLoading, settings, stepResults]);
+
+  const updateAllWorkData = useCallback(() => {
     setLoading(true);
     const imageData =
       detailsContext?.imageData ||
@@ -65,13 +111,13 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
       },
     };
     setOpenCvWork(workData);
-  }, [detailsContext?.imageData, settings, setLoading]);
+  }, [detailsContext, settings, setLoading]);
 
   useEffect(() => {
-    if (!openCvWork) {
-      updateWorkData();
+    if (!openCvWork && detailsContext) {
+      updateAllWorkData();
     }
-  }, [openCvWork, updateWorkData]);
+  }, [detailsContext, openCvWork, updateAllWorkData]);
 
   useEffect(() => {
     if (!currentStep && stepResults && stepResults.length > 0) {
@@ -97,8 +143,8 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
       <OpenCvWorker
         message={openCvWork}
         onWorkerMessage={handleOpenCvWork}
+        onError={() => setLoading(false)}
       ></OpenCvWorker>
-
       <ImageSelector
         dictionary={dictionary}
         stepResults={stepResults}
@@ -112,11 +158,11 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
         step={currentStep?.stepName}
       ></SettingsEditor>
       <div className="flex gap-4 mt-4">
-        <Button onClick={() => updateWorkData()}>
+        <Button onClick={() => updateCurrentStepData()}>
           <label>Rerun</label>
         </Button>
-        <Button onClick={() => updateWorkData()}>
-          <label>Done</label>
+        <Button onClick={() => updateAllWorkData()}>
+          <label>Rerun All</label>
         </Button>
       </div>
     </>

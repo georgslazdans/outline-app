@@ -9,7 +9,9 @@ import blurFunction from "./steps/Blur";
 import thresholdFunction from "./steps/Threshold";
 import extractPaperFunction from "./steps/ExtractPaper";
 import extractObjectFunction from "./steps/ExtractObject";
-import imageDataOf from "./ImageData";
+import imageDataOf, { imageOf } from "./ImageData";
+import ColorSpace from "./ColorSpace";
+import { comma } from "postcss/lib/list";
 
 export type ProcessAll = {
   imageData: ImageData;
@@ -19,6 +21,7 @@ export type ProcessAll = {
 export type ProccessStep = {
   stepName: string;
   imageData: ImageData;
+  imageColorSpace: ColorSpace;
   settings: Settings;
 };
 
@@ -64,6 +67,7 @@ const processorOf = (
         stepData.push({
           stepName: step.name,
           imageData: imageDataOf(currentImage),
+          imageColorSpace: step.imageColorSpace,
         });
         intermediateImages.push(currentImage);
       }
@@ -81,9 +85,11 @@ const stepWithName = (name: string): ProcessingStep<any> => {
   return result;
 };
 
-export const processStep = async (command: ProccessStep): Promise<StepResult[]> => {
+export const processStep = async (
+  command: ProccessStep
+): Promise<StepResult[]> => {
   const step = stepWithName(command.stepName);
-  const image = cv.matFromImageData(command.imageData);
+  const image = imageOf(command.imageData, command.imageColorSpace);
   const steps = processorOf([step], command.settings).process(image);
   image.delete();
   return steps;

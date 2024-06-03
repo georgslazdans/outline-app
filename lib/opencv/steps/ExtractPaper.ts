@@ -95,7 +95,7 @@ const extractPaperFunction: ProcessingStep<ExtractPaperSettings> = {
         secondThreshold: 200.
     },
   },
-  outputColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: ColorSpace.GRAY_SCALE,
   process: extractPaperFrom,
 };
 

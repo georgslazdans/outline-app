@@ -23,7 +23,7 @@ export const ImageViewer = ({ currentStep, className }: Props) => {
 
   useEffect(() => {
     drawImage();
-  }, [drawImage]);
+  });
 
   return (
     <div className={className}>

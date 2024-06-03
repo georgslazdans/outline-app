@@ -29,7 +29,7 @@ const blurFunction: ProcessingStep<BlurSettings> = {
   settings: {
     blurWidth: 5,
   },
-  outputColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: ColorSpace.GRAY_SCALE,
   process: blurOf,
 };
 

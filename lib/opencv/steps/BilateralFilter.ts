@@ -38,7 +38,7 @@ const bilateralFilterFunction: ProcessingStep<BilateralFilterSettings> = {
     sigmaColor: 75,
     sigmaSpace: 75,
   },
-  outputColorSpace: ColorSpace.RGBA,
+  imageColorSpace: ColorSpace.RGBA,
   process: bilateralFilter,
 };
 

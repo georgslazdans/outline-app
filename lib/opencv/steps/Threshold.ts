@@ -13,7 +13,7 @@ const thresholdOf: Process<ThresholdSettings> = (
     settings: ThresholdSettings
   ): cv.Mat => {
     let threshold = new cv.Mat();
-    cv.threshold(image, threshold, 100, 200, cv.THRESH_BINARY);
+    cv.threshold(image, threshold, settings.threshold, settings.maxValue, cv.THRESH_BINARY);
     return threshold;
   };
   
@@ -22,9 +22,9 @@ const thresholdFunction: ProcessingStep<ThresholdSettings> = {
   name: StepName.THRESHOLD,
   settings: {
     threshold: 100,
-    maxValue: 200,
+    maxValue: 255,
   },
-  outputColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: ColorSpace.GRAY_SCALE,
   process: thresholdOf,
 };
 

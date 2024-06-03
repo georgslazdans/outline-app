@@ -8,6 +8,7 @@ import StepResult from "@/lib/opencv/StepResult";
 type Props = {
   message?: OpenCvWork;
   onWorkerMessage: (stepResult: StepResult[]) => void;
+  onError: () => void;
 };
 
 const hasImageData = (message?: OpenCvWork) => {
@@ -16,7 +17,7 @@ const hasImageData = (message?: OpenCvWork) => {
   return message?.data?.imageData && !isImageEmpty(message.data.imageData);
 };
 
-export const OpenCvWorker = ({ message, onWorkerMessage }: Props) => {
+export const OpenCvWorker = ({ message, onWorkerMessage, onError }: Props) => {
   const workerRef = useRef<Worker>();
 
   const handleMessage = useCallback(
@@ -26,10 +27,10 @@ export const OpenCvWorker = ({ message, onWorkerMessage }: Props) => {
       if (result.status == "success") {
         onWorkerMessage(result.stepResults);
       } else {
-        // TODO show error, and give option to try again?
+        onError();
       }
     },
-    [onWorkerMessage]
+    [onWorkerMessage, onError]
   );
 
   const addMessageHandler = useCallback(() => {
@@ -40,13 +41,11 @@ export const OpenCvWorker = ({ message, onWorkerMessage }: Props) => {
 
   const postWork = useCallback(() => {
     if (workerRef.current && hasImageData(message)) {
-      console.log("Posting OpenCv Work", message);
       workerRef.current?.postMessage(message);
     }
   }, [message]);
 
   useEffect(() => {
-    console.log("Creating new wokrer");
     workerRef.current = new Worker(
       new URL("@/lib/opencv/Worker.ts", import.meta.url)
     );

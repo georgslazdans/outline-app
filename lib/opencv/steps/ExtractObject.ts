@@ -57,7 +57,7 @@ const extractObjectFunction: ProcessingStep<ExtractObjectSettings> = {
       secondThreshold: 200,
     },
   },
-  outputColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: ColorSpace.GRAY_SCALE,
   process: extractObjectFrom,
 };
 

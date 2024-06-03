@@ -12,7 +12,7 @@ export type StepSetting = {
 interface ProcessingStep<T extends StepSetting> {
   name: StepName;
   settings: T;
-  outputColorSpace: ColorSpace;
+  imageColorSpace: ColorSpace;
   process: Process<T>;
 }
 

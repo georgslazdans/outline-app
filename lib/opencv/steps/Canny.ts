@@ -23,7 +23,7 @@ const cannyFunction: ProcessingStep<CannySettings> = {
     firstThreshold: 100,
     secondThreshold: 200,
   },
-  outputColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: ColorSpace.GRAY_SCALE,
   process: cannyOf,
 };
 
