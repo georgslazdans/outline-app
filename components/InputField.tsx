@@ -6,7 +6,7 @@ type Props = {
   name: string;
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
-  onChange: (val: any) => void;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const InputField = ({

@@ -1,8 +1,8 @@
 import { processingFunctions } from "./ImageProcessor";
-import { StepSettings } from "./steps/ProcessingFunction";
+import { StepSetting } from "./steps/ProcessingFunction";
 
 type Settings = {
-  [key: string]: StepSettings;
+  [key: string]: StepSetting;
   paperSettings: PaperSettings;
 };
 

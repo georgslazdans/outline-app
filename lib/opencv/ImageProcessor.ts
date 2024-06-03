@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import Settings from "./Settings";
 
 import { StepResult } from "./StepResult";
-import ProcessingStep, { StepSettings } from "./steps/ProcessingFunction";
+import ProcessingStep, { StepSetting } from "./steps/ProcessingFunction";
 import bilateralFilterFunction from "./steps/BilateralFilter";
 import grayScaleFunction from "./steps/GrayScale";
 import blurFunction from "./steps/Blur";
@@ -41,7 +41,7 @@ const processorOf = (
 
   const settingsFor = (
     processingFunction: ProcessingStep<any>
-  ): StepSettings => {
+  ): StepSetting => {
     const name = processingFunction.name;
     return settings[name];
   };

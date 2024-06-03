@@ -25,6 +25,7 @@ export type OpenCvResult = {
 };
 
 const processWork = async (work: OpenCvWork) => {
+  console.log("Processing work", work);
   let result: StepResult[];
   switch (work.type) {
     case "all":
@@ -50,14 +51,29 @@ const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
     stepResults,
     status,
   };
-}
+};
+
+let initialized = false;
+
+const initializedPromise = new Promise<void>((resolve) => {
+  if (initialized) {
+    resolve();
+  } else {
+    // @ts-ignore
+    cv.onRuntimeInitialized = () => {
+      initialized = true;
+      resolve();
+    };
+  }
+});
+
+const waitForInitialization = async () => {
+  await initializedPromise;
+};
 
 addEventListener("message", async (event: MessageEvent<OpenCvWork>) => {
-  // Shouldn't we (who the fuck are we?) initialize the opencv runtime and keep it for next steps?
-  // @ts-ignore
-  cv.onRuntimeInitialized = async () => {
-    const work = event.data;
-    const message = await processMessage(work);
-    postMessage(message);
-  };
+  await waitForInitialization();
+  const work = event.data;
+  const message = await processMessage(work);
+  postMessage(message);
 });
