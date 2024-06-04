@@ -6,6 +6,7 @@ type Props = {
   name: string;
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
+  className?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -15,13 +16,16 @@ const InputField = ({
   name,
   placeholder,
   type,
+  className,
   onChange,
 }: Props) => {
-
   return (
-    <div className="flex flex-col">
-      {label && 
-      <label className="ml-4 mb-0.5" htmlFor={name}>{label}</label>}
+    <div className={"flex flex-col " + className}>
+      {label && (
+        <label className="ml-4 mb-0.5" htmlFor={name}>
+          {label}
+        </label>
+      )}
       <input
         className="border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white p-1.5 pl-6 "
         id={name}
@@ -29,7 +33,7 @@ const InputField = ({
         value={value ? value : ""}
         name={name}
         placeholder={placeholder}
-        onChange={event => onChange(event)}
+        onChange={(event) => onChange(event)}
       />
     </div>
   );

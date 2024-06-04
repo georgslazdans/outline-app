@@ -1,3 +1,4 @@
+import { Context } from "@/context/DetailsContext";
 import { processingFunctions } from "./ImageProcessor";
 import { StepSetting } from "./steps/ProcessingFunction";
 
@@ -17,6 +18,10 @@ export const defaultSettings = (): Settings => {
     settings = { ...settings, [step.name]: step.settings };
   }
   return settings as Settings;
+};
+
+export const settingsOf = (context: Context) => {
+  return context?.settings || defaultSettings();
 };
 
 export default Settings;

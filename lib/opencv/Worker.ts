@@ -6,23 +6,8 @@ import {
 } from "./ImageProcessor";
 import * as cv from "@techstark/opencv-js";
 import StepResult from "./StepResult";
+import { OpenCvWork, OpenCvResult, Status } from "./OpenCvWork";
 
-export type OpenCvWork =
-  | {
-      type: "all";
-      data: ProcessAll;
-    }
-  | {
-      type: "step";
-      data: ProccessStep;
-    };
-
-type Status = "success" | "failed";
-
-export type OpenCvResult = {
-  status: Status;
-  stepResults: StepResult[];
-};
 
 const processWork = async (work: OpenCvWork) => {
   console.log("Processing work", work);

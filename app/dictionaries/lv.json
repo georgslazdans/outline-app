@@ -35,6 +35,10 @@
       "grayScale": "Pēlēkuma Skala",
       "threshold": "Kontrastējošas Krāsas"
     },
-    "settings": "Iestatījumi"
+    "settings": "Iestatījumi",
+    "advancedSettings": "Pilni iestatījumi",
+    "exportSvg": "Eksportēt SVG",
+    "rerun": "Atkārtoti Izpildīt",
+    "done": "Pabeigt"
   }
 }

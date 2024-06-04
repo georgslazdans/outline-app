@@ -1,4 +1,4 @@
-import { OpenCvCalibration } from "@/components/calibration/OpenCvCalibration";
+import OpenCvCalibration from "@/components/calibration/OpenCvCalibration";
 import { getDictionary } from "../dictionaries";
 
 export default async function Calibration() {

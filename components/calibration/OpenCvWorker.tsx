@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-import { OpenCvResult, OpenCvWork } from "@/lib/opencv/Worker";
 import StepResult from "@/lib/opencv/StepResult";
+import { OpenCvWork, OpenCvResult } from "@/lib/opencv/OpenCvWork";
 
 type Props = {
   message?: OpenCvWork;

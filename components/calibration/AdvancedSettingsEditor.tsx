@@ -12,7 +12,7 @@ type Props = {
   onChange: (stepSettings: StepSetting) => void;
 };
 
-export const SettingsEditor = ({
+export const AdvancedSettingsEditor = ({
   dictionary,
   settings,
   step,

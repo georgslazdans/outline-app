@@ -35,6 +35,10 @@
       "grayScale": "Gray Scale",
       "threshold": "Threshold"
     },
-    "settings": "Settings"
+    "settings": "Settings",
+    "advancedSettings": "Advanced Settings",
+    "exportSvg": "Export SVG",
+    "rerun": "Rerun",
+    "done": "Done"
   }
 }

@@ -52,7 +52,7 @@ export const ImageSelector = ({
         onClick={handleLeft}
       ></ArrowLeftIcon>
       <select
-        className="flex-grow text-center border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white p-1.5 py-2 pl-6"
+        className="flex-grow text-center border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white p-1.5 py-2 pl-6 font-bold"
         id={name}
         name={name}
         onChange={(event) => handleOnChange(event)}
