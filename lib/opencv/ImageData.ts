@@ -1,18 +1,27 @@
 import * as cv from "@techstark/opencv-js";
 import ColorSpace, { conversionCodeOf } from "./ColorSpace";
 
-export const imageOf = (imageData: ImageData, colorSpace: ColorSpace) => {
-  const image = cv.matFromImageData(imageData);
-  if (colorSpace == ColorSpace.RGBA) {
-    return image;
-  }
-  let destination = new cv.Mat();
-  image.convertTo(destination, cv.CV_8U);
-  const convertionCode = conversionCodeOf(colorSpace);
-  cv.cvtColor(destination, destination, convertionCode);
+export const imageOf = (
+  imageData: ImageData,
+  colorSpace: ColorSpace
+): cv.Mat => {
+  try {
+    const image = cv.matFromImageData(imageData);
+    if (colorSpace == ColorSpace.RGBA) {
+      return image;
+    }
+    let destination = new cv.Mat();
+    image.convertTo(destination, cv.CV_8U);
+    const convertionCode = conversionCodeOf(colorSpace);
+    cv.cvtColor(destination, destination, convertionCode);
 
-  image.delete();
-  return destination;
+    image.delete();
+    return destination;
+  } catch (e) {
+    const message = "Failed to convert image";
+    console.error(message, colorSpace, e);
+    throw new Error(message);
+  }
 };
 
 const imageDataOf = (image: cv.Mat): ImageData => {

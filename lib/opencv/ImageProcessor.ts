@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import Settings from "./Settings";
+import Settings, { defaultSettings } from "./Settings";
 
 import { StepResult } from "./StepResult";
 import ProcessingStep, { StepSetting } from "./steps/ProcessingFunction";
@@ -53,8 +53,14 @@ const processorOf = (
     image: cv.Mat,
     processingFunction: ProcessingStep<any>
   ): cv.Mat => {
-    var settings = settingsFor(processingFunction);
-    return processingFunction.process(image, settings);
+    try {
+      var settings = settingsFor(processingFunction);
+      return processingFunction.process(image, settings);
+    } catch (e) {
+      console.error("Failed to execute step: " + processingFunction.name, e);
+      return processingFunction.process(image, defaultSettings()[processingFunction.name])
+      // throw new Error("Failed to execute step: " + processingFunction.name);
+    }
   };
 
   return {

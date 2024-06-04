@@ -4,10 +4,7 @@ class ImageContours {
   contours: cv.MatVector;
   hierarchy: cv.Mat;
 
-  constructor(
-    contours: cv.MatVector,
-    hierarchy: cv.Mat,
-  ) {
+  constructor(contours: cv.MatVector, hierarchy: cv.Mat) {
     this.contours = contours;
     this.hierarchy = hierarchy;
   }
@@ -60,20 +57,16 @@ export const drawLargestContour = (
 ) => {
   const largestContourIndex = largestContourOf(contours);
 
-  let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3 );
+  let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
   for (let i = 0; i < contours.size(); ++i) {
     if (largestContourIndex != i) continue;
-    let color = new cv.Scalar(
-      Math.round(Math.random() * 255),
-      Math.round(Math.random() * 255),
-      Math.round(Math.random() * 255)
-    );
+    let color = new cv.Scalar(218, 65, 103); // Primary colour
     cv.drawContours(
       contourImg,
       contours,
       i,
       color,
-      1,
+      2,
       cv.LINE_8,
       hierarchy,
       100

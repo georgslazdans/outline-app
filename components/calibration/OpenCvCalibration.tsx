@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useDetails } from "@/context/DetailsContext";
+import { Context, useDetails } from "@/context/DetailsContext";
 import Settings, { defaultSettings } from "@/lib/opencv/Settings";
 import { ImageViewer } from "./ImageViewer";
 import StepResult from "@/lib/opencv/StepResult";
-import { OpenCvResult, OpenCvWork } from "@/lib/opencv/Worker";
+import { OpenCvWork } from "@/lib/opencv/Worker";
 import { useLoading } from "@/context/LoadingContext";
 import { Dictionary } from "@/app/dictionaries";
 import { OpenCvWorker } from "./OpenCvWorker";
@@ -14,6 +14,7 @@ import Button from "../Button";
 import { SettingsEditor } from "./SettingsEditor";
 import { ImageSelector } from "./ImageSelector";
 import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
+import deepEqual from "@/lib/Objects";
 
 type Props = {
   dictionary: Dictionary;
@@ -45,14 +46,30 @@ const previousStep = (allSteps: StepResult[], currentStep: StepResult) => {
   }
 };
 
+const settingsOf = (context: Context) => {
+  return context?.settings || defaultSettings();
+};
+
 export const OpenCvCalibration = ({ dictionary }: Props) => {
+  const { detailsContext, setDetailsContext } = useDetails();
+  const { setLoading } = useLoading();
+
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
   const [openCvWork, setOpenCvWork] = useState<OpenCvWork>();
   const [currentStep, setCurrentStep] = useState<StepResult>();
   const [settings, setSettings] = useState<Settings>(defaultSettings());
 
-  const { detailsContext } = useDetails();
-  const { setLoading } = useLoading();
+  const updateSettings = useCallback(
+    (context: Context) => {
+      if (
+        deepEqual(settings, defaultSettings()) &&
+        !deepEqual(settings, context.settings)
+      ) {
+        setSettings(settingsOf(context));
+      }
+    },
+    [settings]
+  );
 
   const updateStepResults = useCallback((newResult: StepResult[]) => {
     setStepResults((previousResult) => {
@@ -99,25 +116,28 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const updateAllWorkData = useCallback(() => {
     setLoading(true);
-    const imageData =
-      detailsContext?.imageData ||
-      (typeof window !== "undefined" ? new ImageData(1, 1) : null);
+    if (detailsContext) {
+      const imageData =
+        detailsContext?.imageData ||
+        (typeof window !== "undefined" ? new ImageData(1, 1) : null);
 
-    const workData: OpenCvWork = {
-      type: "all",
-      data: {
-        imageData: imageData,
-        settings: settings,
-      },
-    };
-    setOpenCvWork(workData);
-  }, [detailsContext, settings, setLoading]);
+      const workData: OpenCvWork = {
+        type: "all",
+        data: {
+          imageData: imageData,
+          settings: settingsOf(detailsContext),
+        },
+      };
+      setOpenCvWork(workData);
+    }
+  }, [detailsContext, setLoading]);
 
   useEffect(() => {
     if (!openCvWork && detailsContext) {
       updateAllWorkData();
+      updateSettings(detailsContext);
     }
-  }, [detailsContext, openCvWork, updateAllWorkData]);
+  }, [detailsContext, openCvWork, updateAllWorkData, updateSettings]);
 
   useEffect(() => {
     if (!currentStep && stepResults && stepResults.length > 0) {
@@ -130,12 +150,17 @@ export const OpenCvCalibration = ({ dictionary }: Props) => {
   };
 
   const handleSettingsChange = (stepSetting: StepSetting) => {
-    setSettings((settings) => {
-      return {
-        ...settings,
-        [currentStep!.stepName]: stepSetting,
-      };
-    });
+    const saveSettings = (settings: Settings) => {
+      const newDetails = { ...detailsContext, settings: settings };
+      setDetailsContext(newDetails);
+    };
+
+    const updatedSettings = {
+      ...settings,
+      [currentStep!.stepName]: stepSetting,
+    };
+    setSettings(updatedSettings);
+    saveSettings(updatedSettings);
   };
 
   return (

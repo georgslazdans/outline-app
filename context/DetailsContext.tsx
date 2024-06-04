@@ -1,6 +1,8 @@
 "use client";
 
 import Details from "@/lib/Details";
+import deepEqual from "@/lib/Objects";
+import Settings from "@/lib/opencv/Settings";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -11,7 +13,7 @@ import {
   Dispatch,
   useEffect,
 } from "react";
-import {  useIndexedDB } from "react-indexed-db-hook";
+import { useIndexedDB } from "react-indexed-db-hook";
 
 const DetailsContext = createContext<any>(null);
 
@@ -24,9 +26,10 @@ export type Context = {
   imageFile: Blob;
   imageData: ImageData;
   details: Details;
+  settings: Settings;
 };
 
-export const DetailsProvider = ({ children }: Props) => {
+const DetailsProvider = ({ children }: Props) => {
   const router = useRouter();
   const [detailsContext, setDetailsContext] = useState<Context>();
   const { getAll } = useIndexedDB("details");
@@ -55,3 +58,5 @@ export const useDetails = (): {
   detailsContext: Context;
   setDetailsContext: Dispatch<SetStateAction<Context>>;
 } => useContext(DetailsContext);
+
+export default DetailsProvider;

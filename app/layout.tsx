@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { DetailsProvider } from "@/context/DetailsContext";
 import { LoadingProvider } from "@/context/LoadingContext";
 import { getDictionary } from "./dictionaries";
-import IndexedDbContext from "@/context/IndexedDbContext";
-import { initDB } from "react-indexed-db-hook";
-import { DBConfig } from "@/lib/DbConfig";
+import dynamic from "next/dynamic";
 
-
+const IndexedDbContext = dynamic(() => import("@/context/IndexedDbContext"), {
+  ssr: false,
+});
+const DetailsProvider = dynamic(() => import("@/context/DetailsContext"), {
+  ssr: false,
+});
 
 export const metadata: Metadata = {
   title: "Outline App",
