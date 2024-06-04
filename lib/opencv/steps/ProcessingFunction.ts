@@ -1,9 +1,15 @@
 import * as cv from "@techstark/opencv-js";
-import Settings from "../Settings";
 import ColorSpace from "../ColorSpace";
 import StepName from "./StepName";
+import Point from "@/lib/Point";
 
-export type Process<T extends StepSetting> = (image: cv.Mat, settings: T) => cv.Mat;
+export type ProcessResult = {
+  image: cv.Mat,
+  points?: Point[],
+  debugImage?: cv.Mat
+}
+
+export type Process<T extends StepSetting> = (image: cv.Mat, settings: T) => ProcessResult;
 
 export type StepSetting = {
   [key: string]: any;

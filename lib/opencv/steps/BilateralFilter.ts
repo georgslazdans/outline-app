@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process } from "./ProcessingFunction";
+import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
 import StepName from "./StepName";
 
@@ -12,7 +12,7 @@ type BilateralFilterSettings = {
 const bilateralFilter: Process<BilateralFilterSettings> = (
   image: cv.Mat,
   settings: BilateralFilterSettings
-): cv.Mat => {
+): ProcessResult => {
   let converted = new cv.Mat();
   let filtered = new cv.Mat();
   cv.cvtColor(image, converted, cv.COLOR_RGBA2RGB, 0);
@@ -28,7 +28,7 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
 
   cv.cvtColor(filtered, converted, cv.COLOR_RGB2RGBA, 0);
   filtered.delete();
-  return converted;
+  return {image: converted};
 };
 
 const bilateralFilterFunction: ProcessingStep<BilateralFilterSettings> = {

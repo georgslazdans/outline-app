@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process } from "./ProcessingFunction";
+import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
 import StepName from "./StepName";
 
@@ -11,10 +11,10 @@ type CannySettings = {
 const cannyOf: Process<CannySettings> = (
   image: cv.Mat,
   settings: CannySettings
-): cv.Mat => {
+): ProcessResult => {
   let canny = new cv.Mat();
   cv.Canny(image, canny, settings.firstThreshold, settings.secondThreshold);
-  return canny;
+  return { image: canny };
 };
 
 const cannyFunction: ProcessingStep<CannySettings> = {

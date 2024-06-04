@@ -88,6 +88,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
       {simpleMode && detailsContext && (
         <SimpleCalibration
           dictionary={dictionary}
+          stepResults={stepResults}
           settings={detailsContext.settings}
           openAdvancedMode={() => setSimpleMode(false)}
         ></SimpleCalibration>

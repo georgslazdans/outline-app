@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process } from "./ProcessingFunction";
+import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
 import { pointsFrom } from "../../Point";
 import cannyFunction from "./Canny";
@@ -16,8 +16,8 @@ type ExtractPaperSettings = {
 export const extractPaperFrom: Process<ExtractPaperSettings> = (
   image: cv.Mat,
   settings: ExtractPaperSettings
-): cv.Mat => {
-  const canny = cannyOf(image, settings.cannySettings);
+): ProcessResult => {
+  const canny = cannyOf(image, settings.cannySettings).image;
   const { contours, hierarchy } = contoursOf(canny);
 
   const contourIndex = largestContourOf(contours);
@@ -25,14 +25,14 @@ export const extractPaperFrom: Process<ExtractPaperSettings> = (
     console.log("Contours not found!", this);
     const result = new cv.Mat();
     image.copyTo(result);
-    return result;
+    return {image: result};
   }
   const result = wrapImage(contours.get(contourIndex), image);
 
   contours.delete();
   hierarchy.delete();
   canny.delete();
-  return result;
+  return {image: result};
 };
 
 // TODO this needs to have a landscape vs portrait mode

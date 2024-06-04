@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process } from "./ProcessingFunction";
+import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
 import {
   contoursOf,
@@ -22,18 +22,21 @@ type ExtractObjectSettings = {
 const extractObjectFrom: Process<ExtractObjectSettings> = (
   image: cv.Mat,
   settings: ExtractObjectSettings
-): cv.Mat => {
-  const objectContours = contoursOf(cannyOf(image, settings.cannySettings));
+): ProcessResult => {
+  const objectContours = contoursOf(
+    cannyOf(image, settings.cannySettings).image
+  );
 
   const countourIndex = largestContourOf(objectContours.contours);
   if (!countourIndex) {
     console.log("Object contour not found!", this);
     const result = new cv.Mat();
     image.copyTo(result);
-    return result;
+    return { image: result };
   }
   // Output smoothing should be optional in the last step
-  let resultingContour = smoothOf(objectContours.contours.get(countourIndex));
+  // let resultingContour = smoothOf(objectContours.contours.get(countourIndex));
+  let resultingContour = objectContours.contours.get(countourIndex);
 
   // TODO this image is only for debugging?
   // The SVG should be visible in the editor, but might need a preview, when skiping initializing threejs when just exporting svg?
@@ -45,7 +48,9 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   );
   const points = pointsFrom(resultingContour, 4);
 
-  return resultingImage;
+  objectContours.delete();
+
+  return { image: resultingImage, points: points };
 };
 
 const extractObjectFunction: ProcessingStep<ExtractObjectSettings> = {

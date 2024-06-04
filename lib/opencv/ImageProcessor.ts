@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import Settings, { defaultSettings } from "./Settings";
 
 import { StepResult } from "./StepResult";
-import ProcessingStep, { StepSetting } from "./steps/ProcessingFunction";
+import ProcessingStep, { ProcessResult, StepSetting } from "./steps/ProcessingFunction";
 import bilateralFilterFunction from "./steps/BilateralFilter";
 import grayScaleFunction from "./steps/GrayScale";
 import blurFunction from "./steps/Blur";
@@ -11,7 +11,6 @@ import extractPaperFunction from "./steps/ExtractPaper";
 import extractObjectFunction from "./steps/ExtractObject";
 import imageDataOf, { imageOf } from "./ImageData";
 import ColorSpace from "./ColorSpace";
-import { comma } from "postcss/lib/list";
 
 export type ProcessAll = {
   imageData: ImageData;
@@ -52,13 +51,14 @@ const processorOf = (
   const processStep = (
     image: cv.Mat,
     processingFunction: ProcessingStep<any>
-  ): cv.Mat => {
+  ): ProcessResult => {
     try {
       var settings = settingsFor(processingFunction);
       return processingFunction.process(image, settings);
     } catch (e) {
       console.error("Failed to execute step: " + processingFunction.name, e);
-      return processingFunction.process(image, defaultSettings()[processingFunction.name])
+      // Rerun with default settings!
+      return processingFunction.process(image, processingFunction.settings)
       // throw new Error("Failed to execute step: " + processingFunction.name);
     }
   };
@@ -69,11 +69,13 @@ const processorOf = (
       const intermediateImages: any[] = [];
       let currentImage = image;
       for (const step of processingFunctions) {
-        currentImage = processStep(currentImage, step);
+        const result = processStep(currentImage, step);
+        currentImage = result.image;
         stepData.push({
           stepName: step.name,
-          imageData: imageDataOf(currentImage),
+          imageData: imageDataOf(result.image),
           imageColorSpace: step.imageColorSpace,
+          points: result.points
         });
         intermediateImages.push(currentImage);
       }

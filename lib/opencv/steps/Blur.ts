@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process } from "./ProcessingFunction";
+import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
 import StepName from "./StepName";
 
@@ -8,21 +8,21 @@ type BlurSettings = {
 };
 
 const blurOf: Process<BlurSettings> = (
-    image: cv.Mat,
-    settings: BlurSettings
-  ): cv.Mat => {
-    const blurWidth = settings.blurWidth;
-    let blurred = new cv.Mat();
-    cv.GaussianBlur(
-      image,
-      blurred,
-      new cv.Size(blurWidth, blurWidth),
-      0,
-      0,
-      cv.BORDER_DEFAULT
-    );
-    return blurred;
-  };
+  image: cv.Mat,
+  settings: BlurSettings
+): ProcessResult => {
+  const blurWidth = settings.blurWidth;
+  let blurred = new cv.Mat();
+  cv.GaussianBlur(
+    image,
+    blurred,
+    new cv.Size(blurWidth, blurWidth),
+    0,
+    0,
+    cv.BORDER_DEFAULT
+  );
+  return { image: blurred };
+};
 
 const blurFunction: ProcessingStep<BlurSettings> = {
   name: StepName.BLUR,
