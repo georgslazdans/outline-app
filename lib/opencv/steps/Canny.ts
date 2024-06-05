@@ -17,7 +17,7 @@ const cannyOf: Process<CannySettings> = (
   return { image: canny };
 };
 
-const cannyFunction: ProcessingStep<CannySettings> = {
+const cannyStep: ProcessingStep<CannySettings> = {
   name: StepName.CANNY,
   settings: {
     firstThreshold: 100,
@@ -27,4 +27,4 @@ const cannyFunction: ProcessingStep<CannySettings> = {
   process: cannyOf,
 };
 
-export default cannyFunction;
+export default cannyStep;

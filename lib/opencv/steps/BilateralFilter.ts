@@ -31,7 +31,7 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
   return {image: converted};
 };
 
-const bilateralFilterFunction: ProcessingStep<BilateralFilterSettings> = {
+const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
   name: StepName.BILETERAL_FILTER,
   settings: {
     pixelDiameter: 9,
@@ -42,4 +42,4 @@ const bilateralFilterFunction: ProcessingStep<BilateralFilterSettings> = {
   process: bilateralFilter,
 };
 
-export default bilateralFilterFunction;
+export default bilateralFilterStep;

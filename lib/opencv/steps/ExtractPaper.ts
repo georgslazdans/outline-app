@@ -2,12 +2,12 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
 import Point, { pointsFrom } from "../../Point";
-import cannyFunction from "./Canny";
+import cannyStep from "./Canny";
 import { contoursOf, largestContourOf } from "../Contours";
 import StepName from "./StepName";
 
-const cannyOf = cannyFunction.process;
-type CannySettings = typeof cannyFunction.settings;
+const cannyOf = cannyStep.process;
+type CannySettings = typeof cannyStep.settings;
 
 type ExtractPaperSettings = {
   cannySettings: CannySettings;
@@ -108,7 +108,7 @@ const wrapImage = (cornerPoints: Point[], src: cv.Mat) => {
   return warped;
 };
 
-const extractPaperFunction: ProcessingStep<ExtractPaperSettings> = {
+const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
   name: StepName.EXTRACT_PAPER,
   settings: {
     cannySettings: {
@@ -120,4 +120,4 @@ const extractPaperFunction: ProcessingStep<ExtractPaperSettings> = {
   process: extractPaperFrom,
 };
 
-export default extractPaperFunction;
+export default extractPaperStep;

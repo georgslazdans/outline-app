@@ -23,7 +23,7 @@ const thresholdOf: Process<ThresholdSettings> = (
   return { image: threshold };
 };
 
-const thresholdFunction: ProcessingStep<ThresholdSettings> = {
+const thresholdStep: ProcessingStep<ThresholdSettings> = {
   name: StepName.THRESHOLD,
   settings: {
     threshold: 100,
@@ -33,4 +33,4 @@ const thresholdFunction: ProcessingStep<ThresholdSettings> = {
   process: thresholdOf,
 };
 
-export default thresholdFunction;
+export default thresholdStep;

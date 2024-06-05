@@ -14,11 +14,11 @@ const grayScaleOf: Process<GrayScaleSettings> = (
   return { image: gray };
 };
 
-const grayScaleFunction: ProcessingStep<GrayScaleSettings> = {
+const grayScaleStep: ProcessingStep<GrayScaleSettings> = {
   name: StepName.GRAY_SCALE,
   settings: {},
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: grayScaleOf,
 };
 
-export default grayScaleFunction;
+export default grayScaleStep;

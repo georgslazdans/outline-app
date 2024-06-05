@@ -7,12 +7,12 @@ import {
   largestContourOf,
   smoothOf,
 } from "../Contours";
-import cannyFunction from "./Canny";
+import cannyStep from "./Canny";
 import { pointsFrom } from "../../Point";
 import StepName from "./StepName";
 
-const cannyOf = cannyFunction.process;
-type CannySettings = typeof cannyFunction.settings;
+const cannyOf = cannyStep.process;
+type CannySettings = typeof cannyStep.settings;
 
 type ExtractObjectSettings = {
   smoothOutline: boolean;
@@ -53,7 +53,7 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   return { image: resultingImage, points: points };
 };
 
-const extractObjectFunction: ProcessingStep<ExtractObjectSettings> = {
+const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
   name: StepName.EXTRACT_OBJECT,
   settings: {
     smoothOutline: true,
@@ -66,4 +66,4 @@ const extractObjectFunction: ProcessingStep<ExtractObjectSettings> = {
   process: extractObjectFrom,
 };
 
-export default extractObjectFunction;
+export default extractObjectStep;

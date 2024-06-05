@@ -1,14 +1,17 @@
 import * as cv from "@techstark/opencv-js";
-import Settings, { defaultSettings } from "./Settings";
+import Settings from "./Settings";
 
 import { StepResult } from "./StepResult";
-import ProcessingStep, { ProcessResult, StepSetting } from "./steps/ProcessingFunction";
-import bilateralFilterFunction from "./steps/BilateralFilter";
-import grayScaleFunction from "./steps/GrayScale";
-import blurFunction from "./steps/Blur";
-import thresholdFunction from "./steps/Threshold";
-import extractPaperFunction from "./steps/ExtractPaper";
-import extractObjectFunction from "./steps/ExtractObject";
+import ProcessingStep, {
+  ProcessResult,
+  StepSetting,
+} from "./steps/ProcessingFunction";
+import bilateralFilterStep from "./steps/BilateralFilter";
+import grayScaleStep from "./steps/GrayScale";
+import blurStep from "./steps/Blur";
+import thresholdStep from "./steps/Threshold";
+import extractPaperStep from "./steps/ExtractPaper";
+import extractObjectStep from "./steps/ExtractObject";
 import imageDataOf, { imageOf } from "./ImageData";
 import ColorSpace from "./ColorSpace";
 
@@ -25,19 +28,19 @@ export type ProccessStep = {
 };
 
 export const processingFunctions: ProcessingStep<any>[] = [
-  bilateralFilterFunction,
-  grayScaleFunction,
-  blurFunction,
-  thresholdFunction,
-  extractPaperFunction,
-  extractObjectFunction,
+  bilateralFilterStep,
+  grayScaleStep,
+  blurStep,
+  thresholdStep,
+  extractPaperStep,
+  extractObjectStep,
 ];
 
 const processorOf = (
-  processingFunctions: ProcessingStep<any>[],
+  processingSteps: ProcessingStep<any>[],
   settings: Settings
 ) => {
-  if (!processingFunctions || processingFunctions.length === 0) {
+  if (!processingSteps || processingSteps.length === 0) {
     throw new Error("No functions supplied to image processor");
   }
 
@@ -58,7 +61,7 @@ const processorOf = (
     } catch (e) {
       console.error("Failed to execute step: " + processingFunction.name, e);
       // Rerun with default settings!
-      return processingFunction.process(image, processingFunction.settings)
+      return processingFunction.process(image, processingFunction.settings);
       // throw new Error("Failed to execute step: " + processingFunction.name);
     }
   };
@@ -68,14 +71,14 @@ const processorOf = (
       const stepData: StepResult[] = [];
       const intermediateImages: any[] = [];
       let currentImage = image;
-      for (const step of processingFunctions) {
+      for (const step of processingSteps) {
         const result = processStep(currentImage, step);
         currentImage = result.image;
         stepData.push({
           stepName: step.name,
           imageData: imageDataOf(result.image),
           imageColorSpace: step.imageColorSpace,
-          points: result.points
+          points: result.points,
         });
         intermediateImages.push(currentImage);
       }
@@ -106,7 +109,7 @@ export const processStep = async (
 export const processImage = async (
   command: ProcessAll
 ): Promise<StepResult[]> => {
-  const image = cv.matFromImageData(command.imageData);
+  const image = imageOf(command.imageData, ColorSpace.RGBA);
   const steps = processorOf(processingFunctions, command.settings).process(
     image
   );

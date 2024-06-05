@@ -3,12 +3,12 @@ import InputField from "../InputField";
 import { Dictionary } from "@/app/dictionaries";
 import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
 import { ChangeEvent } from "react";
-import thresholdFunction from "@/lib/opencv/steps/Threshold";
-import blurFunction from "@/lib/opencv/steps/Blur";
+import thresholdStep from "@/lib/opencv/steps/Threshold";
+import blurStep from "@/lib/opencv/steps/Blur";
 import StepName from "@/lib/opencv/steps/StepName";
 
-const threshold = thresholdFunction.name;
-const blur = blurFunction.name;
+const threshold = thresholdStep.name;
+const blur = blurStep.name;
 
 type Props = {
   dictionary: Dictionary;

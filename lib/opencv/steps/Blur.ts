@@ -24,7 +24,7 @@ const blurOf: Process<BlurSettings> = (
   return { image: blurred };
 };
 
-const blurFunction: ProcessingStep<BlurSettings> = {
+const blurStep: ProcessingStep<BlurSettings> = {
   name: StepName.BLUR,
   settings: {
     blurWidth: 5,
@@ -33,4 +33,4 @@ const blurFunction: ProcessingStep<BlurSettings> = {
   process: blurOf,
 };
 
-export default blurFunction;
+export default blurStep;
