@@ -11,12 +11,14 @@ import { useCallback } from "react";
 import Svg from "@/lib/Svg";
 import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/Download";
+import { OutlineCheckViewer } from "./OutlineCheckViewer";
 
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
   openAdvancedMode: () => void;
   stepResults: StepResult[];
+  outlineCheckImage?: ImageData;
 };
 
 const SimpleCalibration = ({
@@ -24,6 +26,7 @@ const SimpleCalibration = ({
   settings,
   openAdvancedMode,
   stepResults,
+  outlineCheckImage,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
@@ -56,6 +59,7 @@ const SimpleCalibration = ({
 
   return (
     <>
+      <OutlineCheckViewer image={outlineCheckImage}></OutlineCheckViewer>
       <SimpleSettingsEditor
         dictionary={dictionary}
         settings={settings}

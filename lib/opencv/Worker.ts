@@ -7,6 +7,7 @@ import {
 import * as cv from "@techstark/opencv-js";
 import StepResult from "./StepResult";
 import { OpenCvWork, OpenCvResult, Status } from "./OpenCvWork";
+import outlineCheckImageOf from "./OutlineCheckImage";
 
 
 const processWork = async (work: OpenCvWork) => {
@@ -26,6 +27,7 @@ const processWork = async (work: OpenCvWork) => {
 const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
   let status: Status = "success";
   let stepResults: StepResult[] = [];
+  let image
   try {
     stepResults = await processWork(message);
   } catch (e) {
@@ -35,6 +37,7 @@ const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
   return {
     stepResults,
     status,
+    outlineCheckImage: outlineCheckImageOf(stepResults)
   };
 };
 

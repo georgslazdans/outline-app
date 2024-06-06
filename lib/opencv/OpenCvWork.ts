@@ -18,6 +18,7 @@ export type Status = "success" | "failed";
 export type OpenCvResult = {
   status: Status;
   stepResults: StepResult[];
+  outlineCheckImage: ImageData;
 };
 
 export const allWorkOf = (context: Context): OpenCvWork => {

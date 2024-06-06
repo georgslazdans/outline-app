@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import StepResult from "@/lib/opencv/StepResult";
+import Button from "../Button";
+import { downloadFile } from "@/lib/Download";
 
 type Props = {
   className?: string;
@@ -25,6 +27,15 @@ export const ImageViewer = ({ currentStep, className }: Props) => {
     drawImage();
   });
 
+  const downloadImage = useCallback(() => {
+    const canvas = canvasRef.current;
+    if(canvas && currentStep?.imageData) {
+        canvas.toBlob((blob) => {
+          downloadFile(blob!, "TestImage.png");
+        });
+    }
+  }, [currentStep?.imageData]);
+
   return (
     <div className={className}>
       <TransformWrapper>
@@ -37,6 +48,9 @@ export const ImageViewer = ({ currentStep, className }: Props) => {
           />
         </TransformComponent>
       </TransformWrapper>
+      <Button onClick={downloadImage}>
+        <label>Download Image</label>
+      </Button>
     </div>
   );
 };

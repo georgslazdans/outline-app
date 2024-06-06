@@ -7,7 +7,7 @@ import { OpenCvWork, OpenCvResult } from "@/lib/opencv/OpenCvWork";
 
 type Props = {
   message?: OpenCvWork;
-  onWorkerMessage: (stepResult: StepResult[]) => void;
+  onWorkerMessage: (stepResult: StepResult[], outlineCheckImage: ImageData) => void;
   onError: () => void;
 };
 
@@ -25,7 +25,7 @@ export const OpenCvWorker = ({ message, onWorkerMessage, onError }: Props) => {
       const result = event.data;
 
       if (result.status == "success") {
-        onWorkerMessage(result.stepResults);
+        onWorkerMessage(result.stepResults, result.outlineCheckImage);
       } else {
         onError();
       }

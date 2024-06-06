@@ -23,6 +23,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const [openCvWork, setOpenCvWork] = useState<OpenCvWork>();
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
+  const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
 
   const updateStepResults = useCallback((newResult: StepResult[]) => {
     setStepResults((previousResult) => {
@@ -42,9 +43,10 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   }, []);
 
   const handleOpenCvWork = useCallback(
-    (newResult: StepResult[]) => {
+    (newResult: StepResult[], outlineCheckImage: ImageData) => {
       setLoading(false);
       updateStepResults(newResult);
+      setOutlineCheckImage(outlineCheckImage);
     },
     [setLoading, updateStepResults]
   );
@@ -91,6 +93,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
           stepResults={stepResults}
           settings={detailsContext.settings}
           openAdvancedMode={() => setSimpleMode(false)}
+          outlineCheckImage={outlineCheckImage}
         ></SimpleCalibration>
       )}
       {!simpleMode && detailsContext && (
