@@ -19,7 +19,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const { setLoading } = useLoading();
 
-  const [simpleMode, setSimpleMode] = useState(false);
+  const [simpleMode, setSimpleMode] = useState(true);
 
   const [openCvWork, setOpenCvWork] = useState<OpenCvWork>();
   const [stepResults, setStepResults] = useState<StepResult[]>([]);

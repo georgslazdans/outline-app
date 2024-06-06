@@ -23,7 +23,7 @@ const coordinatesOfImage = (paperCorners: Point[]) => {
 };
 
 const coordinatesOfPaper = (paperWidth: number, paperHeight: number) => {
-  let dstCorners = cv.matFromArray(4, 1, cv.CV_32FC2, [
+  return cv.matFromArray(4, 1, cv.CV_32FC2, [
     0,
     0,
     paperWidth,
@@ -33,7 +33,6 @@ const coordinatesOfPaper = (paperWidth: number, paperHeight: number) => {
     0,
     paperHeight,
   ]);
-  return dstCorners;
 };
 
 const applyTransform = (
@@ -69,7 +68,8 @@ const imageWarper = () => {
 
               return result;
             },
-            reverseWarpImage: (image: cv.Mat) => {
+            // TODO image size should be the original, intead of the paper
+            reverseWarpImage: (image: cv.Mat, imageSize: cv.Size) => {
               const transformMatrix = cv.getPerspectiveTransform(
                 paperCorners,
                 imageCorners
@@ -79,7 +79,7 @@ const imageWarper = () => {
               imageCorners.delete();
               paperCorners.delete();
               transformMatrix.delete();
-              
+
               return result;
             },
           };

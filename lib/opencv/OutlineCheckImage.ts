@@ -18,19 +18,29 @@ const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
     return new ImageData(1, 1);
   }
 
+  const thresholdImage = imageOf(threshold.imageData, ColorSpace.RGBA);
   const objectImage = imageOf(extractObject.imageData, ColorSpace.RGBA);
-  const reverseWarped = reverseWarpedImageOf(extractPaper.points!, objectImage);
+  const reverseWarped = reverseWarpedImageOf(
+    extractPaper.points!,
+    objectImage,
+    thresholdImage.size()
+  );
 
-  const result = imageDataOf(reverseWarped);
+  const finalImage = new cv.Mat();
+  cv.add(thresholdImage, reverseWarped, finalImage);
+  const result = imageDataOf(finalImage);
 
   objectImage.delete();
   reverseWarped.delete();
 
   return result;
-  // From steps extract paper - get
 };
 
-const reverseWarpedImageOf = (cornerPoints: Point[], src: cv.Mat): cv.Mat => {
+const reverseWarpedImageOf = (
+  cornerPoints: Point[],
+  image: cv.Mat,
+  imageSize: cv.Size
+): cv.Mat => {
   const scale = 4;
   const paperWidth = 297 * scale;
   const paperHeight = 210 * scale;
@@ -38,7 +48,7 @@ const reverseWarpedImageOf = (cornerPoints: Point[], src: cv.Mat): cv.Mat => {
   return imageWarper()
     .withPaperSettings(paperWidth, paperHeight)
     .andPaperContour(cornerPoints)
-    .reverseWarpImage(src);
+    .reverseWarpImage(image, imageSize);
 };
 
 const thresholdResultOf = (steps: StepResult[]): StepResult => {

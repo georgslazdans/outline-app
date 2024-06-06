@@ -66,7 +66,7 @@ export const drawLargestContour = (
       contours,
       i,
       color,
-      2,
+      10,
       cv.LINE_8,
       hierarchy,
       100
