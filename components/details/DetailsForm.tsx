@@ -13,6 +13,7 @@ import { useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
 import { useLoading } from "@/context/LoadingContext";
 import { useIndexedDB } from "react-indexed-db-hook";
+import { defaultSettings } from "@/lib/opencv/Settings";
 
 type Props = {
   dictionary: any;
@@ -66,7 +67,7 @@ const DetailsForm = ({ dictionary }: Props) => {
         ...formData,
         orientation: formData.orientation as Orientation,
       },
-      
+      settings: defaultSettings()
     };
     delete newContext.id;
     add(newContext).then(

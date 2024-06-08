@@ -1,4 +1,11 @@
-import React, { ChangeEvent, HTMLInputTypeAttribute } from "react";
+"use client";
+import React, {
+  ChangeEvent,
+  HTMLInputTypeAttribute,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 type Props = {
   value?: string | number;
@@ -19,6 +26,21 @@ const InputField = ({
   className,
   onChange,
 }: Props) => {
+  // const debounceTime = 1000;
+  // const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
+
+  // const handleOnChange = useCallback(
+  //   (event: ChangeEvent<HTMLInputElement>) => {
+  //     clearTimeout(timeoutId);
+  //     const timeout = setTimeout(() => {
+  //       onChange(event);
+  //     }, debounceTime);
+  //     setTimeoutId(timeout);
+  //   },
+  //   [onChange, timeoutId]
+  // );
+
+  const inputWidth = type == "number" ? "w-20 " : "w-full";
   return (
     <div className={"flex flex-col " + className}>
       {label && (
@@ -26,15 +48,33 @@ const InputField = ({
           {label}
         </label>
       )}
-      <input
-        className="border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white p-1.5 pl-6 "
-        id={name}
-        type={type ? type : "text"}
-        value={value ? value : ""}
-        name={name}
-        placeholder={placeholder}
-        onChange={(event) => onChange(event)}
-      />
+      <div className="flex flex-row">
+        {type == "number" && (
+          <input
+            className="flex-grow ml-2 mr-4"
+            type="range"
+            id={name + "-slider"}
+            name={name + "-slider"}
+            min="0"
+            max="255"
+            onChange={(event) => onChange(event)}
+            value={value ? value : ""}
+          />
+        )}
+
+        <input
+          className={
+            `border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white 
+          p-1.5 pl-6 ` + inputWidth
+          }
+          id={name}
+          type={type ? type : "text"}
+          value={value ? value : ""}
+          name={name}
+          placeholder={placeholder}
+          onChange={(event) => onChange(event)}
+        />
+      </div>
     </div>
   );
 };

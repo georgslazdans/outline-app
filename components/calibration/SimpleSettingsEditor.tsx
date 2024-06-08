@@ -12,20 +12,29 @@ const blur = blurStep.name;
 
 type Props = {
   dictionary: Dictionary;
-  settings: Settings;
+  settings?: Settings;
   onChange: (stepName: StepName, stepSettings: StepSetting) => void;
+};
+
+const handleSliderName = (name: string) => {
+  return name.replace("-slider", "");
 };
 
 const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
   const handleOnChange = (stepName: StepName) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
+      const name = handleSliderName(event.target.name);
       const updatedSetting = {
         ...settings,
-        [event.target.name]: Number.parseInt(event.target.value),
+        [name]: Number.parseInt(event.target.value),
       };
       onChange(stepName, updatedSetting);
     };
   };
+
+  if (!settings) {
+    return <></>;
+  }
 
   return (
     <div>
