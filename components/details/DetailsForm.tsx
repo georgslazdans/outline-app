@@ -81,7 +81,7 @@ const DetailsForm = ({ dictionary }: Props) => {
   };
 
   return (
-    <form className="m-4 flex flex-col gap-4" onSubmit={onFormSave}>
+    <form className="m-4 flex flex-col gap-3" onSubmit={onFormSave}>
       <ContextImage dictionary={dictionary}></ContextImage>
       <InputField
         value={formData.name}
@@ -89,6 +89,7 @@ const DetailsForm = ({ dictionary }: Props) => {
         label={dictionary.details.name}
         name={"name"}
         type={"string"}
+        autofocus
       ></InputField>
       <SelectField
         label={dictionary.details.orientation}

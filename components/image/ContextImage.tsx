@@ -10,25 +10,22 @@ type Props = {
 const ContextImage = ({ dictionary }: Props) => {
   const { detailsContext } = useDetails();
 
-  if (!detailsContext || !detailsContext.imageFile) {
-    console.error("No image file loaded!");
-    return null;
+  let image = <div className="mx-auto h-[15vh]" />;
+  if (detailsContext && detailsContext.imageFile) {
+    const imageUrl = URL.createObjectURL(detailsContext.imageFile);
+    image = (
+      <img
+        className="mx-auto h-[15vh]"
+        src={imageUrl}
+        alt="Newly added image"
+      />
+    );
   }
-
-  const imageUrl = URL.createObjectURL(detailsContext.imageFile);
 
   return (
     <div className="flex flex-col">
       <label className="ml-4 mb-0.5">{dictionary.details.addedImage}</label>
-      <div className="flex items-center">
-        {imageUrl && (
-          <img
-            className="mx-auto max-h-[20vh]"
-            src={imageUrl}
-            alt="Newly added image"
-          />
-        )}
-      </div>
+      <div className="flex items-center">{image}</div>
     </div>
   );
 };

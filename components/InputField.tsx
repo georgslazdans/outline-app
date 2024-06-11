@@ -1,8 +1,5 @@
 "use client";
-import React, {
-  ChangeEvent,
-  HTMLInputTypeAttribute,
-} from "react";
+import React, { ChangeEvent, HTMLInputTypeAttribute } from "react";
 
 type Props = {
   value?: string | number;
@@ -12,6 +9,7 @@ type Props = {
   type?: HTMLInputTypeAttribute;
   className?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  autofocus?: boolean;
 };
 
 const InputField = ({
@@ -22,9 +20,10 @@ const InputField = ({
   type,
   className,
   onChange,
+  autofocus,
 }: Props) => {
   const inputWidth = type == "number" ? "w-20 " : "w-full";
-  
+
   return (
     <div className={"flex flex-col " + className}>
       {label && (
@@ -57,6 +56,7 @@ const InputField = ({
           name={name}
           placeholder={placeholder}
           onChange={(event) => onChange(event)}
+          autoFocus={autofocus}
         />
       </div>
     </div>
