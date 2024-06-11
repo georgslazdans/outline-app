@@ -19,6 +19,7 @@ type Props = {
   openAdvancedMode: () => void;
   stepResults: StepResult[];
   outlineCheckImage?: ImageData;
+  rerun: () => void;
 };
 
 const SimpleCalibration = ({
@@ -27,6 +28,7 @@ const SimpleCalibration = ({
   openAdvancedMode,
   stepResults,
   outlineCheckImage,
+  rerun,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
@@ -74,6 +76,9 @@ const SimpleCalibration = ({
         </Button>
       </div>
       <div className="flex gap-4 mt-4">
+        <Button onClick={() => rerun()}>
+          <label>{dictionary.calibration.rerun}</label>
+        </Button>
         <Button onClick={() => {}}>
           <label>{dictionary.calibration.done}</label>
         </Button>

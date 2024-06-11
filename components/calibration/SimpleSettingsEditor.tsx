@@ -25,7 +25,7 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const name = handleSliderName(event.target.name);
       const updatedSetting = {
-        ...settings,
+        ...settings![stepName],
         [name]: Number.parseInt(event.target.value),
       };
       onChange(stepName, updatedSetting);

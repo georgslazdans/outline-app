@@ -2,9 +2,6 @@
 import React, {
   ChangeEvent,
   HTMLInputTypeAttribute,
-  useCallback,
-  useEffect,
-  useState,
 } from "react";
 
 type Props = {
@@ -26,21 +23,8 @@ const InputField = ({
   className,
   onChange,
 }: Props) => {
-  // const debounceTime = 1000;
-  // const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
-
-  // const handleOnChange = useCallback(
-  //   (event: ChangeEvent<HTMLInputElement>) => {
-  //     clearTimeout(timeoutId);
-  //     const timeout = setTimeout(() => {
-  //       onChange(event);
-  //     }, debounceTime);
-  //     setTimeoutId(timeout);
-  //   },
-  //   [onChange, timeoutId]
-  // );
-
   const inputWidth = type == "number" ? "w-20 " : "w-full";
+  
   return (
     <div className={"flex flex-col " + className}>
       {label && (
