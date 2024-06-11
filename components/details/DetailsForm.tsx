@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useLoading } from "@/context/LoadingContext";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { defaultSettings } from "@/lib/opencv/Settings";
+import ContextImage from "../image/ContextImage";
 
 type Props = {
   dictionary: any;
@@ -67,7 +68,7 @@ const DetailsForm = ({ dictionary }: Props) => {
         ...formData,
         orientation: formData.orientation as Orientation,
       },
-      settings: defaultSettings()
+      settings: defaultSettings(),
     };
     delete newContext.id;
     add(newContext).then(
@@ -81,6 +82,7 @@ const DetailsForm = ({ dictionary }: Props) => {
 
   return (
     <form className="m-4 flex flex-col gap-4" onSubmit={onFormSave}>
+      <ContextImage dictionary={dictionary}></ContextImage>
       <InputField
         value={formData.name}
         onChange={handleChange}

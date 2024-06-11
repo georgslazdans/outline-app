@@ -7,6 +7,7 @@
   "processing": "Processing...",
   "details": {
     "title": "Details",
+    "addedImage": "Added Image",
     "name": "Name",
     "orientation": "Orientation",
     "paperSize": "Paper Size",

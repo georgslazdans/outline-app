@@ -9,8 +9,9 @@ export default async function Details() {
     <main className="flex min-h-full flex-col items-center justify-between p-4">
       <div className="z-10 w-full max-w-5xl items-center justify-between mt-2">
         <h1 className="text-center p-2">{dictionary.details.title}</h1>
+
+      
         <DetailsForm dictionary={dictionary}></DetailsForm>
-        <ContextImage></ContextImage>
       </div>
     </main>
   );
