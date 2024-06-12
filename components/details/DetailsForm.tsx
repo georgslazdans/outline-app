@@ -1,9 +1,9 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import InputField from "../InputField";
+import InputField from "../fiields/InputField";
 import Button from "../Button";
-import SelectField from "../SelectField";
+import SelectField from "../fiields/SelectField";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSize, {
   PaperDimensions,
@@ -15,6 +15,7 @@ import { useLoading } from "@/context/LoadingContext";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { defaultSettings } from "@/lib/opencv/Settings";
 import ContextImage from "../image/ContextImage";
+import NumberField from "../fiields/NumberField";
 
 type Props = {
   dictionary: any;
@@ -105,20 +106,18 @@ const DetailsForm = ({ dictionary }: Props) => {
         value={paperSize}
         onChange={handlePaperSizeChange}
       ></SelectField>
-      <InputField
+      <NumberField
         value={formData.width}
         onChange={handleChange}
         label={dictionary.details.width}
         name={"width"}
-        type={"number"}
-      ></InputField>
-      <InputField
+      ></NumberField>
+      <NumberField
         value={formData.height}
         onChange={handleChange}
         label={dictionary.details.height}
         name={"height"}
-        type={"number"}
-      ></InputField>
+      ></NumberField>
       <Button className="mt-4">
         <label>{dictionary.details.findOutline}</label>
       </Button>

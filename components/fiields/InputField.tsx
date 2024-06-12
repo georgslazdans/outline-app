@@ -22,8 +22,6 @@ const InputField = ({
   onChange,
   autofocus,
 }: Props) => {
-  const inputWidth = type == "number" ? "w-20 " : "w-full";
-
   return (
     <div className={"flex flex-col " + className}>
       {label && (
@@ -32,24 +30,9 @@ const InputField = ({
         </label>
       )}
       <div className="flex flex-row">
-        {type == "number" && (
-          <input
-            className="flex-grow ml-2 mr-4"
-            type="range"
-            id={name + "-slider"}
-            name={name + "-slider"}
-            min="0"
-            max="255"
-            onChange={(event) => onChange(event)}
-            value={value ? value : ""}
-          />
-        )}
-
         <input
-          className={
-            `border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white 
-          p-1.5 pl-6 ` + inputWidth
-          }
+          className="border-4 rounded-[64px] bg-white dark:bg-black 
+          border-black dark:border-white p-1.5 pl-6 w-full"
           id={name}
           type={type ? type : "text"}
           value={value ? value : ""}

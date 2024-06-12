@@ -1,5 +1,5 @@
 import Settings from "@/lib/opencv/Settings";
-import InputField from "../InputField";
+import InputField from "../fiields/InputField";
 import { Dictionary } from "@/app/dictionaries";
 import StepName from "@/lib/opencv/steps/StepName";
 import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
@@ -41,16 +41,20 @@ export const AdvancedSettingsEditor = ({
     };
   };
 
+  const settingLabel = (key: string) => {
+    //@ts-ignore
+    return dictionary.calibration.stepSettings[key];
+  };
+
   return (
     <div>
       <h2 className="text-center p-2">{dictionary.calibration.settings}</h2>
       {currentSetting &&
         Object.keys(currentSetting).map((key) => {
           return (
-            /* TODO add label from dictionary */
             <InputField
               key={key}
-              label={key}
+              label={settingLabel(key)}
               name={`${key}`}
               value={currentSetting[key]}
               onChange={handleOnChange(key)}

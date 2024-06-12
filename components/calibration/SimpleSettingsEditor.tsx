@@ -1,11 +1,12 @@
 import Settings from "@/lib/opencv/Settings";
-import InputField from "../InputField";
+import InputField from "../fiields/InputField";
 import { Dictionary } from "@/app/dictionaries";
 import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
 import { ChangeEvent } from "react";
 import thresholdStep from "@/lib/opencv/steps/Threshold";
 import blurStep from "@/lib/opencv/steps/Blur";
 import StepName from "@/lib/opencv/steps/StepName";
+import NumberField from "../fiields/NumberField";
 
 const threshold = thresholdStep.name;
 const blur = blurStep.name;
@@ -16,17 +17,12 @@ type Props = {
   onChange: (stepName: StepName, stepSettings: StepSetting) => void;
 };
 
-const handleSliderName = (name: string) => {
-  return name.replace("-slider", "");
-};
-
 const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
   const handleOnChange = (stepName: StepName) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
-      const name = handleSliderName(event.target.name);
       const updatedSetting = {
         ...settings![stepName],
-        [name]: Number.parseInt(event.target.value),
+        [event.target.name]: Number.parseInt(event.target.value),
       };
       onChange(stepName, updatedSetting);
     };
@@ -39,20 +35,24 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
   return (
     <div>
       <h2 className="text-center p-2">{dictionary.calibration.settings}</h2>
-      <InputField
-        label={threshold}
+      <NumberField
+        label={dictionary.calibration.stepSettings.threshold}
         name={`threshold`}
         value={settings[threshold].threshold}
         onChange={handleOnChange(threshold)}
-        type="number"
+        slider
       />
-      <InputField
+      <NumberField
         className="mt-2"
-        label={blur}
+        label={dictionary.calibration.stepSettings.blurWidth}
         name={`blurWidth`}
         value={settings[blur].blurWidth}
         onChange={handleOnChange(blur)}
-        type="number"
+        slider
+        numberRange={{
+          min: 0,
+          max: 25,
+        }}
       />
     </div>
   );

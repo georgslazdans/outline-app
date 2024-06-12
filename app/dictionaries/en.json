@@ -36,6 +36,16 @@
       "grayScale": "Gray Scale",
       "threshold": "Threshold"
     },
+    "stepSettings": {
+      "pixelDiameter": "Pixel Diameter",
+      "sigmaColor": "Sigma Color",
+      "sigmaSpace": "Sigma Space",
+      "blurWidth": "Blur Size (px)",
+      "threshold": "Threshold",
+      "maxValue": "Max Value",
+      "cannySettings": "Canny Settings",
+      "smoothOutline": "Smooth Outline"
+    },
     "settings": "Settings",
     "advancedSettings": "Advanced Settings",
     "exportSvg": "Export SVG",
