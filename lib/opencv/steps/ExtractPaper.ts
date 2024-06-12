@@ -3,15 +3,18 @@ import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
 import Point, { pointsFrom } from "../../Point";
 import cannyStep from "./Canny";
-import { contoursOf, drawAllContours, drawLargestContour, largestContourOf } from "../Contours";
+import { contoursOf, largestContourOf } from "../Contours";
 import StepName from "./StepName";
 import imageWarper from "../ImageWarper";
+import { PaperSettings } from "../Settings";
+import Orientation from "@/lib/Orientation";
 
 const cannyOf = cannyStep.process;
 type CannySettings = typeof cannyStep.settings;
 
 type ExtractPaperSettings = {
   cannySettings: CannySettings;
+  paperSettings: PaperSettings;
 };
 
 export const extractPaperFrom: Process<ExtractPaperSettings> = (
@@ -33,7 +36,7 @@ export const extractPaperFrom: Process<ExtractPaperSettings> = (
   const smoothedContour = smoothContour(contours.get(contourIndex!));
   const cornerPoints = pointsFrom(smoothedContour);
 
-  const result = warpedImageOf(cornerPoints, image);
+  const result = warpedImageOf(cornerPoints, image, settings.paperSettings);
 
   contours.delete();
   hierarchy.delete();
@@ -50,16 +53,32 @@ const smoothContour = (contour: cv.Mat) => {
   return result;
 };
 
+const paperWidthOf = (paperSettings: PaperSettings) => {
+  return paperSettings.orientation == Orientation.PORTRAIT
+    ? paperSettings.width
+    : paperSettings.height;
+};
+
+const paperHeightOf = (paperSettings: PaperSettings) => {
+  return paperSettings.orientation == Orientation.PORTRAIT
+    ? paperSettings.height
+    : paperSettings.width;
+};
+
 // TODO this needs to have a landscape vs portrait mode
-const warpedImageOf = (cornerPoints: Point[], src: cv.Mat): cv.Mat => {
+const warpedImageOf = (
+  cornerPoints: Point[],
+  src: cv.Mat,
+  paperSettings: PaperSettings
+): cv.Mat => {
   const scale = 4;
-  const paperWidth = 297 * scale;
-  const paperHeight = 210 * scale;
+  const paperWidth = paperWidthOf(paperSettings) * scale;
+  const paperHeight = paperHeightOf(paperSettings) * scale;
 
   return imageWarper()
-  .withPaperSettings(paperWidth, paperHeight)
-  .andPaperContour(cornerPoints)
-  .warpImage(src);
+    .withPaperSize(paperWidth, paperHeight)
+    .andPaperContour(cornerPoints)
+    .warpImage(src);
 };
 
 const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
@@ -69,6 +88,11 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
       firstThreshold: 100,
       secondThreshold: 200,
     },
+    paperSettings: {
+      width: 210,
+      height: 297,
+      orientation: Orientation.LANDSCAPE
+    }
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: extractPaperFrom,

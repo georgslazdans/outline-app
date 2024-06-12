@@ -48,7 +48,7 @@ const reverseWarpedImageOf = (
   const paperHeight = 210 * scale;
 
   return imageWarper()
-    .withPaperSettings(paperWidth, paperHeight)
+    .withPaperSize(paperWidth, paperHeight)
     .andPaperContour(cornerPoints)
     .reverseWarpImage(image, imageSize);
 };

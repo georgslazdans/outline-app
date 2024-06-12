@@ -20,6 +20,7 @@ interface ProcessingStep<T extends StepSetting> {
   settings: T;
   imageColorSpace: ColorSpace;
   process: Process<T>;
+  config?: any;
 }
 
 export default ProcessingStep;

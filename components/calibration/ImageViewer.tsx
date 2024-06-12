@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import StepResult from "@/lib/opencv/StepResult";
 import Button from "../Button";
-import { downloadFile } from "@/lib/Download";
+import { downloadFile } from "@/lib/utils/Download";
 
 type Props = {
   className?: string;

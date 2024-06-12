@@ -1,4 +1,4 @@
-import Options from "./Options";
+import Options from "./utils/Options";
 
 enum Orientation {
   PORTRAIT = "portrait",
@@ -7,6 +7,6 @@ enum Orientation {
 
 const dictionaryPath = "orientation";
 
-export const orientationOptionsFor = (dictionary: any) => Options.of(Orientation).with(dictionary, dictionaryPath);
+export const orientationOptionsFor = (dictionary: any) => Options.of(Orientation).withTranslation(dictionary, dictionaryPath);
 
 export default Orientation;

@@ -10,7 +10,7 @@ import StepName from "@/lib/opencv/steps/StepName";
 import { useCallback } from "react";
 import Svg from "@/lib/Svg";
 import StepResult from "@/lib/opencv/StepResult";
-import { downloadFile } from "@/lib/Download";
+import { downloadFile } from "@/lib/utils/Download";
 import { OutlineCheckViewer } from "./OutlineCheckViewer";
 
 type Props = {

@@ -38,6 +38,20 @@ const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
     sigmaColor: 75,
     sigmaSpace: 75,
   },
+  config: {
+    pixelDiameter: {
+      min:3,
+      max: 10
+    },
+    sigmaColor: {
+      min:3,
+      max: 10
+    },
+    sigmaSpace: {
+      min:3,
+      max: 10
+    },
+  },
   imageColorSpace: ColorSpace.RGBA,
   process: bilateralFilter,
 };

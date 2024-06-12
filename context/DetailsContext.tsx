@@ -1,7 +1,7 @@
 "use client";
 
 import Details from "@/lib/Details";
-import deepEqual from "@/lib/Objects";
+import deepEqual from "@/lib/utils/Objects";
 import Settings from "@/lib/opencv/Settings";
 import { useRouter } from "next/navigation";
 import {

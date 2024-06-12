@@ -10,7 +10,7 @@ import StepResult from "@/lib/opencv/StepResult";
 import { useDetails } from "@/context/DetailsContext";
 import { OpenCvWork, allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
 import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
-import deepEqual from "@/lib/Objects";
+import deepEqual from "@/lib/utils/Objects";
 import { processingSteps } from "@/lib/opencv/ImageProcessor";
 
 type Props = {

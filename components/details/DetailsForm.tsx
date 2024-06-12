@@ -37,7 +37,7 @@ const DetailsForm = ({ dictionary }: Props) => {
   const [paperSize, setPaperSize] = useState("A4");
   const [formData, setFormData] = useState<Form>({
     name: "",
-    orientation: Orientation.PORTRAIT,
+    orientation: Orientation.LANDSCAPE,
     width: 210,
     height: 297,
   });
@@ -46,30 +46,43 @@ const DetailsForm = ({ dictionary }: Props) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
+  const handlePaperChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const size = event.target.value;
+    setPaperSize(size);
+    if (size != "custom") {
+      const dimensions = PaperDimensions[size as PaperSize];
+      setFormData({
+        ...formData,
+        width: dimensions.width,
+        height: dimensions.height,
+      });
+    }
+  };
+
   const handlePaperSizeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const size = event.target.value;
-    setPaperSize(size);
-    const dimensions = PaperDimensions[size as PaperSize];
-    setFormData({
-      ...formData,
-      width: dimensions.width,
-      height: dimensions.height,
-    });
+    setPaperSize("custom");
+    handleChange(event);
   };
 
   const onFormSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
 
+    const settings = defaultSettings();
+    settings.extractPaper.paperSettings = {
+      width: formData.width,
+      height: formData.height,
+      orientation: formData.orientation as Orientation,
+    }
     const newContext = {
       ...detailsContext,
       details: {
         ...formData,
         orientation: formData.orientation as Orientation,
       },
-      settings: defaultSettings(),
+      settings: settings,
     };
     delete newContext.id;
     add(newContext).then(
@@ -104,17 +117,17 @@ const DetailsForm = ({ dictionary }: Props) => {
         name={"paperSize"}
         options={paperSizeOptionsFor(dictionary)}
         value={paperSize}
-        onChange={handlePaperSizeChange}
+        onChange={handlePaperChange}
       ></SelectField>
       <NumberField
         value={formData.width}
-        onChange={handleChange}
+        onChange={handlePaperSizeChange}
         label={dictionary.details.width}
         name={"width"}
       ></NumberField>
       <NumberField
         value={formData.height}
-        onChange={handleChange}
+        onChange={handlePaperSizeChange}
         label={dictionary.details.height}
         name={"height"}
       ></NumberField>

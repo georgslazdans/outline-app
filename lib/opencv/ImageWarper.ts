@@ -47,7 +47,7 @@ const applyTransform = (
 
 const imageWarper = () => {
   return {
-    withPaperSettings: (width: number, height: number) => {
+    withPaperSize: (width: number, height: number) => {
       const paperCorners = coordinatesOfPaper(width, height);
       const imageSize = new cv.Size(width, height);
 
