@@ -30,6 +30,8 @@ const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
   cv.add(thresholdImage, reverseWarped, finalImage);
   const result = imageDataOf(finalImage);
 
+  finalImage.delete();
+  thresholdImage.delete();
   objectImage.delete();
   reverseWarped.delete();
 

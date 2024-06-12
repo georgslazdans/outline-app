@@ -27,7 +27,7 @@ export type ProccessStep = {
   settings: Settings;
 };
 
-export const processingFunctions: ProcessingStep<any>[] = [
+export const processingSteps: ProcessingStep<any>[] = [
   bilateralFilterStep,
   grayScaleStep,
   blurStep,
@@ -88,10 +88,16 @@ const processorOf = (
   };
 };
 
-const stepWithName = (name: string): ProcessingStep<any> => {
-  const result = processingFunctions.find((it) => it.name === name);
-  if (!result) {
-    throw new Error("No processing function for name: " + name);
+const stepsStartingFrom = (name: string): ProcessingStep<any>[] => {
+  const result = [];
+  let stepFound = false;
+  for(const step of processingSteps) {
+    if(step.name == name) {
+      stepFound = true;
+    }
+    if(stepFound) {
+      result.push(step);
+    }
   }
   return result;
 };
@@ -99,18 +105,18 @@ const stepWithName = (name: string): ProcessingStep<any> => {
 export const processStep = async (
   command: ProccessStep
 ): Promise<StepResult[]> => {
-  const step = stepWithName(command.stepName);
+  const steps = stepsStartingFrom(command.stepName);
   const image = imageOf(command.imageData, command.imageColorSpace);
-  const steps = processorOf([step], command.settings).process(image);
+  const result = processorOf(steps, command.settings).process(image);
   image.delete();
-  return steps;
+  return result;
 };
 
 export const processImage = async (
   command: ProcessAll
 ): Promise<StepResult[]> => {
   const image = imageOf(command.imageData, ColorSpace.RGBA);
-  const steps = processorOf(processingFunctions, command.settings).process(
+  const steps = processorOf(processingSteps, command.settings).process(
     image
   );
   image.delete();

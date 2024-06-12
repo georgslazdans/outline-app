@@ -9,6 +9,9 @@ import { useLoading } from "@/context/LoadingContext";
 import StepResult from "@/lib/opencv/StepResult";
 import { useDetails } from "@/context/DetailsContext";
 import { OpenCvWork, allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
+import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
+import deepEqual from "@/lib/Objects";
+import { processingSteps } from "@/lib/opencv/ImageProcessor";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,6 +27,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   const [openCvWork, setOpenCvWork] = useState<OpenCvWork>();
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
   const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
+  const [previousSettings, setPreviousSettings] = useState<Settings>();
 
   const updateStepResults = useCallback((newResult: StepResult[]) => {
     setStepResults((previousResult) => {
@@ -51,6 +55,11 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     [setLoading, updateStepResults]
   );
 
+  const setWorkData = (workData: OpenCvWork) => {
+    setPreviousSettings(workData.data.settings);
+    setOpenCvWork(workData);
+  };
+
   const updateCurrentStepData = useCallback(
     (stepName: string) => {
       setLoading(true);
@@ -59,7 +68,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
         stepName,
         detailsContext?.settings
       );
-      setOpenCvWork(workData);
+      setWorkData(workData);
     },
     [detailsContext?.settings, setLoading, stepResults]
   );
@@ -68,9 +77,28 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     setLoading(true);
     if (detailsContext) {
       const workData = allWorkOf(detailsContext);
-      setOpenCvWork(workData);
+      setWorkData(workData);
     }
   }, [detailsContext, setLoading]);
+
+  const rerunOpenCv = useCallback(() => {
+    var currentSettings = settingsOf(detailsContext);
+    if (!previousSettings) {
+      updateAllWorkData();
+    } else if (!deepEqual(previousSettings, currentSettings)) {
+      const stepName = firstChangedStep(previousSettings, currentSettings);
+      if (stepName && stepName != processingSteps[0].name) {
+        updateCurrentStepData(stepName);
+      } else {
+        updateAllWorkData();
+      }
+    }
+  }, [
+    detailsContext,
+    previousSettings,
+    updateAllWorkData,
+    updateCurrentStepData,
+  ]);
 
   useEffect(() => {
     if (!openCvWork && detailsContext) {
@@ -94,14 +122,14 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
           settings={detailsContext.settings}
           openAdvancedMode={() => setSimpleMode(false)}
           outlineCheckImage={outlineCheckImage}
-          rerun={updateAllWorkData}
+          rerun={rerunOpenCv}
         ></SimpleCalibration>
       )}
       {!simpleMode && detailsContext && (
         <AdvancedCalibration
           dictionary={dictionary}
           stepResults={stepResults}
-          rerunStep={updateCurrentStepData}
+          rerun={rerunOpenCv}
           onClose={() => setSimpleMode(true)}
         ></AdvancedCalibration>
       )}
@@ -111,17 +139,16 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
 export default OpenCvCalibration;
 
+// const debounceTime = 1000;
+// const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
 
-  // const debounceTime = 1000;
-  // const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
-
-  // const handleOnChange = useCallback(
-  //   (event: ChangeEvent<HTMLInputElement>) => {
-  //     clearTimeout(timeoutId);
-  //     const timeout = setTimeout(() => {
-  //       onChange(event);
-  //     }, debounceTime);
-  //     setTimeoutId(timeout);
-  //   },
-  //   [onChange, timeoutId]
-  // );
+// const handleOnChange = useCallback(
+//   (event: ChangeEvent<HTMLInputElement>) => {
+//     clearTimeout(timeoutId);
+//     const timeout = setTimeout(() => {
+//       onChange(event);
+//     }, debounceTime);
+//     setTimeoutId(timeout);
+//   },
+//   [onChange, timeoutId]
+// );
