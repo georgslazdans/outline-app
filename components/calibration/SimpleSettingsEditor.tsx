@@ -1,5 +1,4 @@
 import Settings from "@/lib/opencv/Settings";
-import InputField from "../fiields/InputField";
 import { Dictionary } from "@/app/dictionaries";
 import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
 import { ChangeEvent } from "react";

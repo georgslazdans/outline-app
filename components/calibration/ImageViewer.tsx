@@ -7,8 +7,13 @@ import { downloadFile } from "@/lib/Download";
 type Props = {
   className?: string;
   currentStep?: StepResult;
+  showDownload?: boolean;
 };
-export const ImageViewer = ({ currentStep, className }: Props) => {
+export const ImageViewer = ({
+  currentStep,
+  className,
+  showDownload = false,
+}: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const getContext = () => {
@@ -29,10 +34,10 @@ export const ImageViewer = ({ currentStep, className }: Props) => {
 
   const downloadImage = useCallback(() => {
     const canvas = canvasRef.current;
-    if(canvas && currentStep?.imageData) {
-        canvas.toBlob((blob) => {
-          downloadFile(blob!, "TestImage.png");
-        });
+    if (canvas && currentStep?.imageData) {
+      canvas.toBlob((blob) => {
+        downloadFile(blob!, "TestImage.png");
+      });
     }
   }, [currentStep?.imageData]);
 
@@ -48,9 +53,11 @@ export const ImageViewer = ({ currentStep, className }: Props) => {
           />
         </TransformComponent>
       </TransformWrapper>
-      <Button onClick={downloadImage}>
-        <label>Download Image</label>
-      </Button>
+      {showDownload && (
+        <Button onClick={downloadImage} className="mt-2">
+          <label>Download Image</label>
+        </Button>
+      )}
     </div>
   );
 };
