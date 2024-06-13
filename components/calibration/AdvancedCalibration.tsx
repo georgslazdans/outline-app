@@ -54,6 +54,13 @@ export const AdvancedCalibration = ({
     }
   };
 
+  const currentStepSettings = () => {
+    var stepName = currentStep?.stepName;
+    if (stepName) {
+      return detailsContext.settings[stepName];
+    }
+  };
+
   return (
     <>
       <ImageSelector
@@ -64,7 +71,7 @@ export const AdvancedCalibration = ({
       <ImageViewer className="mt-2" currentStep={currentStep}></ImageViewer>
       <AdvancedSettingsEditor
         dictionary={dictionary}
-        settings={detailsContext.settings}
+        currentSetting={currentStepSettings()}
         onChange={handleSettingsChange}
         step={currentStep?.stepName}
       ></AdvancedSettingsEditor>

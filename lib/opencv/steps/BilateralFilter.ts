@@ -28,7 +28,7 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
 
   cv.cvtColor(filtered, converted, cv.COLOR_RGB2RGBA, 0);
   filtered.delete();
-  return {image: converted};
+  return { image: converted };
 };
 
 const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
@@ -40,16 +40,19 @@ const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
   },
   config: {
     pixelDiameter: {
-      min:3,
-      max: 10
+      type: "number",
+      min: 3,
+      max: 10,
     },
     sigmaColor: {
-      min:3,
-      max: 10
+      type: "number",
+      min: 0,
+      max: 255,
     },
     sigmaSpace: {
-      min:3,
-      max: 10
+      type: "number",
+      min: 0,
+      max: 255,
     },
   },
   imageColorSpace: ColorSpace.RGBA,

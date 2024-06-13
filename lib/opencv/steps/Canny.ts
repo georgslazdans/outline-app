@@ -23,6 +23,18 @@ const cannyStep: ProcessingStep<CannySettings> = {
     firstThreshold: 100,
     secondThreshold: 200,
   },
+  config: {
+    firstThreshold: {
+      type: "number",
+      min: 0,
+      max: 255,
+    },
+    secondThreshold: {
+      type: "number",
+      min: 0,
+      max: 255,
+    },
+  },
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: cannyOf,
 };

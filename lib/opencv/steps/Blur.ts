@@ -29,6 +29,13 @@ const blurStep: ProcessingStep<BlurSettings> = {
   settings: {
     blurWidth: 5,
   },
+  config: {
+    blurWidth: {
+      type: "number",
+      min: 0,
+      max: 25,
+    },
+  },
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: blurOf,
 };

@@ -94,6 +94,14 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
       orientation: Orientation.LANDSCAPE
     }
   },
+  config: {
+    paperSettings: {
+      type: "group",
+    },
+    cannySettings: {
+      type: "group",
+    },
+  },
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: extractPaperFrom,
 };

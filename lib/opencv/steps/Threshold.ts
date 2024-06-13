@@ -29,6 +29,18 @@ const thresholdStep: ProcessingStep<ThresholdSettings> = {
     threshold: 100,
     maxValue: 255,
   },
+  config: {
+    threshold: {
+      type: "number",
+      min: 0,
+      max: 255,
+    },
+    maxValue: {
+      type: "number",
+      min: 0,
+      max: 255,
+    },
+  },
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: thresholdOf,
 };

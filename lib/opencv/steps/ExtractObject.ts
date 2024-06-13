@@ -62,6 +62,14 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       secondThreshold: 200,
     },
   },
+  config: {
+    smoothOutline: {
+      type: "checkbox",
+    },
+    cannySettings: {
+      type: "group",
+    },
+  },
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: extractObjectFrom,
 };
