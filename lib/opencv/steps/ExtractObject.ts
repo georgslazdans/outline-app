@@ -75,10 +75,11 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     smoothAccuracy: {
       type: "number",
       min: 0,
-      max: 1000
+      max: 1000,
     },
     cannySettings: {
       type: "group",
+      config: cannyStep.config!,
     },
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,

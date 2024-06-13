@@ -44,6 +44,7 @@
       "threhsold": "Threshold",
       "maxValue": "Max Value",
       "cannySettings": "Canny Settings",
+      "paperSettings": "Paper Settings",
       "smoothOutline": "Smooth Outline",
       "smoothAccuracy": "Smooth Max Deviation"
     },

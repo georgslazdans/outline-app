@@ -44,6 +44,12 @@
       "threshold": "Threshold",
       "maxValue": "Max Value",
       "cannySettings": "Canny Settings",
+      "firstThreshold": "First Threshold",
+      "secondThreshold": "Second Threshold",
+      "paperSettings": "Paper Settings",
+      "orientation": "Orientation",
+      "width": "Width",
+      "height": "Height",
       "smoothOutline": "Smooth Outline",
       "smoothAccuracy": "Smooth Max Deviation"
     },

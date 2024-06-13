@@ -7,7 +7,7 @@ import { contoursOf, largestContourOf } from "../Contours";
 import StepName from "./StepName";
 import imageWarper from "../ImageWarper";
 import { PaperSettings } from "../Settings";
-import Orientation from "@/lib/Orientation";
+import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 
 const cannyOf = cannyStep.process;
 type CannySettings = typeof cannyStep.settings;
@@ -91,15 +91,32 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
     paperSettings: {
       width: 210,
       height: 297,
-      orientation: Orientation.LANDSCAPE
-    }
+      orientation: Orientation.LANDSCAPE,
+    },
   },
   config: {
     paperSettings: {
       type: "group",
+      config: {
+        width: {
+          type: "number",
+          min: 1,
+          max: 10000,
+        },
+        height: {
+          type: "number",
+          min: 1,
+          max: 10000,
+        },
+        orientation: {
+          type: "select",
+          optionsFunction: orientationOptionsFor,
+        },
+      },
     },
     cannySettings: {
       type: "group",
+      config: cannyStep.config!,
     },
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,

@@ -2,7 +2,6 @@ import Point from "./Point";
 
 namespace Svg {
   export const from = (points: Point[]) => {
-    console.log("Points", points);
     const pathData = pathDataOf(points);
     return `<svg xmlns="http://www.w3.org/2000/svg">${pathData}</svg>`;
   };
