@@ -44,7 +44,8 @@
       "threhsold": "Threshold",
       "maxValue": "Max Value",
       "cannySettings": "Canny Settings",
-      "smoothOutline": "Smooth Outline"
+      "smoothOutline": "Smooth Outline",
+      "smoothAccuracy": "Smooth Max Deviation"
     },
     "settings": "Iestatījumi",
     "advancedSettings": "Pilni iestatījumi",

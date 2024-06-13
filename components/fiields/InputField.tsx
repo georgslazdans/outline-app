@@ -10,6 +10,7 @@ type Props = {
   className?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   autofocus?: boolean;
+  required?: boolean;
 };
 
 const InputField = ({
@@ -21,6 +22,7 @@ const InputField = ({
   className,
   onChange,
   autofocus,
+  required = false,
 }: Props) => {
   return (
     <div className={"flex flex-col " + className}>
@@ -40,6 +42,7 @@ const InputField = ({
           placeholder={placeholder}
           onChange={(event) => onChange(event)}
           autoFocus={autofocus}
+          required={required}
         />
       </div>
     </div>

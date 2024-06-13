@@ -16,6 +16,7 @@ type CannySettings = typeof cannyStep.settings;
 
 type ExtractObjectSettings = {
   smoothOutline: boolean;
+  smoothAccuracy: number;
   cannySettings: CannySettings;
 };
 
@@ -34,9 +35,13 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     image.copyTo(result);
     return { image: result };
   }
-  // Output smoothing should be optional in the last step
-  // let resultingContour = smoothOf(objectContours.contours.get(countourIndex));
-  let resultingContour = objectContours.contours.get(countourIndex);
+
+  const resultingContour = settings.smoothOutline
+    ? smoothOf(
+        objectContours.contours.get(countourIndex),
+        settings.smoothAccuracy / 1000
+      )
+    : objectContours.contours.get(countourIndex);
 
   // TODO this image is only for debugging?
   // The SVG should be visible in the editor, but might need a preview, when skiping initializing threejs when just exporting svg?
@@ -57,6 +62,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
   name: StepName.EXTRACT_OBJECT,
   settings: {
     smoothOutline: true,
+    smoothAccuracy: 2,
     cannySettings: {
       firstThreshold: 100,
       secondThreshold: 200,
@@ -65,6 +71,11 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
   config: {
     smoothOutline: {
       type: "checkbox",
+    },
+    smoothAccuracy: {
+      type: "number",
+      min: 0,
+      max: 1000
     },
     cannySettings: {
       type: "group",

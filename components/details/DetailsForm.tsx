@@ -75,7 +75,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       width: formData.width,
       height: formData.height,
       orientation: formData.orientation as Orientation,
-    }
+    };
     const newContext = {
       ...detailsContext,
       details: {
@@ -94,6 +94,11 @@ const DetailsForm = ({ dictionary }: Props) => {
     );
   };
 
+  const paperSizeNumberRange = {
+    min: 1,
+    max: 1000000,
+  };
+
   return (
     <form className="m-4 flex flex-col gap-3" onSubmit={onFormSave}>
       <ContextImage dictionary={dictionary}></ContextImage>
@@ -104,6 +109,7 @@ const DetailsForm = ({ dictionary }: Props) => {
         name={"name"}
         type={"string"}
         autofocus
+        required
       ></InputField>
       <SelectField
         label={dictionary.details.orientation}
@@ -124,12 +130,14 @@ const DetailsForm = ({ dictionary }: Props) => {
         onChange={handlePaperSizeChange}
         label={dictionary.details.width}
         name={"width"}
+        numberRange={paperSizeNumberRange}
       ></NumberField>
       <NumberField
         value={formData.height}
         onChange={handlePaperSizeChange}
         label={dictionary.details.height}
         name={"height"}
+        numberRange={paperSizeNumberRange}
       ></NumberField>
       <Button className="mt-4">
         <label>{dictionary.details.findOutline}</label>

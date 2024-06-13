@@ -43,9 +43,9 @@ export const largestContourOf = (contours: cv.MatVector): number | null => {
   return result;
 };
 
-export const smoothOf = (contour: cv.Mat): cv.Mat => {
+export const smoothOf = (contour: cv.Mat, maxDeviationPrecent = 0.002): cv.Mat => {
   let smooth = new cv.Mat();
-  const accuracy = 0.002 * cv.arcLength(contour, true);
+  const accuracy = maxDeviationPrecent * cv.arcLength(contour, true);
   cv.approxPolyDP(contour, smooth, accuracy, true);
   return smooth;
 };

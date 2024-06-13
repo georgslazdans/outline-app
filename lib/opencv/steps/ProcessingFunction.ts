@@ -22,6 +22,7 @@ export type NumberConfig = {
   type: "number";
   min: number;
   max: number;
+  step?: number;
 };
 
 export type StepSettingConfig =

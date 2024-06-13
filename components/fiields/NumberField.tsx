@@ -4,6 +4,7 @@ import React, { ChangeEvent, HTMLInputTypeAttribute } from "react";
 type NumberRange = {
   min: number;
   max: number;
+  step?: number;
 };
 
 type Props = {
@@ -30,6 +31,7 @@ const NumberField = ({
   numberRange = {
     min: 0,
     max: 255,
+    step: 1,
   },
 }: Props) => {
   const sliderSuffix = "-slider";
@@ -60,6 +62,7 @@ const NumberField = ({
             name={name + sliderSuffix}
             min={numberRange.min}
             max={numberRange.max}
+            step={numberRange.step}
             onChange={(event) => handleSlider(event)}
             value={value ? value : ""}
           />
@@ -74,6 +77,9 @@ const NumberField = ({
           type="number"
           value={value ? value : ""}
           name={name}
+          min={numberRange.min}
+          max={numberRange.max}
+          step={numberRange.step}
           placeholder={placeholder}
           onChange={(event) => onChange(event)}
           autoFocus={autofocus}

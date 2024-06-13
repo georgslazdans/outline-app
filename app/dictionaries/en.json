@@ -44,7 +44,8 @@
       "threshold": "Threshold",
       "maxValue": "Max Value",
       "cannySettings": "Canny Settings",
-      "smoothOutline": "Smooth Outline"
+      "smoothOutline": "Smooth Outline",
+      "smoothAccuracy": "Smooth Max Deviation"
     },
     "settings": "Settings",
     "advancedSettings": "Advanced Settings",
