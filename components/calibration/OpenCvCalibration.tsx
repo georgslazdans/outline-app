@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import { useCallback, useEffect, useState } from "react";
 import SimpleCalibration from "./SimpleCalibration";
-import { AdvancedCalibration } from "./AdvancedCalibration";
+import { AdvancedCalibration } from "./advanced/AdvancedCalibration";
 import { OpenCvWorker } from "./OpenCvWorker";
 import { useLoading } from "@/context/LoadingContext";
 import StepResult from "@/lib/opencv/StepResult";
@@ -12,6 +12,9 @@ import { OpenCvWork, allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
 import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
 import deepEqual from "@/lib/utils/Objects";
 import { processingSteps } from "@/lib/opencv/ImageProcessor";
+import extractObjectStep from "@/lib/opencv/steps/ExtractObject";
+import extractPaperStep from "@/lib/opencv/steps/ExtractPaper";
+import StepName from "@/lib/opencv/steps/StepName";
 
 type Props = {
   dictionary: Dictionary;
@@ -86,8 +89,12 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     if (!previousSettings) {
       updateAllWorkData();
     } else if (!deepEqual(previousSettings, currentSettings)) {
-      const stepName = firstChangedStep(previousSettings, currentSettings);
+      let stepName = firstChangedStep(previousSettings, currentSettings);
+      console.log("Step", stepName);
       if (stepName && stepName != processingSteps[0].name) {
+        if (stepName == StepName.EXTRACT_OBJECT || stepName == StepName.EXTRACT_PAPER) {
+          stepName = StepName.THRESHOLD; // Basically need to rerun all 3 steps to get simplified image.
+        }
         updateCurrentStepData(stepName);
       } else {
         updateAllWorkData();

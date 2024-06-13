@@ -2,13 +2,13 @@ import {
   StepSettingConfig,
   NumberConfig,
 } from "@/lib/opencv/steps/ProcessingFunction";
-import InputField from "../fiields/InputField";
-import NumberField from "../fiields/NumberField";
+import NumberField from "../../fiields/NumberField";
 import { ChangeEvent } from "react";
 import { Dictionary } from "@/app/dictionaries";
+import CheckboxField from "../../fiields/CheckboxField";
 
 type Props = {
-  value: string | number | undefined;
+  value: string | number | boolean | undefined;
   name: string;
   config: StepSettingConfig;
   handleOnChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -27,13 +27,13 @@ const StepSettingField = ({
     return dictionary.calibration.stepSettings[name];
   };
 
-  const inputField = (name: string) => {
+  const checkboxField = (name: string) => {
     return (
-      <InputField
+      <CheckboxField
         key={name}
         label={settingLabel(name)}
         name={`${name}`}
-        value={value}
+        value={value as boolean}
         onChange={handleOnChange}
       />
     );
@@ -47,7 +47,7 @@ const StepSettingField = ({
         key={name}
         label={settingLabel(name)}
         name={`${name}`}
-        value={value}
+        value={value as number}
         onChange={handleOnChange}
         numberRange={{
           min: numberConfig.min,
@@ -65,8 +65,9 @@ const StepSettingField = ({
     switch (config.type) {
       case "number":
         return numberField(name, config);
-      case "group":
       case "checkbox":
+        return checkboxField(name);
+      case "group":
         return <></>;
     }
   };

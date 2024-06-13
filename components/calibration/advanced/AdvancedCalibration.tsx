@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 
 import { useDetails } from "@/context/DetailsContext";
 import Settings from "@/lib/opencv/Settings";
-import { ImageViewer } from "./ImageViewer";
+import { ImageViewer } from "../ImageViewer";
 import StepResult from "@/lib/opencv/StepResult";
 import { Dictionary } from "@/app/dictionaries";
-import Button from "../Button";
+import Button from "../../Button";
 import { AdvancedSettingsEditor } from "./AdvancedSettingsEditor";
-import { ImageSelector } from "./ImageSelector";
+import { ImageSelector } from "../ImageSelector";
 import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
 
 type Props = {

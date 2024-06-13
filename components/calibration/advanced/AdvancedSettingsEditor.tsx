@@ -25,14 +25,24 @@ export const AdvancedSettingsEditor = ({
     return null;
   }
 
-  const handleOnChange = (key: string) => {
+  const settingsUpdaterFor = (config: StepSettingConfig) => {
+    switch (config.type) {
+      case "number":
+        return (event: ChangeEvent<HTMLInputElement>) => Number.parseInt(event.target.value);
+      case "group":
+        return (event: ChangeEvent<HTMLInputElement>) => event.target.value;
+      case "checkbox":
+        return (event: ChangeEvent<HTMLInputElement>) => event.target.checked;
+    }
+  };
+
+  const handleOnChange = (key: string, config: StepSettingConfig) => {
+    const fieldConverter = settingsUpdaterFor(config);
     return (event: ChangeEvent<HTMLInputElement>) => {
-      // TODO boolean values, nested values
       const updatedSetting = {
         ...currentSetting,
-        [key]: Number.parseInt(event.target.value),
+        [key]: fieldConverter(event),
       };
-      // setCurrentSetting(updatedSetting);
       onChange(updatedSetting);
     };
   };
@@ -56,7 +66,7 @@ export const AdvancedSettingsEditor = ({
               name={key}
               value={currentSetting[key]}
               config={configOf(key)}
-              handleOnChange={handleOnChange(key)}
+              handleOnChange={handleOnChange(key, configOf(key))}
               dictionary={dictionary}
             ></StepSettingField>
           );
