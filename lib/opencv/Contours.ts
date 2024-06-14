@@ -1,4 +1,5 @@
 import * as cv from "@techstark/opencv-js";
+import Point from "../Point";
 
 class ImageContours {
   contours: cv.MatVector;
@@ -43,11 +44,40 @@ export const largestContourOf = (contours: cv.MatVector): number | null => {
   return result;
 };
 
-export const smoothOf = (contour: cv.Mat, maxDeviationPrecent = 0.002): cv.Mat => {
+export const smoothOf = (
+  contour: cv.Mat,
+  maxDeviationPrecent = 0.002
+): cv.Mat => {
   let smooth = new cv.Mat();
   const accuracy = maxDeviationPrecent * cv.arcLength(contour, true);
   cv.approxPolyDP(contour, smooth, accuracy, true);
   return smooth;
+};
+
+export const drawContourShape = (points: Point[], size: cv.Size) => {
+  const image = cv.Mat.zeros(size.height, size.width, cv.CV_8UC3);
+  const closed = true;
+  const strokeWidth = 10;
+  const markersVector = new cv.MatVector();
+  const mv = new cv.Mat(points.length, 1, cv.CV_32SC2);
+  points.forEach(({ x, y }, idx) => {
+    mv.intPtr(idx, 0)[0] = x;
+    mv.intPtr(idx, 0)[1] = y;
+  });
+  markersVector.push_back(mv);
+
+  cv.polylines(
+    image,
+    markersVector,
+    closed,
+    new cv.Scalar(218, 65, 103),
+    strokeWidth
+  );
+
+  markersVector.delete();
+  mv.delete();
+
+  return image;
 };
 
 export const drawLargestContour = (

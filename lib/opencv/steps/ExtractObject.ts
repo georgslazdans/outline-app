@@ -3,7 +3,7 @@ import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../ColorSpace";
 import {
   contoursOf,
-  drawLargestContour,
+  drawContourShape,
   largestContourOf,
   smoothOf,
 } from "../Contours";
@@ -39,20 +39,13 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   const resultingContour = settings.smoothOutline
     ? smoothOf(
         objectContours.contours.get(countourIndex),
-        settings.smoothAccuracy / 1000
+        settings.smoothAccuracy / 10000
       )
     : objectContours.contours.get(countourIndex);
 
-  // TODO this image is only for debugging?
-  // The SVG should be visible in the editor, but might need a preview, when skiping initializing threejs when just exporting svg?
-  // Then just show the SVG with HTML, no?
-  const resultingImage = drawLargestContour(
-    image.size(),
-    objectContours.contours,
-    objectContours.hierarchy
-  );
   const points = pointsFrom(resultingContour, 4);
 
+  const resultingImage = drawContourShape(pointsFrom(resultingContour), image.size());
   objectContours.delete();
 
   return { image: resultingImage, points: points };
@@ -75,7 +68,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     smoothAccuracy: {
       type: "number",
       min: 0,
-      max: 1000,
+      max: 100,
     },
     cannySettings: {
       type: "group",

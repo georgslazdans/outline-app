@@ -15,11 +15,17 @@ export type OpenCvWork =
 
 export type Status = "success" | "failed";
 
-export type OpenCvResult = {
-  status: Status;
+export type SuccessResult = {
+  status: "success";
   stepResults: StepResult[];
   outlineCheckImage: ImageData;
 };
+
+export type FailedResult = {
+  status: "failed";
+};
+
+export type OpenCvResult = SuccessResult | FailedResult
 
 export const allWorkOf = (context: Context): OpenCvWork => {
   const imageData =

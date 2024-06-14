@@ -34,7 +34,7 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
 const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
   name: StepName.BILETERAL_FILTER,
   settings: {
-    pixelDiameter: 9,
+    pixelDiameter: 5,
     sigmaColor: 75,
     sigmaSpace: 75,
   },

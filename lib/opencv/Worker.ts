@@ -9,7 +9,6 @@ import StepResult from "./StepResult";
 import { OpenCvWork, OpenCvResult, Status } from "./OpenCvWork";
 import outlineCheckImageOf from "./OutlineCheckImage";
 
-
 const processWork = async (work: OpenCvWork) => {
   console.log("Processing work", work);
   let result: StepResult[];
@@ -25,20 +24,19 @@ const processWork = async (work: OpenCvWork) => {
 };
 
 const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
-  let status: Status = "success";
-  let stepResults: StepResult[] = [];
-  let image
   try {
-    stepResults = await processWork(message);
+    const stepResults = await processWork(message);
+    return {
+      status: "success",
+      stepResults,
+      outlineCheckImage: outlineCheckImageOf(stepResults),
+    };
   } catch (e) {
-    status = "failed";
     console.error("Error while executing OpenCv", e);
+    return {
+      status: "failed",
+    };
   }
-  return {
-    stepResults,
-    status,
-    outlineCheckImage: outlineCheckImageOf(stepResults)
-  };
 };
 
 let initialized = false;
