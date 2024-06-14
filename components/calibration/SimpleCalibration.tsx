@@ -2,7 +2,6 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import SimpleSettingsEditor from "./SimpleSettingsEditor";
-import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
 import Settings from "@/lib/opencv/Settings";
 import Button from "../Button";
 import { useDetails } from "@/context/DetailsContext";
@@ -12,6 +11,7 @@ import Svg from "@/lib/Svg";
 import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
 import { OutlineCheckViewer } from "./OutlineCheckViewer";
+import StepSetting from "@/lib/opencv/steps/StepSettings";
 
 type Props = {
   dictionary: Dictionary;

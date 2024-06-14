@@ -4,7 +4,6 @@ import Settings from "./Settings";
 import { StepResult } from "./StepResult";
 import ProcessingStep, {
   ProcessResult,
-  StepSetting,
 } from "./steps/ProcessingFunction";
 import bilateralFilterStep from "./steps/BilateralFilter";
 import grayScaleStep from "./steps/GrayScale";
@@ -14,6 +13,7 @@ import extractPaperStep from "./steps/ExtractPaper";
 import extractObjectStep from "./steps/ExtractObject";
 import imageDataOf, { imageOf } from "./ImageData";
 import ColorSpace from "./ColorSpace";
+import StepSetting from "./steps/StepSettings";
 
 export type ProcessAll = {
   imageData: ImageData;

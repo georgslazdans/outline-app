@@ -1,11 +1,11 @@
 import Settings from "@/lib/opencv/Settings";
 import { Dictionary } from "@/app/dictionaries";
-import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
 import { ChangeEvent } from "react";
 import thresholdStep from "@/lib/opencv/steps/Threshold";
 import blurStep from "@/lib/opencv/steps/Blur";
 import StepName from "@/lib/opencv/steps/StepName";
 import NumberField from "../fiields/NumberField";
+import StepSetting from "@/lib/opencv/steps/StepSettings";
 
 const threshold = thresholdStep.name;
 const blur = blurStep.name;

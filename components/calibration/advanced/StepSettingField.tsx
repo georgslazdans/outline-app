@@ -1,13 +1,9 @@
-import {
-  StepSettingConfig,
-  NumberConfig,
-  SelectConfig,
-} from "@/lib/opencv/steps/ProcessingFunction";
 import NumberField from "../../fiields/NumberField";
 import { ChangeEvent } from "react";
 import { Dictionary } from "@/app/dictionaries";
 import CheckboxField from "../../fiields/CheckboxField";
 import SelectField from "@/components/fiields/SelectField";
+import { StepSettingConfig, NumberConfig, SelectConfig } from "@/lib/opencv/steps/StepSettings";
 
 type Props = {
   value: string | number | boolean | undefined;

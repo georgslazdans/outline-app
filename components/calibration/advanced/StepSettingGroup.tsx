@@ -1,11 +1,7 @@
-import {
-  StepSettingConfig,
-  StepSetting,
-  eventFieldConverterFor,
-} from "@/lib/opencv/steps/ProcessingFunction";
 import { Dictionary } from "@/app/dictionaries";
 import StepSettingField from "./StepSettingField";
 import { ChangeEvent } from "react";
+import StepSetting, { StepSettingConfig, eventFieldConverterFor } from "@/lib/opencv/steps/StepSettings";
 
 type Props = {
   name: string;

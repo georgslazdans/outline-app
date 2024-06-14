@@ -10,7 +10,7 @@ import { Dictionary } from "@/app/dictionaries";
 import Button from "../../Button";
 import { AdvancedSettingsEditor } from "./AdvancedSettingsEditor";
 import { ImageSelector } from "../ImageSelector";
-import { StepSetting } from "@/lib/opencv/steps/ProcessingFunction";
+import StepSetting from "@/lib/opencv/steps/StepSettings";
 
 type Props = {
   dictionary: Dictionary;

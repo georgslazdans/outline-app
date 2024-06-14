@@ -1,15 +1,10 @@
 import { Dictionary } from "@/app/dictionaries";
 import StepName from "@/lib/opencv/steps/StepName";
-import {
-  StepSettingConfig,
-  StepSetting,
-  GroupConfig,
-  eventFieldConverterFor,
-} from "@/lib/opencv/steps/ProcessingFunction";
 import { ChangeEvent } from "react";
 import { processingSteps } from "@/lib/opencv/ImageProcessor";
 import StepSettingField from "./StepSettingField";
 import StepSettingGroup from "./StepSettingGroup";
+import StepSetting, { GroupConfig, StepSettingConfig, eventFieldConverterFor } from "@/lib/opencv/steps/StepSettings";
 
 type Props = {
   dictionary: Dictionary;
