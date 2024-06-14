@@ -29,7 +29,8 @@ const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
 
   const paperContourImage = drawContourShape(
     extractPaper.points,
-    thresholdImage.size()
+    thresholdImage.size(),
+    new cv.Scalar(18, 150, 182)
   );
 
   // const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {

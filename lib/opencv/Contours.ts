@@ -54,7 +54,7 @@ export const smoothOf = (
   return smooth;
 };
 
-export const drawContourShape = (points: Point[], size: cv.Size) => {
+export const drawContourShape = (points: Point[], size: cv.Size, color = new cv.Scalar(218, 65, 103)) => {
   const image = cv.Mat.zeros(size.height, size.width, cv.CV_8UC4);
   const closed = true;
   const strokeWidth = 15;
@@ -70,7 +70,7 @@ export const drawContourShape = (points: Point[], size: cv.Size) => {
     image,
     markersVector,
     closed,
-    new cv.Scalar(218, 65, 103),
+    color,
     strokeWidth
   );
 
