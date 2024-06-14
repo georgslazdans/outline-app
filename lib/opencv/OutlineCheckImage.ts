@@ -7,6 +7,7 @@ import thresholdStep from "./steps/Threshold";
 import imageWarper from "./ImageWarper";
 import imageDataOf, { imageOf } from "./ImageData";
 import ColorSpace from "./ColorSpace";
+import { drawContourShape } from "./Contours";
 
 const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
   const threshold = thresholdResultOf(steps);
@@ -26,14 +27,46 @@ const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
     thresholdImage.size()
   );
 
-  const finalImage = new cv.Mat();
-  cv.add(thresholdImage, reverseWarped, finalImage);
+  const paperContourImage = drawContourShape(
+    extractPaper.points,
+    thresholdImage.size()
+  );
+
+  // const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {
+  //   const combinedImage = new cv.Mat();
+
+  //   const binaryMask = cv.Mat.zeros(imageB.size(), cv.CV_8UC1);
+  //   cv.threshold(imageB, binaryMask, 128, 255, cv.THRESH_BINARY);
+
+  //   const inverseMask = cv.Mat.zeros(imageB.size(), cv.CV_8UC1);
+  //   cv.bitwise_not(binaryMask, inverseMask);
+
+  //   const mask = grayScaleStep.process(inverseMask, {}).image;
+
+  //   cv.add(imageA, imageB, combinedImage, mask);
+
+  //   binaryMask.delete();
+  //   inverseMask.delete();
+
+  //   return combinedImage;
+  // };
+
+  const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {
+    const combinedImage = new cv.Mat();
+    cv.add(imageA, imageB, combinedImage);
+    return combinedImage;
+  }
+
+  const thresholdWithObject = combineImages(thresholdImage, reverseWarped);
+  const finalImage = combineImages(thresholdWithObject, paperContourImage);
   const result = imageDataOf(finalImage);
 
   finalImage.delete();
   thresholdImage.delete();
   objectImage.delete();
   reverseWarped.delete();
+  paperContourImage.delete();
+  thresholdWithObject.delete();
 
   return result;
 };

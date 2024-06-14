@@ -4,7 +4,7 @@ import Point from "../Point";
 const coordinatesOfImage = (paperCorners: Point[]) => {
   // Sort the corners in order: top-left, top-right, bottom-right, bottom-left
   //corners = corners.sort((a, b) => a.y - b.y);
-  const points = paperCorners.sort((a, b) => a.y - b.y);
+  const points = [...paperCorners].sort((a, b) => a.y - b.y);
   let topLeft = points[0].x < points[1].x ? points[0] : points[1];
   let topRight = points[0].x > points[1].x ? points[0] : points[1];
   let bottomLeft = points[2].x < points[3].x ? points[2] : points[3];
