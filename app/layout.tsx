@@ -14,6 +14,7 @@ const DetailsProvider = dynamic(() => import("@/context/DetailsContext"), {
 export const metadata: Metadata = {
   title: "Outline App",
   description: "Create SVG paths from images",
+  manifest: "/manifest.json",
 };
 
 export default async function RootLayout({

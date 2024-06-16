@@ -41,7 +41,7 @@
       "sigmaColor": "Sigma Color",
       "sigmaSpace": "Sigma Space",
       "blurWidth": "Blur Size (px)",
-      "threhsold": "Threshold",
+      "threshold": "Threshold",
       "maxValue": "Max Value",
       "cannySettings": "Canny Settings",
       "paperSettings": "Paper Settings",
