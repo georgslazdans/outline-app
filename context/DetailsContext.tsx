@@ -27,6 +27,7 @@ export type Context = {
   imageData: ImageData;
   details: Details;
   settings: Settings;
+  addDate: Date;
 };
 
 const DetailsProvider = ({ children }: Props) => {

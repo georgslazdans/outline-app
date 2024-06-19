@@ -9,12 +9,12 @@ import PaperSize, {
   PaperDimensions,
   paperSizeOptionsFor,
 } from "@/lib/PaperSize";
-import { useDetails } from "@/context/DetailsContext";
+import { Context, useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
 import { useLoading } from "@/context/LoadingContext";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { defaultSettings } from "@/lib/opencv/Settings";
-import ContextImage from "../image/ContextImage";
+import ImageField from "../image/ImageField";
 import NumberField from "../fiields/NumberField";
 
 type Props = {
@@ -76,13 +76,14 @@ const DetailsForm = ({ dictionary }: Props) => {
       height: formData.height,
       orientation: formData.orientation as Orientation,
     };
-    const newContext = {
+    const newContext: Context = {
       ...detailsContext,
       details: {
         ...formData,
         orientation: formData.orientation as Orientation,
       },
       settings: settings,
+      addDate: new Date(),
     };
     delete newContext.id;
     add(newContext).then(
@@ -101,7 +102,10 @@ const DetailsForm = ({ dictionary }: Props) => {
 
   return (
     <form className="m-4 flex flex-col gap-3" onSubmit={onFormSave}>
-      <ContextImage dictionary={dictionary}></ContextImage>
+      <ImageField
+        dictionary={dictionary}
+        detailsContext={detailsContext}
+      ></ImageField>
       <InputField
         value={formData.name}
         onChange={handleChange}

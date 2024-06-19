@@ -53,5 +53,16 @@
     "exportSvg": "Eksportēt SVG",
     "rerun": "Atkārtoti Izpildīt",
     "done": "Pabeigt"
+  },
+
+  "history": {
+    "title": "Vēsture",
+    "image": "Bilde",
+    "name": "Nosaukums",
+    "date": "Datums",
+    "searchByName": "Search by Name",
+    "settings": "Iestatījumi",
+    "svg": "SVG",
+    "delete": "Izdzēst"
   }
 }

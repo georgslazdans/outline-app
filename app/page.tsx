@@ -2,10 +2,10 @@ import Image from "next/image";
 import { getDictionary } from "./dictionaries";
 import wrenchPic from "./wrench.png";
 import Upload from "@/components/image/Upload";
+import HistoryButton from "@/components/HistoryButton";
 
 export default async function Home() {
   const dictionary = await getDictionary("en");
-
   return (
     <main className="flex min-h-full flex-col items-center justify-between p-4">
       <div className="z-10 w-full max-w-5xl items-center justify-between mt-2">
@@ -23,6 +23,7 @@ export default async function Home() {
         </div>
         <Upload dictionary={dictionary}></Upload>
         <p className="mt-6 text-center">{dictionary.learnMore}</p>
+        <HistoryButton dictionary={dictionary}></HistoryButton>
       </div>
     </main>
   );

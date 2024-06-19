@@ -20,6 +20,7 @@ type Props = {
   stepResults: StepResult[];
   outlineCheckImage?: ImageData;
   rerun: () => void;
+  onClose: () => void;
 };
 
 const SimpleCalibration = ({
@@ -29,6 +30,7 @@ const SimpleCalibration = ({
   stepResults,
   outlineCheckImage,
   rerun,
+  onClose: close
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
@@ -79,7 +81,7 @@ const SimpleCalibration = ({
         <Button onClick={() => rerun()}>
           <label>{dictionary.calibration.rerun}</label>
         </Button>
-        <Button onClick={() => {}}>
+        <Button onClick={() => close()}>
           <label>{dictionary.calibration.done}</label>
         </Button>
       </div>

@@ -58,5 +58,15 @@
     "exportSvg": "Export SVG",
     "rerun": "Rerun",
     "done": "Done"
+  },
+  "history": {
+    "title": "History",
+    "image": "Image",
+    "name": "Name",
+    "date": "Date",
+    "searchByName": "Search by Name",
+    "settings": "Settings",
+    "svg": "SVG",
+    "delete": "Delete"
   }
 }

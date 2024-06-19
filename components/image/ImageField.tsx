@@ -1,24 +1,22 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { useDetails } from "@/context/DetailsContext";
+import { Context } from "@/context/DetailsContext";
+import BlobImage from "./BlobImage";
 
 type Props = {
+  detailsContext: Context;
   dictionary: Dictionary;
 };
 
-const ContextImage = ({ dictionary }: Props) => {
-  const { detailsContext } = useDetails();
-
+const ImageField = ({detailsContext,  dictionary }: Props) => {
   let image = <div className="mx-auto h-[15vh]" />;
   if (detailsContext && detailsContext.imageFile) {
-    const imageUrl = URL.createObjectURL(detailsContext.imageFile);
     image = (
-      <img
-        className="mx-auto h-[15vh]"
-        src={imageUrl}
-        alt="Newly added image"
-      />
+      <BlobImage
+      image={detailsContext.imageFile}
+      className="mx-auto h-[15vh]">
+      </BlobImage>
     );
   }
 
@@ -30,4 +28,4 @@ const ContextImage = ({ dictionary }: Props) => {
   );
 };
 
-export default ContextImage;
+export default ImageField;

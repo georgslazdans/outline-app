@@ -12,15 +12,18 @@ import { OpenCvWork, allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
 import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
 import deepEqual from "@/lib/utils/Objects";
 import { processingSteps } from "@/lib/opencv/ImageProcessor";
-import extractObjectStep from "@/lib/opencv/steps/ExtractObject";
-import extractPaperStep from "@/lib/opencv/steps/ExtractPaper";
 import StepName from "@/lib/opencv/steps/StepName";
+import { useIndexedDB } from "react-indexed-db-hook";
+import { useRouter } from "next/navigation";
 
 type Props = {
   dictionary: Dictionary;
 };
 
 const OpenCvCalibration = ({ dictionary }: Props) => {
+  const { update } = useIndexedDB("details");
+  const router = useRouter();
+
   const { detailsContext } = useDetails();
 
   const { setLoading } = useLoading();
@@ -91,7 +94,10 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     } else if (!deepEqual(previousSettings, currentSettings)) {
       let stepName = firstChangedStep(previousSettings, currentSettings);
       if (stepName && stepName != processingSteps[0].name) {
-        if (stepName == StepName.EXTRACT_OBJECT || stepName == StepName.EXTRACT_PAPER) {
+        if (
+          stepName == StepName.EXTRACT_OBJECT ||
+          stepName == StepName.EXTRACT_PAPER
+        ) {
           stepName = StepName.THRESHOLD; // Basically need to rerun all 3 steps to get simplified image.
         }
         updateCurrentStepData(stepName);
@@ -112,6 +118,14 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     }
   }, [detailsContext, openCvWork, updateAllWorkData]);
 
+  const saveAndClose = () => {
+    setLoading(true);
+    update({ detailsContext }).then(() => {
+      setLoading(false);
+      router.push("/");
+    });
+  };
+
   return (
     <>
       <OpenCvWorker
@@ -129,6 +143,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
           openAdvancedMode={() => setSimpleMode(false)}
           outlineCheckImage={outlineCheckImage}
           rerun={rerunOpenCv}
+          onClose={saveAndClose}
         ></SimpleCalibration>
       )}
       {!simpleMode && detailsContext && (
