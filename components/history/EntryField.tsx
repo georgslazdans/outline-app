@@ -8,9 +8,9 @@ type Props = {
 const EntryField = ({ label, value }: Props) => {
   return (
     <>
-      <div>
-        <div>{label}</div>
-        <div>{value}</div>
+      <div className="w-full flex flex-row">
+        <div className="w-full">{label}</div>
+        <div className="w-full">{value}</div>
       </div>
     </>
   );

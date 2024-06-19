@@ -39,38 +39,36 @@ const Entry = ({ context, dictionary }: Props) => {
   const dateString = context.addDate?.toLocaleDateString();
   const buttonClass = "h-16 p-0";
   return (
-    <>
-      <div className="border border-black dark:border-white rounded-[16px] p-3 w-full">
-        <div className="flex flex-row">
-          <div className="w-[10rem]">
-            <BlobImage image={context.imageFile}></BlobImage>
-          </div>
-          <div className="ml-4">
-            <h2>{context.details?.name}</h2>
-            <EntryField label={dictionary.history.date} value={dateString} />
-          </div>
+    <div className="border border-black dark:border-white rounded-[16px] p-3 w-full">
+      <div className="flex flex-row">
+        <div className="w-[16rem]">
+          <BlobImage image={context.imageFile}></BlobImage>
         </div>
-        <div className="flex flex-row gap-2 mt-2">
-          <Button
-            onClick={openSettings}
-            className={buttonClass}
-            style="secondary"
-          >
-            <label>{dictionary.history.settings}</label>
-          </Button>
-          <Button
-            onClick={exportSvg}
-            className={buttonClass}
-            style={hasSvg ? "secondary" : "disabled"}
-          >
-            <label>{dictionary.history.svg}</label>
-          </Button>
-          <Button className={buttonClass} style="red">
-            <label>{dictionary.history.delete}</label>
-          </Button>
+        <div className="ml-4 w-full">
+          <h2>{context.details?.name}</h2>
+          <EntryField label={dictionary.history.date} value={dateString} />
         </div>
       </div>
-    </>
+      <div className="flex flex-row gap-2 mt-2">
+        <Button
+          onClick={openSettings}
+          className={buttonClass}
+          style="secondary"
+        >
+          <label>{dictionary.history.settings}</label>
+        </Button>
+        <Button
+          onClick={exportSvg}
+          className={buttonClass}
+          style={hasSvg ? "secondary" : "disabled"}
+        >
+          <label>{dictionary.history.svg}</label>
+        </Button>
+        <Button className={buttonClass} style="red">
+          <label>{dictionary.history.delete}</label>
+        </Button>
+      </div>
+    </div>
   );
 };
 
