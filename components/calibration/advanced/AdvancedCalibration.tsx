@@ -80,7 +80,7 @@ export const AdvancedCalibration = ({
       <div className="flex gap-4 mt-4">
         <Button
           onClick={() => rerun()}
-          style={settingsChanged ? "red" : "secondary"}
+          style={settingsChanged ? "red" : "disabled"}
         >
           <label>{dictionary.calibration.rerun}</label>
         </Button>

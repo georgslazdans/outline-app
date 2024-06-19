@@ -84,8 +84,8 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   );
 
   const updateAllWorkData = useCallback(() => {
-    setLoading(true);
     if (detailsContext) {
+      setLoading(true);
       const workData = allWorkOf(detailsContext);
       setWorkData(workData);
     }
@@ -125,7 +125,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const saveAndClose = () => {
     setLoading(true);
-    update({ detailsContext }).then(() => {
+    update(detailsContext).then(() => {
       setLoading(false);
       router.push("/");
     });

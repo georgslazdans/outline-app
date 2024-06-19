@@ -12,8 +12,10 @@ import {
   SetStateAction,
   Dispatch,
   useEffect,
+  useRef,
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
+import getImageData from "@/lib/utils/ImageData";
 
 const DetailsContext = createContext<any>(null);
 
@@ -35,12 +37,19 @@ const DetailsProvider = ({ children }: Props) => {
   const [detailsContext, setDetailsContext] = useState<Context>();
   const { getAll } = useIndexedDB("details");
 
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
+    console.log("Settin up detailas context", detailsContext);
     if (!detailsContext) {
       getAll().then((allContexts) => {
         if (allContexts && allContexts.length > 0) {
           const loadedContext = allContexts.pop();
-          setDetailsContext(loadedContext);
+          getImageData(loadedContext.imageFile, canvasRef.current).then(
+            (data) => {
+              setDetailsContext({ ...loadedContext, imageData: data });
+            }
+          );
         } else {
           router.push("/");
         }
@@ -50,6 +59,7 @@ const DetailsProvider = ({ children }: Props) => {
 
   return (
     <DetailsContext.Provider value={{ detailsContext, setDetailsContext }}>
+      <canvas ref={canvasRef} style={{ display: "none" }} />
       {children}
     </DetailsContext.Provider>
   );

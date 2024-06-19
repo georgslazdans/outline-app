@@ -5,6 +5,7 @@ import ImageUpload from "./ImageUpload";
 import PhotoUpload from "./PhotoCapture";
 import { useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
+import getImageData from "@/lib/utils/ImageData";
 
 type Props = {
   dictionary: any;
@@ -19,7 +20,7 @@ const Upload = ({ dictionary }: Props) => {
   const onFileUpload = async (event: any) => {
     const file = event.target.files[0];
     if (file) {
-      const imageData = await getImageData(file);
+      const imageData = await getImageData(file, canvasRef.current);
 
       setDetailsContext((context) => {
         return { ...context, imageFile: file, imageData };
@@ -29,24 +30,7 @@ const Upload = ({ dictionary }: Props) => {
     }
   };
 
-  const getImageData = async (blob: Blob) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
 
-    if (!canvas || !ctx) {
-      throw new Error("Canvas element or context has not been initialized!");
-    }
-    const imageBitmap = await createImageBitmap(blob);
-
-    canvas.width = imageBitmap.width;
-    canvas.height = imageBitmap.height;
-    ctx.drawImage(imageBitmap, 0, 0);
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    imageBitmap.close();
-    return imageData;
-  };
 
   return (
     <>

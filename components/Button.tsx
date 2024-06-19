@@ -7,7 +7,7 @@ type Props = {
   children?: ReactNode;
   onClick?: FormEventHandler<HTMLButtonElement>;
   type?: "submit" | "reset" | "button";
-  style?: "primary" | "secondary" | "red";
+  style?: "primary" | "secondary" | "red" | "disabled";
 };
 
 const STYLES = {
@@ -15,6 +15,7 @@ const STYLES = {
   secondary:
     "bg-white dark:bg-black text-black dark:text-white border-4 border-black dark:border-white",
   red: "bg-white dark:bg-black text-red border-4 border-red",
+  disabled: "bg-white dark:bg-black text-gray border-4 border-gray",
 };
 
 const Button = ({ className, children, onClick, type, style }: Props) => {
@@ -22,7 +23,7 @@ const Button = ({ className, children, onClick, type, style }: Props) => {
   return (
     <button
       type={type ? type : "submit"}
-      className={" rounded-[64px] p-4 w-full " + buttonStyle + " " + className}
+      className={"rounded-[64px] p-4 w-full " + buttonStyle + " " + className}
       onClick={(event) => onClick && onClick(event)}
     >
       {children}

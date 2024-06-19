@@ -87,8 +87,8 @@ const DetailsForm = ({ dictionary }: Props) => {
     };
     delete newContext.id;
     add(newContext).then(
-      () => {
-        setDetailsContext(newContext);
+      (dbId) => {
+        setDetailsContext({ ...newContext, id: dbId });
         router.push("/calibration");
       },
       (error) => console.error(error)
