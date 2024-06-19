@@ -4,7 +4,7 @@ import { ChangeEvent } from "react";
 import thresholdStep from "@/lib/opencv/steps/Threshold";
 import blurStep from "@/lib/opencv/steps/Blur";
 import StepName from "@/lib/opencv/steps/StepName";
-import NumberField from "../fiields/NumberField";
+import NumberField from "../../fiields/NumberField";
 import StepSetting from "@/lib/opencv/steps/StepSettings";
 
 const threshold = thresholdStep.name;

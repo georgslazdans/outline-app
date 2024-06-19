@@ -17,6 +17,7 @@ type Props = {
   stepResults: StepResult[];
   rerun: () => void;
   onClose: () => void;
+  settingsChanged: boolean;
 };
 
 export const AdvancedCalibration = ({
@@ -24,6 +25,7 @@ export const AdvancedCalibration = ({
   stepResults,
   rerun,
   onClose,
+  settingsChanged,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
@@ -76,7 +78,10 @@ export const AdvancedCalibration = ({
         step={currentStep?.stepName}
       ></AdvancedSettingsEditor>
       <div className="flex gap-4 mt-4">
-        <Button onClick={() => rerun()}>
+        <Button
+          onClick={() => rerun()}
+          style={settingsChanged ? "red" : "secondary"}
+        >
           <label>{dictionary.calibration.rerun}</label>
         </Button>
         <Button onClick={() => onClose()}>

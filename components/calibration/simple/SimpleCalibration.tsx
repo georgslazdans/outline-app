@@ -3,19 +3,20 @@
 import { Dictionary } from "@/app/dictionaries";
 import SimpleSettingsEditor from "./SimpleSettingsEditor";
 import Settings from "@/lib/opencv/Settings";
-import Button from "../Button";
+import Button from "../../Button";
 import { useDetails } from "@/context/DetailsContext";
 import StepName from "@/lib/opencv/steps/StepName";
 import { useCallback } from "react";
 import Svg from "@/lib/Svg";
 import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
-import { OutlineCheckViewer } from "./OutlineCheckViewer";
+import { OutlineCheckViewer } from "../OutlineCheckViewer";
 import StepSetting from "@/lib/opencv/steps/StepSettings";
 
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
+  settingsChanged: boolean;
   openAdvancedMode: () => void;
   stepResults: StepResult[];
   outlineCheckImage?: ImageData;
@@ -26,11 +27,12 @@ type Props = {
 const SimpleCalibration = ({
   dictionary,
   settings,
+  settingsChanged,
   openAdvancedMode,
   stepResults,
   outlineCheckImage,
   rerun,
-  onClose: close
+  onClose: close,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
@@ -70,15 +72,18 @@ const SimpleCalibration = ({
         onChange={handleSettingsChange}
       ></SimpleSettingsEditor>
       <div className="flex flex-col mt-4">
-        <Button onClick={() => openAdvancedMode()}>
+        <Button onClick={() => openAdvancedMode()} style="secondary">
           <label>{dictionary.calibration.advancedSettings}</label>
         </Button>
-        <Button className="mt-2" onClick={exportSvg}>
+        <Button className="mt-2" onClick={exportSvg} style="secondary">
           <label>{dictionary.calibration.exportSvg}</label>
         </Button>
       </div>
       <div className="flex gap-4 mt-4">
-        <Button onClick={() => rerun()}>
+        <Button
+          onClick={() => rerun()}
+          style={settingsChanged ? "red" : "secondary"}
+        >
           <label>{dictionary.calibration.rerun}</label>
         </Button>
         <Button onClick={() => close()}>

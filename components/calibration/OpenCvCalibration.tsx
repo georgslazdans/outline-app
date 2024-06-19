@@ -1,8 +1,8 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { useCallback, useEffect, useState } from "react";
-import SimpleCalibration from "./SimpleCalibration";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import SimpleCalibration from "./simple/SimpleCalibration";
 import { AdvancedCalibration } from "./advanced/AdvancedCalibration";
 import { OpenCvWorker } from "./OpenCvWorker";
 import { useLoading } from "@/context/LoadingContext";
@@ -35,6 +35,10 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
   const [previousSettings, setPreviousSettings] = useState<Settings>();
 
+  const settingsChanged = useMemo(
+    () => !deepEqual(previousSettings, settingsOf(detailsContext)),
+    [previousSettings, detailsContext]
+  );
   const updateStepResults = useCallback((newResult: StepResult[]) => {
     setStepResults((previousResult) => {
       const updatedResult = [...previousResult];
@@ -91,7 +95,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     var currentSettings = settingsOf(detailsContext);
     if (!previousSettings) {
       updateAllWorkData();
-    } else if (!deepEqual(previousSettings, currentSettings)) {
+    } else if (settingsChanged) {
       let stepName = firstChangedStep(previousSettings, currentSettings);
       if (stepName && stepName != processingSteps[0].name) {
         if (
@@ -108,6 +112,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   }, [
     detailsContext,
     previousSettings,
+    settingsChanged,
     updateAllWorkData,
     updateCurrentStepData,
   ]);
@@ -140,6 +145,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
           dictionary={dictionary}
           stepResults={stepResults}
           settings={detailsContext.settings}
+          settingsChanged={settingsChanged}
           openAdvancedMode={() => setSimpleMode(false)}
           outlineCheckImage={outlineCheckImage}
           rerun={rerunOpenCv}
@@ -152,6 +158,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
           stepResults={stepResults}
           rerun={rerunOpenCv}
           onClose={() => setSimpleMode(true)}
+          settingsChanged={settingsChanged}
         ></AdvancedCalibration>
       )}
     </>
