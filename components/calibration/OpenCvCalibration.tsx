@@ -125,7 +125,9 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const saveAndClose = () => {
     setLoading(true);
-    update(detailsContext).then(() => {
+    const points = stepResults.pop()?.points;
+    const context = { ...detailsContext, resultPoints: points };
+    update(context).then(() => {
       setLoading(false);
       router.push("/");
     });

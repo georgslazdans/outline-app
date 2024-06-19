@@ -1,11 +1,14 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { Context } from "@/context/DetailsContext";
+import { Context, useDetails } from "@/context/DetailsContext";
 import React from "react";
 import BlobImage from "../image/BlobImage";
 import EntryField from "./EntryField";
 import Button from "../Button";
+import { useRouter } from "next/navigation";
+import Svg from "@/lib/Svg";
+import { downloadFile } from "@/lib/utils/Download";
 
 type Props = {
   context: Context;
@@ -13,8 +16,28 @@ type Props = {
 };
 
 const Entry = ({ context, dictionary }: Props) => {
+  const { detailsContext, setDetailsContext } = useDetails();
+  const router = useRouter();
+
+  const openSettings = () => {
+    setDetailsContext(context);
+    router.push("/calibration");
+  };
+
+  const hasSvg = !!context.resultPoints;
+
+  const exportSvg = () => {
+    if (hasSvg) {
+      const svg = Svg.from(context.resultPoints!);
+      const blob = new Blob([svg], {
+        type: "image/svg+xml",
+      });
+      downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.svg`);
+    }
+  };
+
   const dateString = context.addDate?.toLocaleDateString();
-  const buttonClass = "h-10 p-0";
+  const buttonClass = "h-16 p-0";
   return (
     <>
       <div className="border border-black dark:border-white rounded-[16px] p-3 w-full">
@@ -28,13 +51,21 @@ const Entry = ({ context, dictionary }: Props) => {
           </div>
         </div>
         <div className="flex flex-row gap-2 mt-2">
-          <Button className={buttonClass}>
+          <Button
+            onClick={openSettings}
+            className={buttonClass}
+            style="secondary"
+          >
             <label>{dictionary.history.settings}</label>
           </Button>
-          <Button className={buttonClass}>
+          <Button
+            onClick={exportSvg}
+            className={buttonClass}
+            style={hasSvg ? "secondary" : "disabled"}
+          >
             <label>{dictionary.history.svg}</label>
           </Button>
-          <Button className={buttonClass}>
+          <Button className={buttonClass} style="red">
             <label>{dictionary.history.delete}</label>
           </Button>
         </div>

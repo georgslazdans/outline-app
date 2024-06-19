@@ -16,6 +16,7 @@ import {
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
+import Point from "@/lib/Point";
 
 const DetailsContext = createContext<any>(null);
 
@@ -28,6 +29,7 @@ export type Context = {
   imageFile: Blob;
   imageData: ImageData;
   details: Details;
+  resultPoints: Point[]
   settings: Settings;
   addDate: Date;
 };
