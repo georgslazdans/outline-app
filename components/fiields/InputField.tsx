@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, HTMLInputTypeAttribute } from "react";
+import React, { ChangeEvent, FocusEventHandler, HTMLInputTypeAttribute } from "react";
 
 type Props = {
   value?: string | number;
@@ -11,6 +11,7 @@ type Props = {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   autofocus?: boolean;
   required?: boolean;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
 };
 
 const InputField = ({
@@ -23,6 +24,7 @@ const InputField = ({
   onChange,
   autofocus,
   required = false,
+  onBlur
 }: Props) => {
   return (
     <div className={"flex flex-col " + className}>
@@ -43,6 +45,7 @@ const InputField = ({
           onChange={(event) => onChange(event)}
           autoFocus={autofocus}
           required={required}
+          onBlur={onBlur}
         />
       </div>
     </div>

@@ -9,15 +9,18 @@ import Button from "../Button";
 import { useRouter } from "next/navigation";
 import Svg from "@/lib/Svg";
 import { downloadFile } from "@/lib/utils/Download";
+import { useIndexedDB } from "react-indexed-db-hook";
 
 type Props = {
   context: Context;
   dictionary: Dictionary;
+  onDelete: () => void;
 };
 
-const Entry = ({ context, dictionary }: Props) => {
+const Entry = ({ context, dictionary, onDelete }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
   const router = useRouter();
+  const { deleteRecord } = useIndexedDB("details");
 
   const openSettings = () => {
     setDetailsContext(context);
@@ -34,6 +37,10 @@ const Entry = ({ context, dictionary }: Props) => {
       });
       downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.svg`);
     }
+  };
+
+  const deleteEntry = () => {
+    deleteRecord(context.id!).then(() => onDelete());
   };
 
   const dateString = context.addDate?.toLocaleDateString();
@@ -64,7 +71,7 @@ const Entry = ({ context, dictionary }: Props) => {
         >
           <label>{dictionary.history.svg}</label>
         </Button>
-        <Button className={buttonClass} style="red">
+        <Button onClick={deleteEntry} className={buttonClass} style="red">
           <label>{dictionary.history.delete}</label>
         </Button>
       </div>
