@@ -5,7 +5,7 @@ type Props = {
   className?: string;
   image?: ImageData;
 };
-export const OutlineCheckViewer = ({ className, image }: Props) => {
+export const OutlineImageViewer = ({ className, image }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const getContext = () => {
@@ -27,7 +27,7 @@ export const OutlineCheckViewer = ({ className, image }: Props) => {
   return (
     <div className={className}>
       <TransformWrapper>
-        <TransformComponent>
+        <TransformComponent wrapperClass="!mx-auto">
           <canvas
             className="max-w-full max-h-[80vh]"
             ref={canvasRef}

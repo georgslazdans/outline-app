@@ -15,7 +15,6 @@ const History = ({ dictionary }: Props) => {
   const { getAll } = useIndexedDB("details");
   const [items, setItems] = useState<Context[]>([]);
   const [search, setSearch] = React.useState("");
-  const keyRange = IDBKeyRange.
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -33,7 +32,7 @@ const History = ({ dictionary }: Props) => {
         setItems(allContexts);
       }
     });
-  }, [getAll, search]);
+  }, [getAll]);
 
   useEffect(() => {
     refreshData();
