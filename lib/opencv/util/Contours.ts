@@ -1,5 +1,7 @@
 import * as cv from "@techstark/opencv-js";
-import Point from "../Point";
+import Point from "../../Point";
+
+const PRIMARY_COLOR = new cv.Scalar(218, 65, 103);
 
 class ImageContours {
   contours: cv.MatVector;
@@ -54,7 +56,25 @@ export const smoothOf = (
   return smooth;
 };
 
-export const drawContourShape = (points: Point[], size: cv.Size, color = new cv.Scalar(218, 65, 103)) => {
+export const contourShapeOf = (points: Point[]) => {
+  let color = PRIMARY_COLOR;
+  const drawImage = {
+    drawImageOfSize: (size: cv.Size) => drawContourShape(points, size, color),
+  };
+  return {
+    withColour: (newColour: cv.Scalar) => {
+      color = newColour;
+      return drawImage;
+    },
+    ...drawImage,
+  };
+};
+
+const drawContourShape = (
+  points: Point[],
+  size: cv.Size,
+  color = PRIMARY_COLOR
+) => {
   const image = cv.Mat.zeros(size.height, size.width, cv.CV_8UC4);
   const closed = true;
   const strokeWidth = 15;
@@ -66,13 +86,7 @@ export const drawContourShape = (points: Point[], size: cv.Size, color = new cv.
   });
   markersVector.push_back(mv);
 
-  cv.polylines(
-    image,
-    markersVector,
-    closed,
-    color,
-    strokeWidth
-  );
+  cv.polylines(image, markersVector, closed, color, strokeWidth);
 
   markersVector.delete();
   mv.delete();

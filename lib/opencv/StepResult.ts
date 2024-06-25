@@ -1,6 +1,6 @@
 import Point from "../Point";
-import ColorSpace from "./ColorSpace";
-import StepName from "./steps/StepName";
+import ColorSpace from "./util/ColorSpace";
+import StepName from "./processor/steps/StepName";
 
 export type StepResult = {
   stepName: StepName;

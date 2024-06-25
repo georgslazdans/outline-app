@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import Point from "../Point";
+import Point from "../../Point";
 
 const coordinatesOfImage = (paperCorners: Point[]) => {
   // Sort the corners in order: top-left, top-right, bottom-right, bottom-left

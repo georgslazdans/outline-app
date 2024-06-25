@@ -3,11 +3,11 @@ import {
   ProcessAll,
   processImage,
   processStep,
-} from "./ImageProcessor";
+} from "./processor/ImageProcessor";
 import * as cv from "@techstark/opencv-js";
 import StepResult from "./StepResult";
 import { OpenCvWork, OpenCvResult, Status } from "./OpenCvWork";
-import outlineCheckImageOf from "./OutlineCheckImage";
+import outlineCheckImageOf from "./processor/OutlineCheckImage";
 
 const processWork = async (work: OpenCvWork) => {
   console.log("Processing work", work);

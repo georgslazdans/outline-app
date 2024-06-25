@@ -1,13 +1,13 @@
 import * as cv from "@techstark/opencv-js";
-import Point from "../Point";
-import StepResult from "./StepResult";
+import Point from "../../Point";
+import StepResult from "../StepResult";
 import extractObjectStep from "./steps/ExtractObject";
 import extractPaperStep from "./steps/ExtractPaper";
 import thresholdStep from "./steps/Threshold";
 import imageWarper from "./ImageWarper";
-import imageDataOf, { imageOf } from "./ImageData";
-import ColorSpace from "./ColorSpace";
-import { drawContourShape } from "./Contours";
+import imageDataOf, { imageOf } from "../util/ImageData";
+import ColorSpace from "../util/ColorSpace";
+import { contourShapeOf } from "../util/Contours";
 
 const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
   const threshold = thresholdResultOf(steps);
@@ -27,36 +27,17 @@ const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
     thresholdImage.size()
   );
 
-  const paperContourImage = drawContourShape(
-    extractPaper.points,
-    thresholdImage.size(),
-    new cv.Scalar(18, 150, 182)
-  );
-
-  // const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {
-  //   const combinedImage = new cv.Mat();
-
-  //   const binaryMask = cv.Mat.zeros(imageB.size(), cv.CV_8UC1);
-  //   cv.threshold(imageB, binaryMask, 128, 255, cv.THRESH_BINARY);
-
-  //   const inverseMask = cv.Mat.zeros(imageB.size(), cv.CV_8UC1);
-  //   cv.bitwise_not(binaryMask, inverseMask);
-
-  //   const mask = grayScaleStep.process(inverseMask, {}).image;
-
-  //   cv.add(imageA, imageB, combinedImage, mask);
-
-  //   binaryMask.delete();
-  //   inverseMask.delete();
-
-  //   return combinedImage;
-  // };
+  console.log("Paper Points", extractPaper.points);
+  const blue = new cv.Scalar(18, 150, 182);
+  const paperContourImage = contourShapeOf(extractPaper.points)
+    .withColour(blue)
+    .drawImageOfSize(thresholdImage.size());
 
   const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {
     const combinedImage = new cv.Mat();
     cv.add(imageA, imageB, combinedImage);
     return combinedImage;
-  }
+  };
 
   const thresholdWithObject = combineImages(thresholdImage, reverseWarped);
   const finalImage = combineImages(thresholdWithObject, paperContourImage);

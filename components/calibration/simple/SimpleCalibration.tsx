@@ -5,13 +5,13 @@ import SimpleSettingsEditor from "./SimpleSettingsEditor";
 import Settings from "@/lib/opencv/Settings";
 import Button from "../../Button";
 import { useDetails } from "@/context/DetailsContext";
-import StepName from "@/lib/opencv/steps/StepName";
+import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useCallback } from "react";
 import Svg from "@/lib/Svg";
 import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
 import { OutlineImageViewer } from "../OutlineImageViewer";
-import StepSetting from "@/lib/opencv/steps/StepSettings";
+import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
 
 type Props = {
   dictionary: Dictionary;

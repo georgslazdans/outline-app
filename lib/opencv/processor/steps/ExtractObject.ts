@@ -1,14 +1,14 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
-import ColorSpace from "../ColorSpace";
+import ColorSpace from "../../util/ColorSpace";
 import {
+  contourShapeOf,
   contoursOf,
-  drawContourShape,
   largestContourOf,
   smoothOf,
-} from "../Contours";
+} from "../../util/Contours";
 import cannyStep from "./Canny";
-import { pointsFrom } from "../../Point";
+import { pointsFrom } from "../../../Point";
 import StepName from "./StepName";
 
 const cannyOf = cannyStep.process;
@@ -45,8 +45,9 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
 
   const points = pointsFrom(resultingContour, 4);
 
-  const resultingImage = drawContourShape(pointsFrom(resultingContour), image.size());
+  const resultingImage = contourShapeOf(pointsFrom(resultingContour)).drawImageOfSize(image.size());
   objectContours.delete();
+  resultingContour.delete();
 
   return { image: resultingImage, points: points };
 };
@@ -75,7 +76,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       config: cannyStep.config!,
     },
   },
-  imageColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: ColorSpace.RGBA,
   process: extractObjectFrom,
 };
 

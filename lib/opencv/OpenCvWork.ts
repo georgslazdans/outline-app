@@ -1,5 +1,5 @@
 import { Context } from "@/context/DetailsContext";
-import { ProcessAll, ProccessStep } from "./ImageProcessor";
+import { ProcessAll, ProccessStep } from "./processor/ImageProcessor";
 import StepResult from "./StepResult";
 import Settings, { settingsOf } from "./Settings";
 

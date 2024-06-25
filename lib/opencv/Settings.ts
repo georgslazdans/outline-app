@@ -1,9 +1,9 @@
 import { Context } from "@/context/DetailsContext";
-import { processingSteps } from "./ImageProcessor";
-import StepName from "./steps/StepName";
+import { processingSteps } from "./processor/ImageProcessor";
+import StepName from "./processor/steps/StepName";
 import deepEqual from "../utils/Objects";
 import Orientation from "../Orientation";
-import StepSetting from "./steps/StepSettings";
+import StepSetting from "./processor/steps/StepSettings";
 
 type Settings = {
   [key: string]: StepSetting;

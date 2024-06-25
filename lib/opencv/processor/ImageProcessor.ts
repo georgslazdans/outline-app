@@ -1,7 +1,7 @@
 import * as cv from "@techstark/opencv-js";
-import Settings from "./Settings";
+import Settings from "../Settings";
 
-import { StepResult } from "./StepResult";
+import { StepResult } from "../StepResult";
 import ProcessingStep, {
   ProcessResult,
 } from "./steps/ProcessingFunction";
@@ -11,8 +11,8 @@ import blurStep from "./steps/Blur";
 import thresholdStep from "./steps/Threshold";
 import extractPaperStep from "./steps/ExtractPaper";
 import extractObjectStep from "./steps/ExtractObject";
-import imageDataOf, { imageOf } from "./ImageData";
-import ColorSpace from "./ColorSpace";
+import imageDataOf, { imageOf } from "../util/ImageData";
+import ColorSpace from "../util/ColorSpace";
 import StepSetting from "./steps/StepSettings";
 
 export type ProcessAll = {

@@ -1,6 +1,6 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
-import ColorSpace from "../ColorSpace";
+import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
 type BlurSettings = {

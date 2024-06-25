@@ -11,8 +11,8 @@ import { useDetails } from "@/context/DetailsContext";
 import { OpenCvWork, allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
 import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
 import deepEqual from "@/lib/utils/Objects";
-import { processingSteps } from "@/lib/opencv/ImageProcessor";
-import StepName from "@/lib/opencv/steps/StepName";
+import { processingSteps } from "@/lib/opencv/processor/ImageProcessor";
+import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
 
