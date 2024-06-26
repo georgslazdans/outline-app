@@ -76,7 +76,7 @@ const processorOf = (
         currentImage = result.image;
         stepData.push({
           stepName: step.name,
-          imageData: imageDataOf(result.image),
+          imageData: imageDataOf(currentImage),
           imageColorSpace: step.imageColorSpace,
           points: result.points,
         });

@@ -29,7 +29,8 @@ const imageDataOf = (image: cv.Mat): ImageData => {
   return new ImageData(
     new Uint8ClampedArray(convertedImage.data),
     convertedImage.cols,
-    convertedImage.rows
+    convertedImage.rows,
+    { colorSpace: "srgb" }
   );
 };
 

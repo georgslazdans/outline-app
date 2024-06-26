@@ -30,7 +30,6 @@ export const extractPaperFrom: Process<ExtractPaperSettings> = (
     const result = new cv.Mat();
     image.copyTo(result);
     return { image: result };
-    // return { image: drawLargestContour(image.size(), contours, hierarchy) };
   }
 
   const smoothedContour = smoothContour(contours.get(contourIndex!));
@@ -65,7 +64,6 @@ const paperHeightOf = (paperSettings: PaperSettings) => {
     : paperSettings.width;
 };
 
-// TODO this needs to have a landscape vs portrait mode
 const warpedImageOf = (
   cornerPoints: Point[],
   src: cv.Mat,

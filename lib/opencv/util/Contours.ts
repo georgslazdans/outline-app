@@ -58,24 +58,29 @@ export const smoothOf = (
 
 export const contourShapeOf = (points: Point[]) => {
   let color = PRIMARY_COLOR;
+  let imageDataType = cv.CV_8UC4;
   const drawImage = {
-    drawImageOfSize: (size: cv.Size) => drawContourShape(points, size, color),
-  };
-  return {
     withColour: (newColour: cv.Scalar) => {
       color = newColour;
       return drawImage;
     },
-    ...drawImage,
+    asRGB: () => {
+      imageDataType = cv.CV_8UC3;
+      return drawImage;
+    },
+    drawImageOfSize: (size: cv.Size) =>
+      drawContourShape(points, size, color, imageDataType),
   };
+  return drawImage;
 };
 
 const drawContourShape = (
   points: Point[],
   size: cv.Size,
-  color = PRIMARY_COLOR
+  color = PRIMARY_COLOR,
+  imageDataType: number
 ) => {
-  const image = cv.Mat.zeros(size.height, size.width, cv.CV_8UC4);
+  const image = cv.Mat.zeros(size.height, size.width, imageDataType);
   const closed = true;
   const strokeWidth = 15;
   const markersVector = new cv.MatVector();

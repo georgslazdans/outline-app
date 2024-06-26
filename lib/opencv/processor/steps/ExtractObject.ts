@@ -45,7 +45,9 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
 
   const points = pointsFrom(resultingContour, 4);
 
-  const resultingImage = contourShapeOf(pointsFrom(resultingContour)).drawImageOfSize(image.size());
+  const resultingImage = contourShapeOf(pointsFrom(resultingContour))
+  .asRGB()
+  .drawImageOfSize(image.size());
   objectContours.delete();
   resultingContour.delete();
 
@@ -76,7 +78,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       config: cannyStep.config!,
     },
   },
-  imageColorSpace: ColorSpace.RGBA,
+  imageColorSpace: ColorSpace.RGB,
   process: extractObjectFrom,
 };
 
