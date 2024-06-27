@@ -26,7 +26,7 @@ const thresholdOf: Process<ThresholdSettings> = (
 const thresholdStep: ProcessingStep<ThresholdSettings> = {
   name: StepName.THRESHOLD,
   settings: {
-    threshold: 100,
+    threshold: 130,
     maxValue: 255,
   },
   config: {

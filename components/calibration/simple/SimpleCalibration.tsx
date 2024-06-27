@@ -59,7 +59,7 @@ const SimpleCalibration = ({
 
   return (
     <>
-      <OutlineImageViewer image={outlineCheckImage}></OutlineImageViewer>
+      <OutlineImageViewer className="max-h-[30vh]" image={outlineCheckImage}></OutlineImageViewer>
       <SimpleSettingsEditor
         dictionary={dictionary}
         settings={settings}

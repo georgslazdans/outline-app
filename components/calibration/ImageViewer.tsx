@@ -47,7 +47,7 @@ export const ImageViewer = ({
         <TransformComponent wrapperClass="!mx-auto">
           <canvas
             id="image-viewer"
-            className="max-w-full max-h-[80vh] mx-auto"
+            className="max-w-full max-h-[50vh] mx-auto"
             ref={canvasRef}
             width={currentStep?.imageData.width}
             height={currentStep?.imageData.height}

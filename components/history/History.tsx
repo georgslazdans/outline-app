@@ -21,9 +21,10 @@ const History = ({ dictionary }: Props) => {
   };
 
   const filter = (nodes: Context[]) => {
-    return nodes.filter((it) =>
-      it.details.name.toLowerCase().includes(search.toLowerCase())
-    );
+    return nodes.filter((it) => {
+      const name = it.details?.name || "";
+      return name.toLowerCase().includes(search.toLowerCase());
+    });
   };
 
   const refreshData = useCallback(() => {

@@ -37,7 +37,12 @@ const DEFAULT_PAPER_SETTINGS = {
 };
 
 const paperSettingsOf = (context: Context) => {
-  return context?.settings[StepName.EXTRACT_PAPER]?.paperSettings;
+  const settings = context?.settings;
+  if (settings && settings[StepName.EXTRACT_PAPER]) {
+    return settings[StepName.EXTRACT_PAPER]?.paperSettings;
+  } else {
+    return defaultSettings()[StepName.EXTRACT_PAPER].paperSettings;
+  }
 };
 
 const DetailsForm = ({ dictionary }: Props) => {
@@ -48,7 +53,7 @@ const DetailsForm = ({ dictionary }: Props) => {
 
   const [paperSize, setPaperSize] = useState("A4");
 
-  const [formData, setFormData] = useState<Form>(
+  const [formData, setFormData] = useState<Form>( // TODO what is this???
     paperSettingsOf(detailsContext) || defaultSettings
   );
 
