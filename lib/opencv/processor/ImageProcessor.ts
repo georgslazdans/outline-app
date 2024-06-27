@@ -25,7 +25,7 @@ export type ProccessStep = {
   settings: Settings;
 };
 
-export const processingSteps: ProcessingStep<any>[] = [
+export const PROCESSING_STEPS: ProcessingStep<any>[] = [
   bilateralFilterStep,
   grayScaleStep,
   blurStep,
@@ -57,25 +57,23 @@ const processorOf = (
     throw new Error("No functions supplied to image processor");
   }
 
-  const settingsFor = (
-    processingFunction: ProcessingStep<any>
-  ): StepSetting => {
-    const name = processingFunction.name;
+  const settingsFor = (step: ProcessingStep<any>): StepSetting => {
+    const name = step.name;
     return settings[name];
   };
 
   const processStep = (
     image: cv.Mat,
-    processingFunction: ProcessingStep<any>
+    step: ProcessingStep<any>
   ): ProcessStepResult => {
     try {
-      var settings = settingsFor(processingFunction);
+      var settings = settingsFor(step);
       return {
         type: "success",
-        stepResult: processingFunction.process(image, settings),
+        stepResult: step.process(image, settings),
       };
     } catch (e) {
-      const errorMessage = "Failed to execute step: " + processingFunction.name;
+      const errorMessage = "Failed to execute step: " + step.name;
       console.error(errorMessage, e);
       return {
         type: "error",
@@ -116,7 +114,7 @@ const processorOf = (
 const stepsStartingFrom = (name: string): ProcessingStep<any>[] => {
   const result = [];
   let stepFound = false;
-  for (const step of processingSteps) {
+  for (const step of PROCESSING_STEPS) {
     if (step.name == name) {
       stepFound = true;
     }
@@ -141,7 +139,23 @@ export const processImage = async (
   command: ProcessAll
 ): Promise<ProcessingResult> => {
   const image = imageOf(command.imageData, ColorSpace.RGBA);
-  const steps = processorOf(processingSteps, command.settings).process(image);
+  const steps = processorOf(PROCESSING_STEPS, command.settings).process(image);
   image.delete();
+  if (steps.results) {
+    ensureAllSteps(steps.results!);
+  }
   return steps;
+};
+
+const ensureAllSteps = (steps: StepResult[]) => {
+  const stepNames = steps.map((it) => it.stepName);
+  for (const step of PROCESSING_STEPS) {
+    if (!stepNames.includes(step.name)) {
+      steps.push({
+        stepName: step.name,
+        imageData: new ImageData(1, 1),
+        imageColorSpace: step.imageColorSpace,
+      });
+    }
+  }
 };

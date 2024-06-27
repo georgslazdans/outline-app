@@ -1,7 +1,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { ChangeEvent } from "react";
-import { processingSteps } from "@/lib/opencv/processor/ImageProcessor";
+import { PROCESSING_STEPS } from "@/lib/opencv/processor/ImageProcessor";
 import StepSettingField from "./StepSettingField";
 import StepSettingGroup from "./StepSettingGroup";
 import StepSetting, { GroupConfig, StepSettingConfig, eventFieldConverterFor } from "@/lib/opencv/processor/steps/StepSettings";
@@ -45,7 +45,7 @@ export const AdvancedSettingsEditor = ({
   };
 
   const configOf = (key: string): StepSettingConfig => {
-    const config = processingSteps.find((it) => it.name == step)?.config;
+    const config = PROCESSING_STEPS.find((it) => it.name == step)?.config;
     if (!config) {
       throw new Error(`Config not found for key: ${key} with step: ${step}}`);
     }

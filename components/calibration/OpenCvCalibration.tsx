@@ -11,7 +11,7 @@ import { useDetails } from "@/context/DetailsContext";
 import { OpenCvWork, allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
 import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
 import deepEqual from "@/lib/utils/Objects";
-import { processingSteps } from "@/lib/opencv/processor/ImageProcessor";
+import { PROCESSING_STEPS } from "@/lib/opencv/processor/ImageProcessor";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
@@ -118,7 +118,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
       updateAllWorkData();
     } else if (settingsChanged) {
       let stepName = firstChangedStep(previousSettings, currentSettings);
-      if (stepName && stepName != processingSteps[0].name) {
+      if (stepName && stepName != PROCESSING_STEPS[0].name) {
         if (
           stepName == StepName.EXTRACT_OBJECT ||
           stepName == StepName.EXTRACT_PAPER

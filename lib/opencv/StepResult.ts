@@ -7,7 +7,6 @@ export type StepResult = {
   imageData: ImageData;
   imageColorSpace: ColorSpace;
   points?: Point[];
-  debugSteps?: StepResult[];
 };
 
 export default StepResult;

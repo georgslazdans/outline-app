@@ -9,7 +9,6 @@ import * as cv from "@techstark/opencv-js";
 import { OpenCvWork, OpenCvResult, Status } from "./OpenCvWork";
 import outlineCheckImageOf from "./processor/OutlineCheckImage";
 
-// TODO add try catch so I can return a decent error message with the done steps for debugging.
 const processWork = async (work: OpenCvWork) => {
   console.log("Processing work", work);
   let result: ProcessingResult;

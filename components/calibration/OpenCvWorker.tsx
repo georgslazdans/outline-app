@@ -43,7 +43,7 @@ export const OpenCvWorker = ({
         }
       }
     },
-    [onWorkerMessage, onError]
+    [onWorkerMessage, onStepError, onError]
   );
 
   const addMessageHandler = useCallback(() => {
