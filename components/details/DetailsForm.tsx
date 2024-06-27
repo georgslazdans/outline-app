@@ -16,6 +16,7 @@ import { useIndexedDB } from "react-indexed-db-hook";
 import { defaultSettings } from "@/lib/opencv/Settings";
 import ImageField from "../image/ImageField";
 import NumberField from "../fiields/NumberField";
+import StepName from "@/lib/opencv/processor/steps/StepName";
 
 type Props = {
   dictionary: any;
@@ -28,6 +29,17 @@ type Form = {
   height: number;
 };
 
+const DEFAULT_PAPER_SETTINGS = {
+  name: "",
+  orientation: Orientation.LANDSCAPE,
+  width: 210,
+  height: 297,
+};
+
+const paperSettingsOf = (context: Context) => {
+  return context?.settings[StepName.EXTRACT_PAPER]?.paperSettings;
+};
+
 const DetailsForm = ({ dictionary }: Props) => {
   const router = useRouter();
   const { detailsContext, setDetailsContext } = useDetails();
@@ -35,12 +47,10 @@ const DetailsForm = ({ dictionary }: Props) => {
   const { add } = useIndexedDB("details");
 
   const [paperSize, setPaperSize] = useState("A4");
-  const [formData, setFormData] = useState<Form>({
-    name: "",
-    orientation: Orientation.LANDSCAPE,
-    width: 210,
-    height: 297,
-  });
+
+  const [formData, setFormData] = useState<Form>(
+    paperSettingsOf(detailsContext) || defaultSettings
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });

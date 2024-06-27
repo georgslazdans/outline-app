@@ -2,9 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import Settings from "../Settings";
 
 import { StepResult } from "../StepResult";
-import ProcessingStep, {
-  ProcessResult,
-} from "./steps/ProcessingFunction";
+import ProcessingStep, { ProcessResult } from "./steps/ProcessingFunction";
 import bilateralFilterStep from "./steps/BilateralFilter";
 import grayScaleStep from "./steps/GrayScale";
 import blurStep from "./steps/Blur";
@@ -36,6 +34,21 @@ export const processingSteps: ProcessingStep<any>[] = [
   extractObjectStep,
 ];
 
+export type ProcessingResult = {
+  results?: StepResult[];
+  error?: string;
+};
+
+type ProcessStepResult =
+  | {
+      type: "success";
+      stepResult: ProcessResult;
+    }
+  | {
+      type: "error";
+      error: string;
+    };
+
 const processorOf = (
   processingSteps: ProcessingStep<any>[],
   settings: Settings
@@ -54,36 +67,48 @@ const processorOf = (
   const processStep = (
     image: cv.Mat,
     processingFunction: ProcessingStep<any>
-  ): ProcessResult => {
+  ): ProcessStepResult => {
     try {
       var settings = settingsFor(processingFunction);
-      return processingFunction.process(image, settings);
+      return {
+        type: "success",
+        stepResult: processingFunction.process(image, settings),
+      };
     } catch (e) {
-      console.error("Failed to execute step: " + processingFunction.name, e);
-      // Rerun with default settings!
-      return processingFunction.process(image, processingFunction.settings);
-      // throw new Error("Failed to execute step: " + processingFunction.name);
+      const errorMessage = "Failed to execute step: " + processingFunction.name;
+      console.error(errorMessage, e);
+      return {
+        type: "error",
+        error: errorMessage,
+      };
     }
   };
 
   return {
-    process: (image: cv.Mat): StepResult[] => {
+    process: (image: cv.Mat): ProcessingResult => {
       const stepData: StepResult[] = [];
+      let errorMessage = undefined;
       const intermediateImages: any[] = [];
       let currentImage = image;
       for (const step of processingSteps) {
         const result = processStep(currentImage, step);
-        currentImage = result.image;
-        stepData.push({
-          stepName: step.name,
-          imageData: imageDataOf(currentImage),
-          imageColorSpace: step.imageColorSpace,
-          points: result.points,
-        });
-        intermediateImages.push(currentImage);
+        if (result.type == "success") {
+          const stepResult = result.stepResult;
+          currentImage = stepResult.image;
+          stepData.push({
+            stepName: step.name,
+            imageData: imageDataOf(currentImage),
+            imageColorSpace: step.imageColorSpace,
+            points: stepResult.points,
+          });
+          intermediateImages.push(currentImage);
+        } else {
+          errorMessage = result.error;
+          break;
+        }
       }
       intermediateImages.forEach((it) => it.delete());
-      return stepData;
+      return { results: stepData, error: errorMessage };
     },
   };
 };
@@ -91,11 +116,11 @@ const processorOf = (
 const stepsStartingFrom = (name: string): ProcessingStep<any>[] => {
   const result = [];
   let stepFound = false;
-  for(const step of processingSteps) {
-    if(step.name == name) {
+  for (const step of processingSteps) {
+    if (step.name == name) {
       stepFound = true;
     }
-    if(stepFound) {
+    if (stepFound) {
       result.push(step);
     }
   }
@@ -104,7 +129,7 @@ const stepsStartingFrom = (name: string): ProcessingStep<any>[] => {
 
 export const processStep = async (
   command: ProccessStep
-): Promise<StepResult[]> => {
+): Promise<ProcessingResult> => {
   const steps = stepsStartingFrom(command.stepName);
   const image = imageOf(command.imageData, command.imageColorSpace);
   const result = processorOf(steps, command.settings).process(image);
@@ -114,11 +139,9 @@ export const processStep = async (
 
 export const processImage = async (
   command: ProcessAll
-): Promise<StepResult[]> => {
+): Promise<ProcessingResult> => {
   const image = imageOf(command.imageData, ColorSpace.RGBA);
-  const steps = processorOf(processingSteps, command.settings).process(
-    image
-  );
+  const steps = processorOf(processingSteps, command.settings).process(image);
   image.delete();
   return steps;
 };

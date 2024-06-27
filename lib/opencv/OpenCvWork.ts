@@ -1,5 +1,5 @@
 import { Context } from "@/context/DetailsContext";
-import { ProcessAll, ProccessStep } from "./processor/ImageProcessor";
+import { ProcessAll, ProccessStep, ProcessingResult } from "./processor/ImageProcessor";
 import StepResult from "./StepResult";
 import Settings, { settingsOf } from "./Settings";
 
@@ -17,12 +17,13 @@ export type Status = "success" | "failed";
 
 export type SuccessResult = {
   status: "success";
-  stepResults: StepResult[];
+  result: ProcessingResult;
   outlineCheckImage: ImageData;
 };
 
 export type FailedResult = {
   status: "failed";
+  result: ProcessingResult;
 };
 
 export type OpenCvResult = SuccessResult | FailedResult

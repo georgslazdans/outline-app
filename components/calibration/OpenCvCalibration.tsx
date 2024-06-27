@@ -15,6 +15,7 @@ import { processingSteps } from "@/lib/opencv/processor/ImageProcessor";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
+import ErrorMessage from "./ErrorMessage";
 
 type Props = {
   dictionary: Dictionary;
@@ -34,6 +35,8 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
   const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
   const [previousSettings, setPreviousSettings] = useState<Settings>();
+
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const settingsChanged = useMemo(
     () => !deepEqual(previousSettings, settingsOf(detailsContext)),
@@ -61,8 +64,26 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
       setLoading(false);
       updateStepResults(newResult);
       setOutlineCheckImage(outlineCheckImage);
+      setErrorMessage(undefined);
     },
     [setLoading, updateStepResults]
+  );
+
+  const handleStepError = useCallback(
+    (newResult: StepResult[], error: string) => {
+      setLoading(false);
+      updateStepResults(newResult);
+      setErrorMessage(error);
+    },
+    [setLoading, updateStepResults]
+  );
+
+  const handleWorkerError = useCallback(
+    (error: string) => {
+      setLoading(false);
+      setErrorMessage(error);
+    },
+    [setLoading]
   );
 
   const setWorkData = (workData: OpenCvWork) => {
@@ -138,10 +159,10 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
       <OpenCvWorker
         message={openCvWork}
         onWorkerMessage={handleOpenCvWork}
-        /* TODO HANDLE ERRORS */
-        onError={() => setLoading(false)}
+        onStepError={handleStepError}
+        onError={handleWorkerError}
       ></OpenCvWorker>
-
+      {errorMessage && <ErrorMessage className="mb-2" text={errorMessage}></ErrorMessage>}
       {simpleMode && detailsContext && (
         <SimpleCalibration
           dictionary={dictionary}
@@ -168,17 +189,3 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 };
 
 export default OpenCvCalibration;
-
-// const debounceTime = 1000;
-// const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
-
-// const handleOnChange = useCallback(
-//   (event: ChangeEvent<HTMLInputElement>) => {
-//     clearTimeout(timeoutId);
-//     const timeout = setTimeout(() => {
-//       onChange(event);
-//     }, debounceTime);
-//     setTimeoutId(timeout);
-//   },
-//   [onChange, timeoutId]
-// );

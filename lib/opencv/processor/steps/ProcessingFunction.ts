@@ -10,6 +10,10 @@ export type ProcessResult = {
   debugImage?: cv.Mat;
 };
 
+export type ErrorResult = {
+  message: string;
+};
+
 export type Process<T extends StepSetting> = (
   image: cv.Mat,
   settings: T

@@ -7,8 +7,12 @@ import { OpenCvWork, OpenCvResult } from "@/lib/opencv/OpenCvWork";
 
 type Props = {
   message?: OpenCvWork;
-  onWorkerMessage: (stepResult: StepResult[], outlineCheckImage: ImageData) => void;
-  onError: () => void;
+  onWorkerMessage: (
+    stepResult: StepResult[],
+    outlineCheckImage: ImageData
+  ) => void;
+  onStepError: (stepResult: StepResult[], message: string) => void;
+  onError: (message: string) => void;
 };
 
 const hasImageData = (message?: OpenCvWork) => {
@@ -17,7 +21,12 @@ const hasImageData = (message?: OpenCvWork) => {
   return message?.data?.imageData && !isImageEmpty(message.data.imageData);
 };
 
-export const OpenCvWorker = ({ message, onWorkerMessage, onError }: Props) => {
+export const OpenCvWorker = ({
+  message,
+  onWorkerMessage,
+  onStepError,
+  onError,
+}: Props) => {
   const workerRef = useRef<Worker>();
 
   const handleMessage = useCallback(
@@ -25,9 +34,13 @@ export const OpenCvWorker = ({ message, onWorkerMessage, onError }: Props) => {
       const result = event.data;
 
       if (result.status == "success") {
-        onWorkerMessage(result.stepResults, result.outlineCheckImage);
+        onWorkerMessage(result.result.results!, result.outlineCheckImage);
       } else {
-        onError();
+        if (result.result.results) {
+          onStepError(result.result.results, result.result.error!);
+        } else {
+          onError(result.result.error!);
+        }
       }
     },
     [onWorkerMessage, onError]

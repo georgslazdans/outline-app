@@ -42,7 +42,6 @@ const DetailsProvider = ({ children }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    console.log("Settin up detailas context", detailsContext);
     if (!detailsContext) {
       getAll().then((allContexts) => {
         if (allContexts && allContexts.length > 0) {
