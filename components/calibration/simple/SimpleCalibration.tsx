@@ -16,23 +16,17 @@ import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
-  settingsChanged: boolean;
   openAdvancedMode: () => void;
   stepResults: StepResult[];
   outlineCheckImage?: ImageData;
-  rerun: () => void;
-  onClose: () => void;
 };
 
 const SimpleCalibration = ({
   dictionary,
   settings,
-  settingsChanged,
   openAdvancedMode,
   stepResults,
   outlineCheckImage,
-  rerun,
-  onClose: close,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
@@ -77,17 +71,6 @@ const SimpleCalibration = ({
         </Button>
         <Button className="mt-2" onClick={exportSvg} style="secondary">
           <label>{dictionary.calibration.exportSvg}</label>
-        </Button>
-      </div>
-      <div className="flex gap-4 mt-4">
-        <Button
-          onClick={() => rerun()}
-          style={settingsChanged ? "red" : "disabled"}
-        >
-          <label>{dictionary.calibration.rerun}</label>
-        </Button>
-        <Button onClick={() => close()}>
-          <label>{dictionary.calibration.done}</label>
         </Button>
       </div>
     </>

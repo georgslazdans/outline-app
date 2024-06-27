@@ -15,17 +15,11 @@ import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
 type Props = {
   dictionary: Dictionary;
   stepResults: StepResult[];
-  rerun: () => void;
-  onClose: () => void;
-  settingsChanged: boolean;
 };
 
 export const AdvancedCalibration = ({
   dictionary,
-  stepResults,
-  rerun,
-  onClose,
-  settingsChanged,
+  stepResults
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
@@ -77,17 +71,6 @@ export const AdvancedCalibration = ({
         onChange={handleSettingsChange}
         step={currentStep?.stepName}
       ></AdvancedSettingsEditor>
-      <div className="flex gap-4 mt-4">
-        <Button
-          onClick={() => rerun()}
-          style={settingsChanged ? "red" : "disabled"}
-        >
-          <label>{dictionary.calibration.rerun}</label>
-        </Button>
-        <Button onClick={() => onClose()}>
-          <label>{dictionary.calibration.done}</label>
-        </Button>
-      </div>
     </>
   );
 };

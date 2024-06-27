@@ -16,6 +16,7 @@ import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
+import BottomButtons from "./BottomButtons";
 
 type Props = {
   dictionary: Dictionary;
@@ -162,28 +163,40 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
         onStepError={handleStepError}
         onError={handleWorkerError}
       ></OpenCvWorker>
-      {errorMessage && <ErrorMessage className="mb-2" text={errorMessage}></ErrorMessage>}
-      {simpleMode && detailsContext && (
-        <SimpleCalibration
-          dictionary={dictionary}
-          stepResults={stepResults}
-          settings={detailsContext.settings}
-          settingsChanged={settingsChanged}
-          openAdvancedMode={() => setSimpleMode(false)}
-          outlineCheckImage={outlineCheckImage}
-          rerun={rerunOpenCv}
-          onClose={saveAndClose}
-        ></SimpleCalibration>
-      )}
-      {!simpleMode && detailsContext && (
-        <AdvancedCalibration
-          dictionary={dictionary}
-          stepResults={stepResults}
-          rerun={rerunOpenCv}
-          onClose={() => setSimpleMode(true)}
-          settingsChanged={settingsChanged}
-        ></AdvancedCalibration>
-      )}
+      <div className="flex flex-col min-h-full flex-grow">
+        <div className="flex-grow overflow-auto">
+          {errorMessage && (
+            <ErrorMessage className="mb-2" text={errorMessage}></ErrorMessage>
+          )}
+          {simpleMode && detailsContext && (
+            <>
+              <SimpleCalibration
+                dictionary={dictionary}
+                stepResults={stepResults}
+                settings={detailsContext.settings}
+                openAdvancedMode={() => setSimpleMode(false)}
+                outlineCheckImage={outlineCheckImage}
+              ></SimpleCalibration>
+            </>
+          )}
+          {!simpleMode && detailsContext && (
+            <>
+              <AdvancedCalibration
+                dictionary={dictionary}
+                stepResults={stepResults}
+              ></AdvancedCalibration>
+            </>
+          )}
+        </div>
+        <div className="w-full">
+          <BottomButtons
+            dictionary={dictionary}
+            rerun={rerunOpenCv}
+            onClose={() => (simpleMode ? saveAndClose() : setSimpleMode(true))}
+            settingsChanged={settingsChanged}
+          ></BottomButtons>
+        </div>
+      </div>
     </>
   );
 };
