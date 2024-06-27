@@ -80,7 +80,7 @@ const DetailsForm = ({ dictionary }: Props) => {
     event.preventDefault();
     setLoading(true);
 
-    const settings = defaultSettings();
+    const settings = detailsContext?.settings || defaultSettings();
     settings.extractPaper.paperSettings = {
       width: formData.width,
       height: formData.height,
