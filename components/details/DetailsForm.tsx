@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useLoading } from "@/context/LoadingContext";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { defaultSettings } from "@/lib/opencv/Settings";
-import ImageField from "../image/ImageField";
+import ImageField from "../fiields/ImageField";
 import NumberField from "../fiields/NumberField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 
@@ -119,7 +119,7 @@ const DetailsForm = ({ dictionary }: Props) => {
     <form className="m-4 flex flex-col gap-3" onSubmit={onFormSave}>
       <ImageField
         dictionary={dictionary}
-        detailsContext={detailsContext}
+        blob={detailsContext?.imageFile}
       ></ImageField>
       <InputField
         value={formData.name}
