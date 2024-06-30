@@ -23,14 +23,22 @@ const processWork = async (work: OpenCvWork) => {
   return result;
 };
 
+const settingsOf = (message: OpenCvWork) => {
+  return message.data.settings;
+};
+
 const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
   try {
     const stepResults = await processWork(message);
     if (!stepResults.error) {
+      const outlineCheckImage = outlineCheckImageOf(
+        stepResults.results!,
+        settingsOf(message)
+      );
       return {
         status: "success",
         result: stepResults,
-        outlineCheckImage: outlineCheckImageOf(stepResults.results!),
+        outlineCheckImage: outlineCheckImage,
       };
     } else {
       return {

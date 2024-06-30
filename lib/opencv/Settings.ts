@@ -2,17 +2,10 @@ import { Context } from "@/context/DetailsContext";
 import { PROCESSING_STEPS } from "./processor/ImageProcessor";
 import StepName from "./processor/steps/StepName";
 import deepEqual from "../utils/Objects";
-import Orientation from "../Orientation";
 import StepSetting from "./processor/steps/StepSettings";
 
 type Settings = {
   [key: string]: StepSetting;
-};
-
-export type PaperSettings = {
-  width: number;
-  height: number;
-  orientation: Orientation;
 };
 
 export const defaultSettings = (): Settings => {

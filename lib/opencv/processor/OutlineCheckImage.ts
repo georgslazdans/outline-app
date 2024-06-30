@@ -8,8 +8,13 @@ import imageWarper from "./ImageWarper";
 import imageDataOf, { imageOf } from "../util/ImageData";
 import ColorSpace from "../util/ColorSpace";
 import { contourShapeOf } from "../util/Contours";
+import PaperSettings, { paperHeightOf, paperSettingsOf, paperWidthOf } from "../PaperSettings";
+import Settings from "../Settings";
 
-const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
+const outlineCheckImageOf = (
+  steps: StepResult[],
+  settings: Settings
+): ImageData => {
   const threshold = thresholdResultOf(steps);
   const extractPaper = extractPaperResultOf(steps);
   const extractObject = extractObjectResultOf(steps);
@@ -24,10 +29,10 @@ const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
   const reverseWarped = reverseWarpedImageOf(
     extractPaper.points!,
     objectImage,
-    thresholdImage.size()
+    thresholdImage.size(),
+    paperSettingsOf(settings)
   );
 
-  console.log("Paper Points", extractPaper.points);
   const blue = new cv.Scalar(18, 150, 182);
   const paperContourImage = contourShapeOf(extractPaper.points)
     .withColour(blue)
@@ -56,11 +61,12 @@ const outlineCheckImageOf = (steps: StepResult[]): ImageData => {
 const reverseWarpedImageOf = (
   cornerPoints: Point[],
   image: cv.Mat,
-  imageSize: cv.Size
+  imageSize: cv.Size,
+  paperSettings: PaperSettings
 ): cv.Mat => {
   const scale = 4;
-  const paperWidth = 297 * scale;
-  const paperHeight = 210 * scale;
+  const paperWidth = paperWidthOf(paperSettings) * scale;
+  const paperHeight = paperHeightOf(paperSettings) * scale;
 
   return imageWarper()
     .withPaperSize(paperWidth, paperHeight)

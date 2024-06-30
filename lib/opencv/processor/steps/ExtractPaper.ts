@@ -6,8 +6,8 @@ import cannyStep from "./Canny";
 import { contoursOf, largestContourOf } from "../../util/Contours";
 import StepName from "./StepName";
 import imageWarper from "../ImageWarper";
-import { PaperSettings } from "../../Settings";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
+import PaperSettings, { paperHeightOf, paperWidthOf } from "../../PaperSettings";
 
 const cannyOf = cannyStep.process;
 type CannySettings = typeof cannyStep.settings;
@@ -50,18 +50,6 @@ const smoothContour = (contour: cv.Mat) => {
   const accuracy = 0.02 * cv.arcLength(contour, true);
   cv.approxPolyDP(contour, result, accuracy, true);
   return result;
-};
-
-const paperWidthOf = (paperSettings: PaperSettings) => {
-  return paperSettings.orientation == Orientation.PORTRAIT
-    ? paperSettings.width
-    : paperSettings.height;
-};
-
-const paperHeightOf = (paperSettings: PaperSettings) => {
-  return paperSettings.orientation == Orientation.PORTRAIT
-    ? paperSettings.height
-    : paperSettings.width;
 };
 
 const warpedImageOf = (
