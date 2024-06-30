@@ -39,3 +39,6 @@ next-env.d.ts
 **/public/sw.js
 **/public/workbox-*.js.map
 **/public/sw.js.map
+
+**/public/images/next-image-export-optimizer-hashes.json
+**/public/nextImageExportOptimizer/*

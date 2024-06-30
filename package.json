@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --experimental-https",
-    "build": "next build",
+    "build": "next build && next-image-export-optimizer",
     "start": "next start",
     "lint": "next lint",
     "test": "jest"
@@ -15,11 +15,13 @@
     "@techstark/opencv-js": "^4.9.0-release.3",
     "comlink": "^4.4.1",
     "next": "14.2.3",
+    "next-image-export-optimizer": "^1.14.1",
     "react": "^18",
     "react-dom": "^18",
     "react-indexed-db-hook": "^1.0.14",
     "react-loader-spinner": "^6.1.6",
-    "react-zoom-pan-pinch": "^3.4.4"
+    "react-zoom-pan-pinch": "^3.4.4",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",

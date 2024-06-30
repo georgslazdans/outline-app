@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { getDictionary } from "./dictionaries";
 import wrenchPic from "./wrench.png";
 import Upload from "@/components/image/Upload";
 import HistoryButton from "@/components/HistoryButton";
+import ExportedImage from "next-image-export-optimizer";
 
 export default async function Home() {
   const dictionary = await getDictionary("en");
@@ -12,13 +12,13 @@ export default async function Home() {
         <h1 className="text-center p-2">{dictionary.description}</h1>
         <div className="relative h-[50vh] mt-4">
           <div className="absolute h-full w-full">
-            <Image
+            <ExportedImage
               className="object-contain"
               src={wrenchPic}
               alt={dictionary.pictureAlt}
               priority
               fill
-            ></Image>
+            ></ExportedImage>
           </div>
         </div>
         <Upload dictionary={dictionary}></Upload>
