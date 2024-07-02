@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --experimental-https",
+    "dev": "next dev",
     "build": "next build && next-image-export-optimizer",
     "start": "next start",
     "lint": "next lint",
