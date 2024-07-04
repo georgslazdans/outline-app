@@ -1,15 +1,7 @@
-import { default as PWA } from "next-pwa";
-import { nanoid } from "nanoid";
-import { default as getStaticPrecacheEntries } from "./config/staticprecache.js";
-import { default as getGeneratedPrecacheEntries } from "./config/precache.js";
-import { PHASE_PRODUCTION_BUILD } from "next/constants.js";
-
-const buildId = nanoid();
+import withSerwistInit from "@serwist/next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  generateBuildId: () => buildId,
-
   output: "export",
   images: {
     loader: "custom",
@@ -31,26 +23,12 @@ const nextConfig = {
     return config;
   },
 };
-const pwaConfig = {
-  dest: "public",
-  // cacheOnFrontEndNav: true,
-  dynamicStartUrl: false,
-};
 
-const pwa = (pwaConfig) => {
-  return { withNextConfig: (nextConfig) => PWA(pwaConfig)(nextConfig) };
-};
+const withSerwist = withSerwistInit({
+  // Note: This is only an example. If you use Pages Router,
+  // use something else that works, such as "service-worker/index.ts".
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
+});
 
-const configFunction = (phase, { defaultConfig }) => {
-  const config = { ...pwaConfig };
-
-  if (phase === PHASE_PRODUCTION_BUILD) {
-    config.additionalManifestEntries = [
-      ...getStaticPrecacheEntries(config),
-      ...getGeneratedPrecacheEntries(buildId),
-    ];
-  }
-  console.log("PWA config", config);
-  return pwa(config).withNextConfig({ ...defaultConfig, ...nextConfig });
-};
-export default configFunction;
+export default withSerwist(nextConfig);
