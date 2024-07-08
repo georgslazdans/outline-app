@@ -12,6 +12,7 @@ import extractObjectStep from "./steps/ExtractObject";
 import imageDataOf, { imageOf } from "../util/ImageData";
 import ColorSpace from "../util/ColorSpace";
 import StepSetting from "./steps/StepSettings";
+import handleOpenCvError from "../OpenCvError";
 
 export type ProcessAll = {
   imageData: ImageData;
@@ -73,8 +74,8 @@ const processorOf = (
         stepResult: step.process(image, settings),
       };
     } catch (e) {
-      const errorMessage = "Failed to execute step: " + step.name;
-      console.error(errorMessage, e);
+      const errorMessage =
+        "Failed to execute step: " + step.name + ", " + handleOpenCvError(e);
       return {
         type: "error",
         error: errorMessage,

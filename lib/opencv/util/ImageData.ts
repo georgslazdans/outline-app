@@ -1,5 +1,6 @@
 import * as cv from "@techstark/opencv-js";
 import ColorSpace, { conversionCodeOf } from "./ColorSpace";
+import handleOpenCvError from "../OpenCvError";
 
 export const imageOf = (
   imageData: ImageData,
@@ -24,24 +25,35 @@ export const imageOf = (
   }
 };
 
-const imageDataOf = (image: cv.Mat): ImageData => {
-  var convertedImage = convertImage(image);
+const asImageData = (image: cv.Mat): ImageData => {
   return new ImageData(
-    new Uint8ClampedArray(convertedImage.data),
-    convertedImage.cols,
-    convertedImage.rows,
+    new Uint8ClampedArray(image.data),
+    image.cols,
+    image.rows,
     { colorSpace: "srgb" }
   );
 };
 
-const convertImage = (image: cv.Mat): cv.Mat => {
-  const channels = image.channels();
-  if (channels == 4) {
-    return image;
+const imageDataOf = (image: cv.Mat): ImageData => {
+  try {
+    if (image.channels() == 4) {
+      return asImageData(image);
+    } else {
+      var convertedImage = convertToRGBA(image);
+      const imageData = asImageData(convertedImage);
+      convertedImage.delete();
+      return imageData;
+    }
+  } catch (e) {
+    const error = handleOpenCvError(e);
+    throw new Error("Failed to convert image: " + error);
   }
+};
+
+const convertToRGBA = (image: cv.Mat): cv.Mat => {
   let destination = new cv.Mat();
   image.convertTo(destination, cv.CV_8U);
-  cv.cvtColor(destination, destination, colorConversionOf(channels));
+  cv.cvtColor(destination, destination, colorConversionOf(image.channels()));
   return destination;
 };
 
