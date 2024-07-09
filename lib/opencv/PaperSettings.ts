@@ -8,13 +8,27 @@ type PaperSettings = {
   orientation: Orientation;
 };
 
-export const paperWidthOf = (paperSettings: PaperSettings) => {
+export type PaperDimensions = {
+  width: number;
+  height: number;
+};
+
+export const paperDimensionsOf = (
+  paperSettings: PaperSettings
+): PaperDimensions => {
+  return {
+    width: paperWidthOf(paperSettings),
+    height: paperHeightOf(paperSettings),
+  };
+};
+
+const paperWidthOf = (paperSettings: PaperSettings) => {
   return paperSettings.orientation == Orientation.PORTRAIT
     ? paperSettings.width
     : paperSettings.height;
 };
 
-export const paperHeightOf = (paperSettings: PaperSettings) => {
+const paperHeightOf = (paperSettings: PaperSettings) => {
   return paperSettings.orientation == Orientation.PORTRAIT
     ? paperSettings.height
     : paperSettings.width;

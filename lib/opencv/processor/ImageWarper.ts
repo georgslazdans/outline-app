@@ -1,5 +1,25 @@
 import * as cv from "@techstark/opencv-js";
 import Point from "../../Point";
+import { PaperDimensions } from "../PaperSettings";
+
+const scaleFactorOf = (
+  imageSize: cv.Size,
+  paperDimensions: PaperDimensions
+): number => {
+  const widthScaleFactor = imageSize.width / paperDimensions.width;
+  const heightScaleFactor = imageSize.height / paperDimensions.height;
+  return Math.min(widthScaleFactor, heightScaleFactor);
+};
+
+const calculateWarpedImagedSize = (
+  scaleFactor: number,
+  paperDimensions: PaperDimensions
+) => {
+  return {
+    width: Math.floor(paperDimensions.width * scaleFactor),
+    height: Math.floor(paperDimensions.height * scaleFactor),
+  };
+};
 
 const coordinatesOfImage = (paperCorners: Point[]) => {
   // Sort the corners in order: top-left, top-right, bottom-right, bottom-left
@@ -22,16 +42,19 @@ const coordinatesOfImage = (paperCorners: Point[]) => {
   ]);
 };
 
-const coordinatesOfPaper = (paperWidth: number, paperHeight: number) => {
+const coordinatesOfPaper = (
+  paperDimensions: PaperDimensions,
+  scaleFactor: number = 1
+) => {
   return cv.matFromArray(4, 1, cv.CV_32FC2, [
     0,
     0,
-    paperWidth,
+    paperDimensions.width * scaleFactor,
     0,
-    paperWidth,
-    paperHeight,
+    paperDimensions.width * scaleFactor,
+    paperDimensions.height * scaleFactor,
     0,
-    paperHeight,
+    paperDimensions.height * scaleFactor,
   ]);
 };
 
@@ -47,20 +70,25 @@ const applyTransform = (
 
 const imageWarper = () => {
   return {
-    withPaperSize: (width: number, height: number) => {
-      const paperCorners = coordinatesOfPaper(width, height);
-      const imageSize = new cv.Size(width, height);
-
+    withPaperSize: (paperSize: PaperDimensions) => {
       return {
         andPaperContour: (contour: Point[]) => {
           const imageCorners = coordinatesOfImage(contour);
           return {
             warpImage: (image: cv.Mat) => {
+              const scaleFactor = scaleFactorOf(image.size(), paperSize);
+              const paperCorners = coordinatesOfPaper(paperSize, scaleFactor);
+
               const transformMatrix = cv.getPerspectiveTransform(
                 imageCorners,
                 paperCorners
               );
-              const result = applyTransform(transformMatrix, image, imageSize);
+
+              const result = applyTransform(
+                transformMatrix,
+                image,
+                calculateWarpedImagedSize(scaleFactor, paperSize)
+              );
 
               imageCorners.delete();
               paperCorners.delete();
@@ -68,13 +96,18 @@ const imageWarper = () => {
 
               return result;
             },
-            // TODO image size should be the original, intead of the paper
-            reverseWarpImage: (image: cv.Mat, imageSize: cv.Size) => {
+            reverseWarpImage: (image: cv.Mat, originalImageSize: cv.Size) => {
+              const scaleFactor = scaleFactorOf(originalImageSize, paperSize);
+              const paperCorners = coordinatesOfPaper(paperSize, scaleFactor);
               const transformMatrix = cv.getPerspectiveTransform(
                 paperCorners,
                 imageCorners
               );
-              const result = applyTransform(transformMatrix, image, imageSize);
+              const result = applyTransform(
+                transformMatrix,
+                image,
+                originalImageSize
+              );
 
               imageCorners.delete();
               paperCorners.delete();

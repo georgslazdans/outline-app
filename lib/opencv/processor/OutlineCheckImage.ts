@@ -8,7 +8,7 @@ import imageWarper from "./ImageWarper";
 import imageDataOf, { imageOf } from "../util/ImageData";
 import ColorSpace from "../util/ColorSpace";
 import { contourShapeOf } from "../util/Contours";
-import PaperSettings, { paperHeightOf, paperSettingsOf, paperWidthOf } from "../PaperSettings";
+import PaperSettings, { paperDimensionsOf, paperSettingsOf } from "../PaperSettings";
 import Settings from "../Settings";
 
 const outlineCheckImageOf = (
@@ -64,12 +64,8 @@ const reverseWarpedImageOf = (
   imageSize: cv.Size,
   paperSettings: PaperSettings
 ): cv.Mat => {
-  const scale = 4;
-  const paperWidth = paperWidthOf(paperSettings) * scale;
-  const paperHeight = paperHeightOf(paperSettings) * scale;
-
   return imageWarper()
-    .withPaperSize(paperWidth, paperHeight)
+    .withPaperSize(paperDimensionsOf(paperSettings))
     .andPaperContour(cornerPoints)
     .reverseWarpImage(image, imageSize);
 };

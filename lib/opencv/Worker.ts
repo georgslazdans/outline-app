@@ -6,8 +6,9 @@ import {
   processStep,
 } from "./processor/ImageProcessor";
 import * as cv from "@techstark/opencv-js";
-import { OpenCvWork, OpenCvResult, Status } from "./OpenCvWork";
+import { OpenCvWork, OpenCvResult } from "./OpenCvWork";
 import outlineCheckImageOf from "./processor/OutlineCheckImage";
+import handleOpenCvError from "./OpenCvError";
 
 const processWork = async (work: OpenCvWork) => {
   console.log("Processing work", work);
@@ -47,8 +48,8 @@ const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
       };
     }
   } catch (e: any) {
-    const errorMessage = "Error while executing OpenCv! " + e.message;
-    console.error("Error while executing OpenCv", e);
+    const errorMessage =
+      "Error while executing OpenCv! " + handleOpenCvError(e);
     return {
       status: "failed",
       result: { error: errorMessage },

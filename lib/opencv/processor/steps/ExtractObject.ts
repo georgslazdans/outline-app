@@ -42,8 +42,8 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
         settings.smoothAccuracy / 10000
       )
     : objectContours.contours.get(countourIndex);
-  const points = pointsFrom(resultingContour, 4); // Scale back down to real world values
-  const resultingImage = contourShapeOf(pointsFrom(resultingContour))
+  const points = pointsFrom(resultingContour);
+  const resultingImage = contourShapeOf(points)
     .asRGB()
     .drawImageOfSize(image.size());
 

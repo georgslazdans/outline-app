@@ -7,7 +7,7 @@ import { contoursOf, largestContourOf } from "../../util/Contours";
 import StepName from "./StepName";
 import imageWarper from "../ImageWarper";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
-import PaperSettings, { paperHeightOf, paperWidthOf } from "../../PaperSettings";
+import PaperSettings, { paperDimensionsOf } from "../../PaperSettings";
 
 const cannyOf = cannyStep.process;
 type CannySettings = typeof cannyStep.settings;
@@ -57,12 +57,8 @@ const warpedImageOf = (
   src: cv.Mat,
   paperSettings: PaperSettings
 ): cv.Mat => {
-  const scale = 4;
-  const paperWidth = paperWidthOf(paperSettings) * scale;
-  const paperHeight = paperHeightOf(paperSettings) * scale;
-
   return imageWarper()
-    .withPaperSize(paperWidth, paperHeight)
+    .withPaperSize(paperDimensionsOf(paperSettings))
     .andPaperContour(cornerPoints)
     .warpImage(src);
 };
