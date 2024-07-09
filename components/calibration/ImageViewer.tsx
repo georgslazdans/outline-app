@@ -1,16 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import StepResult from "@/lib/opencv/StepResult";
 import Button from "../Button";
 import { downloadFile } from "@/lib/utils/Download";
 
 type Props = {
   className?: string;
-  currentStep?: StepResult;
+  imageData?: ImageData;
   showDownload?: boolean;
 };
 export const ImageViewer = ({
-  currentStep,
+  imageData,
   className,
   showDownload = false,
 }: Props) => {
@@ -23,10 +22,10 @@ export const ImageViewer = ({
 
   const drawImage = useCallback(() => {
     const ctx = getContext();
-    if (ctx && currentStep?.imageData) {
-      ctx.putImageData(currentStep.imageData, 0, 0);
+    if (ctx && imageData) {
+      ctx.putImageData(imageData, 0, 0);
     }
-  }, [currentStep]);
+  }, [imageData]);
 
   useEffect(() => {
     drawImage();
@@ -34,12 +33,12 @@ export const ImageViewer = ({
 
   const downloadImage = useCallback(() => {
     const canvas = canvasRef.current;
-    if (canvas && currentStep?.imageData) {
+    if (canvas && imageData) {
       canvas.toBlob((blob) => {
         downloadFile(blob!, "TestImage.png");
       });
     }
-  }, [currentStep?.imageData]);
+  }, [imageData]);
 
   return (
     <div className={className}>
@@ -49,8 +48,8 @@ export const ImageViewer = ({
             id="image-viewer"
             className="max-w-full max-h-[50vh] mx-auto"
             ref={canvasRef}
-            width={currentStep?.imageData.width}
-            height={currentStep?.imageData.height}
+            width={imageData?.width}
+            height={imageData?.height}
           />
         </TransformComponent>
       </TransformWrapper>

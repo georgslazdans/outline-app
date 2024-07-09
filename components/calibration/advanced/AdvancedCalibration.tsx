@@ -7,7 +7,6 @@ import Settings from "@/lib/opencv/Settings";
 import { ImageViewer } from "../ImageViewer";
 import StepResult from "@/lib/opencv/StepResult";
 import { Dictionary } from "@/app/dictionaries";
-import Button from "../../Button";
 import { AdvancedSettingsEditor } from "./AdvancedSettingsEditor";
 import { ImageSelector } from "../ImageSelector";
 import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
@@ -17,10 +16,7 @@ type Props = {
   stepResults: StepResult[];
 };
 
-export const AdvancedCalibration = ({
-  dictionary,
-  stepResults
-}: Props) => {
+export const AdvancedCalibration = ({ dictionary, stepResults }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
   const [currentStep, setCurrentStep] = useState<StepResult>();
@@ -28,6 +24,16 @@ export const AdvancedCalibration = ({
   useEffect(() => {
     if (!currentStep && stepResults && stepResults.length > 0) {
       setCurrentStep(stepResults[0]);
+    }
+  }, [currentStep, stepResults]);
+
+  useEffect(() => {
+    if (currentStep) {
+      const name = currentStep.stepName;
+      const step = stepResults.find((it) => it.stepName === name);
+      if (step != currentStep) {
+        setCurrentStep(step);
+      }
     }
   }, [currentStep, stepResults]);
 
@@ -64,7 +70,10 @@ export const AdvancedCalibration = ({
         stepResults={stepResults}
         onDataChange={handleDataChange}
       ></ImageSelector>
-      <ImageViewer className="mt-2" currentStep={currentStep}></ImageViewer>
+      <ImageViewer
+        className="mt-2"
+        imageData={currentStep?.imageData}
+      ></ImageViewer>
       <AdvancedSettingsEditor
         dictionary={dictionary}
         currentSetting={currentStepSettings()}
