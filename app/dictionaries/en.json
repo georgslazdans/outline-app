@@ -68,5 +68,7 @@
     "settings": "Settings",
     "svg": "SVG",
     "delete": "Delete"
-  }
+  },
+  "homepage": "Home",
+  "menu": "Menu"
 }

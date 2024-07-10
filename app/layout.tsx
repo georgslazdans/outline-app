@@ -3,6 +3,7 @@ import "./globals.css";
 import { LoadingProvider } from "@/context/LoadingContext";
 import { getDictionary } from "./dictionaries";
 import dynamic from "next/dynamic";
+import Navbar from "@/components/navbar/Navbar";
 
 const IndexedDbContext = dynamic(() => import("@/context/IndexedDbContext"), {
   ssr: false,
@@ -28,6 +29,7 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <IndexedDbContext></IndexedDbContext>
+        <Navbar dictionary={dictionary} />
         <LoadingProvider dictionary={dictionary}>
           <DetailsProvider>{children}</DetailsProvider>
         </LoadingProvider>
