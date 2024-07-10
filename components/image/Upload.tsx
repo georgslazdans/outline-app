@@ -6,18 +6,22 @@ import PhotoUpload from "./PhotoCapture";
 import { useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
 import getImageData from "@/lib/utils/ImageData";
+import { useLoading } from "@/context/LoadingContext";
 
 type Props = {
   dictionary: any;
 };
 
 const Upload = ({ dictionary }: Props) => {
+  const { setLoading } = useLoading();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { setDetailsContext } = useDetails();
   const router = useRouter();
+  router.prefetch("/details");
 
   const onFileUpload = async (event: any) => {
+    setLoading(true);
     const file = event.target.files[0];
     if (file) {
       const imageData = await getImageData(file, canvasRef.current);
@@ -29,8 +33,6 @@ const Upload = ({ dictionary }: Props) => {
       router.push("/details");
     }
   };
-
-
 
   return (
     <>

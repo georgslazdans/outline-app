@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import InputField from "../fiields/InputField";
 import Button from "../Button";
 import SelectField from "../fiields/SelectField";
@@ -56,6 +56,10 @@ const DetailsForm = ({ dictionary }: Props) => {
   const [formData, setFormData] = useState<Form>( // TODO what is this???
     paperSettingsOf(detailsContext) || defaultSettings
   );
+
+  useEffect(() => {
+    setLoading(false);
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
