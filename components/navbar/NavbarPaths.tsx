@@ -10,6 +10,10 @@ const navbarPaths = (dictionary: Dictionary): NavbarPath[] => {
       path: "/history",
       name: dictionary.history.title,
     },
+    // {
+    //   path: "/info",
+    //   name: dictionary.info.title,
+    // },
   ];
 };
 

@@ -64,6 +64,9 @@
     "svg": "SVG",
     "delete": "Izdzēst"
   },
+  "info": {
+    "title": "Informācija"
+  },
   "homepage": "Sākums",
   "menu": "Izvēlne"
 }
