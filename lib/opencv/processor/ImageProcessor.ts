@@ -60,7 +60,8 @@ const processorOf = (
 
   const settingsFor = (step: ProcessingStep<any>): StepSetting => {
     const name = step.name;
-    return settings[name];
+    const stepSettings = {...step.settings, ...settings[name]};
+    return stepSettings;
   };
 
   const processStep = (

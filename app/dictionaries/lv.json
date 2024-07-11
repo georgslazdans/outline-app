@@ -43,6 +43,8 @@
       "blurWidth": "Blur Size (px)",
       "threshold": "Threshold",
       "maxValue": "Max Value",
+      "blockSize": "Block Size",
+      "c": "Constant",
       "cannySettings": "Canny Settings",
       "paperSettings": "Paper Settings",
       "smoothOutline": "Smooth Outline",

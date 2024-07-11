@@ -4,6 +4,8 @@ import ColorSpace from "../../util/ColorSpace";
 import {
   contourShapeOf,
   contoursOf,
+  drawAllContours,
+  fancyContoursOf,
   largestContourOf,
   smoothOf,
 } from "../../util/Contours";
@@ -24,8 +26,9 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   image: cv.Mat,
   settings: ExtractObjectSettings
 ): ProcessResult => {
-  const objectContours = contoursOf(
-    cannyOf(image, settings.cannySettings).image
+  const cannyImage = cannyOf(image, settings.cannySettings).image
+  const objectContours = fancyContoursOf(
+    cannyImage
   );
 
   const countourIndex = largestContourOf(objectContours.contours);
@@ -47,8 +50,13 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     .asRGB()
     .drawImageOfSize(image.size());
 
+
+  // const resultingImage = drawAllContours(image.size(), objectContours);
+
   objectContours.delete();
   resultingContour.delete();
+  cannyImage.delete();
+
 
   return { image: resultingImage, points: points };
 };

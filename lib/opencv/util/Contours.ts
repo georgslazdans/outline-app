@@ -32,6 +32,20 @@ export const contoursOf = (image: cv.Mat): ImageContours => {
   return new ImageContours(contours, hierarchy);
 };
 
+export const fancyContoursOf = (image: cv.Mat): ImageContours => {
+  const contours = new cv.MatVector();
+  const hierarchy = new cv.Mat();
+  cv.findContours(
+    image,
+    contours,
+    hierarchy,
+    cv.RETR_CCOMP,
+    cv.CHAIN_APPROX_TC89_L1
+  );
+
+  return new ImageContours(contours, hierarchy);
+};
+
 export const largestContourOf = (contours: cv.MatVector): number | null => {
   let area = 0;
   let result = null;
@@ -128,9 +142,9 @@ export const drawLargestContour = (
 
 export const drawAllContours = (
   imageSize: cv.Size,
-  contours: cv.MatVector,
-  hierarchy: cv.Mat
+  imageContours: ImageContours
 ): cv.Mat => {
+  const { contours, hierarchy } = imageContours;
   // Create a color image to draw contours
   let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
   for (let i = 0; i < contours.size(); ++i) {

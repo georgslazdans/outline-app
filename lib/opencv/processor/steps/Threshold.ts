@@ -6,6 +6,8 @@ import StepName from "./StepName";
 type ThresholdSettings = {
   threshold: number;
   maxValue: number;
+  blockSize: number;
+  c: number;
 };
 
 const thresholdOf: Process<ThresholdSettings> = (
@@ -13,12 +15,30 @@ const thresholdOf: Process<ThresholdSettings> = (
   settings: ThresholdSettings
 ): ProcessResult => {
   let threshold = new cv.Mat();
-  cv.threshold(
+  cv.adaptiveThreshold(
     image,
+    threshold,
+    settings.maxValue,
+    cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+    cv.THRESH_BINARY,
+    settings.blockSize,// 7,11,
+    settings.c
+  );
+
+  // cv.threshold(
+  //   image,
+  //   threshold,
+  //   settings.threshold,
+  //   settings.maxValue,
+  //   cv.THRESH_BINARY
+  // );
+
+  cv.threshold(
+    threshold,
     threshold,
     settings.threshold,
     settings.maxValue,
-    cv.THRESH_BINARY
+    cv.THRESH_BINARY + cv.THRESH_OTSU
   );
   return { image: threshold };
 };
@@ -28,6 +48,8 @@ const thresholdStep: ProcessingStep<ThresholdSettings> = {
   settings: {
     threshold: 130,
     maxValue: 255,
+    blockSize: 11,
+    c: 2,
   },
   config: {
     threshold: {
@@ -38,6 +60,16 @@ const thresholdStep: ProcessingStep<ThresholdSettings> = {
     maxValue: {
       type: "number",
       min: 0,
+      max: 255,
+    },
+    blockSize: {
+      type: "number",
+      min: 0,
+      max: 50,
+    },
+    c: {
+      type: "number",
+      min: -255,
       max: 255,
     },
   },
