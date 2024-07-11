@@ -1,13 +1,13 @@
 import Settings from "@/lib/opencv/Settings";
 import { Dictionary } from "@/app/dictionaries";
 import { ChangeEvent } from "react";
-import thresholdStep from "@/lib/opencv/processor/steps/Threshold";
+import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshold";
 import blurStep from "@/lib/opencv/processor/steps/Blur";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import NumberField from "../../fiields/NumberField";
 import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
 
-const threshold = thresholdStep.name;
+const threshold = adaptiveThresholdStep.name;
 const blur = blurStep.name;
 
 type Props = {
@@ -37,7 +37,7 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
       <NumberField
         label={dictionary.calibration.stepSettings.threshold}
         name={`threshold`}
-        value={settings[threshold].threshold}
+        value={settings[threshold]?.threshold}
         onChange={handleOnChange(threshold)}
         slider
       />
@@ -45,7 +45,7 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
         className="mt-2"
         label={dictionary.calibration.stepSettings.blurWidth}
         name={`blurWidth`}
-        value={settings[blur].blurWidth}
+        value={settings[blur]?.blurWidth}
         onChange={handleOnChange(blur)}
         slider
         numberRange={{

@@ -7,7 +7,8 @@ type GrayScaleSettings = {};
 
 const grayScaleOf: Process<GrayScaleSettings> = (
   image: cv.Mat,
-  settings: GrayScaleSettings
+  settings: GrayScaleSettings,
+  intermediateImageOf: (stepName: StepName) => cv.Mat
 ): ProcessResult => {
   let gray = new cv.Mat();
   cv.cvtColor(image, gray, cv.COLOR_RGBA2GRAY, 0);

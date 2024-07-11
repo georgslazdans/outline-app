@@ -1,7 +1,9 @@
 import { Context } from "@/context/DetailsContext";
-import { ProcessAll, ProccessStep, ProcessingResult } from "./processor/ImageProcessor";
+import { ProcessingResult } from "./processor/ImageProcessor";
 import StepResult from "./StepResult";
 import Settings, { settingsOf } from "./Settings";
+import { ProcessAll, ProccessStep } from "./processor/ProcessStep";
+import StepName from "./processor/steps/StepName";
 
 export type OpenCvWork =
   | {
@@ -26,7 +28,7 @@ export type FailedResult = {
   result: ProcessingResult;
 };
 
-export type OpenCvResult = SuccessResult | FailedResult
+export type OpenCvResult = SuccessResult | FailedResult;
 
 export const allWorkOf = (context: Context): OpenCvWork => {
   const imageData =
@@ -51,10 +53,11 @@ export const stepWorkOf = (
   return {
     type: "step",
     data: {
-      stepName: stepName,
+      stepName: stepName as StepName,
       imageData: step.imageData,
       imageColorSpace: step.imageColorSpace,
       settings: settings,
+      previousData: stepResults,
     },
   };
 };

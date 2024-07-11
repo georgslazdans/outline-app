@@ -9,7 +9,8 @@ type BlurSettings = {
 
 const blurOf: Process<BlurSettings> = (
   image: cv.Mat,
-  settings: BlurSettings
+  settings: BlurSettings,
+  intermediateImageOf: (stepName: StepName) => cv.Mat
 ): ProcessResult => {
   const blurWidth = settings.blurWidth;
   let blurred = new cv.Mat();

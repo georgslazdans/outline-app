@@ -34,7 +34,8 @@
       "extractObject": "Extract Object",
       "extractPaper": "Extract Paper",
       "grayScale": "Gray Scale",
-      "threshold": "Threshold"
+      "threshold": "Threshold",
+      "adaptiveThreshold": "Adaptive Threshold"
     },
     "stepSettings": {
       "pixelDiameter": "Pixel Diameter",
@@ -42,6 +43,7 @@
       "sigmaSpace": "Sigma Space",
       "blurWidth": "Blur Size (px)",
       "threshold": "Threshold",
+      "inverseThreshold": "Inverse Threshold",
       "maxValue": "Max Value",
       "blockSize": "Block Size",
       "c": "Constant",

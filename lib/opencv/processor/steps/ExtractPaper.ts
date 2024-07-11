@@ -2,27 +2,22 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import Point, { pointsFrom } from "../../../Point";
-import cannyStep from "./Canny";
 import { contoursOf, largestContourOf } from "../../util/Contours";
 import StepName from "./StepName";
 import imageWarper from "../ImageWarper";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSettings, { paperDimensionsOf } from "../../PaperSettings";
 
-const cannyOf = cannyStep.process;
-type CannySettings = typeof cannyStep.settings;
-
 type ExtractPaperSettings = {
-  cannySettings: CannySettings;
   paperSettings: PaperSettings;
 };
 
 export const extractPaperFrom: Process<ExtractPaperSettings> = (
   image: cv.Mat,
-  settings: ExtractPaperSettings
+  settings: ExtractPaperSettings,
+  intermediateImageOf: (stepName: StepName) => cv.Mat
 ): ProcessResult => {
-  const canny = cannyOf(image, settings.cannySettings).image;
-  const { contours, hierarchy } = contoursOf(canny);
+  const { contours, hierarchy } = contoursOf(image);
 
   const contourIndex = largestContourOf(contours);
   if (!contourIndex) {
@@ -35,11 +30,11 @@ export const extractPaperFrom: Process<ExtractPaperSettings> = (
   const smoothedContour = smoothContour(contours.get(contourIndex!));
   const cornerPoints = pointsFrom(smoothedContour);
 
-  const result = warpedImageOf(cornerPoints, image, settings.paperSettings);
+  const blurImage = intermediateImageOf(StepName.BLUR);
+  const result = warpedImageOf(cornerPoints, blurImage, settings.paperSettings);
 
   contours.delete();
   hierarchy.delete();
-  canny.delete();
   smoothedContour.delete();
 
   return { image: result, points: cornerPoints };
@@ -66,10 +61,6 @@ const warpedImageOf = (
 const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
   name: StepName.EXTRACT_PAPER,
   settings: {
-    cannySettings: {
-      firstThreshold: 100,
-      secondThreshold: 200,
-    },
     paperSettings: {
       width: 210,
       height: 297,
@@ -95,11 +86,7 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
           optionsFunction: orientationOptionsFor,
         },
       },
-    },
-    cannySettings: {
-      type: "group",
-      config: cannyStep.config!,
-    },
+    }
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: extractPaperFrom,

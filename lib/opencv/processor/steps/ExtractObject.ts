@@ -9,26 +9,21 @@ import {
   largestContourOf,
   smoothOf,
 } from "../../util/Contours";
-import cannyStep from "./Canny";
 import { pointsFrom } from "../../../Point";
 import StepName from "./StepName";
-
-const cannyOf = cannyStep.process;
-type CannySettings = typeof cannyStep.settings;
 
 type ExtractObjectSettings = {
   smoothOutline: boolean;
   smoothAccuracy: number;
-  cannySettings: CannySettings;
 };
 
 const extractObjectFrom: Process<ExtractObjectSettings> = (
   image: cv.Mat,
-  settings: ExtractObjectSettings
+  settings: ExtractObjectSettings,
+  intermediateImageOf: (stepName: StepName) => cv.Mat
 ): ProcessResult => {
-  const cannyImage = cannyOf(image, settings.cannySettings).image
   const objectContours = fancyContoursOf(
-    cannyImage
+    image
   );
 
   const countourIndex = largestContourOf(objectContours.contours);
@@ -55,8 +50,6 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
 
   objectContours.delete();
   resultingContour.delete();
-  cannyImage.delete();
-
 
   return { image: resultingImage, points: points };
 };
@@ -66,10 +59,6 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
   settings: {
     smoothOutline: true,
     smoothAccuracy: 2,
-    cannySettings: {
-      firstThreshold: 100,
-      secondThreshold: 200,
-    },
   },
   config: {
     smoothOutline: {
@@ -79,11 +68,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       type: "number",
       min: 0,
       max: 100,
-    },
-    cannySettings: {
-      type: "group",
-      config: cannyStep.config!,
-    },
+    }
   },
   imageColorSpace: ColorSpace.RGB,
   process: extractObjectFrom,

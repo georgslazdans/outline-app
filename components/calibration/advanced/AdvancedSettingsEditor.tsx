@@ -4,7 +4,11 @@ import { ChangeEvent } from "react";
 import { PROCESSING_STEPS } from "@/lib/opencv/processor/ImageProcessor";
 import StepSettingField from "./StepSettingField";
 import StepSettingGroup from "./StepSettingGroup";
-import StepSetting, { GroupConfig, StepSettingConfig, eventFieldConverterFor } from "@/lib/opencv/processor/steps/StepSettings";
+import StepSetting, {
+  GroupConfig,
+  StepSettingConfig,
+  eventFieldConverterFor,
+} from "@/lib/opencv/processor/steps/StepSettings";
 
 type Props = {
   dictionary: Dictionary;
@@ -58,6 +62,10 @@ export const AdvancedSettingsEditor = ({
       {currentSetting &&
         Object.keys(currentSetting).map((key) => {
           const config = configOf(key);
+          if (!config) {
+            console.warn("No config found for setting: ", key);
+            return;
+          }
           if (config.type == "group") {
             const groupConfig = config as GroupConfig;
             return (

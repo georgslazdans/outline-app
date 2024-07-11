@@ -1,14 +1,14 @@
-import {
-  ProccessStep,
-  ProcessAll,
-  ProcessingResult,
-  processImage,
-  processStep,
-} from "./processor/ImageProcessor";
+import { ProcessingResult } from "./processor/ImageProcessor";
 import * as cv from "@techstark/opencv-js";
 import { OpenCvWork, OpenCvResult } from "./OpenCvWork";
 import outlineCheckImageOf from "./processor/OutlineCheckImage";
 import handleOpenCvError from "./OpenCvError";
+import {
+  processImage,
+  ProcessAll,
+  processStep,
+  ProccessStep,
+} from "./processor/ProcessStep";
 
 const processWork = async (work: OpenCvWork) => {
   console.log("Processing work", work);

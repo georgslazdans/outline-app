@@ -6,32 +6,29 @@ import ProcessingStep, { ProcessResult } from "./steps/ProcessingFunction";
 import bilateralFilterStep from "./steps/BilateralFilter";
 import grayScaleStep from "./steps/GrayScale";
 import blurStep from "./steps/Blur";
-import thresholdStep from "./steps/Threshold";
+import adaptiveThresholdStep from "./steps/AdaptiveThreshold";
 import extractPaperStep from "./steps/ExtractPaper";
 import extractObjectStep from "./steps/ExtractObject";
 import imageDataOf, { imageOf } from "../util/ImageData";
-import ColorSpace from "../util/ColorSpace";
 import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
+import cannyStep from "./steps/Canny";
+import StepName from "./steps/StepName";
+import thresholdStep from "./steps/Threshold";
 
-export type ProcessAll = {
-  imageData: ImageData;
-  settings: Settings;
-};
-
-export type ProccessStep = {
-  stepName: string;
-  imageData: ImageData;
-  imageColorSpace: ColorSpace;
-  settings: Settings;
+export type IntermediateImages = {
+  [key in StepName]?: cv.Mat;
 };
 
 export const PROCESSING_STEPS: ProcessingStep<any>[] = [
   bilateralFilterStep,
   grayScaleStep,
   blurStep,
-  thresholdStep,
+  adaptiveThresholdStep,
+  cannyStep,
   extractPaperStep,
+  thresholdStep,
+  cannyStep,
   extractObjectStep,
 ];
 
@@ -58,21 +55,21 @@ const processorOf = (
     throw new Error("No functions supplied to image processor");
   }
 
-  const settingsFor = (step: ProcessingStep<any>): StepSetting => {
-    const name = step.name;
-    const stepSettings = {...step.settings, ...settings[name]};
-    return stepSettings;
-  };
-
   const processStep = (
     image: cv.Mat,
-    step: ProcessingStep<any>
+    step: ProcessingStep<any>,
+    intermediateImages: IntermediateImages
   ): ProcessStepResult => {
     try {
       var settings = settingsFor(step);
+      const intermediateImageOf = (stepName: StepName) => {
+        return Object.entries(intermediateImages).findLast(
+          ([key]) => key === stepName
+        )![1];
+      };
       return {
         type: "success",
-        stepResult: step.process(image, settings),
+        stepResult: step.process(image, settings, intermediateImageOf),
       };
     } catch (e) {
       const errorMessage =
@@ -84,80 +81,62 @@ const processorOf = (
     }
   };
 
-  return {
-    process: (image: cv.Mat): ProcessingResult => {
-      const stepData: StepResult[] = [];
-      let errorMessage = undefined;
-      const intermediateImages: any[] = [];
-      let currentImage = image;
-      for (const step of processingSteps) {
-        const result = processStep(currentImage, step);
-        if (result.type == "success") {
-          const stepResult = result.stepResult;
-          currentImage = stepResult.image;
-          stepData.push({
-            stepName: step.name,
-            imageData: imageDataOf(currentImage),
-            imageColorSpace: step.imageColorSpace,
-            points: stepResult.points,
-          });
-          intermediateImages.push(currentImage);
-        } else {
-          errorMessage = result.error;
-          break;
-        }
-      }
-      intermediateImages.forEach((it) => it.delete());
-      return { results: stepData, error: errorMessage };
-    },
+  const settingsFor = (step: ProcessingStep<any>): StepSetting => {
+    const name = step.name;
+    const stepSettings = { ...step.settings, ...settings[name] };
+    return stepSettings;
   };
-};
 
-const stepsStartingFrom = (name: string): ProcessingStep<any>[] => {
-  const result = [];
-  let stepFound = false;
-  for (const step of PROCESSING_STEPS) {
-    if (step.name == name) {
-      stepFound = true;
+  const stepData: StepResult[] = [];
+  let intermediateImages: IntermediateImages = {};
+
+  const withPreviousSteps = (stepResults: StepResult[]) => {
+    intermediateImages = stepResults
+      .map((it) => {
+        return { [it.stepName]: imageOf(it.imageData, it.imageColorSpace) };
+      })
+      .reduce((acc, curr) => {
+        return { ...acc, ...curr };
+      }, {});
+
+    stepResults.forEach((it) => stepData.push(it));
+    return result;
+  };
+
+  const process = (image: cv.Mat): ProcessingResult => {
+    let errorMessage = undefined;
+    let currentImage = image;
+    for (const step of processingSteps) {
+      const result = processStep(currentImage, step, intermediateImages);
+      if (result.type == "success") {
+        const stepResult = result.stepResult;
+        currentImage = stepResult.image;
+        stepData.push({
+          stepName: step.name,
+          imageData: imageDataOf(currentImage),
+          imageColorSpace: step.imageColorSpace,
+          points: stepResult.points,
+        });
+        intermediateImages = {
+          ...intermediateImages,
+          [step.name]: currentImage,
+        };
+      } else {
+        errorMessage = result.error;
+        break;
+      }
     }
-    if (stepFound) {
-      result.push(step);
-    }
-  }
+
+    Object.values(intermediateImages).forEach((it) => it.delete());
+    return { results: stepData, error: errorMessage };
+  };
+
+  const result = {
+    process: process,
+    withPreviousSteps: withPreviousSteps,
+  };
+
   return result;
 };
 
-export const processStep = async (
-  command: ProccessStep
-): Promise<ProcessingResult> => {
-  const steps = stepsStartingFrom(command.stepName);
-  const image = imageOf(command.imageData, command.imageColorSpace);
-  const result = processorOf(steps, command.settings).process(image);
-  image.delete();
-  return result;
-};
-
-export const processImage = async (
-  command: ProcessAll
-): Promise<ProcessingResult> => {
-  const image = imageOf(command.imageData, ColorSpace.RGBA);
-  const steps = processorOf(PROCESSING_STEPS, command.settings).process(image);
-  image.delete();
-  if (steps.results) {
-    ensureAllSteps(steps.results!);
-  }
-  return steps;
-};
-
-const ensureAllSteps = (steps: StepResult[]) => {
-  const stepNames = steps.map((it) => it.stepName);
-  for (const step of PROCESSING_STEPS) {
-    if (!stepNames.includes(step.name)) {
-      steps.push({
-        stepName: step.name,
-        imageData: new ImageData(1, 1),
-        imageColorSpace: step.imageColorSpace,
-      });
-    }
-  }
-};
+export default processorOf;

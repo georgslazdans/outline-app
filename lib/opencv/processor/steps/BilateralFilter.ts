@@ -11,7 +11,8 @@ type BilateralFilterSettings = {
 
 const bilateralFilter: Process<BilateralFilterSettings> = (
   image: cv.Mat,
-  settings: BilateralFilterSettings
+  settings: BilateralFilterSettings,
+  intermediateImageOf: (stepName: StepName) => cv.Mat
 ): ProcessResult => {
   let converted = new cv.Mat();
   let filtered = new cv.Mat();

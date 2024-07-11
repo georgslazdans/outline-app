@@ -10,7 +10,8 @@ type CannySettings = {
 
 const cannyOf: Process<CannySettings> = (
   image: cv.Mat,
-  settings: CannySettings
+  settings: CannySettings,
+  intermediateImageOf: (stepName: StepName) => cv.Mat
 ): ProcessResult => {
   let canny = new cv.Mat();
   cv.Canny(image, canny, settings.firstThreshold, settings.secondThreshold);

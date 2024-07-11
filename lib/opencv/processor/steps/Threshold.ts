@@ -5,51 +5,69 @@ import StepName from "./StepName";
 
 type ThresholdSettings = {
   threshold: number;
+  inverseThreshold: number;
   maxValue: number;
-  blockSize: number;
-  c: number;
 };
 
 const thresholdOf: Process<ThresholdSettings> = (
   image: cv.Mat,
-  settings: ThresholdSettings
+  settings: ThresholdSettings,
+  intermediateImageOf: (stepName: StepName) => cv.Mat
 ): ProcessResult => {
   let threshold = new cv.Mat();
-  cv.adaptiveThreshold(
-    image,
-    threshold,
-    settings.maxValue,
-    cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-    cv.THRESH_BINARY,
-    settings.blockSize,// 7,11,
-    settings.c
-  );
-
-  // cv.threshold(
-  //   image,
-  //   threshold,
-  //   settings.threshold,
-  //   settings.maxValue,
-  //   cv.THRESH_BINARY
-  // );
+  let inverseThreshold = new cv.Mat();
 
   cv.threshold(
-    threshold,
+    image,
     threshold,
     settings.threshold,
     settings.maxValue,
-    cv.THRESH_BINARY + cv.THRESH_OTSU
+    cv.THRESH_BINARY
   );
-  return { image: threshold };
+
+  cv.threshold(
+    image,
+    inverseThreshold,
+    settings.inverseThreshold,
+    settings.maxValue,
+    cv.THRESH_BINARY_INV
+  );
+
+  // Create mask from inverse threshold where black parts (value 0) are selected
+  let blackPartsMask = new cv.Mat();
+  cv.compare(
+    inverseThreshold,
+    new cv.Mat(
+      inverseThreshold.rows,
+      inverseThreshold.cols,
+      inverseThreshold.type(),
+      [0, 0, 0, 0]
+    ),
+    blackPartsMask,
+    cv.CMP_EQ
+  );
+
+  // Extract black parts from inverse threshold using the mask
+  let blackParts = new cv.Mat();
+  cv.bitwise_and(inverseThreshold, blackPartsMask, blackParts);
+
+  let combined = new cv.Mat();
+  cv.bitwise_xor(threshold, inverseThreshold, combined);
+
+  threshold.delete();
+  inverseThreshold.delete();
+  blackPartsMask.delete();
+  blackParts.delete();
+
+  return { image: combined };
 };
 
 const thresholdStep: ProcessingStep<ThresholdSettings> = {
   name: StepName.THRESHOLD,
   settings: {
     threshold: 130,
+    inverseThreshold: 255,
     maxValue: 255,
-    blockSize: 11,
-    c: 2,
   },
   config: {
     threshold: {
@@ -57,19 +75,14 @@ const thresholdStep: ProcessingStep<ThresholdSettings> = {
       min: 0,
       max: 255,
     },
-    maxValue: {
+    inverseThreshold: {
       type: "number",
       min: 0,
       max: 255,
     },
-    blockSize: {
+    maxValue: {
       type: "number",
       min: 0,
-      max: 50,
-    },
-    c: {
-      type: "number",
-      min: -255,
       max: 255,
     },
   },

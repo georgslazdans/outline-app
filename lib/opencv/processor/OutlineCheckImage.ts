@@ -3,7 +3,7 @@ import Point from "../../Point";
 import StepResult from "../StepResult";
 import extractObjectStep from "./steps/ExtractObject";
 import extractPaperStep from "./steps/ExtractPaper";
-import thresholdStep from "./steps/Threshold";
+import adaptiveThresholdStep from "./steps/AdaptiveThreshold";
 import imageWarper from "./ImageWarper";
 import imageDataOf, { imageOf } from "../util/ImageData";
 import ColorSpace from "../util/ColorSpace";
@@ -71,7 +71,7 @@ const reverseWarpedImageOf = (
 };
 
 const thresholdResultOf = (steps: StepResult[]): StepResult => {
-  return steps.find((it) => it.stepName == thresholdStep.name)!;
+  return steps.find((it) => it.stepName == adaptiveThresholdStep.name)!;
 };
 
 const extractPaperResultOf = (steps: StepResult[]): StepResult => {

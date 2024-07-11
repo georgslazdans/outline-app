@@ -120,12 +120,6 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     } else if (settingsChanged) {
       let stepName = firstChangedStep(previousSettings, currentSettings);
       if (stepName && stepName != PROCESSING_STEPS[0].name) {
-        if (
-          stepName == StepName.EXTRACT_OBJECT ||
-          stepName == StepName.EXTRACT_PAPER
-        ) {
-          stepName = StepName.THRESHOLD; // Basically need to rerun all 3 steps to get simplified image.
-        }
         updateCurrentStepData(stepName);
       } else {
         updateAllWorkData();

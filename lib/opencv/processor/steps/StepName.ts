@@ -5,6 +5,7 @@ enum StepName {
     EXTRACT_OBJECT = "extractObject",
     EXTRACT_PAPER = "extractPaper",
     GRAY_SCALE = "grayScale",
+    ADAPTIVE_THRESHOLD = "adaptiveThreshold",
     THRESHOLD = "threshold",
 }
 
