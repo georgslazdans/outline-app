@@ -30,7 +30,7 @@ export const extractPaperFrom: Process<ExtractPaperSettings> = (
   const smoothedContour = smoothContour(contours.get(contourIndex!));
   const cornerPoints = pointsFrom(smoothedContour);
 
-  const blurImage = intermediateImageOf(StepName.BLUR);
+  const blurImage = intermediateImageOf(StepName.BILETERAL_FILTER);
   const result = warpedImageOf(cornerPoints, blurImage, settings.paperSettings);
 
   contours.delete();

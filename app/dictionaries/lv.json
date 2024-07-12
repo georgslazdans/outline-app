@@ -30,13 +30,16 @@
     "step": {
       "bilateralFilter": "Bilateral Filter",
       "blur": "Aizmiglojums",
+      "blurObject": "Objekta Aizmiglojums",
       "cannyPaper": "Canny Lapas",
       "cannyObject": "Canny Objekta",
       "extractObject": "Izvilkt Objektu",
       "extractPaper": "Izvlikt Lapu",
       "grayScale": "Pēlēkuma Skala",
+      "grayScaleObject": "Objekta Pēlēkuma Skala",
       "threshold": "Kontrasts",
-      "adaptiveThreshold": "Adaptīvais Kontrasts"
+      "adaptiveThreshold": "Adaptīvais Kontrasts",
+      "closeCorners": "Close Corners"
     },
     "stepSettings": {
       "pixelDiameter": "Pixel Diameter",
@@ -51,7 +54,8 @@
       "cannySettings": "Canny Settings",
       "paperSettings": "Paper Settings",
       "smoothOutline": "Smooth Outline",
-      "smoothAccuracy": "Smooth Max Deviation"
+      "smoothAccuracy": "Smooth Max Deviation",
+      "kernelSize": "Kernel Size"
     },
     "settings": "Iestatījumi",
     "advancedSettings": "Pilni iestatījumi",

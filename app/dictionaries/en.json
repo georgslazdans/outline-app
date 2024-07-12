@@ -30,13 +30,16 @@
     "step": {
       "bilateralFilter": "Bilateral Filter",
       "blur": "Blur",
+      "blurObject": "Blur Object",
       "cannyPaper": "Canny Paper",
       "cannyObject": "Canny Object",
       "extractObject": "Extract Object",
       "extractPaper": "Extract Paper",
       "grayScale": "Gray Scale",
+      "grayScaleObject": "Gray Scale Object",
       "threshold": "Threshold",
-      "adaptiveThreshold": "Adaptive Threshold"
+      "adaptiveThreshold": "Adaptive Threshold",
+      "closeCorners": "Close Corners"
     },
     "stepSettings": {
       "pixelDiameter": "Pixel Diameter",
@@ -56,7 +59,8 @@
       "width": "Width",
       "height": "Height",
       "smoothOutline": "Smooth Outline",
-      "smoothAccuracy": "Smooth Max Deviation"
+      "smoothAccuracy": "Smooth Max Deviation",
+      "kernelSize": "Kernel Size"
     },
     "settings": "Settings",
     "advancedSettings": "Advanced Settings",

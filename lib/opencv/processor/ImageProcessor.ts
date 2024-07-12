@@ -15,6 +15,7 @@ import handleOpenCvError from "../OpenCvError";
 import cannyStep from "./steps/Canny";
 import StepName from "./steps/StepName";
 import thresholdStep from "./steps/Threshold";
+import closeContoursStep from "./steps/CloseContours";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
@@ -34,8 +35,12 @@ export const PROCESSING_STEPS: ProcessingStep<any>[] = [
   adaptiveThresholdStep,
   cannyStep,
   extractPaperStep,
-  thresholdStep,
+  withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
+  withStepName(StepName.BLUR_OBJECT, blurStep),
+  withStepName(StepName.THRESHOLD, adaptiveThresholdStep),
+  // thresholdStep,
   withStepName(StepName.CANNY_OBJECT, cannyStep),
+  closeContoursStep,
   extractObjectStep,
 ];
 
