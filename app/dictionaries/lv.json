@@ -55,7 +55,8 @@
       "paperSettings": "Paper Settings",
       "smoothOutline": "Smooth Outline",
       "smoothAccuracy": "Smooth Max Deviation",
-      "kernelSize": "Kernel Size"
+      "kernelSize": "Kernel Size",
+      "meanThreshold": "Mean Threshold"
     },
     "settings": "Iestatījumi",
     "advancedSettings": "Pilni iestatījumi",

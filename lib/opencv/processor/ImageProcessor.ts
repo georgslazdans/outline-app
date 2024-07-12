@@ -2,7 +2,10 @@ import * as cv from "@techstark/opencv-js";
 import Settings from "../Settings";
 
 import { StepResult } from "../StepResult";
-import ProcessingStep, { ProcessResult } from "./steps/ProcessingFunction";
+import ProcessingStep, {
+  PreviousData,
+  ProcessResult,
+} from "./steps/ProcessingFunction";
 import bilateralFilterStep from "./steps/BilateralFilter";
 import grayScaleStep from "./steps/GrayScale";
 import blurStep from "./steps/Blur";
@@ -37,8 +40,8 @@ export const PROCESSING_STEPS: ProcessingStep<any>[] = [
   extractPaperStep,
   withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
   withStepName(StepName.BLUR_OBJECT, blurStep),
-  withStepName(StepName.THRESHOLD, adaptiveThresholdStep),
-  // thresholdStep,
+  // withStepName(StepName.THRESHOLD, adaptiveThresholdStep),
+  thresholdStep,
   withStepName(StepName.CANNY_OBJECT, cannyStep),
   closeContoursStep,
   extractObjectStep,
@@ -73,15 +76,10 @@ const processorOf = (
     intermediateImages: IntermediateImages
   ): ProcessStepResult => {
     try {
-      var settings = settingsFor(step);
-      const intermediateImageOf = (stepName: StepName) => {
-        return Object.entries(intermediateImages).findLast(
-          ([key]) => key === stepName
-        )![1];
-      };
+      var stepSettings = settingsFor(step);
       return {
         type: "success",
-        stepResult: step.process(image, settings, intermediateImageOf),
+        stepResult: step.process(image, stepSettings, previousDataOf(intermediateImages, settings)),
       };
     } catch (e) {
       const errorMessage =
@@ -127,7 +125,7 @@ const processorOf = (
           stepName: step.name,
           imageData: imageDataOf(currentImage),
           imageColorSpace: step.imageColorSpace,
-          points: stepResult.points,
+          contours: stepResult.contours,
         });
         intermediateImages = {
           ...intermediateImages,
@@ -149,6 +147,24 @@ const processorOf = (
   };
 
   return result;
+};
+
+const previousDataOf = (
+  intermediateImages: IntermediateImages,
+  settings: Settings
+): PreviousData => {
+  const intermediateImageOf = (stepName: StepName) => {
+    return Object.entries(intermediateImages).findLast(
+      ([key]) => key === stepName
+    )![1];
+  };
+  const settingsOf = (stepName: StepName): StepSetting => {
+    return settings[stepName];
+  };
+  return {
+    intermediateImageOf: intermediateImageOf,
+    settingsOf: settingsOf,
+  };
 };
 
 export default processorOf;

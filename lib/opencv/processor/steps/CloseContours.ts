@@ -1,5 +1,9 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, {
+  PreviousData,
+  Process,
+  ProcessResult,
+} from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
@@ -10,14 +14,16 @@ type CloseContoursSettings = {
 const closeContours: Process<CloseContoursSettings> = (
   image: cv.Mat,
   settings: CloseContoursSettings,
-  intermediateImageOf: (stepName: StepName) => cv.Mat
+  previous: PreviousData
 ): ProcessResult => {
   let closed = new cv.Mat();
   let dilated = new cv.Mat();
-  let kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(settings.kernelSize, settings.kernelSize));
+  let kernel = cv.getStructuringElement(
+    cv.MORPH_RECT,
+    new cv.Size(settings.kernelSize, settings.kernelSize)
+  );
   cv.dilate(image, dilated, kernel);
-
-  cv.morphologyEx(dilated, closed, cv.MORPH_CLOSE, kernel);
+  cv.erode(dilated, closed, kernel);
 
   dilated.delete();
   return { image: closed };
@@ -30,10 +36,10 @@ const closeContoursStep: ProcessingStep<CloseContoursSettings> = {
   },
   config: {
     kernelSize: {
-        type: "number",
-        min: 0,
-        max: 50,
-      },
+      type: "number",
+      min: 0,
+      max: 50,
+    },
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,
   process: closeContours,

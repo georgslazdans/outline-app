@@ -7,9 +7,12 @@ import adaptiveThresholdStep from "./steps/AdaptiveThreshold";
 import imageWarper from "./ImageWarper";
 import imageDataOf, { imageOf } from "../util/ImageData";
 import ColorSpace from "../util/ColorSpace";
-import { contourShapeOf } from "../util/Contours";
-import PaperSettings, { paperDimensionsOf, paperSettingsOf } from "../PaperSettings";
+import PaperSettings, {
+  paperDimensionsOf,
+  paperSettingsOf,
+} from "../PaperSettings";
 import Settings from "../Settings";
+import { contourShapeOf } from "../util/contours/Drawing";
 
 const outlineCheckImageOf = (
   steps: StepResult[],
@@ -19,22 +22,23 @@ const outlineCheckImageOf = (
   const extractPaper = extractPaperResultOf(steps);
   const extractObject = extractObjectResultOf(steps);
 
-  if (!extractPaper.points) {
+  if (!extractPaper.contours || extractPaper.contours.length == 0) {
     console.warn("No paper points for outline image!");
     return new ImageData(1, 1);
   }
+  const paperContours = extractPaper.contours[0];
 
   const thresholdImage = imageOf(threshold.imageData, ColorSpace.RGBA);
   const objectImage = imageOf(extractObject.imageData, ColorSpace.RGBA);
   const reverseWarped = reverseWarpedImageOf(
-    extractPaper.points!,
+    paperContours.points,
     objectImage,
     thresholdImage.size(),
     paperSettingsOf(settings)
   );
 
   const blue = new cv.Scalar(18, 150, 182);
-  const paperContourImage = contourShapeOf(extractPaper.points)
+  const paperContourImage = contourShapeOf([paperContours])
     .withColour(blue)
     .drawImageOfSize(thresholdImage.size());
 

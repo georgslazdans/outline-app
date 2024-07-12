@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, { PreviousData, Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
@@ -12,7 +12,7 @@ type ThresholdSettings = {
 const thresholdOf: Process<ThresholdSettings> = (
   image: cv.Mat,
   settings: ThresholdSettings,
-  intermediateImageOf: (stepName: StepName) => cv.Mat
+  previous: PreviousData
 ): ProcessResult => {
   let threshold = new cv.Mat();
   let inverseThreshold = new cv.Mat();

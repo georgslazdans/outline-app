@@ -9,7 +9,11 @@ import { useLoading } from "@/context/LoadingContext";
 import StepResult from "@/lib/opencv/StepResult";
 import { useDetails } from "@/context/DetailsContext";
 import { OpenCvWork, allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
-import Settings, { defaultSettings, firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
+import Settings, {
+  defaultSettings,
+  firstChangedStep,
+  settingsOf,
+} from "@/lib/opencv/Settings";
 import deepEqual from "@/lib/utils/Objects";
 import { PROCESSING_STEPS } from "@/lib/opencv/processor/ImageProcessor";
 import StepName from "@/lib/opencv/processor/steps/StepName";
@@ -141,8 +145,8 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const saveAndClose = () => {
     setLoading(true);
-    const points = stepResults.pop()?.points;
-    const context = { ...detailsContext, resultPoints: points };
+    const contours = stepResults.pop()!.contours;
+    const context = { ...detailsContext, contours: contours };
     update(context).then(() => {
       setLoading(false);
       router.push("/");
@@ -150,19 +154,28 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   };
 
   useEffect(() => {
-    const applyDefaults = (defaultSettings: Settings, currentSettings: Settings): Settings => {
+    const applyDefaults = (
+      defaultSettings: Settings,
+      currentSettings: Settings
+    ): Settings => {
       const mergedSettings = { ...defaultSettings };
-    
+
       for (const key in currentSettings) {
         if (currentSettings.hasOwnProperty(key)) {
-          mergedSettings[key] = { ...defaultSettings[key], ...currentSettings[key] };
+          mergedSettings[key] = {
+            ...defaultSettings[key],
+            ...currentSettings[key],
+          };
         }
       }
-    
+
       return mergedSettings;
     };
-    if(detailsContext?.settings) {
-      detailsContext.settings = applyDefaults(defaultSettings(), detailsContext.settings)
+    if (detailsContext?.settings) {
+      detailsContext.settings = applyDefaults(
+        defaultSettings(),
+        detailsContext.settings
+      );
     }
   });
 

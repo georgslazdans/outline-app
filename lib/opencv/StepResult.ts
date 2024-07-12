@@ -6,7 +6,11 @@ export type StepResult = {
   stepName: StepName;
   imageData: ImageData;
   imageColorSpace: ColorSpace;
-  points?: Point[];
+  contours?: ContourPoints[];
 };
+
+export type ContourPoints = {
+  points: Point[];
+}
 
 export default StepResult;

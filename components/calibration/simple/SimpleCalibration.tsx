@@ -50,7 +50,7 @@ const SimpleCalibration = ({
 
   const exportSvg = useCallback(() => {
     const lastStep = stepResults[stepResults.length - 1];
-    const svg = Svg.from(lastStep.points!);
+    const svg = Svg.from(lastStep.contours!);
     const blob = new Blob([svg], {
       type: "image/svg+xml",
     });

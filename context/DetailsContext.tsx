@@ -17,6 +17,7 @@ import {
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
 import Point from "@/lib/Point";
+import { ContourPoints } from "@/lib/opencv/StepResult";
 
 const DetailsContext = createContext<any>(null);
 
@@ -29,7 +30,7 @@ export type Context = {
   imageFile: Blob;
   imageData: ImageData;
   details: Details;
-  resultPoints: Point[]
+  contours: ContourPoints[]
   settings: Settings;
   addDate: Date;
 };

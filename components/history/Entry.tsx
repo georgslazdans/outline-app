@@ -27,11 +27,11 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
     router.push("/calibration");
   };
 
-  const hasSvg = !!context.resultPoints;
+  const hasSvg = !!context.contours;
 
   const exportSvg = () => {
     if (hasSvg) {
-      const svg = Svg.from(context.resultPoints!);
+      const svg = Svg.from(context.contours!);
       const blob = new Blob([svg], {
         type: "image/svg+xml",
       });

@@ -1,8 +1,8 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, { PreviousData, Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import Point, { pointsFrom } from "../../../Point";
-import { contoursOf, largestContourOf } from "../../util/Contours";
+import { contoursOf, largestContourOf } from "../../util/contours/Contours";
 import StepName from "./StepName";
 import imageWarper from "../ImageWarper";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
@@ -15,7 +15,7 @@ type ExtractPaperSettings = {
 export const extractPaperFrom: Process<ExtractPaperSettings> = (
   image: cv.Mat,
   settings: ExtractPaperSettings,
-  intermediateImageOf: (stepName: StepName) => cv.Mat
+  previous: PreviousData
 ): ProcessResult => {
   const { contours, hierarchy } = contoursOf(image);
 
@@ -30,14 +30,14 @@ export const extractPaperFrom: Process<ExtractPaperSettings> = (
   const smoothedContour = smoothContour(contours.get(contourIndex!));
   const cornerPoints = pointsFrom(smoothedContour);
 
-  const blurImage = intermediateImageOf(StepName.BILETERAL_FILTER);
-  const result = warpedImageOf(cornerPoints, blurImage, settings.paperSettings);
+  const blurImage = previous.intermediateImageOf(StepName.BILETERAL_FILTER);
+  const result = warpedImageOf(cornerPoints.points, blurImage, settings.paperSettings);
 
   contours.delete();
   hierarchy.delete();
   smoothedContour.delete();
 
-  return { image: result, points: cornerPoints };
+  return { image: result, contours: [cornerPoints] };
 };
 
 const smoothContour = (contour: cv.Mat) => {

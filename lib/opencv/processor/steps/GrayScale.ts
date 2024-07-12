@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, { PreviousData, Process, ProcessResult } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
@@ -8,7 +8,7 @@ type GrayScaleSettings = {};
 const grayScaleOf: Process<GrayScaleSettings> = (
   image: cv.Mat,
   settings: GrayScaleSettings,
-  intermediateImageOf: (stepName: StepName) => cv.Mat
+  previous: PreviousData
 ): ProcessResult => {
   let gray = new cv.Mat();
   cv.cvtColor(image, gray, cv.COLOR_RGBA2GRAY, 0);

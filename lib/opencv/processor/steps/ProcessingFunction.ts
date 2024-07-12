@@ -6,17 +6,26 @@ import StepSetting, { StepSettingConfig } from "./StepSettings";
 
 export type ProcessResult = {
   image: cv.Mat;
-  points?: Point[];
+  contours?: ContourPoints[]
 };
+
+export type ContourPoints = {
+  points: Point[];
+}
 
 export type ErrorResult = {
   message: string;
 };
 
+export type PreviousData = {
+  intermediateImageOf: (stepName: StepName) => cv.Mat,
+  settingsOf: (stepName: StepName) => StepSetting
+}
+
 export type Process<T extends StepSetting> = (
   image: cv.Mat,
   settings: T,
-  intermediateImageOf: (stepName: StepName) => cv.Mat
+  previous: PreviousData
 ) => ProcessResult;
 
 interface ProcessingStep<T extends StepSetting> {

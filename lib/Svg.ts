@@ -1,8 +1,9 @@
 import Point from "./Point";
+import { ContourPoints } from "./opencv/StepResult";
 
 namespace Svg {
-  export const from = (points: Point[]) => {
-    const pathData = pathDataOf(points);
+  export const from = (points: ContourPoints[]) => {
+    const pathData = points.map((it) => pathDataOf(it.points)).join(" ");
     return `<svg xmlns="http://www.w3.org/2000/svg">${pathData}</svg>`;
   };
 

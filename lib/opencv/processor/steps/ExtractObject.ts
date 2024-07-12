@@ -1,18 +1,24 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, {
+  PreviousData,
+  Process,
+  ProcessResult,
+} from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import {
-  contourShapeOf,
-  contoursOf,
-  drawAllContours,
+  contoursWithHolesFrom,
   fancyContoursOf,
   largestContourOf,
   smoothOf,
-} from "../../util/Contours";
+} from "../../util/contours/Contours";
 import { pointsFrom } from "../../../Point";
 import StepName from "./StepName";
+import { scaleFactorOf } from "../ImageWarper";
+import { paperDimensionsOf } from "../../PaperSettings";
+import { contourShapeOf, drawAllContoursChild } from "../../util/contours/Drawing";
 
 type ExtractObjectSettings = {
+  meanThreshold: number;
   smoothOutline: boolean;
   smoothAccuracy: number;
 };
@@ -20,38 +26,71 @@ type ExtractObjectSettings = {
 const extractObjectFrom: Process<ExtractObjectSettings> = (
   image: cv.Mat,
   settings: ExtractObjectSettings,
-  intermediateImageOf: (stepName: StepName) => cv.Mat
+  previous: PreviousData
 ): ProcessResult => {
-  const objectContours = fancyContoursOf(
-    image
-  );
+  const handleContourSmoothing = (contour: cv.Mat) => {
+    return settings.smoothOutline
+      ? smoothOf(contour, settings.smoothAccuracy / 10000)
+      : contour;
+  };
+  const objectContours = fancyContoursOf(image);
 
-  const countourIndex = largestContourOf(objectContours.contours);
-  if (!countourIndex) {
+  const outlineContourIndex = largestContourOf(objectContours.contours);
+  if (!outlineContourIndex) {
     console.log("Object contour not found!", this);
     const result = new cv.Mat();
     image.copyTo(result);
     return { image: result };
   }
 
-  const resultingContour = settings.smoothOutline
-    ? smoothOf(
-        objectContours.contours.get(countourIndex),
-        settings.smoothAccuracy / 10000
-      )
-    : objectContours.contours.get(countourIndex);
-  const points = pointsFrom(resultingContour);
-  const resultingImage = contourShapeOf(points)
+  const outlineContour = handleContourSmoothing(
+    objectContours.contours.get(outlineContourIndex)
+  );
+  const scaleFactor = scaleFactorFrom(previous);
+
+  const points = pointsFrom(outlineContour);
+  const holes = contoursWithHolesFrom(
+    objectContours,
+    outlineContourIndex,
+    previous.intermediateImageOf(StepName.BLUR_OBJECT),
+    settings.meanThreshold,
+    handleContourSmoothing
+  );
+
+  const scaledHoles = contoursWithHolesFrom(
+    objectContours,
+    outlineContourIndex,
+    previous.intermediateImageOf(StepName.BLUR_OBJECT),
+    settings.meanThreshold,
+    handleContourSmoothing,
+    scaleFactor
+  );
+  const scaledPoints = pointsFrom(outlineContour, scaleFactor);
+
+  const resultingImage = contourShapeOf([...holes, points])
     .asRGB()
     .drawImageOfSize(image.size());
 
-
-  // const resultingImage = drawAllContours(image.size(), objectContours);
+  // const resultingImage = drawAllContoursChild(
+  //   image.size(),
+  //   objectContours,
+  //   outlineContourIndex
+  // );
 
   objectContours.delete();
-  resultingContour.delete();
+  outlineContour.delete();
 
-  return { image: resultingImage, points: points };
+  return { image: resultingImage, contours: [...scaledHoles, scaledPoints] };
+};
+
+const scaleFactorFrom = (previous: PreviousData) => {
+  const paperDimensions = paperDimensionsOf(
+    previous.settingsOf(StepName.EXTRACT_PAPER).paperSettings
+  );
+  const imageSize = previous
+    .intermediateImageOf(StepName.BILETERAL_FILTER)
+    .size();
+  return scaleFactorOf(imageSize, paperDimensions);
 };
 
 const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
@@ -59,6 +98,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
   settings: {
     smoothOutline: true,
     smoothAccuracy: 2,
+    meanThreshold: 10,
   },
   config: {
     smoothOutline: {
@@ -68,7 +108,12 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       type: "number",
       min: 0,
       max: 100,
-    }
+    },
+    meanThreshold: {
+      type: "number",
+      min: 0,
+      max: 20,
+    },
   },
   imageColorSpace: ColorSpace.RGB,
   process: extractObjectFrom,
