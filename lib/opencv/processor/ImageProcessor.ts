@@ -20,6 +20,13 @@ export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
 };
 
+const withStepName = (
+  stepName: StepName,
+  processingStep: ProcessingStep<any>
+): ProcessingStep<any> => {
+  return { ...processingStep, name: stepName };
+};
+
 export const PROCESSING_STEPS: ProcessingStep<any>[] = [
   bilateralFilterStep,
   grayScaleStep,
@@ -28,7 +35,7 @@ export const PROCESSING_STEPS: ProcessingStep<any>[] = [
   cannyStep,
   extractPaperStep,
   thresholdStep,
-  cannyStep,
+  withStepName(StepName.CANNY_OBJECT, cannyStep),
   extractObjectStep,
 ];
 

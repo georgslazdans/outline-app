@@ -19,7 +19,7 @@ const cannyOf: Process<CannySettings> = (
 };
 
 const cannyStep: ProcessingStep<CannySettings> = {
-  name: StepName.CANNY,
+  name: StepName.CANNY_PAPER,
   settings: {
     firstThreshold: 100,
     secondThreshold: 200,

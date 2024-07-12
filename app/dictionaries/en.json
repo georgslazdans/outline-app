@@ -30,7 +30,8 @@
     "step": {
       "bilateralFilter": "Bilateral Filter",
       "blur": "Blur",
-      "canny": "Canny",
+      "cannyPaper": "Canny Paper",
+      "cannyObject": "Canny Object",
       "extractObject": "Extract Object",
       "extractPaper": "Extract Paper",
       "grayScale": "Gray Scale",

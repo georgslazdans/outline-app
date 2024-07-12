@@ -30,7 +30,8 @@
     "step": {
       "bilateralFilter": "Bilateral Filter",
       "blur": "Aizmiglojums",
-      "canny": "Canny",
+      "cannyPaper": "Canny Lapas",
+      "cannyObject": "Canny Objekta",
       "extractObject": "Izvilkt Objektu",
       "extractPaper": "Izvlikt Lapu",
       "grayScale": "Pēlēkuma Skala",

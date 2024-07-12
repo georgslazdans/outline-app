@@ -1,7 +1,8 @@
 enum StepName {
     BILETERAL_FILTER = "bilateralFilter",
     BLUR = "blur",
-    CANNY = "canny",
+    CANNY_PAPER = "cannyPaper",
+    CANNY_OBJECT = "cannyObject",
     EXTRACT_OBJECT = "extractObject",
     EXTRACT_PAPER = "extractPaper",
     GRAY_SCALE = "grayScale",
