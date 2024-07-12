@@ -78,8 +78,8 @@ export const contoursWithHolesFrom = (
     const mask = maskOf(i, contours.contours, imageSize);
     const mean = cv.mean(image, mask)[0];
     if (
-      mean <= probablyBackgroundValue + threshold / 2 &&
-      mean >= probablyBackgroundValue - threshold / 2
+      mean <= probablyBackgroundValue + threshold &&
+      mean >= probablyBackgroundValue - threshold
     ) {
       const contour = handleContourSmoothing(contours.contours.get(i));
       const scaledPoints = pointsFrom(contour, scaleFactor);

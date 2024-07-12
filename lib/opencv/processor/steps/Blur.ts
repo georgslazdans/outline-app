@@ -28,7 +28,7 @@ const blurOf: Process<BlurSettings> = (
 const blurStep: ProcessingStep<BlurSettings> = {
   name: StepName.BLUR,
   settings: {
-    blurWidth: 5,
+    blurWidth: 15,
   },
   config: {
     blurWidth: {

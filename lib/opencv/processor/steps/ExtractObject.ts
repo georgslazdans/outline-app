@@ -112,7 +112,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     meanThreshold: {
       type: "number",
       min: 0,
-      max: 20,
+      max: 30,
     },
   },
   imageColorSpace: ColorSpace.RGB,
