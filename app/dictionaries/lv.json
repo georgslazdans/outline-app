@@ -44,6 +44,7 @@
       "threshold": "Kontrasts",
       "objectThreshold": "Objekta Kontrasts",
       "adaptiveThreshold": "Adaptīvais Kontrasts",
+      "binaryThreshold": "Binārais Kontrasts",
       "closeCorners": "Close Corners"
     },
     "stepSettings": {

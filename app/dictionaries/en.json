@@ -44,6 +44,7 @@
       "threshold": "Threshold",
       "objectThreshold": "Object Threshold",
       "adaptiveThreshold": "Adaptive Threshold",
+      "binaryThreshold": "Binary Threshold",
       "closeCorners": "Close Corners"
     },
     "stepSettings": {
