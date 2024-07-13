@@ -30,7 +30,7 @@ const outlineCheckImageOf = (
 
   const thresholdImage = imageOf(threshold.imageData, ColorSpace.RGBA);
   const objectImage = imageOf(extractObject.imageData, ColorSpace.RGBA);
-  const reverseWarped = reverseWarpedImageOf(
+  const objectContourImage = reverseWarpedImageOf(
     paperContours.points,
     objectImage,
     thresholdImage.size(),
@@ -38,39 +38,49 @@ const outlineCheckImageOf = (
   );
 
   const blue = new cv.Scalar(18, 150, 182);
-  const paperContourImage = contourShapeOf([paperContours])
+  const paperContourImage = contourShapeOf(extractPaper.contours)
     .withColour(blue)
     .drawImageOfSize(thresholdImage.size());
 
-  const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {
-    const combinedImage = new cv.Mat();
-    cv.add(imageA, imageB, combinedImage);
-    return combinedImage;
-  };
-
-  const thresholdWithObject = combineImages(thresholdImage, reverseWarped);
+  const thresholdWithObject = combineImages(thresholdImage, objectContourImage);
   const finalImage = combineImages(thresholdWithObject, paperContourImage);
   const result = imageDataOf(finalImage);
 
   finalImage.delete();
   thresholdImage.delete();
   objectImage.delete();
-  reverseWarped.delete();
+  objectContourImage.delete();
   paperContourImage.delete();
   thresholdWithObject.delete();
 
   return result;
 };
 
+const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {
+  const combinedImage = new cv.Mat();
+  const mask = new cv.Mat();
+  const invertedMask = new cv.Mat();
+
+  cv.cvtColor(imageB, mask, cv.COLOR_RGBA2GRAY, 0);
+  cv.bitwise_not(mask, invertedMask);
+
+  cv.bitwise_and(imageA, imageA, combinedImage, invertedMask);
+  cv.bitwise_and(imageB, imageB, combinedImage, mask);
+
+  mask.delete();
+  invertedMask.delete();
+  return combinedImage;
+};
+
 const reverseWarpedImageOf = (
-  cornerPoints: Point[],
+  paperCornerPoints: Point[],
   image: cv.Mat,
   imageSize: cv.Size,
   paperSettings: PaperSettings
 ): cv.Mat => {
   return imageWarper()
     .withPaperSize(paperDimensionsOf(paperSettings))
-    .andPaperContour(cornerPoints)
+    .andPaperContour(paperCornerPoints)
     .reverseWarpImage(image, imageSize);
 };
 
