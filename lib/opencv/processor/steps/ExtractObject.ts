@@ -15,12 +15,16 @@ import { pointsFrom } from "../../../Point";
 import StepName from "./StepName";
 import { scaleFactorOf } from "../ImageWarper";
 import { paperDimensionsOf } from "../../PaperSettings";
-import { contourShapeOf, drawAllContoursChild } from "../../util/contours/Drawing";
+import {
+  contourShapeOf,
+  drawAllContoursChild,
+} from "../../util/contours/Drawing";
 
 type ExtractObjectSettings = {
   meanThreshold: number;
   smoothOutline: boolean;
   smoothAccuracy: number;
+  debugContours: boolean;
 };
 
 const extractObjectFrom: Process<ExtractObjectSettings> = (
@@ -67,15 +71,18 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   );
   const scaledPoints = pointsFrom(outlineContour, scaleFactor);
 
-  const resultingImage = contourShapeOf([...holes, points])
-    .asRGB()
-    .drawImageOfSize(image.size());
-
-  // const resultingImage = drawAllContoursChild(
-  //   image.size(),
-  //   objectContours,
-  //   outlineContourIndex
-  // );
+  let resultingImage: cv.Mat;
+  if (!settings.debugContours) {
+    resultingImage = contourShapeOf([...holes, points])
+      .asRGB()
+      .drawImageOfSize(image.size());
+  } else {
+    resultingImage = drawAllContoursChild(
+      image.size(),
+      objectContours,
+      outlineContourIndex
+    );
+  }
 
   objectContours.delete();
   outlineContour.delete();
@@ -99,6 +106,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     smoothOutline: true,
     smoothAccuracy: 2,
     meanThreshold: 10,
+    debugContours: false,
   },
   config: {
     smoothOutline: {
@@ -113,6 +121,9 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       type: "number",
       min: 0,
       max: 30,
+    },
+    debugContours: {
+      type: "checkbox",
     },
   },
   imageColorSpace: ColorSpace.RGB,

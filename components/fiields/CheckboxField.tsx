@@ -27,7 +27,7 @@ const CheckboxField = ({
       )}
       <input
         className="border-4 rounded-[64px] bg-white dark:bg-black 
-          border-black dark:border-white p-1.5 pl-6 mr-6 w-8 h-8"
+          border-black dark:border-white p-1.5 pl-6 mr-6 w-8 h-8 mt-6 "
         id={name}
         type={"checkbox"}
         checked={value}

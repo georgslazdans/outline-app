@@ -65,7 +65,8 @@
       "meanThreshold": "Mean Threshold",
       "thresholdType": "Threshold Type",
       "adaptiveSettings": "Adaptive Settings",
-      "binarySettings": "Binary Settings"
+      "binarySettings": "Binary Settings",
+      "debugContours": "Debug Contours"
     },
     "settings": "Iestatījumi",
     "advancedSettings": "Pilni iestatījumi",
