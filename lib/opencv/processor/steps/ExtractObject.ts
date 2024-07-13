@@ -6,7 +6,6 @@ import ProcessingStep, {
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import {
-  contoursWithHolesFrom,
   fancyContoursOf,
   largestContourOf,
   smoothOf,
@@ -19,6 +18,7 @@ import {
   contourShapeOf,
   drawAllContoursChild,
 } from "../../util/contours/Drawing";
+import holeFinder from "../../util/contours/Holes";
 
 type ExtractObjectSettings = {
   meanThreshold: number;
@@ -34,6 +34,7 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   previous: PreviousData
 ): ProcessResult => {
   const handleContourSmoothing = (contour: cv.Mat) => {
+    // TODO create new object, so it can always be cleaned after call
     return settings.smoothOutline
       ? smoothOf(contour, settings.smoothAccuracy / 10000)
       : contour;
@@ -54,25 +55,23 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   const scaleFactor = scaleFactorFrom(previous);
 
   const points = pointsFrom(outlineContour);
-  const holes = contoursWithHolesFrom(
-    objectContours,
-    outlineContourIndex,
-    previous.intermediateImageOf(StepName.BLUR_OBJECT),
-    settings.meanThreshold,
-    handleContourSmoothing,
-    1,
-    settings.holeAreaTreshold
-  );
 
-  const scaledHoles = contoursWithHolesFrom(
-    objectContours,
-    outlineContourIndex,
-    previous.intermediateImageOf(StepName.BLUR_OBJECT),
-    settings.meanThreshold,
-    handleContourSmoothing,
-    scaleFactor,
-    settings.holeAreaTreshold
-  );
+  const holes = holeFinder()
+    .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
+    .withSettings(1, settings.meanThreshold, settings.holeAreaTreshold)
+    .withContourProcesing(handleContourSmoothing)
+    .findHolesInContour(objectContours, outlineContourIndex);
+
+  const scaledHoles = holeFinder()
+    .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
+    .withSettings(
+      scaleFactor,
+      settings.meanThreshold,
+      settings.holeAreaTreshold
+    )
+    .withContourProcesing(handleContourSmoothing)
+    .findHolesInContour(objectContours, outlineContourIndex);
+
   const scaledPoints = pointsFrom(outlineContour, scaleFactor);
 
   let resultingImage: cv.Mat;
@@ -134,7 +133,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       type: "number",
       min: 0,
       max: 100,
-      step: 0.01
+      step: 0.01,
     },
   },
   imageColorSpace: ColorSpace.RGB,

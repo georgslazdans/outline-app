@@ -1,6 +1,4 @@
 import * as cv from "@techstark/opencv-js";
-import Point, { pointsFrom } from "../../../Point";
-import { ContourPoints } from "../../StepResult";
 
 class ImageContours {
   contours: cv.MatVector;
@@ -57,63 +55,6 @@ export const largestContourOf = (contours: cv.MatVector): number | null => {
     }
   }
   return result;
-};
-
-// TODO refactor into atleast two functions - split by mean and filter hole sizes
-export const contoursWithHolesFrom = (
-  contours: ImageContours,
-  parentIndex: number,
-  image: cv.Mat,
-  threshold = 10,
-  handleContourSmoothing: (contour: cv.Mat) => cv.Mat,
-  scaleFactor: number = 1,
-  holeAreaTreshold: number = 1
-): ContourPoints[] => {
-  const probablyBackgroundValue = cv.mean(image)[0]; // TODO draw the inverse from outline
-  const imageSize = image.size();
-  const result: ContourPoints[] = [];
-
-  const parentAreaSize = cv.contourArea(contours.contours.get(parentIndex));
-  const areaThreshold = (parentAreaSize / 100) * holeAreaTreshold;
-  
-  for (let i = 0; i < contours.contours.size(); ++i) {
-    const hierarchyIndex = contours.hierarchy.intPtr(0, i)[3]; // parent contour index
-    if (hierarchyIndex != parentIndex) {
-      continue;
-    }
-    const mask = maskOf(i, contours.contours, imageSize);
-    const mean = cv.mean(image, mask)[0];
-    if (
-      mean <= probablyBackgroundValue + threshold &&
-      mean >= probablyBackgroundValue - threshold
-    ) {
-      const contour = handleContourSmoothing(contours.contours.get(i));
-      const contourArea = cv.contourArea(contour);
-      if (contourArea >= areaThreshold) {
-        const scaledPoints = pointsFrom(contour, scaleFactor);
-        result.push(scaledPoints);
-      }
-    }
-    mask.delete();
-  }
-  return result;
-};
-
-const maskOf = (
-  index: number,
-  contours: cv.MatVector,
-  imageSize: cv.Size
-): cv.Mat => {
-  let mask = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC1);
-
-  cv.drawContours(
-    mask,
-    contours,
-    index,
-    new cv.Scalar(255, 255, 255),
-    cv.FILLED
-  );
-  return mask;
 };
 
 export const smoothOf = (
