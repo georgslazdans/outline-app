@@ -66,7 +66,8 @@
       "thresholdType": "Threshold Type",
       "adaptiveSettings": "Adaptive Settings",
       "binarySettings": "Binary Settings",
-      "debugContours": "Debug Contours"
+      "debugContours": "Debug Contours",
+      "holeAreaTreshold": "Hole Area Threshold (%)"
     },
     "settings": "Iestatījumi",
     "advancedSettings": "Pilni iestatījumi",

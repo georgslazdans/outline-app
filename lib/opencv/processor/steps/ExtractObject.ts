@@ -25,6 +25,7 @@ type ExtractObjectSettings = {
   smoothOutline: boolean;
   smoothAccuracy: number;
   debugContours: boolean;
+  holeAreaTreshold: number;
 };
 
 const extractObjectFrom: Process<ExtractObjectSettings> = (
@@ -58,7 +59,9 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     outlineContourIndex,
     previous.intermediateImageOf(StepName.BLUR_OBJECT),
     settings.meanThreshold,
-    handleContourSmoothing
+    handleContourSmoothing,
+    1,
+    settings.holeAreaTreshold
   );
 
   const scaledHoles = contoursWithHolesFrom(
@@ -67,7 +70,8 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     previous.intermediateImageOf(StepName.BLUR_OBJECT),
     settings.meanThreshold,
     handleContourSmoothing,
-    scaleFactor
+    scaleFactor,
+    settings.holeAreaTreshold
   );
   const scaledPoints = pointsFrom(outlineContour, scaleFactor);
 
@@ -107,6 +111,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     smoothAccuracy: 2,
     meanThreshold: 10,
     debugContours: false,
+    holeAreaTreshold: 1,
   },
   config: {
     smoothOutline: {
@@ -124,6 +129,12 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     },
     debugContours: {
       type: "checkbox",
+    },
+    holeAreaTreshold: {
+      type: "number",
+      min: 0,
+      max: 100,
+      step: 0.01
     },
   },
   imageColorSpace: ColorSpace.RGB,

@@ -59,17 +59,23 @@ export const largestContourOf = (contours: cv.MatVector): number | null => {
   return result;
 };
 
+// TODO refactor into atleast two functions - split by mean and filter hole sizes
 export const contoursWithHolesFrom = (
   contours: ImageContours,
   parentIndex: number,
   image: cv.Mat,
   threshold = 10,
   handleContourSmoothing: (contour: cv.Mat) => cv.Mat,
-  scaleFactor: number = 1
+  scaleFactor: number = 1,
+  holeAreaTreshold: number = 1
 ): ContourPoints[] => {
   const probablyBackgroundValue = cv.mean(image)[0]; // TODO draw the inverse from outline
   const imageSize = image.size();
   const result: ContourPoints[] = [];
+
+  const parentAreaSize = cv.contourArea(contours.contours.get(parentIndex));
+  const areaThreshold = (parentAreaSize / 100) * holeAreaTreshold;
+  
   for (let i = 0; i < contours.contours.size(); ++i) {
     const hierarchyIndex = contours.hierarchy.intPtr(0, i)[3]; // parent contour index
     if (hierarchyIndex != parentIndex) {
@@ -82,9 +88,11 @@ export const contoursWithHolesFrom = (
       mean >= probablyBackgroundValue - threshold
     ) {
       const contour = handleContourSmoothing(contours.contours.get(i));
-      const scaledPoints = pointsFrom(contour, scaleFactor);
-
-      result.push(scaledPoints);
+      const contourArea = cv.contourArea(contour);
+      if (contourArea >= areaThreshold) {
+        const scaledPoints = pointsFrom(contour, scaleFactor);
+        result.push(scaledPoints);
+      }
     }
     mask.delete();
   }
@@ -117,6 +125,5 @@ export const smoothOf = (
   cv.approxPolyDP(contour, smooth, accuracy, true);
   return smooth;
 };
-
 
 export default ImageContours;
