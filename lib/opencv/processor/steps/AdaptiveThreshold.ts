@@ -4,7 +4,6 @@ import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
 type AdaptiveThresholdSettings = {
-  threshold: number;
   maxValue: number;
   blockSize: number;
   c: number;
@@ -26,38 +25,17 @@ const thresholdOf: Process<AdaptiveThresholdSettings> = (
     settings.c
   );
 
-  // cv.threshold(
-  //   image,
-  //   threshold,
-  //   settings.threshold,
-  //   settings.maxValue,
-  //   cv.THRESH_BINARY
-  // );
-
-  cv.threshold(
-    threshold,
-    threshold,
-    settings.threshold,
-    settings.maxValue,
-    cv.THRESH_BINARY + cv.THRESH_OTSU
-  );
   return { image: threshold };
 };
 
 const adaptiveThresholdStep: ProcessingStep<AdaptiveThresholdSettings> = {
   name: StepName.ADAPTIVE_THRESHOLD,
   settings: {
-    threshold: 130,
     maxValue: 255,
-    blockSize: 11,
+    blockSize: 7,
     c: 2,
   },
   config: {
-    threshold: {
-      type: "number",
-      min: 0,
-      max: 255,
-    },
     maxValue: {
       type: "number",
       min: 0,
@@ -70,8 +48,8 @@ const adaptiveThresholdStep: ProcessingStep<AdaptiveThresholdSettings> = {
     },
     c: {
       type: "number",
-      min: -255,
-      max: 255,
+      min: -10,
+      max: 10,
     },
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,

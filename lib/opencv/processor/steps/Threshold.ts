@@ -1,12 +1,31 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { PreviousData, Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, {
+  PreviousData,
+  Process,
+  ProcessResult,
+} from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
+import adaptiveThresholdStep from "./AdaptiveThreshold";
+import binaryThresholdStep from "./BinaryThreshold";
+import Options from "@/lib/utils/Options";
+
+enum Threshold {
+  ADAPTIVE = "adaptive",
+  BINARY = "binary",
+}
+const dictionaryPath = "threshold";
+
+export const thresholdOptionsFor = (dictionary: any) =>
+  Options.of(Threshold).withTranslation(dictionary, dictionaryPath);
+
+type BinaryThresholdSettings = typeof binaryThresholdStep.settings;
+type AdaptiveThresholdSettings = typeof adaptiveThresholdStep.settings;
 
 type ThresholdSettings = {
-  threshold: number;
-  inverseThreshold: number;
-  maxValue: number;
+  thresholdType: Threshold;
+  binarySettings: BinaryThresholdSettings;
+  adaptiveSettings: AdaptiveThresholdSettings;
 };
 
 const thresholdOf: Process<ThresholdSettings> = (
@@ -14,76 +33,32 @@ const thresholdOf: Process<ThresholdSettings> = (
   settings: ThresholdSettings,
   previous: PreviousData
 ): ProcessResult => {
-  let threshold = new cv.Mat();
-  let inverseThreshold = new cv.Mat();
-
-  cv.threshold(
-    image,
-    threshold,
-    settings.threshold,
-    settings.maxValue,
-    cv.THRESH_BINARY
-  );
-
-  cv.threshold(
-    image,
-    inverseThreshold,
-    settings.inverseThreshold,
-    settings.maxValue,
-    cv.THRESH_BINARY_INV
-  );
-
-  // Create mask from inverse threshold where black parts (value 0) are selected
-  let blackPartsMask = new cv.Mat();
-  cv.compare(
-    inverseThreshold,
-    new cv.Mat(
-      inverseThreshold.rows,
-      inverseThreshold.cols,
-      inverseThreshold.type(),
-      [0, 0, 0, 0]
-    ),
-    blackPartsMask,
-    cv.CMP_EQ
-  );
-
-  // Extract black parts from inverse threshold using the mask
-  let blackParts = new cv.Mat();
-  cv.bitwise_and(inverseThreshold, blackPartsMask, blackParts);
-
-  let combined = new cv.Mat();
-  cv.bitwise_xor(threshold, inverseThreshold, combined);
-
-  threshold.delete();
-  inverseThreshold.delete();
-  blackPartsMask.delete();
-  blackParts.delete();
-
-  return { image: combined };
+  if (settings.thresholdType == Threshold.ADAPTIVE) {
+    return adaptiveThresholdStep.process(image, settings.adaptiveSettings, previous);
+  } else {
+    return binaryThresholdStep.process(image, settings.binarySettings, previous);
+  }
 };
 
 const thresholdStep: ProcessingStep<ThresholdSettings> = {
   name: StepName.THRESHOLD,
   settings: {
-    threshold: 130,
-    inverseThreshold: 255,
-    maxValue: 255,
+    thresholdType: Threshold.ADAPTIVE,
+    binarySettings: binaryThresholdStep.settings,
+    adaptiveSettings: adaptiveThresholdStep.settings
   },
   config: {
-    threshold: {
-      type: "number",
-      min: 0,
-      max: 255,
+    thresholdType: {
+      type: "select",
+      optionsFunction: thresholdOptionsFor,
     },
-    inverseThreshold: {
-      type: "number",
-      min: 0,
-      max: 255,
+    binarySettings: {
+      type: "group",
+      config: binaryThresholdStep.config!,
     },
-    maxValue: {
-      type: "number",
-      min: 0,
-      max: 255,
+    adaptiveSettings: {
+      type: "group",
+      config: adaptiveThresholdStep.config!,
     },
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,

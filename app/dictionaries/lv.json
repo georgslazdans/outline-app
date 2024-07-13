@@ -25,6 +25,10 @@
     "us-letter": "US Letter",
     "us-legal": "US Legal"
   },
+  "threshold": {
+    "adaptive": "Adaptīvs",
+    "binary": "Binārs"
+  },
   "calibration": {
     "title": "OpenCv Kalibrēšana",
     "step": {
@@ -38,6 +42,7 @@
       "grayScale": "Pēlēkuma Skala",
       "grayScaleObject": "Objekta Pēlēkuma Skala",
       "threshold": "Kontrasts",
+      "objectThreshold": "Objekta Kontrasts",
       "adaptiveThreshold": "Adaptīvais Kontrasts",
       "closeCorners": "Close Corners"
     },
@@ -56,7 +61,10 @@
       "smoothOutline": "Smooth Outline",
       "smoothAccuracy": "Smooth Max Deviation",
       "kernelSize": "Kernel Size",
-      "meanThreshold": "Mean Threshold"
+      "meanThreshold": "Mean Threshold",
+      "thresholdType": "Threshold Type",
+      "adaptiveSettings": "Adaptive Settings",
+      "binarySettings": "Binary Settings"
     },
     "settings": "Iestatījumi",
     "advancedSettings": "Pilni iestatījumi",

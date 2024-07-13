@@ -25,6 +25,10 @@
     "us-letter": "US Letter",
     "us-legal": "US Legal"
   },
+  "threshold": {
+    "adaptive": "Adaptive",
+    "binary": "Binary"
+  },
   "calibration": {
     "title": "OpenCv Calibration",
     "step": {
@@ -38,6 +42,7 @@
       "grayScale": "Gray Scale",
       "grayScaleObject": "Gray Scale Object",
       "threshold": "Threshold",
+      "objectThreshold": "Object Threshold",
       "adaptiveThreshold": "Adaptive Threshold",
       "closeCorners": "Close Corners"
     },
@@ -61,7 +66,10 @@
       "smoothOutline": "Smooth Outline",
       "smoothAccuracy": "Smooth Max Deviation",
       "kernelSize": "Kernel Size",
-      "meanThreshold": "Mean Threshold"
+      "meanThreshold": "Mean Threshold",
+      "thresholdType": "Threshold Type",
+      "adaptiveSettings": "Adaptive Settings",
+      "binarySettings": "Binary Settings"
     },
     "settings": "Settings",
     "advancedSettings": "Advanced Settings",

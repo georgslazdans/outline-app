@@ -12,7 +12,7 @@ type ExtractPaperSettings = {
   paperSettings: PaperSettings;
 };
 
-export const extractPaperFrom: Process<ExtractPaperSettings> = (
+const extractPaperFrom: Process<ExtractPaperSettings> = (
   image: cv.Mat,
   settings: ExtractPaperSettings,
   previous: PreviousData

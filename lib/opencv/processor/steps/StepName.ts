@@ -10,6 +10,8 @@ enum StepName {
     GRAY_SCALE_OBJECT = "grayScaleObject",
     ADAPTIVE_THRESHOLD = "adaptiveThreshold",
     THRESHOLD = "threshold",
+    OBJECT_THRESHOLD = "objectThreshold",
+    BINARY_THRESHOLD = "binaryThreshold",
     CLOSE_CORNERS = "closeCorners",
 }
 

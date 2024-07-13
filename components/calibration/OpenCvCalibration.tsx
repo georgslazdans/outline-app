@@ -188,7 +188,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
         onError={handleWorkerError}
       ></OpenCvWorker>
       <div className="flex flex-col h-full">
-        <div className="flex-grow overflow-auto mb-auto h-[80vh]">
+        <div className="flex-grow overflow-auto mb-auto h-[72vh]">
           {errorMessage && (
             <ErrorMessage className="mb-2" text={errorMessage}></ErrorMessage>
           )}

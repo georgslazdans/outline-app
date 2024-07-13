@@ -11,7 +11,7 @@ import {
 } from "./processor/ProcessStep";
 
 const processWork = async (work: OpenCvWork) => {
-  console.log("Processing work", work);
+  console.log("Processing work", work.type, work.data.settings);
   let result: ProcessingResult;
   switch (work.type) {
     case "all":
