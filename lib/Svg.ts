@@ -1,11 +1,16 @@
 import Point from "./Point";
+import { PaperDimensions } from "./opencv/PaperSettings";
 import { ContourPoints } from "./opencv/StepResult";
 
 namespace Svg {
-  export const from = (contours: ContourPoints[]) => {
+  export const from = (contours: ContourPoints[], paperDimensions: PaperDimensions) => {
     const pathData = pathDataOf(contours);
-    return `<svg xmlns="http://www.w3.org/2000/svg">${pathData}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" ${viewPortOf(paperDimensions)}>${pathData}</svg>`;
   };
+
+  const viewPortOf = (paperDimensions: PaperDimensions) => {
+    return ` width="${paperDimensions.width}mm" height="${paperDimensions.height}mm" viewBox="0 0 ${paperDimensions.width} ${paperDimensions.height}" `
+  }
 
   const pathDataOf = (contours: ContourPoints[]) => {
     const pointData = contours.map(it=> pointDataOf(it.points)).join("");
@@ -20,8 +25,6 @@ namespace Svg {
     pathData += " Z"; // Close the path
     return pathData;
   }
-
-  const maxSize = () => {};
 }
 
 export default Svg;

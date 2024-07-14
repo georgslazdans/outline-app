@@ -12,6 +12,7 @@ import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
 import { OutlineImageViewer } from "../OutlineImageViewer";
 import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
+import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 
 type Props = {
   dictionary: Dictionary;
@@ -50,12 +51,13 @@ const SimpleCalibration = ({
 
   const exportSvg = useCallback(() => {
     const lastStep = stepResults[stepResults.length - 1];
-    const svg = Svg.from(lastStep.contours!);
+    const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
+    const svg = Svg.from(lastStep.contours!, paperDimensions);
     const blob = new Blob([svg], {
       type: "image/svg+xml",
     });
     downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.svg`);
-  }, [stepResults]);
+  }, [detailsContext, stepResults]);
 
   return (
     <>

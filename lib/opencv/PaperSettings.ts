@@ -1,3 +1,4 @@
+import { Context } from "@/context/DetailsContext";
 import Orientation from "../Orientation";
 import Settings from "./Settings";
 import StepName from "./processor/steps/StepName";
@@ -11,6 +12,12 @@ type PaperSettings = {
 export type PaperDimensions = {
   width: number;
   height: number;
+};
+
+export const paperDimensionsOfDetailsContext = (
+  detailsContext: Context
+): PaperDimensions => {
+  return paperDimensionsOf(detailsContext.settings[StepName.EXTRACT_PAPER].paperSettings);
 };
 
 export const paperDimensionsOf = (

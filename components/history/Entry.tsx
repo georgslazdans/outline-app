@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import Svg from "@/lib/Svg";
 import { downloadFile } from "@/lib/utils/Download";
 import { useIndexedDB } from "react-indexed-db-hook";
+import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 
 type Props = {
   context: Context;
@@ -31,7 +32,8 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
 
   const exportSvg = () => {
     if (hasSvg) {
-      const svg = Svg.from(context.contours!);
+      const paperDimensions = paperDimensionsOfDetailsContext(context);
+      const svg = Svg.from(context.contours!, paperDimensions);
       const blob = new Blob([svg], {
         type: "image/svg+xml",
       });
