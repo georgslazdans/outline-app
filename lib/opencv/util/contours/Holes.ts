@@ -13,13 +13,9 @@ const holeFinder = () => {
   const result = {
     withImage: (image: cv.Mat) => {
       _image = image;
-      _backgroundColor = cv.mean(_image)[0]; // TODO use inverse of object mask! This is expensive, dawg
       return result;
     },
-    withSettings: (
-      meanThreshold: number,
-      areaHoleThreshold: number
-    ) => {
+    withSettings: (meanThreshold: number, areaHoleThreshold: number) => {
       _meanThreshold = meanThreshold;
       _areaHoleThreshold = areaHoleThreshold;
       return result;
@@ -32,6 +28,10 @@ const holeFinder = () => {
       contours: ImageContours,
       parentIndex: number
     ): ContourPoints[] => {
+      const backgroundMask = inverseMaskOf(parentIndex, contours.contours, _image.size());
+      _backgroundColor = cv.mean(_image, backgroundMask)[0];
+      backgroundMask.delete();
+
       const contourPoints: ContourPoints[] = [];
 
       const parentAreaSize = cv.contourArea(contours.contours.get(parentIndex));
@@ -112,6 +112,26 @@ const maskOf = (
     cv.FILLED
   );
   return mask;
+};
+
+const inverseMaskOf = (
+  index: number,
+  contours: cv.MatVector,
+  imageSize: cv.Size
+): cv.Mat => {
+  const mask = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC1);
+  const inverseMask = new cv.Mat();
+  cv.drawContours(
+    mask,
+    contours,
+    index,
+    new cv.Scalar(255, 255, 255),
+    cv.FILLED
+  );
+  cv.bitwise_not(mask, inverseMask);
+
+  mask.delete();
+  return inverseMask;
 };
 
 export default holeFinder;
