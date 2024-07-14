@@ -10,7 +10,7 @@ import {
   largestContourOf,
   smoothOf,
 } from "../../util/contours/Contours";
-import { pointsFrom } from "../../../Point";
+import { pointsFrom, scalePoints } from "../../../Point";
 import StepName from "./StepName";
 import { scaleFactorOf } from "../ImageWarper";
 import { paperDimensionsOf } from "../../PaperSettings";
@@ -54,28 +54,18 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   const outlineContour = handleContourSmoothing(
     objectContours.contours.get(outlineContourIndex)
   );
-  const scaleFactor = scaleFactorFrom(previous);
 
   const points = pointsFrom(outlineContour);
 
   const holes = holeFinder()
     .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
-    .withSettings(1, settings.meanThreshold, settings.holeAreaTreshold)
+    .withSettings(settings.meanThreshold, settings.holeAreaTreshold)
     .withContourProcesing(handleContourSmoothing)
     .findHolesInContour(objectContours, outlineContourIndex);
 
-  // TODO scale the points afterwards?
-  const scaledHoles = holeFinder()
-    .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
-    .withSettings(
-      scaleFactor,
-      settings.meanThreshold,
-      settings.holeAreaTreshold
-    )
-    .withContourProcesing(handleContourSmoothing)
-    .findHolesInContour(objectContours, outlineContourIndex);
-
-  const scaledPoints = pointsFrom(outlineContour, scaleFactor);
+  const scaleFactor = scaleFactorFrom(previous);
+  const scaledHoles = holes.map((it) => scalePoints(it, 1 / scaleFactor));
+  const scaledPoints = scalePoints(points, 1 / scaleFactor);
 
   let resultingImage: cv.Mat;
   if (!settings.debugContours) {

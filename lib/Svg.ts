@@ -1,6 +1,5 @@
-import Point from "./Point";
+import Point, { ContourPoints } from "./Point";
 import { PaperDimensions } from "./opencv/PaperSettings";
-import { ContourPoints } from "./opencv/StepResult";
 
 namespace Svg {
   export const from = (contours: ContourPoints[], paperDimensions: PaperDimensions) => {

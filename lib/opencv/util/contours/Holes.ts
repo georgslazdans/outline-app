@@ -1,7 +1,6 @@
 import * as cv from "@techstark/opencv-js";
 
-import { pointsFrom } from "@/lib/Point";
-import { ContourPoints } from "../../StepResult";
+import { ContourPoints, pointsFrom } from "@/lib/Point";
 import ImageContours from "./Contours";
 
 const holeFinder = () => {
@@ -9,7 +8,6 @@ const holeFinder = () => {
   let _backgroundColor: number;
   let _meanThreshold: number;
   let _areaHoleThreshold: number;
-  let _scaleFactor: number;
   let contourProcessing: (contour: cv.Mat) => cv.Mat;
 
   const result = {
@@ -19,11 +17,9 @@ const holeFinder = () => {
       return result;
     },
     withSettings: (
-      scaleFactor: number,
       meanThreshold: number,
       areaHoleThreshold: number
     ) => {
-      _scaleFactor = scaleFactor;
       _meanThreshold = meanThreshold;
       _areaHoleThreshold = areaHoleThreshold;
       return result;
@@ -53,7 +49,7 @@ const holeFinder = () => {
           // TODO can have contour processing optional? E.g. Handle delete inside
           const contour = contourProcessing(contours.contours.get(i));
           if (isHoleLargerThanThreshold(contour, areaThreshold)) {
-            const scaledPoints = pointsFrom(contour, _scaleFactor);
+            const scaledPoints = pointsFrom(contour);
             contourPoints.push(scaledPoints);
           }
           contour.delete();
