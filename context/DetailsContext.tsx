@@ -1,7 +1,6 @@
 "use client";
 
 import Details from "@/lib/Details";
-import deepEqual from "@/lib/utils/Objects";
 import Settings from "@/lib/opencv/Settings";
 import { useRouter } from "next/navigation";
 import {
@@ -16,8 +15,7 @@ import {
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
-import Point from "@/lib/Point";
-import { ContourPoints } from "@/lib/opencv/StepResult";
+import { ContourPoints } from "@/lib/Point";
 
 const DetailsContext = createContext<any>(null);
 
