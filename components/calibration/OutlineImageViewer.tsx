@@ -10,7 +10,7 @@ export const OutlineImageViewer = ({ className, image }: Props) => {
 
   const getContext = () => {
     const canvas = canvasRef.current;
-    return canvas?.getContext("2d");
+    return canvas?.getContext("2d", { willReadFrequently: true });
   };
 
   const drawImage = useCallback(() => {

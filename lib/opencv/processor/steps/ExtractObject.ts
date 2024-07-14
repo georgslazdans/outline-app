@@ -33,20 +33,22 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   settings: ExtractObjectSettings,
   previous: PreviousData
 ): ProcessResult => {
+  const copyOf = (image: cv.Mat) => {
+    const result = new cv.Mat();
+    image.copyTo(result);
+    return result;
+  };
   const handleContourSmoothing = (contour: cv.Mat) => {
-    // TODO create new object, so it can always be cleaned after call
     return settings.smoothOutline
       ? smoothOf(contour, settings.smoothAccuracy / 10000)
-      : contour;
+      : copyOf(contour);
   };
   const objectContours = fancyContoursOf(image);
 
   const outlineContourIndex = largestContourOf(objectContours.contours);
   if (!outlineContourIndex) {
     console.log("Object contour not found!", this);
-    const result = new cv.Mat();
-    image.copyTo(result);
-    return { image: result };
+    return { image: copyOf(image) };
   }
 
   const outlineContour = handleContourSmoothing(
@@ -62,6 +64,7 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     .withContourProcesing(handleContourSmoothing)
     .findHolesInContour(objectContours, outlineContourIndex);
 
+  // TODO scale the points afterwards?
   const scaledHoles = holeFinder()
     .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
     .withSettings(

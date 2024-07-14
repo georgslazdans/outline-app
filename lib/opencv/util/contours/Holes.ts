@@ -15,7 +15,7 @@ const holeFinder = () => {
   const result = {
     withImage: (image: cv.Mat) => {
       _image = image;
-      _backgroundColor = cv.mean(_image)[0]; // TODO use inverse of object mask!
+      _backgroundColor = cv.mean(_image)[0]; // TODO use inverse of object mask! This is expensive, dawg
       return result;
     },
     withSettings: (
@@ -39,7 +39,7 @@ const holeFinder = () => {
       const contourPoints: ContourPoints[] = [];
 
       const parentAreaSize = cv.contourArea(contours.contours.get(parentIndex));
-      const areaThreshold = (parentAreaSize / 100) * _areaHoleThreshold;    
+      const areaThreshold = (parentAreaSize / 100) * _areaHoleThreshold;
       for (let i = 0; i < contours.contours.size(); ++i) {
         if (!isParent(i, parentIndex, contours.hierarchy)) {
           continue;
@@ -50,11 +50,13 @@ const holeFinder = () => {
             .ofBackgroundColour(_backgroundColor, _meanThreshold)
             .inImage(_image)
         ) {
+          // TODO can have contour processing optional? E.g. Handle delete inside
           const contour = contourProcessing(contours.contours.get(i));
           if (isHoleLargerThanThreshold(contour, areaThreshold)) {
             const scaledPoints = pointsFrom(contour, _scaleFactor);
             contourPoints.push(scaledPoints);
           }
+          contour.delete();
         }
       }
       return contourPoints;

@@ -1,5 +1,5 @@
 const getImageData = async (blob: Blob, canvas: HTMLCanvasElement | null) => {
-  const ctx = canvas?.getContext("2d");
+  const ctx = canvas?.getContext("2d", { willReadFrequently: true });
 
   if (!canvas || !ctx) {
     throw new Error("Canvas element or context has not been initialized!");
