@@ -37,6 +37,9 @@ const holeFinder = () => {
       parentIndex: number
     ): ContourPoints[] => {
       const contourPoints: ContourPoints[] = [];
+
+      const parentAreaSize = cv.contourArea(contours.contours.get(parentIndex));
+      const areaThreshold = (parentAreaSize / 100) * _areaHoleThreshold;    
       for (let i = 0; i < contours.contours.size(); ++i) {
         if (!isParent(i, parentIndex, contours.hierarchy)) {
           continue;
@@ -48,7 +51,7 @@ const holeFinder = () => {
             .inImage(_image)
         ) {
           const contour = contourProcessing(contours.contours.get(i));
-          if (isHoleLargerThanThreshold(contour, _areaHoleThreshold)) {
+          if (isHoleLargerThanThreshold(contour, areaThreshold)) {
             const scaledPoints = pointsFrom(contour, _scaleFactor);
             contourPoints.push(scaledPoints);
           }
