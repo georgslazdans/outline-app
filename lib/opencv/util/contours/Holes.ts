@@ -28,7 +28,11 @@ const holeFinder = () => {
       contours: ImageContours,
       parentIndex: number
     ): ContourPoints[] => {
-      const backgroundMask = inverseMaskOf(parentIndex, contours.contours, _image.size());
+      const backgroundMask = inverseMaskOf(
+        parentIndex,
+        contours.contours,
+        _image.size()
+      );
       _backgroundColor = cv.mean(_image, backgroundMask)[0];
       backgroundMask.delete();
 
@@ -41,20 +45,19 @@ const holeFinder = () => {
           continue;
         }
 
+        const contour = contourProcessing(contours.contours.get(i));
         if (
+          isHoleLargerThanThreshold(contour, areaThreshold) &&
           isContour(contours.contours, i)
             .ofBackgroundColour(_backgroundColor, _meanThreshold)
             .inImage(_image)
         ) {
-          // TODO can have contour processing optional? E.g. Handle delete inside
-          const contour = contourProcessing(contours.contours.get(i));
-          if (isHoleLargerThanThreshold(contour, areaThreshold)) {
-            const scaledPoints = pointsFrom(contour);
-            contourPoints.push(scaledPoints);
-          }
-          contour.delete();
+          const scaledPoints = pointsFrom(contour);
+          contourPoints.push(scaledPoints);
         }
+        contour.delete();
       }
+
       return contourPoints;
     },
   };
