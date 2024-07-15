@@ -58,13 +58,15 @@ export const AdvancedSettingsEditor = ({
 
   return (
     <div className="xl:w-1/2">
-      <h2 className="text-center p-2 w-full">{dictionary.calibration.settings}</h2>
+      <h2 className="text-center p-2 w-full">
+        {dictionary.calibration.settings}
+      </h2>
       <div className="flex flex-col gap-1">
         {currentSetting &&
           Object.keys(currentSetting).map((key) => {
             const config = configOf(key);
             if (!config) {
-              console.warn("No config found for setting: ", key);
+              console.info("No config found for setting: ", key);
               return;
             }
             if (config.type == "group") {

@@ -36,7 +36,7 @@ export const eventFieldConverterFor = (config: StepSettingConfig) => {
   switch (config.type) {
     case "number":
       return (event: ChangeEvent<HTMLInputElement>) =>
-        Number.parseInt(event.target.value);
+        Number.parseFloat(event.target.value);
     case "group":
       return (event: ChangeEvent<HTMLInputElement>) => event.target.value;
     case "checkbox":

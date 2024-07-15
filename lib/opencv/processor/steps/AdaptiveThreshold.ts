@@ -1,5 +1,9 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { PreviousData, Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, {
+  PreviousData,
+  Process,
+  ProcessResult,
+} from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
@@ -43,8 +47,9 @@ const adaptiveThresholdStep: ProcessingStep<AdaptiveThresholdSettings> = {
     },
     blockSize: {
       type: "number",
-      min: 0,
+      min: 1,
       max: 50,
+      step: 2,
     },
     c: {
       type: "number",

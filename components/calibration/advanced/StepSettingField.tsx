@@ -50,6 +50,7 @@ const StepSettingField = ({
         numberRange={{
           min: numberConfig.min,
           max: numberConfig.max,
+          step: numberConfig.step
         }}
         slider
       />

@@ -1,5 +1,9 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { PreviousData, Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, {
+  PreviousData,
+  Process,
+  ProcessResult,
+} from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
@@ -33,8 +37,9 @@ const blurStep: ProcessingStep<BlurSettings> = {
   config: {
     blurWidth: {
       type: "number",
-      min: 0,
+      min: 1,
       max: 25,
+      step: 2,
     },
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,

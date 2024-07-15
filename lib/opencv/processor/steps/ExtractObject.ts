@@ -110,7 +110,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     },
     holeSettings: {
       meanThreshold: 10,
-      holeAreaTreshold: 1,
+      holeAreaTreshold: 1.0,
     },
     debugContours: false,
   },
@@ -125,6 +125,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
           type: "number",
           min: 0,
           max: 100,
+          step: 0.1
         },
       },
     },
@@ -139,7 +140,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
         holeAreaTreshold: {
           type: "number",
           min: 0,
-          max: 100,
+          max: 20,
           step: 0.01,
         },
       },
