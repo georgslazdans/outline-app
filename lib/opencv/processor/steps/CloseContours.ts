@@ -39,7 +39,7 @@ const closeContours: Process<CloseContoursSettings> = (
 const closeContoursStep: ProcessingStep<CloseContoursSettings> = {
   name: StepName.CLOSE_CORNERS,
   settings: {
-    kernelSize: 10,
+    kernelSize: 15,
     iterations: 1,
   },
   config: {
