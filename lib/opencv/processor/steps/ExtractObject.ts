@@ -18,14 +18,17 @@ import {
   contourShapeOf,
   drawAllContoursChild,
 } from "../../util/contours/Drawing";
-import holeFinder from "../../util/contours/Holes";
+import holeFinder, { HoleSettings } from "../../util/contours/Holes";
 
-type ExtractObjectSettings = {
-  meanThreshold: number;
+type SnoothSettings = {
   smoothOutline: boolean;
   smoothAccuracy: number;
+};
+
+type ExtractObjectSettings = {
+  smoothSettings: SnoothSettings;
+  holeSettings: HoleSettings;
   debugContours: boolean;
-  holeAreaTreshold: number;
 };
 
 const extractObjectFrom: Process<ExtractObjectSettings> = (
@@ -39,8 +42,8 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     return result;
   };
   const handleContourSmoothing = (contour: cv.Mat) => {
-    return settings.smoothOutline
-      ? smoothOf(contour, settings.smoothAccuracy / 10000)
+    return settings.smoothSettings.smoothOutline
+      ? smoothOf(contour, settings.smoothSettings.smoothAccuracy / 10000)
       : copyOf(contour);
   };
   const objectContours = fancyContoursOf(image);
@@ -59,7 +62,9 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
 
   const holes = holeFinder()
     .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
-    .withSettings(settings.meanThreshold, settings.holeAreaTreshold)
+    .withSettings(
+      settings.holeSettings
+    )
     .withContourProcesing(handleContourSmoothing)
     .findHolesInContour(objectContours, outlineContourIndex);
 
@@ -99,35 +104,50 @@ const scaleFactorFrom = (previous: PreviousData) => {
 const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
   name: StepName.EXTRACT_OBJECT,
   settings: {
-    smoothOutline: true,
-    smoothAccuracy: 2,
-    meanThreshold: 10,
+    smoothSettings: {
+      smoothOutline: true,
+      smoothAccuracy: 2,
+    },
+    holeSettings: {
+      meanThreshold: 10,
+      holeAreaTreshold: 1,
+    },
     debugContours: false,
-    holeAreaTreshold: 1,
   },
   config: {
-    smoothOutline: {
-      type: "checkbox",
+    smoothSettings: {
+      type: "group",
+      config: {
+        smoothOutline: {
+          type: "checkbox",
+        },
+        smoothAccuracy: {
+          type: "number",
+          min: 0,
+          max: 100,
+        },
+      },
     },
-    smoothAccuracy: {
-      type: "number",
-      min: 0,
-      max: 100,
-    },
-    meanThreshold: {
-      type: "number",
-      min: 0,
-      max: 30,
+    holeSettings: {
+      type: "group",
+      config: {
+        meanThreshold: {
+          type: "number",
+          min: 0,
+          max: 30,
+        },
+        holeAreaTreshold: {
+          type: "number",
+          min: 0,
+          max: 100,
+          step: 0.01,
+        },
+      },
     },
     debugContours: {
       type: "checkbox",
     },
-    holeAreaTreshold: {
-      type: "number",
-      min: 0,
-      max: 100,
-      step: 0.01,
-    },
+
   },
   imageColorSpace: ColorSpace.RGB,
   process: extractObjectFrom,

@@ -72,7 +72,9 @@
       "adaptiveSettings": "Adaptive Settings",
       "binarySettings": "Binary Settings",
       "debugContours": "Debug Contours",
-      "holeAreaTreshold": "Hole Area Threshold (%)"
+      "holeAreaTreshold": "Hole Area Threshold (%)",
+      "smoothSettings": "Smooth Settings",
+      "holeSettings": "Hole Settings"
     },
     "settings": "Settings",
     "advancedSettings": "Advanced Settings",
