@@ -9,6 +9,7 @@ import StepName from "./StepName";
 
 type CloseContoursSettings = {
   kernelSize: number;
+  iterations: number;
 };
 
 const closeContours: Process<CloseContoursSettings> = (
@@ -16,29 +17,41 @@ const closeContours: Process<CloseContoursSettings> = (
   settings: CloseContoursSettings,
   previous: PreviousData
 ): ProcessResult => {
-  let closed = new cv.Mat();
-  let dilated = new cv.Mat();
-  let kernel = cv.getStructuringElement(
+  const closed = new cv.Mat();
+
+  const kernel = cv.getStructuringElement(
     cv.MORPH_RECT,
     new cv.Size(settings.kernelSize, settings.kernelSize)
   );
-  cv.dilate(image, dilated, kernel);
-  cv.erode(dilated, closed, kernel);
 
-  dilated.delete();
+  cv.morphologyEx(
+    image,
+    closed,
+    cv.MORPH_CLOSE,
+    kernel,
+    new cv.Point(-1, -1),
+    settings.iterations
+  );
+
   return { image: closed };
 };
 
 const closeContoursStep: ProcessingStep<CloseContoursSettings> = {
   name: StepName.CLOSE_CORNERS,
   settings: {
-    kernelSize: 5,
+    kernelSize: 10,
+    iterations: 1,
   },
   config: {
     kernelSize: {
       type: "number",
       min: 0,
       max: 50,
+    },
+    iterations: {
+      type: "number",
+      min: 0,
+      max: 10,
     },
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,

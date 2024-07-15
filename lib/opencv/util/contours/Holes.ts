@@ -3,11 +3,16 @@ import * as cv from "@techstark/opencv-js";
 import { ContourPoints, pointsFrom } from "@/lib/Point";
 import ImageContours from "./Contours";
 
+export type HoleSettings = {
+  meanThreshold: number;
+  holeAreaTreshold: number;
+};
+
 const holeFinder = () => {
   let _image: cv.Mat;
   let _backgroundColor: number;
   let _meanThreshold: number;
-  let _areaHoleThreshold: number;
+  let _holeAreaThreshold: number;
   let contourProcessing: (contour: cv.Mat) => cv.Mat;
 
   const result = {
@@ -15,9 +20,9 @@ const holeFinder = () => {
       _image = image;
       return result;
     },
-    withSettings: (meanThreshold: number, areaHoleThreshold: number) => {
-      _meanThreshold = meanThreshold;
-      _areaHoleThreshold = areaHoleThreshold;
+    withSettings: (holeSettings: HoleSettings) => {
+      _meanThreshold = holeSettings.meanThreshold;
+      _holeAreaThreshold = holeSettings.holeAreaTreshold;
       return result;
     },
     withContourProcesing: (processingFunction: (contour: cv.Mat) => cv.Mat) => {
@@ -39,7 +44,7 @@ const holeFinder = () => {
       const contourPoints: ContourPoints[] = [];
 
       const parentAreaSize = cv.contourArea(contours.contours.get(parentIndex));
-      const areaThreshold = (parentAreaSize / 100) * _areaHoleThreshold;
+      const areaThreshold = (parentAreaSize / 100) * _holeAreaThreshold;
       for (let i = 0; i < contours.contours.size(); ++i) {
         if (!isParent(i, parentIndex, contours.hierarchy)) {
           continue;

@@ -74,7 +74,8 @@
       "debugContours": "Debug Contours",
       "holeAreaTreshold": "Hole Area Threshold (%)",
       "smoothSettings": "Smooth Settings",
-      "holeSettings": "Hole Settings"
+      "holeSettings": "Hole Settings",
+      "iterations": "Iterations"
     },
     "settings": "Settings",
     "advancedSettings": "Advanced Settings",
