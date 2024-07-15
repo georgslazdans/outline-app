@@ -61,12 +61,18 @@ const SimpleCalibration = ({
 
   return (
     <>
-      <OutlineImageViewer className="max-h-[30vh]" image={outlineCheckImage}></OutlineImageViewer>
-      <SimpleSettingsEditor
-        dictionary={dictionary}
-        settings={settings}
-        onChange={handleSettingsChange}
-      ></SimpleSettingsEditor>
+      <div className="flex flex-col xl:flex-row flex-grow">
+        <OutlineImageViewer
+          className="max-h-[30vh] xl:max-h-[45vh] xl:w-1/2"
+          image={outlineCheckImage}
+        ></OutlineImageViewer>
+        <SimpleSettingsEditor
+          dictionary={dictionary}
+          settings={settings}
+          onChange={handleSettingsChange}
+        ></SimpleSettingsEditor>
+      </div>
+
       <div className="flex flex-col mt-4">
         <Button onClick={() => openAdvancedMode()} style="secondary">
           <label>{dictionary.calibration.advancedSettings}</label>

@@ -47,7 +47,7 @@ const History = ({ dictionary }: Props) => {
         value={search}
         onChange={handleSearch}
       ></InputField>
-      <div className="mt-4">
+      <div className="mt-4 grid grid-cols-1 gap-1 xl:gap-4 xl:grid-cols-3">
         {filter(items).map((it) => {
           return (
             <div key={it.id} className="mb-2">

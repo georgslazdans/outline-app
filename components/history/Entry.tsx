@@ -48,8 +48,8 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
   const dateString = context.addDate?.toLocaleDateString();
   const buttonClass = "h-16 p-0";
   return (
-    <div className="border border-black dark:border-white rounded-[16px] p-3 w-full">
-      <div className="flex flex-row">
+    <div className="flex flex-col border border-black dark:border-white rounded-[16px] p-3 w-full h-full">
+      <div className="flex flex-row grow">
         <div className="w-[16rem]">
           <BlobImage image={context.imageFile}></BlobImage>
         </div>

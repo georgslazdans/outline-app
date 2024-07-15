@@ -70,16 +70,18 @@ export const AdvancedCalibration = ({ dictionary, stepResults }: Props) => {
         stepResults={stepResults}
         onDataChange={handleDataChange}
       ></ImageSelector>
-      <ImageViewer
-        className="mt-2"
-        imageData={currentStep?.imageData}
-      ></ImageViewer>
-      <AdvancedSettingsEditor
-        dictionary={dictionary}
-        currentSetting={currentStepSettings()}
-        onChange={handleSettingsChange}
-        step={currentStep?.stepName}
-      ></AdvancedSettingsEditor>
+      <div className="mt-2 flex flex-col gap-1 xl:flex-row flex-grow">
+        <ImageViewer
+          className="xl:w-1/2"
+          imageData={currentStep?.imageData}
+        ></ImageViewer>
+        <AdvancedSettingsEditor
+          dictionary={dictionary}
+          currentSetting={currentStepSettings()}
+          onChange={handleSettingsChange}
+          step={currentStep?.stepName}
+        ></AdvancedSettingsEditor>
+      </div>
     </>
   );
 };

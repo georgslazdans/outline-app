@@ -57,40 +57,42 @@ export const AdvancedSettingsEditor = ({
   };
 
   return (
-    <div>
-      <h2 className="text-center p-2">{dictionary.calibration.settings}</h2>
-      {currentSetting &&
-        Object.keys(currentSetting).map((key) => {
-          const config = configOf(key);
-          if (!config) {
-            console.warn("No config found for setting: ", key);
-            return;
-          }
-          if (config.type == "group") {
-            const groupConfig = config as GroupConfig;
-            return (
-              <StepSettingGroup
-                key={key}
-                name={key}
-                settings={currentSetting[key]}
-                config={groupConfig.config}
-                onChange={handleOnGroupChange(key)}
-                dictionary={dictionary}
-              ></StepSettingGroup>
-            );
-          } else {
-            return (
-              <StepSettingField
-                key={key}
-                name={key}
-                value={currentSetting[key]}
-                config={configOf(key)}
-                handleOnChange={handleOnChange(key, configOf(key))}
-                dictionary={dictionary}
-              ></StepSettingField>
-            );
-          }
-        })}
+    <div className="xl:w-1/2">
+      <h2 className="text-center p-2 w-full">{dictionary.calibration.settings}</h2>
+      <div className="flex flex-col gap-1">
+        {currentSetting &&
+          Object.keys(currentSetting).map((key) => {
+            const config = configOf(key);
+            if (!config) {
+              console.warn("No config found for setting: ", key);
+              return;
+            }
+            if (config.type == "group") {
+              const groupConfig = config as GroupConfig;
+              return (
+                <StepSettingGroup
+                  key={key}
+                  name={key}
+                  settings={currentSetting[key]}
+                  config={groupConfig.config}
+                  onChange={handleOnGroupChange(key)}
+                  dictionary={dictionary}
+                ></StepSettingGroup>
+              );
+            } else {
+              return (
+                <StepSettingField
+                  key={key}
+                  name={key}
+                  value={currentSetting[key]}
+                  config={configOf(key)}
+                  handleOnChange={handleOnChange(key, configOf(key))}
+                  dictionary={dictionary}
+                ></StepSettingField>
+              );
+            }
+          })}
+      </div>
     </div>
   );
 };
