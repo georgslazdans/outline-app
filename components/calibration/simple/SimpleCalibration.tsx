@@ -13,6 +13,7 @@ import { downloadFile } from "@/lib/utils/Download";
 import { OutlineImageViewer } from "../OutlineImageViewer";
 import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
+import { centerPoints } from "@/lib/Point";
 
 type Props = {
   dictionary: Dictionary;
@@ -52,7 +53,10 @@ const SimpleCalibration = ({
   const exportSvg = useCallback(() => {
     const lastStep = stepResults[stepResults.length - 1];
     const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
-    const svg = Svg.from(lastStep.contours!, paperDimensions);
+    const contours = lastStep.contours!.map((it) =>
+      centerPoints(it, paperDimensions)
+    );
+    const svg = Svg.from(contours, paperDimensions);
     const blob = new Blob([svg], {
       type: "image/svg+xml",
     });

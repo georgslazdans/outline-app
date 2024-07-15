@@ -2,17 +2,25 @@ import Point, { ContourPoints } from "./Point";
 import { PaperDimensions } from "./opencv/PaperSettings";
 
 namespace Svg {
-  export const from = (contours: ContourPoints[], paperDimensions: PaperDimensions) => {
+  export const from = (
+    contours: ContourPoints[],
+    paperDimensions: PaperDimensions
+  ) => {
     const pathData = pathDataOf(contours);
-    return `<svg xmlns="http://www.w3.org/2000/svg" ${viewPortOf(paperDimensions)}>${pathData}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" ${viewPortOf(
+      paperDimensions
+    )}>
+      ${pathData}
+    </svg>`;
   };
 
   const viewPortOf = (paperDimensions: PaperDimensions) => {
-    return ` width="${paperDimensions.width}mm" height="${paperDimensions.height}mm" viewBox="0 0 ${paperDimensions.width} ${paperDimensions.height}" `
-  }
+    return ` width="${paperDimensions.width}mm" height="${paperDimensions.height}mm"
+             viewBox="${-paperDimensions.width/2} ${-paperDimensions.height/2} ${paperDimensions.width} ${paperDimensions.height}" `;
+  };
 
   const pathDataOf = (contours: ContourPoints[]) => {
-    const pointData = contours.map(it=> pointDataOf(it.points)).join("");
+    const pointData = contours.map((it) => pointDataOf(it.points)).join("");
     return `<path d="${pointData}" stroke-width="1" stroke="black" fill="none"/>`;
   };
 
@@ -23,7 +31,7 @@ namespace Svg {
     }
     pathData += " Z"; // Close the path
     return pathData;
-  }
+  };
 }
 
 export default Svg;

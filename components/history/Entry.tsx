@@ -11,6 +11,7 @@ import Svg from "@/lib/Svg";
 import { downloadFile } from "@/lib/utils/Download";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
+import { centerPoints } from "@/lib/Point";
 
 type Props = {
   context: Context;
@@ -33,7 +34,10 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
   const exportSvg = () => {
     if (hasSvg) {
       const paperDimensions = paperDimensionsOfDetailsContext(context);
-      const svg = Svg.from(context.contours!, paperDimensions);
+      const contours = context.contours!.map((it) =>
+        centerPoints(it, paperDimensions)
+      );
+      const svg = Svg.from(contours, paperDimensions);
       const blob = new Blob([svg], {
         type: "image/svg+xml",
       });

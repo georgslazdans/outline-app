@@ -1,4 +1,5 @@
 import * as cv from "@techstark/opencv-js";
+import { PaperDimensions } from "./opencv/PaperSettings";
 
 type Point = {
   x: number;
@@ -18,6 +19,19 @@ export const pointsFrom = (shape: cv.Mat): ContourPoints => {
     points.push({ x, y });
   }
   return { points };
+};
+
+export const centerPoints = (
+  contour: ContourPoints,
+  paperDimensions: PaperDimensions
+): ContourPoints => {
+  const translateX = paperDimensions.width / 2;
+  const translateY = paperDimensions.height / 2;
+  return {
+    points: contour.points.map((point) => {
+      return { x: point.x - translateX, y: point.y - translateY };
+    }),
+  };
 };
 
 export const scalePoints = (
