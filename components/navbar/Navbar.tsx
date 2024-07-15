@@ -19,14 +19,21 @@ const Navbar = ({ dictionary }: Props) => {
 
   return (
     <>
-      <div className="fixed w-16 h-16 right-0 z-50">
-        <NavbarMenuButton dictionary={dictionary} onClick={onMenuClick} />
+      <div className="xl:hidden">
+        <div className="fixed w-16 h-16 right-0 z-50">
+          <NavbarMenuButton dictionary={dictionary} onClick={onMenuClick} />
+        </div>
+        <div className="w-full max-h-[80vh] fixed z-30 flex">
+          {!showMenu && <NavbarBackButton dictionary={dictionary} />}
+        </div>
+        <div className="w-full max-h-[80vh] fixed z-40">
+          {showMenu && <NavbarMenu dictionary={dictionary} />}
+        </div>
       </div>
-      <div className="w-full max-h-[80vh] fixed z-30 flex">
-        {!showMenu && <NavbarBackButton dictionary={dictionary} />}
-      </div>
-      <div className="w-full max-h-[80vh] fixed z-40">
-        {showMenu && <NavbarMenu dictionary={dictionary} />}
+      <div className="hidden xl:block">
+        <div className="w-full z-40">
+          <NavbarMenu dictionary={dictionary} />
+        </div>
       </div>
     </>
   );

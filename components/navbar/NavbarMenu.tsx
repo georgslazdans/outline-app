@@ -16,30 +16,31 @@ const NavbarMenu = ({ dictionary }: Props) => {
 
   const onNavigation = (nav: NavbarPath) => {
     return () => {
-      console.log("click", nav);
       router.push(nav.path);
     };
   };
 
   return (
-    <div className="border-b-8 border-black dark:border-white bg-white dark:bg-black">
-      {paths.map((it) => {
-        return (
-          <li
-            key={it.path}
-            className={`mx-2 p-4 ${pathname == it.path ? "underline" : ""}`}
-            onClick={onNavigation(it)}
-          >
-            <a
-              href={it.path}
-              aria-current={pathname == it.path ? "page" : "false"}
+    <div className="border-b-4 xl:border-b border-black dark:border-white bg-white dark:bg-black">
+      <ul className="list-image-none flex flex-col xl:flex-row xl:max-w-5xl xl:mx-auto">
+        {paths.map((it) => {
+          return (
+            <li
+              key={it.path}
+              className={`mx-2 p-4 ${pathname == it.path ? "underline" : ""}`}
+              onClick={onNavigation(it)}
             >
-              {/* {it.name} */}
-              <label>{it.name}</label>
-            </a>
-          </li>
-        );
-      })}
+              <a
+                href={it.path}
+                aria-current={pathname == it.path ? "page" : "false"}
+              >
+                {/* {it.name} */}
+                <label>{it.name}</label>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
