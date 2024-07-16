@@ -39,7 +39,7 @@ const imageDataOf = (image: cv.Mat): ImageData => {
     if (image.channels() == 4) {
       return asImageData(image);
     } else {
-      var convertedImage = convertToRGBA(image);
+      const convertedImage = convertToRGBA(image);
       const imageData = asImageData(convertedImage);
       convertedImage.delete();
       return imageData;

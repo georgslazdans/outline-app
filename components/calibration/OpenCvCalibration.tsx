@@ -118,7 +118,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   }, [detailsContext, setLoading]);
 
   const rerunOpenCv = useCallback(() => {
-    var currentSettings = settingsOf(detailsContext);
+    const currentSettings = settingsOf(detailsContext);
     if (!previousSettings) {
       updateAllWorkData();
     } else if (settingsChanged) {

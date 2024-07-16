@@ -57,7 +57,7 @@ export const AdvancedCalibration = ({ dictionary, stepResults }: Props) => {
   };
 
   const currentStepSettings = () => {
-    var stepName = currentStep?.stepName;
+    const stepName = currentStep?.stepName;
     if (stepName) {
       return detailsContext.settings[stepName];
     }

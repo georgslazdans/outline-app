@@ -71,7 +71,9 @@
       "smoothSettings": "Smooth Settings",
       "holeSettings": "Hole Settings",
       "iterations": "Iterations",
-      "closeCornerSettings": "Close Corners"
+      "closeCornerSettings": "Close Corners",
+      "disable": "Disable",
+      "reuseBlur": "Reuse Blur"
     },
     "settings": "Iestatījumi",
     "simpleSettings": {

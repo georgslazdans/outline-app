@@ -75,10 +75,14 @@ const processorOf = (
     intermediateImages: IntermediateImages
   ): ProcessStepResult => {
     try {
-      var stepSettings = settingsFor(step);
+      const stepSettings = settingsFor(step);
       return {
         type: "success",
-        stepResult: step.process(image, stepSettings, previousDataOf(intermediateImages, settings)),
+        stepResult: step.process(
+          image,
+          stepSettings,
+          previousDataOf(intermediateImages, settings)
+        ),
       };
     } catch (e) {
       const errorMessage =
@@ -113,9 +117,32 @@ const processorOf = (
   };
 
   const process = (image: cv.Mat): ProcessingResult => {
+    const reuseBlur = settingsFor(extractPaperStep).reuseBlur;
+
     let errorMessage = undefined;
     let currentImage = image;
     for (const step of processingSteps) {
+      console.log("Step", step.name, reuseBlur);
+      if (reuseBlur) {
+        if (
+          step.name == StepName.BLUR_OBJECT ||
+          step.name == StepName.GRAY_SCALE_OBJECT
+        ) {
+          const copy = new cv.Mat();
+          currentImage.copyTo(copy);
+          stepData.push({
+            stepName: step.name,
+            imageData: imageDataOf(copy),
+            imageColorSpace: step.imageColorSpace,
+            contours: [],
+          });
+          intermediateImages = {
+            ...intermediateImages,
+            [step.name]: copy,
+          };
+          continue;
+        }
+      }
       const result = processStep(currentImage, step, intermediateImages);
       if (result.type == "success") {
         const stepResult = result.stepResult;

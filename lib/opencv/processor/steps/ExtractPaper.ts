@@ -9,6 +9,7 @@ import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSettings, { paperDimensionsOf } from "../../PaperSettings";
 
 type ExtractPaperSettings = {
+  reuseBlur: boolean
   paperSettings: PaperSettings;
 };
 
@@ -30,8 +31,9 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
   const smoothedContour = smoothContour(contours.get(contourIndex!));
   const cornerPoints = pointsFrom(smoothedContour);
 
-  const blurImage = previous.intermediateImageOf(StepName.BILETERAL_FILTER);
-  const result = warpedImageOf(cornerPoints.points, blurImage, settings.paperSettings);
+  const previousStep = settings.reuseBlur ? StepName.BLUR : StepName.BILETERAL_FILTER; 
+  const previousImage = previous.intermediateImageOf(previousStep);
+  const result = warpedImageOf(cornerPoints.points, previousImage, settings.paperSettings);
 
   contours.delete();
   hierarchy.delete();
@@ -66,6 +68,7 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
       height: 297,
       orientation: Orientation.LANDSCAPE,
     },
+    reuseBlur: true
   },
   config: {
     paperSettings: {
@@ -86,6 +89,9 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
           optionsFunction: orientationOptionsFor,
         },
       },
+    },
+    reuseBlur: {
+      type: "checkbox"
     }
   },
   imageColorSpace: ColorSpace.GRAY_SCALE,

@@ -1,5 +1,9 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { PreviousData, Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, {
+  PreviousData,
+  Process,
+  ProcessResult,
+} from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
@@ -7,6 +11,7 @@ type BilateralFilterSettings = {
   pixelDiameter: number;
   sigmaColor: number;
   sigmaSpace: number;
+  disable: boolean;
 };
 
 const bilateralFilter: Process<BilateralFilterSettings> = (
@@ -14,6 +19,11 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
   settings: BilateralFilterSettings,
   previous: PreviousData
 ): ProcessResult => {
+  if (settings.disable) {
+    const result = new cv.Mat();
+    image.copyTo(result);
+    return { image: result };
+  }
   let converted = new cv.Mat();
   let filtered = new cv.Mat();
   cv.cvtColor(image, converted, cv.COLOR_RGBA2RGB, 0);
@@ -38,6 +48,7 @@ const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
     pixelDiameter: 5,
     sigmaColor: 75,
     sigmaSpace: 75,
+    disable: false,
   },
   config: {
     pixelDiameter: {
@@ -54,6 +65,9 @@ const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
       type: "number",
       min: 0,
       max: 255,
+    },
+    disable: {
+      type: "checkbox",
     },
   },
   imageColorSpace: ColorSpace.RGBA,
