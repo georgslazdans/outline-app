@@ -13,7 +13,6 @@ const holeFinder = () => {
   let _backgroundColor: number;
   let _meanThreshold: number;
   let _holeAreaThreshold: number;
-  let contourProcessing: (contour: cv.Mat) => cv.Mat;
 
   const result = {
     withImage: (image: cv.Mat) => {
@@ -25,14 +24,10 @@ const holeFinder = () => {
       _holeAreaThreshold = holeSettings.holeAreaTreshold;
       return result;
     },
-    withContourProcesing: (processingFunction: (contour: cv.Mat) => cv.Mat) => {
-      contourProcessing = processingFunction;
-      return result;
-    },
     findHolesInContour: (
       contours: ImageContours,
       parentIndex: number
-    ): ContourPoints[] => {
+    ): number[] => {
       const backgroundMask = inverseMaskOf(
         parentIndex,
         contours.contours,
@@ -41,7 +36,7 @@ const holeFinder = () => {
       _backgroundColor = cv.mean(_image, backgroundMask)[0];
       backgroundMask.delete();
 
-      const contourPoints: ContourPoints[] = [];
+      const holeIndexes: number[] = [];
 
       const parentAreaSize = cv.contourArea(contours.contours.get(parentIndex));
       const areaThreshold = (parentAreaSize / 100) * _holeAreaThreshold;
@@ -50,23 +45,36 @@ const holeFinder = () => {
           continue;
         }
 
-        const contour = contourProcessing(contours.contours.get(i));
+        const contour = contours.contours.get(i);
         if (
           isHoleLargerThanThreshold(contour, areaThreshold) &&
           isContour(contours.contours, i)
             .ofBackgroundColour(_backgroundColor, _meanThreshold)
             .inImage(_image)
         ) {
-          contourPoints.push(pointsFrom(contour));
+          holeIndexes.push(i);
         }
         contour.delete();
       }
 
-      return contourPoints;
+      return holeIndexes;
     },
   };
 
   return result;
+};
+
+export const contourPointsOf = (
+  contours: ImageContours,
+  holeIndexes: number[],
+  processingFunction: (contour: cv.Mat) => cv.Mat
+) => {
+  const contourPoints: ContourPoints[] = [];
+  for (const i of holeIndexes) {
+    const contour = processingFunction(contours.contours.get(i));
+    contourPoints.push(pointsFrom(contour));
+  }
+  return contourPoints;
 };
 
 const isParent = (

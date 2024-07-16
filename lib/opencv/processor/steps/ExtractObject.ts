@@ -1,5 +1,6 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
+  ContourPoints,
   PreviousData,
   Process,
   ProcessResult,
@@ -18,7 +19,10 @@ import {
   contourShapeOf,
   drawAllContoursChild,
 } from "../../util/contours/Drawing";
-import holeFinder, { HoleSettings } from "../../util/contours/Holes";
+import holeFinder, {
+  HoleSettings,
+  contourPointsOf,
+} from "../../util/contours/Holes";
 
 type SnoothSettings = {
   smoothOutline: boolean;
@@ -28,7 +32,7 @@ type SnoothSettings = {
 type ExtractObjectSettings = {
   smoothSettings: SnoothSettings;
   holeSettings: HoleSettings;
-  debugContours: boolean;
+  drawContours: boolean;
 };
 
 const extractObjectFrom: Process<ExtractObjectSettings> = (
@@ -54,26 +58,26 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     return { image: copyOf(image) };
   }
 
+  const holeIndexes = holeFinder()
+    .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
+    .withSettings(settings.holeSettings)
+    .findHolesInContour(objectContours, outlineContourIndex);
+
   const outlineContour = handleContourSmoothing(
     objectContours.contours.get(outlineContourIndex)
   );
 
-  const points = pointsFrom(outlineContour);
+  const outlinePoints = pointsFrom(outlineContour);
+  const holePoints = contourPointsOf(
+    objectContours,
+    holeIndexes,
+    handleContourSmoothing
+  );
 
-  const holes = holeFinder()
-    .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
-    .withSettings(settings.holeSettings)
-    .withContourProcesing(handleContourSmoothing)
-    .findHolesInContour(objectContours, outlineContourIndex);
-
-  const scaleFactor = scaleFactorFrom(previous);
-  const scaledHoles = holes.map((it) => scalePoints(it, 1 / scaleFactor));
-  const scaledPoints = scalePoints(points, 1 / scaleFactor);
-
-  const resultingImage = contourShapeOf([...holes, points]).drawImageOfSize(
+  const resultingImage = contourShapeOf([...holePoints, outlinePoints]).drawImageOfSize(
     image.size()
   );
-  if (settings.debugContours) {
+  if (settings.drawContours) {
     const darkBlue = new cv.Scalar(44, 125, 148);
     const lineThickness = 5;
     const debugContours = drawAllContoursChild(
@@ -81,7 +85,8 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
       objectContours,
       outlineContourIndex,
       darkBlue,
-      lineThickness
+      lineThickness,
+      holeIndexes
     );
     cv.add(resultingImage, debugContours, resultingImage);
     debugContours.delete();
@@ -90,8 +95,15 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   objectContours.delete();
   outlineContour.delete();
 
-  return { image: resultingImage, contours: [...scaledHoles, scaledPoints] };
+  return { image: resultingImage, contours:  scaledResultOf(holePoints, outlinePoints, previous)};
 };
+
+const scaledResultOf = (holes:ContourPoints[], outline: ContourPoints, previous: PreviousData) => {
+  const scaleFactor = scaleFactorFrom(previous);
+  const scaledHoles = holes.map((it) => scalePoints(it, 1 / scaleFactor));
+  const scaledOutline = scalePoints(outline, 1 / scaleFactor);
+  return [...scaledHoles, scaledOutline]
+}
 
 const scaleFactorFrom = (previous: PreviousData) => {
   const paperDimensions = paperDimensionsOf(
@@ -114,7 +126,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       meanThreshold: 10,
       holeAreaTreshold: 1.0,
     },
-    debugContours: true,
+    drawContours: true,
   },
   config: {
     smoothSettings: {
@@ -147,7 +159,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
         },
       },
     },
-    debugContours: {
+    drawContours: {
       type: "checkbox",
     },
   },

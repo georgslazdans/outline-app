@@ -115,13 +115,14 @@ export const drawAllContoursChild = (
   imageContours: ImageContours,
   parentIndex: number,
   color: cv.Scalar,
-  lineThickness: number
+  lineThickness: number,
+  ignoreIndexes: number[] = []
 ): cv.Mat => {
   const { contours, hierarchy } = imageContours;
   let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
   for (let i = 0; i < contours.size(); ++i) {
     const hierarchyIndex = hierarchy.intPtr(0, i)[3]; // parent contour index
-    if (hierarchyIndex != parentIndex || i == parentIndex) {
+    if (hierarchyIndex != parentIndex || i == parentIndex || ignoreIndexes.includes(i)) {
       continue;
     }
     cv.drawContours(

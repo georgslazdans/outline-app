@@ -66,7 +66,7 @@
       "thresholdType": "Threshold Type",
       "adaptiveSettings": "Adaptive Settings",
       "binarySettings": "Binary Settings",
-      "debugContours": "Debug Contours",
+      "drawContours": "Draw Contours",
       "holeAreaTreshold": "Hole Area Threshold (%)",
       "smoothSettings": "Smooth Settings",
       "holeSettings": "Hole Settings",
