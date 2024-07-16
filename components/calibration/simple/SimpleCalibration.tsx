@@ -32,21 +32,10 @@ const SimpleCalibration = ({
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
-  const handleSettingsChange = (
-    stepName: StepName,
-    stepSetting: StepSetting
-  ) => {
-    const saveSettings = (settings: Settings) => {
-      const newDetails = { ...detailsContext, settings: settings };
-      setDetailsContext(newDetails);
-    };
-
+  const handleSettingsChange = (updatedSettings: Settings) => {
     if (detailsContext) {
-      const updatedSettings = {
-        ...detailsContext.settings,
-        [stepName]: stepSetting,
-      };
-      saveSettings(updatedSettings);
+      const newDetails = { ...detailsContext, settings: updatedSettings };
+      setDetailsContext(newDetails);
     }
   };
 
@@ -65,7 +54,7 @@ const SimpleCalibration = ({
 
   return (
     <>
-      <div className="flex flex-col xl:flex-row flex-grow">
+      <div className="flex flex-col gap-4 xl:flex-row flex-grow">
         <OutlineImageViewer
           className="max-h-[30vh] xl:max-h-[45vh] xl:w-1/2"
           image={outlineCheckImage}

@@ -70,9 +70,13 @@
       "holeAreaTreshold": "Hole Area Threshold (%)",
       "smoothSettings": "Smooth Settings",
       "holeSettings": "Hole Settings",
-      "iterations": "Iterations"
+      "iterations": "Iterations",
+      "closeCornerSettings": "Close Corners"
     },
     "settings": "Iestatījumi",
+    "simpleSettings": {
+      "title": "Simple Settings"
+    },
     "advancedSettings": "Pilni iestatījumi",
     "exportSvg": "Eksportēt SVG",
     "rerun": "Atkārtoti Izpildīt",
