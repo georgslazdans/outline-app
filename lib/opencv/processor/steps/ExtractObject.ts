@@ -75,7 +75,6 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   let resultingImage: cv.Mat;
   if (!settings.debugContours) {
     resultingImage = contourShapeOf([...holes, points])
-      .asRGB()
       .drawImageOfSize(image.size());
   } else {
     resultingImage = drawAllContoursChild(

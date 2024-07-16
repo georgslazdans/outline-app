@@ -50,7 +50,7 @@ const imageDataOf = (image: cv.Mat): ImageData => {
   }
 };
 
-const convertToRGBA = (image: cv.Mat): cv.Mat => {
+export const convertToRGBA = (image: cv.Mat): cv.Mat => {
   let destination = new cv.Mat();
   image.convertTo(destination, cv.CV_8U);
   cv.cvtColor(destination, destination, colorConversionOf(image.channels()));

@@ -5,7 +5,7 @@ import extractObjectStep from "./steps/ExtractObject";
 import extractPaperStep from "./steps/ExtractPaper";
 import adaptiveThresholdStep from "./steps/AdaptiveThreshold";
 import imageWarper from "./ImageWarper";
-import imageDataOf, { imageOf } from "../util/ImageData";
+import imageDataOf, { convertToRGBA, imageOf } from "../util/ImageData";
 import ColorSpace from "../util/ColorSpace";
 import PaperSettings, {
   paperDimensionsOf,
@@ -38,9 +38,11 @@ const outlineCheckImageOf = (
   );
 
   const blue = new cv.Scalar(18, 150, 182);
-  const paperContourImage = contourShapeOf(extractPaper.contours)
+  const paperContourImageRGB = contourShapeOf(extractPaper.contours)
     .withColour(blue)
     .drawImageOfSize(thresholdImage.size());
+
+  const paperContourImage = convertToRGBA(paperContourImageRGB);
 
   const thresholdWithObject = combineImages(thresholdImage, objectContourImage);
   const finalImage = combineImages(thresholdWithObject, paperContourImage);
@@ -51,25 +53,34 @@ const outlineCheckImageOf = (
   objectImage.delete();
   objectContourImage.delete();
   paperContourImage.delete();
+  paperContourImageRGB.delete();
   thresholdWithObject.delete();
 
   return result;
 };
 
 const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {
-  const combinedImage = new cv.Mat();
-  const mask = new cv.Mat();
   const invertedMask = new cv.Mat();
-
-  cv.cvtColor(imageB, mask, cv.COLOR_RGBA2GRAY, 0);
+  const mask = maskOf(imageB);
   cv.bitwise_not(mask, invertedMask);
 
+  const combinedImage = new cv.Mat();
   cv.bitwise_and(imageA, imageA, combinedImage, invertedMask);
   cv.bitwise_and(imageB, imageB, combinedImage, mask);
 
   mask.delete();
   invertedMask.delete();
+
   return combinedImage;
+};
+
+const maskOf = (image: cv.Mat) => {
+  const mask = new cv.Mat();
+  const grayscale = new cv.Mat();
+  cv.cvtColor(image, grayscale, cv.COLOR_RGBA2GRAY, 0);
+  cv.threshold(grayscale, mask, 100, 255, cv.THRESH_BINARY);
+  grayscale.delete();
+  return mask;
 };
 
 const reverseWarpedImageOf = (
