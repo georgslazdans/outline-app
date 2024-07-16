@@ -62,9 +62,7 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
 
   const holes = holeFinder()
     .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
-    .withSettings(
-      settings.holeSettings
-    )
+    .withSettings(settings.holeSettings)
     .withContourProcesing(handleContourSmoothing)
     .findHolesInContour(objectContours, outlineContourIndex);
 
@@ -72,16 +70,21 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   const scaledHoles = holes.map((it) => scalePoints(it, 1 / scaleFactor));
   const scaledPoints = scalePoints(points, 1 / scaleFactor);
 
-  let resultingImage: cv.Mat;
-  if (!settings.debugContours) {
-    resultingImage = contourShapeOf([...holes, points])
-      .drawImageOfSize(image.size());
-  } else {
-    resultingImage = drawAllContoursChild(
+  const resultingImage = contourShapeOf([...holes, points]).drawImageOfSize(
+    image.size()
+  );
+  if (settings.debugContours) {
+    const darkBlue = new cv.Scalar(44, 125, 148);
+    const lineThickness = 5;
+    const debugContours = drawAllContoursChild(
       image.size(),
       objectContours,
-      outlineContourIndex
+      outlineContourIndex,
+      darkBlue,
+      lineThickness
     );
+    cv.add(resultingImage, debugContours, resultingImage);
+    debugContours.delete();
   }
 
   objectContours.delete();
@@ -111,7 +114,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       meanThreshold: 10,
       holeAreaTreshold: 1.0,
     },
-    debugContours: false,
+    debugContours: true,
   },
   config: {
     smoothSettings: {
@@ -124,7 +127,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
           type: "number",
           min: 0,
           max: 100,
-          step: 0.1
+          step: 0.1,
         },
       },
     },
@@ -147,7 +150,6 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     debugContours: {
       type: "checkbox",
     },
-
   },
   imageColorSpace: ColorSpace.RGB,
   process: extractObjectFrom,

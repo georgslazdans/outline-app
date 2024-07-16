@@ -6,14 +6,15 @@ import Settings from "@/lib/opencv/Settings";
 import Button from "../../Button";
 import { useDetails } from "@/context/DetailsContext";
 import StepName from "@/lib/opencv/processor/steps/StepName";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import Svg from "@/lib/Svg";
 import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
-import { OutlineImageViewer } from "../OutlineImageViewer";
-import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
+import { OutlineImageViewer } from "./OutlineImageViewer";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import { centerPoints } from "@/lib/Point";
+import SelectField from "@/components/fiields/SelectField";
+import CheckboxField from "@/components/fiields/CheckboxField";
 
 type Props = {
   dictionary: Dictionary;
@@ -52,13 +53,51 @@ const SimpleCalibration = ({
     downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.svg`);
   }, [detailsContext, stepResults]);
 
+  const [backgroundImageStepName, setBackgroundImageStepName] = useState(
+    StepName.ADAPTIVE_THRESHOLD
+  );
+  const [drawOutlines, setDrawOutlines] = useState(true);
+  const backgroundImageStep = stepResults.find(
+    (it) => it.stepName == backgroundImageStepName
+  );
+
   return (
     <>
       <div className="flex flex-col gap-4 xl:flex-row flex-grow">
-        <OutlineImageViewer
-          className="max-h-[30vh] xl:max-h-[45vh] xl:w-1/2"
-          image={outlineCheckImage}
-        ></OutlineImageViewer>
+        <div className="xl:w-1/2">
+          <SelectField
+            label={"Bakcground Image"}
+            name={"background-image"}
+            value={backgroundImageStepName}
+            options={[
+              {
+                label: dictionary.calibration.step[StepName.BLUR],
+                value: StepName.BLUR,
+              },
+              {
+                label: dictionary.calibration.step[StepName.ADAPTIVE_THRESHOLD],
+                value: StepName.ADAPTIVE_THRESHOLD,
+              },
+              {
+                label: dictionary.calibration.step[StepName.BILETERAL_FILTER],
+                value: StepName.BILETERAL_FILTER,
+              },
+            ]}
+            onChange={(event) => setBackgroundImageStepName(event.target.value)}
+          ></SelectField>
+          <CheckboxField
+            label={"Draw outlines"}
+            name={"draw-outline"}
+            value={drawOutlines}
+            onChange={(event) => setDrawOutlines(event.target.checked)}
+          ></CheckboxField>
+          <OutlineImageViewer
+            className="max-h-[30vh] xl:max-h-[45vh]"
+            baseImage={backgroundImageStep?.imageData}
+            outlineImage={outlineCheckImage}
+            drawOutline={drawOutlines}
+          ></OutlineImageViewer>
+        </div>
         <SimpleSettingsEditor
           dictionary={dictionary}
           settings={settings}

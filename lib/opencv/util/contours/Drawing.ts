@@ -113,36 +113,23 @@ export const drawAllContours = (
 export const drawAllContoursChild = (
   imageSize: cv.Size,
   imageContours: ImageContours,
-  parentIndex: number
+  parentIndex: number,
+  color: cv.Scalar,
+  lineThickness: number
 ): cv.Mat => {
   const { contours, hierarchy } = imageContours;
-
-  const colorMap: { [key: number]: cv.Scalar } = {};
-
-  // Create a color image to draw contours
   let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
   for (let i = 0; i < contours.size(); ++i) {
     const hierarchyIndex = hierarchy.intPtr(0, i)[3]; // parent contour index
-    if (hierarchyIndex != parentIndex && i != parentIndex) {
+    if (hierarchyIndex != parentIndex || i == parentIndex) {
       continue;
     }
-
-    if (!(hierarchyIndex in colorMap)) {
-      colorMap[hierarchyIndex] = new cv.Scalar(
-        Math.round(Math.random() * 255),
-        Math.round(Math.random() * 255),
-        Math.round(Math.random() * 255)
-      );
-    }
-
-    const color = colorMap[hierarchyIndex];
-
     cv.drawContours(
       contourImg,
       contours,
       i,
       color,
-      1,
+      lineThickness,
       cv.LINE_8,
       hierarchy,
       100

@@ -57,8 +57,7 @@ const holeFinder = () => {
             .ofBackgroundColour(_backgroundColor, _meanThreshold)
             .inImage(_image)
         ) {
-          const scaledPoints = pointsFrom(contour);
-          contourPoints.push(scaledPoints);
+          contourPoints.push(pointsFrom(contour));
         }
         contour.delete();
       }

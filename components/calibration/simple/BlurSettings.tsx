@@ -49,13 +49,15 @@ const BlurSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
 
     onSettingsChange(updatedSettings);
   };
+
+  const blurConfig = {...blurStep.config![BLUR_WIDTH], min: 7};
   return (
     <>
       <SettingGroup dictionary={dictionary} name="blur">
         <StepSettingField
           value={settings[StepName.BLUR].blurWidth}
           name={BLUR_WIDTH}
-          config={blurStep.config![BLUR_WIDTH]}
+          config={blurConfig}
           handleOnChange={onChange}
           dictionary={dictionary}
         ></StepSettingField>

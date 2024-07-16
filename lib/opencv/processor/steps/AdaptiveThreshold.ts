@@ -47,7 +47,7 @@ const adaptiveThresholdStep: ProcessingStep<AdaptiveThresholdSettings> = {
     },
     blockSize: {
       type: "number",
-      min: 1,
+      min: 3,
       max: 50,
       step: 2,
     },

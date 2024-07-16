@@ -7,9 +7,7 @@ import SettingGroup from "./SettingGroup";
 import StepSettingField from "../advanced/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import extractObjectStep from "@/lib/opencv/processor/steps/ExtractObject";
-import {
-  GroupConfig,
-} from "@/lib/opencv/processor/steps/StepSettings";
+import { GroupConfig } from "@/lib/opencv/processor/steps/StepSettings";
 
 const MEAN_THRESHOLD = "meanThreshold";
 const HOLE_AREA_THRESHOLD = "holeAreaTreshold";
@@ -43,12 +41,11 @@ const HoleSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
 
   const holeSettings: GroupConfig = extractObjectStep.config!
     .holeSettings as GroupConfig;
-
   return (
     <>
       <SettingGroup dictionary={dictionary} name="holeSettings">
         <StepSettingField
-          value={settings[StepName.EXTRACT_OBJECT].holeSettings[MEAN_THRESHOLD]}
+          value={settings[StepName.EXTRACT_OBJECT].holeSettings?.meanThreshold}
           name={MEAN_THRESHOLD}
           config={holeSettings.config[MEAN_THRESHOLD]}
           handleOnChange={onChange(MEAN_THRESHOLD)}
@@ -56,7 +53,7 @@ const HoleSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
         ></StepSettingField>
         <StepSettingField
           value={
-            settings[StepName.EXTRACT_OBJECT].holeSettings[HOLE_AREA_THRESHOLD]
+            settings[StepName.EXTRACT_OBJECT].holeSettings?.holeAreaTreshold
           }
           name={HOLE_AREA_THRESHOLD}
           config={holeSettings.config[HOLE_AREA_THRESHOLD]}

@@ -22,65 +22,57 @@ const outlineCheckImageOf = (
   const extractPaper = extractPaperResultOf(steps);
   const extractObject = extractObjectResultOf(steps);
 
+  const imageSize = new cv.Size(
+    threshold.imageData.width,
+    threshold.imageData.height
+  );
+
   if (!extractPaper.contours || extractPaper.contours.length == 0) {
     console.warn("No paper points for outline image!");
     return new ImageData(1, 1);
   }
   const paperContours = extractPaper.contours[0];
 
-  const thresholdImage = imageOf(threshold.imageData, ColorSpace.RGBA);
   const objectImage = imageOf(extractObject.imageData, ColorSpace.RGBA);
+
   const objectContourImage = reverseWarpedImageOf(
     paperContours.points,
     objectImage,
-    thresholdImage.size(),
+    imageSize,
     paperSettingsOf(settings)
   );
 
   const blue = new cv.Scalar(18, 150, 182);
   const paperContourImageRGB = contourShapeOf(extractPaper.contours)
     .withColour(blue)
-    .drawImageOfSize(thresholdImage.size());
+    .drawImageOfSize(imageSize);
 
   const paperContourImage = convertToRGBA(paperContourImageRGB);
 
-  const thresholdWithObject = combineImages(thresholdImage, objectContourImage);
-  const finalImage = combineImages(thresholdWithObject, paperContourImage);
-  const result = imageDataOf(finalImage);
+  const finalImage = new cv.Mat();
+  cv.add(objectContourImage, paperContourImage, finalImage);
+
+  const result = convertBlackToTransperent(imageDataOf(finalImage));
 
   finalImage.delete();
-  thresholdImage.delete();
   objectImage.delete();
   objectContourImage.delete();
   paperContourImage.delete();
   paperContourImageRGB.delete();
-  thresholdWithObject.delete();
 
   return result;
 };
 
-const combineImages = (imageA: cv.Mat, imageB: cv.Mat) => {
-  const invertedMask = new cv.Mat();
-  const mask = maskOf(imageB);
-  cv.bitwise_not(mask, invertedMask);
+const convertBlackToTransperent = (result: ImageData): ImageData => {
+  const data = result.data;
 
-  const combinedImage = new cv.Mat();
-  cv.bitwise_and(imageA, imageA, combinedImage, invertedMask);
-  cv.bitwise_and(imageB, imageB, combinedImage, mask);
-
-  mask.delete();
-  invertedMask.delete();
-
-  return combinedImage;
-};
-
-const maskOf = (image: cv.Mat) => {
-  const mask = new cv.Mat();
-  const grayscale = new cv.Mat();
-  cv.cvtColor(image, grayscale, cv.COLOR_RGBA2GRAY, 0);
-  cv.threshold(grayscale, mask, 100, 255, cv.THRESH_BINARY);
-  grayscale.delete();
-  return mask;
+  // Iterate through each pixel, converting black to transparent
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
+      data[i + 3] = 0; // Set alpha to 0 (transparent)
+    }
+  }
+  return result;
 };
 
 const reverseWarpedImageOf = (
