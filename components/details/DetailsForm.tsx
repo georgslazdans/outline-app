@@ -17,6 +17,7 @@ import { defaultSettings } from "@/lib/opencv/Settings";
 import ImageField from "../fiields/ImageField";
 import NumberField from "../fiields/NumberField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
+import useNavigationHistory from "@/context/NavigationHistory";
 
 type Props = {
   dictionary: any;
@@ -47,6 +48,7 @@ const paperSettingsOf = (context: Context) => {
 
 const DetailsForm = ({ dictionary }: Props) => {
   const router = useRouter();
+  const { addHistory } = useNavigationHistory();
   const { detailsContext, setDetailsContext } = useDetails();
   const { setLoading } = useLoading();
   const { add } = useIndexedDB("details");
@@ -108,6 +110,7 @@ const DetailsForm = ({ dictionary }: Props) => {
     add(newContext).then(
       (dbId) => {
         setDetailsContext({ ...newContext, id: dbId });
+        addHistory("/details");
         router.push("/calibration");
       },
       (error) => console.error(error)

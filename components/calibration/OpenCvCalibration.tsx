@@ -21,6 +21,7 @@ import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
 import BottomButtons from "./BottomButtons";
+import useNavigationHistory from "@/context/NavigationHistory";
 
 type Props = {
   dictionary: Dictionary;
@@ -29,6 +30,7 @@ type Props = {
 const OpenCvCalibration = ({ dictionary }: Props) => {
   const { update } = useIndexedDB("details");
   const router = useRouter();
+  const { getHistory, clearHistory } = useNavigationHistory();
 
   const { detailsContext } = useDetails();
 
@@ -149,7 +151,13 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     const context = { ...detailsContext, contours: contours };
     update(context).then(() => {
       setLoading(false);
-      router.push("/");
+      const lastRoute = getHistory().pop();
+      if (lastRoute == "/details") {
+        router.push("/");
+      } else {
+        router.push(lastRoute);
+      }
+      clearHistory();
     });
   };
 

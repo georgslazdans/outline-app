@@ -1,7 +1,6 @@
 import { getDictionary } from "./dictionaries";
 import wrenchPic from "./wrench.png";
 import Upload from "@/components/image/Upload";
-import HistoryButton from "@/components/HistoryButton";
 import ExportedImage from "next-image-export-optimizer";
 
 export default async function Home() {

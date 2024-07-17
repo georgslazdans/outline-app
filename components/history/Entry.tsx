@@ -12,6 +12,7 @@ import { downloadFile } from "@/lib/utils/Download";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import { centerPoints } from "@/lib/Point";
+import useNavigationHistory from "@/context/NavigationHistory";
 
 type Props = {
   context: Context;
@@ -22,10 +23,13 @@ type Props = {
 const Entry = ({ context, dictionary, onDelete }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
   const router = useRouter();
+  const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("details");
 
   const openSettings = () => {
     setDetailsContext(context);
+
+    addHistory("/history");
     router.push("/calibration");
   };
 

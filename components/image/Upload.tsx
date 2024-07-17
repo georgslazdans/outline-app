@@ -7,12 +7,14 @@ import { useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
 import getImageData from "@/lib/utils/ImageData";
 import { useLoading } from "@/context/LoadingContext";
+import useNavigationHistory from "@/context/NavigationHistory";
 
 type Props = {
   dictionary: any;
 };
 
 const Upload = ({ dictionary }: Props) => {
+  const { addHistory } = useNavigationHistory();
   const { setLoading } = useLoading();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -30,6 +32,7 @@ const Upload = ({ dictionary }: Props) => {
         return { ...context, imageFile: file, imageData };
       });
 
+      addHistory("/");
       router.push("/details");
     }
   };
