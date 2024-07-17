@@ -66,7 +66,6 @@
       "thresholdType": "Threshold Type",
       "adaptiveSettings": "Adaptive Settings",
       "binarySettings": "Binary Settings",
-      "drawContours": "Draw Contours",
       "holeAreaTreshold": "Hole Area Threshold (%)",
       "smoothSettings": "Smooth Settings",
       "holeSettings": "Hole Settings",
@@ -77,7 +76,10 @@
     },
     "settings": "Iestatījumi",
     "simpleSettings": {
-      "title": "Simple Settings"
+      "title": "Vienkāršie Iestatījumi",
+      "blur": "Blur",
+      "closeCorners": "Close Corners",
+      "holeSettings": "Hole Settings"
     },
     "advancedSettings": "Pilni iestatījumi",
     "exportSvg": "Eksportēt SVG",

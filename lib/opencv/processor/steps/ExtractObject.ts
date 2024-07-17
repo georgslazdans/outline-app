@@ -32,7 +32,6 @@ type SnoothSettings = {
 type ExtractObjectSettings = {
   smoothSettings: SnoothSettings;
   holeSettings: HoleSettings;
-  drawContours: boolean;
 };
 
 const extractObjectFrom: Process<ExtractObjectSettings> = (
@@ -52,7 +51,10 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   };
   const objectContours = fancyContoursOf(image);
 
-  const outlineContourIndex = largestContourOf(objectContours.contours, imageAreaThresholdSizeOf(image));
+  const outlineContourIndex = largestContourOf(
+    objectContours.contours,
+    imageAreaThresholdSizeOf(image)
+  );
   if (outlineContourIndex == null) {
     console.log("Object contour not found!", this);
     return { image: copyOf(image) };
@@ -78,20 +80,19 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     ...holePoints,
     outlinePoints,
   ]).drawImageOfSize(image.size());
-  if (settings.drawContours) {
-    const darkBlue = new cv.Scalar(44, 125, 148);
-    const lineThickness = 5;
-    const debugContours = drawAllContoursChild(
-      image.size(),
-      objectContours,
-      outlineContourIndex,
-      darkBlue,
-      lineThickness,
-      holeIndexes
-    );
-    cv.add(resultingImage, debugContours, resultingImage);
-    debugContours.delete();
-  }
+
+  const darkBlue = new cv.Scalar(44, 125, 148);
+  const lineThickness = 5;
+  const otherContours = drawAllContoursChild(
+    image.size(),
+    objectContours,
+    outlineContourIndex,
+    darkBlue,
+    lineThickness,
+    holeIndexes
+  );
+  cv.add(resultingImage, otherContours, resultingImage);
+  otherContours.delete();
 
   objectContours.delete();
   outlineContour.delete();
@@ -138,8 +139,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     holeSettings: {
       meanThreshold: 10,
       holeAreaTreshold: 1.0,
-    },
-    drawContours: true,
+    }
   },
   config: {
     smoothSettings: {
@@ -171,9 +171,6 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
           step: 0.01,
         },
       },
-    },
-    drawContours: {
-      type: "checkbox",
     },
   },
   imageColorSpace: ColorSpace.RGB,
