@@ -1,5 +1,9 @@
 "use client";
-import React, { ChangeEvent, HTMLInputTypeAttribute } from "react";
+import React, {
+  ChangeEvent,
+  useEffect,
+  useState,
+} from "react";
 
 type NumberRange = {
   min: number;
@@ -34,16 +38,46 @@ const NumberField = ({
     step: 1,
   },
 }: Props) => {
+  const [debouncedEvent, setDebouncedEvent] =
+    useState<ChangeEvent<HTMLInputElement>>();
+  const [sliderValue, setSliderValue] = useState<number>(value as number);
+
   const sliderSuffix = "-slider";
   const inputClass = slider ? "w-20" : "w-full";
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (debouncedEvent) {
+        console.log("Event!");
+        onChange(debouncedEvent);
+        setDebouncedEvent(undefined);
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [debouncedEvent, onChange]);
 
   const removeSuffix = (name: string) => {
     return name.replace(sliderSuffix, "");
   };
 
-  const handleSlider = (event: ChangeEvent<HTMLInputElement>) => {
-    event.target.name = removeSuffix(event.target.name);
-    onChange(event);
+  const handleSlider = (sliderEvent: ChangeEvent<HTMLInputElement>) => {
+    sliderEvent.target.name = removeSuffix(sliderEvent.target.name);
+    const event = {
+      target: {
+        name: removeSuffix(name),
+        value: sliderEvent.target.value,
+      },
+    } as ChangeEvent<HTMLInputElement>;
+    setDebouncedEvent(event);
+    setSliderValue(Number.parseFloat(sliderEvent.target.value));
+  };
+
+  const handleInput = (inputEvent: ChangeEvent<HTMLInputElement>) => {
+    setSliderValue(Number.parseFloat(inputEvent.target.value));
+    onChange(inputEvent);
   };
 
   return (
@@ -64,7 +98,7 @@ const NumberField = ({
             max={numberRange.max}
             step={numberRange.step}
             onChange={(event) => handleSlider(event)}
-            value={value ? value : ""}
+            value={sliderValue}
           />
         )}
 
@@ -75,13 +109,13 @@ const NumberField = ({
           }
           id={name}
           type="number"
-          value={value ? value : ""}
+          value={sliderValue}
           name={name}
           min={numberRange.min}
           max={numberRange.max}
           step={numberRange.step}
           placeholder={placeholder}
-          onChange={(event) => onChange(event)}
+          onChange={(event) => handleInput(event)}
           autoFocus={autofocus}
         />
       </div>
