@@ -27,13 +27,18 @@ export const processStep = async (
 ): Promise<ProcessingResult> => {
   const steps = stepsStartingFrom(command.stepName);
   const image = imageOf(command.imageData, command.imageColorSpace);
+  const previousSteps = stepResultsBefore(
+    command.stepName,
+    command.previousData
+  );
   const result = processorOf(steps, command.settings)
-    .withPreviousSteps(
-      stepResultsBefore(command.stepName, command.previousData)
-    )
+    .withPreviousSteps(previousSteps)
     .process(image);
   image.delete();
-  return result;
+  return {
+    ...result,
+    results: filterPreviousSteps(result.results!, previousSteps),
+  };
 };
 
 export const processImage = async (
@@ -87,4 +92,18 @@ const ensureAllSteps = (steps: StepResult[]) => {
       });
     }
   }
+};
+
+const filterPreviousSteps = (
+  list: StepResult[],
+  previosSteps: StepResult[]
+): StepResult[] => {
+  const keepSteps = [
+    StepName.ADAPTIVE_THRESHOLD,
+    StepName.EXTRACT_PAPER,
+  ];
+  const previousStepNames = previosSteps
+    .filter((it) => !keepSteps.includes(it.stepName))
+    .map((it) => it.stepName);
+  return list.filter((it) => !previousStepNames.includes(it.stepName));
 };

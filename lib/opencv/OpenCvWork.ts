@@ -57,7 +57,7 @@ export const stepWorkOf = (
       imageData: step.imageData,
       imageColorSpace: step.imageColorSpace,
       settings: settings,
-      previousData: stepResults,
+      previousData: filterMandatorySteps(stepResults, stepName),
     },
   };
 };
@@ -83,4 +83,22 @@ const previousStepOf = (allSteps: StepResult[], stepName: string) => {
   } else {
     return allSteps[stepIndex - 1];
   }
+};
+
+const filterMandatorySteps = (
+  allSteps: StepResult[],
+  stepName: string
+): StepResult[] => {
+  const mandatorySteps = [
+    StepName.ADAPTIVE_THRESHOLD,
+    StepName.BLUR,
+    StepName.EXTRACT_PAPER,
+    StepName.BLUR_OBJECT,
+    StepName.BILETERAL_FILTER
+  ];
+  const stepIndex = indexOfStep(allSteps, stepName);
+  const stepsUntil = allSteps
+    .slice(0, stepIndex - 1)
+    .filter((it) => mandatorySteps.includes(it.stepName));
+  return [...stepsUntil, allSteps[stepIndex - 1]];
 };
