@@ -90,7 +90,6 @@ const filterMandatorySteps = (
   stepName: string
 ): StepResult[] => {
   const mandatorySteps = [
-    StepName.ADAPTIVE_THRESHOLD,
     StepName.BLUR,
     StepName.EXTRACT_PAPER,
     StepName.BLUR_OBJECT,

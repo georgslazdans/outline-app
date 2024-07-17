@@ -3,7 +3,6 @@ import Point from "../../Point";
 import StepResult from "../StepResult";
 import extractObjectStep from "./steps/ExtractObject";
 import extractPaperStep from "./steps/ExtractPaper";
-import adaptiveThresholdStep from "./steps/AdaptiveThreshold";
 import imageWarper from "./ImageWarper";
 import imageDataOf, { convertToRGBA, imageOf } from "../util/ImageData";
 import ColorSpace from "../util/ColorSpace";
@@ -13,18 +12,19 @@ import PaperSettings, {
 } from "../PaperSettings";
 import Settings from "../Settings";
 import { contourShapeOf } from "../util/contours/Drawing";
+import blurStep from "./steps/Blur";
 
 const outlineCheckImageOf = (
   steps: StepResult[],
   settings: Settings
 ): ImageData => {
-  const threshold = thresholdResultOf(steps);
+  const blur = blurResultOf(steps);
   const extractPaper = extractPaperResultOf(steps);
   const extractObject = extractObjectResultOf(steps);
 
   const imageSize = new cv.Size(
-    threshold.imageData.width,
-    threshold.imageData.height
+    blur.imageData.width,
+    blur.imageData.height
   );
 
   if (!extractPaper.contours || extractPaper.contours.length == 0) {
@@ -87,8 +87,8 @@ const reverseWarpedImageOf = (
     .reverseWarpImage(image, imageSize);
 };
 
-const thresholdResultOf = (steps: StepResult[]): StepResult => {
-  return steps.find((it) => it.stepName == adaptiveThresholdStep.name)!;
+const blurResultOf = (steps: StepResult[]): StepResult => {
+  return steps.find((it) => it.stepName == blurStep.name)!;
 };
 
 const extractPaperResultOf = (steps: StepResult[]): StepResult => {

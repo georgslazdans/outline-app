@@ -99,7 +99,7 @@ const filterPreviousSteps = (
   previosSteps: StepResult[]
 ): StepResult[] => {
   const keepSteps = [
-    StepName.ADAPTIVE_THRESHOLD,
+    StepName.BLUR,
     StepName.EXTRACT_PAPER,
   ];
   const previousStepNames = previosSteps
