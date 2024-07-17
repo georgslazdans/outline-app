@@ -70,7 +70,7 @@ export const AdvancedCalibration = ({ dictionary, stepResults }: Props) => {
         stepResults={stepResults}
         onDataChange={handleDataChange}
       ></ImageSelector>
-      <div className="mt-2 flex flex-col gap-1 xl:flex-row flex-grow">
+      <div className="mt-2 flex flex-col gap-2 xl:flex-row flex-grow">
         <ImageViewer
           className="xl:w-1/2"
           imageData={currentStep?.imageData}
@@ -80,6 +80,7 @@ export const AdvancedCalibration = ({ dictionary, stepResults }: Props) => {
           currentSetting={currentStepSettings()}
           onChange={handleSettingsChange}
           step={currentStep?.stepName}
+          settings={detailsContext.settings}
         ></AdvancedSettingsEditor>
       </div>
     </>

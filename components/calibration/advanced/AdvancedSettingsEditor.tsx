@@ -9,10 +9,12 @@ import StepSetting, {
   StepSettingConfig,
   eventFieldConverterFor,
 } from "@/lib/opencv/processor/steps/StepSettings";
+import Settings from "@/lib/opencv/Settings";
 
 type Props = {
   dictionary: Dictionary;
   currentSetting?: StepSetting;
+  settings: Settings;
   step?: StepName;
   onChange: (stepSettings: StepSetting) => void;
 };
@@ -20,6 +22,7 @@ type Props = {
 export const AdvancedSettingsEditor = ({
   dictionary,
   currentSetting,
+  settings,
   step,
   onChange,
 }: Props) => {
@@ -68,6 +71,9 @@ export const AdvancedSettingsEditor = ({
             if (!config) {
               console.info("No config found for setting: ", key);
               return;
+            }
+            if (config.display && !config.display(settings, step)) {
+              return <></>;
             }
             if (config.type == "group") {
               const groupConfig = config as GroupConfig;

@@ -9,6 +9,7 @@ import StepName from "./StepName";
 import adaptiveThresholdStep from "./AdaptiveThreshold";
 import binaryThresholdStep from "./BinaryThreshold";
 import Options from "@/lib/utils/Options";
+import Settings from "../../Settings";
 
 enum Threshold {
   ADAPTIVE = "adaptive",
@@ -40,6 +41,13 @@ const thresholdOf: Process<ThresholdSettings> = (
   }
 };
 
+const displaySettings = (thresholdType: Threshold) => {
+  return (settings: Settings, currentStepName: StepName): boolean => {
+    console.log("Display Threshold settings?", settings[currentStepName]?.thresholdType == thresholdType, currentStepName, thresholdType)
+      return settings[currentStepName]?.thresholdType == thresholdType;
+  }
+}
+
 const thresholdStep: ProcessingStep<ThresholdSettings> = {
   name: StepName.THRESHOLD,
   settings: {
@@ -54,10 +62,12 @@ const thresholdStep: ProcessingStep<ThresholdSettings> = {
     },
     binarySettings: {
       type: "group",
+      display: displaySettings(Threshold.BINARY),
       config: binaryThresholdStep.config!,
     },
     adaptiveSettings: {
       type: "group",
+      display: displaySettings(Threshold.ADAPTIVE),
       config: adaptiveThresholdStep.config!,
     },
   },

@@ -18,6 +18,7 @@ const StepSettingGroup = ({
   config,
   dictionary,
 }: Props) => {
+
   const settingLabel = (name: string) => {
     //@ts-ignore
     return dictionary.calibration.stepSettings[name];
@@ -36,7 +37,7 @@ const StepSettingGroup = ({
 
   return (
     <>
-      <h3>{settingLabel(name)}</h3>
+      <h3 className="ml-2">{settingLabel(name)}</h3>
       {Object.keys(settings).map((key) => {
         return (
           <StepSettingField

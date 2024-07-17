@@ -38,7 +38,7 @@ const blurStep: ProcessingStep<BlurSettings> = {
     blurWidth: {
       type: "number",
       min: 1,
-      max: 25,
+      max: 35,
       step: 2,
     },
   },

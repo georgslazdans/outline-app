@@ -6,6 +6,7 @@ import ProcessingStep, {
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
+import Settings from "../../Settings";
 
 type BilateralFilterSettings = {
   pixelDiameter: number;
@@ -42,32 +43,39 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
   return { image: converted };
 };
 
+const displaySettings = (settings: Settings, currentStepName: StepName) => {
+  return settings[currentStepName].disable == false;
+};
+
 const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
   name: StepName.BILETERAL_FILTER,
   settings: {
+    disable: false,
     pixelDiameter: 5,
     sigmaColor: 75,
     sigmaSpace: 75,
-    disable: false,
   },
   config: {
+    disable: {
+      type: "checkbox",
+    },
     pixelDiameter: {
       type: "number",
+      display: displaySettings,
       min: 3,
       max: 10,
     },
     sigmaColor: {
       type: "number",
+      display: displaySettings,
       min: 0,
       max: 255,
     },
     sigmaSpace: {
       type: "number",
+      display: displaySettings,
       min: 0,
       max: 255,
-    },
-    disable: {
-      type: "checkbox",
     },
   },
   imageColorSpace: ColorSpace.RGBA,
