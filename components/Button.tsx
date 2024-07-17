@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEventHandler, FormEventHandler, ReactNode } from "react";
+import React, { FormEventHandler, ReactNode } from "react";
 
 type Props = {
   className?: string;
