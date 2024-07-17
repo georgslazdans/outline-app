@@ -52,8 +52,8 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   };
   const objectContours = fancyContoursOf(image);
 
-  const outlineContourIndex = largestContourOf(objectContours.contours);
-  if (!outlineContourIndex) {
+  const outlineContourIndex = largestContourOf(objectContours.contours, imageAreaThresholdSizeOf(image));
+  if (outlineContourIndex == null) {
     console.log("Object contour not found!", this);
     return { image: copyOf(image) };
   }
@@ -74,9 +74,10 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     handleContourSmoothing
   );
 
-  const resultingImage = contourShapeOf([...holePoints, outlinePoints]).drawImageOfSize(
-    image.size()
-  );
+  const resultingImage = contourShapeOf([
+    ...holePoints,
+    outlinePoints,
+  ]).drawImageOfSize(image.size());
   if (settings.drawContours) {
     const darkBlue = new cv.Scalar(44, 125, 148);
     const lineThickness = 5;
@@ -95,15 +96,27 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
   objectContours.delete();
   outlineContour.delete();
 
-  return { image: resultingImage, contours:  scaledResultOf(holePoints, outlinePoints, previous)};
+  return {
+    image: resultingImage,
+    contours: scaledResultOf(holePoints, outlinePoints, previous),
+  };
 };
 
-const scaledResultOf = (holes:ContourPoints[], outline: ContourPoints, previous: PreviousData) => {
+const imageAreaThresholdSizeOf = (image: cv.Mat) => {
+  const { width, height } = image.size();
+  return width * height * 0.95;
+};
+
+const scaledResultOf = (
+  holes: ContourPoints[],
+  outline: ContourPoints,
+  previous: PreviousData
+) => {
   const scaleFactor = scaleFactorFrom(previous);
   const scaledHoles = holes.map((it) => scalePoints(it, 1 / scaleFactor));
   const scaledOutline = scalePoints(outline, 1 / scaleFactor);
-  return [...scaledHoles, scaledOutline]
-}
+  return [...scaledHoles, scaledOutline];
+};
 
 const scaleFactorFrom = (previous: PreviousData) => {
   const paperDimensions = paperDimensionsOf(

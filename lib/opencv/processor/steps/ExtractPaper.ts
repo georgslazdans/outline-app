@@ -21,7 +21,7 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
   const { contours, hierarchy } = contoursOf(image);
 
   const contourIndex = largestContourOf(contours);
-  if (!contourIndex) {
+  if (contourIndex == null) {
     console.log("Paper contours not found!", this);
     const result = new cv.Mat();
     image.copyTo(result);

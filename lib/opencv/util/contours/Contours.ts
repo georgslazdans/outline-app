@@ -43,17 +43,23 @@ export const fancyContoursOf = (image: cv.Mat): ImageContours => {
   return new ImageContours(contours, hierarchy);
 };
 
-export const largestContourOf = (contours: cv.MatVector): number | null => {
+export const largestContourOf = (
+  contours: cv.MatVector,
+  maxAreaSize?: number
+): number | null => {
   let area = 0;
   let result = null;
   for (let i = 0; i < contours.size(); ++i) {
     const contour = contours.get(i);
     const caluclatedArea = cv.contourArea(contour);
     if (caluclatedArea > area) {
-      area = caluclatedArea;
-      result = i;
+      if (!maxAreaSize || caluclatedArea < maxAreaSize) {
+        area = caluclatedArea;
+        result = i;
+      }
     }
   }
+
   return result;
 };
 
