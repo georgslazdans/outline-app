@@ -35,25 +35,32 @@ const thresholdOf: Process<ThresholdSettings> = (
   previous: PreviousData
 ): ProcessResult => {
   if (settings.thresholdType == Threshold.ADAPTIVE) {
-    return adaptiveThresholdStep.process(image, settings.adaptiveSettings, previous);
+    return adaptiveThresholdStep.process(
+      image,
+      settings.adaptiveSettings,
+      previous
+    );
   } else {
-    return binaryThresholdStep.process(image, settings.binarySettings, previous);
+    return binaryThresholdStep.process(
+      image,
+      settings.binarySettings,
+      previous
+    );
   }
 };
 
 const displaySettings = (thresholdType: Threshold) => {
   return (settings: Settings, currentStepName: StepName): boolean => {
-    console.log("Display Threshold settings?", settings[currentStepName]?.thresholdType == thresholdType, currentStepName, thresholdType)
-      return settings[currentStepName]?.thresholdType == thresholdType;
-  }
-}
+    return settings[currentStepName]?.thresholdType == thresholdType;
+  };
+};
 
 const thresholdStep: ProcessingStep<ThresholdSettings> = {
   name: StepName.THRESHOLD,
   settings: {
     thresholdType: Threshold.ADAPTIVE,
     binarySettings: binaryThresholdStep.settings,
-    adaptiveSettings: adaptiveThresholdStep.settings
+    adaptiveSettings: adaptiveThresholdStep.settings,
   },
   config: {
     thresholdType: {
@@ -71,7 +78,7 @@ const thresholdStep: ProcessingStep<ThresholdSettings> = {
       config: adaptiveThresholdStep.config!,
     },
   },
-  imageColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: () => ColorSpace.GRAY_SCALE,
   process: thresholdOf,
 };
 

@@ -124,7 +124,7 @@ const scaleFactorFrom = (previous: PreviousData) => {
     previous.settingsOf(StepName.EXTRACT_PAPER).paperSettings
   );
   const imageSize = previous
-    .intermediateImageOf(StepName.BILETERAL_FILTER)
+    .intermediateImageOf(StepName.INPUT)
     .size();
   return scaleFactorOf(imageSize, paperDimensions);
 };
@@ -173,7 +173,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
       },
     },
   },
-  imageColorSpace: ColorSpace.RGB,
+  imageColorSpace:  () => ColorSpace.RGB,
   process: extractObjectFrom,
 };
 

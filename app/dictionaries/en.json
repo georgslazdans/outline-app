@@ -29,9 +29,14 @@
     "adaptive": "Adaptive",
     "binary": "Binary"
   },
+  "reuseStep": {
+    "blur": "Blur",
+    "none": "None"
+  },
   "calibration": {
     "title": "OpenCv Calibration",
     "step": {
+      "input": "Input",
       "bilateralFilter": "Bilateral Filter",
       "blur": "Blur",
       "blurObject": "Blur Object",
@@ -76,8 +81,8 @@
       "holeSettings": "Hole Settings",
       "iterations": "Iterations",
       "closeCornerSettings": "Close Corners",
-      "disable": "Disable",
-      "reuseBlur": "Reuse Blur"
+      "disabled": "Disabled",
+      "reuseStep": "Reuse Step"
     },
     "simpleSettings": {
       "title": "Simple Settings",

@@ -12,7 +12,7 @@ type BilateralFilterSettings = {
   pixelDiameter: number;
   sigmaColor: number;
   sigmaSpace: number;
-  disable: boolean;
+  disabled: boolean;
 };
 
 const bilateralFilter: Process<BilateralFilterSettings> = (
@@ -20,7 +20,7 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
   settings: BilateralFilterSettings,
   previous: PreviousData
 ): ProcessResult => {
-  if (settings.disable) {
+  if (settings.disabled) {
     const result = new cv.Mat();
     image.copyTo(result);
     return { image: result };
@@ -44,19 +44,19 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
 };
 
 const displaySettings = (settings: Settings, currentStepName: StepName) => {
-  return settings[currentStepName].disable == false;
+  return settings[currentStepName].disabled == false;
 };
 
 const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
   name: StepName.BILETERAL_FILTER,
   settings: {
-    disable: false,
+    disabled: false,
     pixelDiameter: 5,
     sigmaColor: 75,
     sigmaSpace: 75,
   },
   config: {
-    disable: {
+    disabled: {
       type: "checkbox",
     },
     pixelDiameter: {
@@ -78,7 +78,7 @@ const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
       max: 255,
     },
   },
-  imageColorSpace: ColorSpace.RGBA,
+  imageColorSpace: () => ColorSpace.RGBA,
   process: bilateralFilter,
 };
 

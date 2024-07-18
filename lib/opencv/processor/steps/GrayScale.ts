@@ -18,7 +18,7 @@ const grayScaleOf: Process<GrayScaleSettings> = (
 const grayScaleStep: ProcessingStep<GrayScaleSettings> = {
   name: StepName.GRAY_SCALE,
   settings: {},
-  imageColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: () => ColorSpace.GRAY_SCALE,
   process: grayScaleOf,
 };
 

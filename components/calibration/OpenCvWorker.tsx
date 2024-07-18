@@ -34,10 +34,10 @@ export const OpenCvWorker = ({
       const result = event.data;
 
       if (result.status == "success") {
-        onWorkerMessage(result.result.results!, result.outlineCheckImage);
+        onWorkerMessage(result.result.data!, result.outlineCheckImage);
       } else {
-        if (result.result.results) {
-          onStepError(result.result.results, result.result.error!);
+        if (result.result.data) {
+          onStepError(result.result.data, result.result.error!);
         } else {
           onError(result.result.error!);
         }

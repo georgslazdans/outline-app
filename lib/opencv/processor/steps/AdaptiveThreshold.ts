@@ -57,7 +57,7 @@ const adaptiveThresholdStep: ProcessingStep<AdaptiveThresholdSettings> = {
       max: 10,
     },
   },
-  imageColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: () => ColorSpace.GRAY_SCALE,
   process: thresholdOf,
 };
 

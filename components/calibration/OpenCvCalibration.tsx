@@ -15,13 +15,12 @@ import Settings, {
   settingsOf,
 } from "@/lib/opencv/Settings";
 import deepEqual from "@/lib/utils/Objects";
-import { PROCESSING_STEPS } from "@/lib/opencv/processor/ImageProcessor";
-import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
 import BottomButtons from "./BottomButtons";
 import useNavigationHistory from "@/context/NavigationHistory";
+import StepName from "@/lib/opencv/processor/steps/StepName";
 
 type Props = {
   dictionary: Dictionary;
@@ -125,7 +124,10 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
       updateAllWorkData();
     } else if (settingsChanged) {
       let stepName = firstChangedStep(previousSettings, currentSettings);
-      if (stepName && stepName != PROCESSING_STEPS[0].name) {
+      if (
+        stepName &&
+        ![StepName.INPUT, StepName.BILETERAL_FILTER].includes(stepName)
+      ) {
         updateCurrentStepData(stepName);
       } else {
         updateAllWorkData();
@@ -152,7 +154,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     update(context).then(() => {
       setLoading(false);
       const lastRoute = getHistory().pop();
-      if (lastRoute == "/details") {
+      if (!lastRoute || lastRoute == "/details") {
         router.push("/");
       } else {
         router.push(lastRoute);

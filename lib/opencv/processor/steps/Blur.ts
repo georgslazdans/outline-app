@@ -42,7 +42,7 @@ const blurStep: ProcessingStep<BlurSettings> = {
       step: 2,
     },
   },
-  imageColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: () => ColorSpace.GRAY_SCALE,
   process: blurOf,
 };
 

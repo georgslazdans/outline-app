@@ -1,8 +1,6 @@
 import * as cv from "@techstark/opencv-js";
 import Point from "../../Point";
 import StepResult from "../StepResult";
-import extractObjectStep from "./steps/ExtractObject";
-import extractPaperStep from "./steps/ExtractPaper";
 import imageWarper from "./ImageWarper";
 import imageDataOf, { convertToRGBA, imageOf } from "../util/ImageData";
 import ColorSpace from "../util/ColorSpace";
@@ -12,20 +10,17 @@ import PaperSettings, {
 } from "../PaperSettings";
 import Settings from "../Settings";
 import { contourShapeOf } from "../util/contours/Drawing";
-import blurStep from "./steps/Blur";
+import StepName from "./steps/StepName";
 
 const outlineCheckImageOf = (
   steps: StepResult[],
   settings: Settings
 ): ImageData => {
-  const blur = blurResultOf(steps);
-  const extractPaper = extractPaperResultOf(steps);
-  const extractObject = extractObjectResultOf(steps);
+  const input = findStep(StepName.INPUT).in(steps);
+  const extractPaper = findStep(StepName.EXTRACT_PAPER).in(steps);
+  const extractObject = findStep(StepName.EXTRACT_OBJECT).in(steps);
 
-  const imageSize = new cv.Size(
-    blur.imageData.width,
-    blur.imageData.height
-  );
+  const imageSize = new cv.Size(input.imageData.width, input.imageData.height);
 
   if (!extractPaper.contours || extractPaper.contours.length == 0) {
     console.warn("No paper points for outline image!");
@@ -65,8 +60,6 @@ const outlineCheckImageOf = (
 
 const convertBlackToTransperent = (result: ImageData): ImageData => {
   const data = result.data;
-
-  // Iterate through each pixel, converting black to transparent
   for (let i = 0; i < data.length; i += 4) {
     if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
       data[i + 3] = 0; // Set alpha to 0 (transparent)
@@ -87,16 +80,12 @@ const reverseWarpedImageOf = (
     .reverseWarpImage(image, imageSize);
 };
 
-const blurResultOf = (steps: StepResult[]): StepResult => {
-  return steps.find((it) => it.stepName == blurStep.name)!;
-};
-
-const extractPaperResultOf = (steps: StepResult[]): StepResult => {
-  return steps.find((it) => it.stepName == extractPaperStep.name)!;
-};
-
-const extractObjectResultOf = (steps: StepResult[]): StepResult => {
-  return steps.find((it) => it.stepName == extractObjectStep.name)!;
+const findStep = (stepName: StepName) => {
+  return {
+    in: (steps: StepResult[]) => {
+      return steps.find((it) => it.stepName == stepName)!;
+    },
+  };
 };
 
 export default outlineCheckImageOf;

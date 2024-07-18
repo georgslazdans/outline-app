@@ -3,6 +3,7 @@ import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 import Point from "@/lib/Point";
 import StepSetting, { StepSettingConfig } from "./StepSettings";
+import Settings from "../../Settings";
 
 export type ProcessResult = {
   image: cv.Mat;
@@ -31,7 +32,7 @@ export type Process<T extends StepSetting> = (
 interface ProcessingStep<T extends StepSetting> {
   name: StepName;
   settings: T;
-  imageColorSpace: ColorSpace;
+  imageColorSpace: (settings: Settings) => ColorSpace;
   process: Process<T>;
   config?: { [key: string]: StepSettingConfig };
 }

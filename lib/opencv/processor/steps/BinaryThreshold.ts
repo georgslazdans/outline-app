@@ -1,5 +1,9 @@
 import * as cv from "@techstark/opencv-js";
-import ProcessingStep, { PreviousData, Process, ProcessResult } from "./ProcessingFunction";
+import ProcessingStep, {
+  PreviousData,
+  Process,
+  ProcessResult,
+} from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 
@@ -84,7 +88,7 @@ const binaryThresholdStep: ProcessingStep<BinaryThresholdSettings> = {
       max: 255,
     },
   },
-  imageColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: () => ColorSpace.GRAY_SCALE,
   process: binaryThresholdOf,
 };
 

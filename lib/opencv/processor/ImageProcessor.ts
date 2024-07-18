@@ -6,48 +6,18 @@ import ProcessingStep, {
   PreviousData,
   ProcessResult,
 } from "./steps/ProcessingFunction";
-import bilateralFilterStep from "./steps/BilateralFilter";
-import grayScaleStep from "./steps/GrayScale";
-import blurStep from "./steps/Blur";
-import adaptiveThresholdStep from "./steps/AdaptiveThreshold";
-import extractPaperStep from "./steps/ExtractPaper";
-import extractObjectStep from "./steps/ExtractObject";
 import imageDataOf, { imageOf } from "../util/ImageData";
 import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
-import cannyStep from "./steps/Canny";
 import StepName from "./steps/StepName";
-import closeContoursStep from "./steps/CloseContours";
-import thresholdStep from "./steps/Threshold";
+import { ReuseStep } from "./steps/ExtractPaper";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
 };
 
-const withStepName = (
-  stepName: StepName,
-  processingStep: ProcessingStep<any>
-): ProcessingStep<any> => {
-  return { ...processingStep, name: stepName };
-};
-
-export const PROCESSING_STEPS: ProcessingStep<any>[] = [
-  bilateralFilterStep,
-  grayScaleStep,
-  blurStep,
-  adaptiveThresholdStep,
-  cannyStep,
-  extractPaperStep,
-  withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
-  withStepName(StepName.BLUR_OBJECT, blurStep),
-  withStepName(StepName.OBJECT_THRESHOLD, thresholdStep),
-  withStepName(StepName.CANNY_OBJECT, cannyStep),
-  closeContoursStep,
-  extractObjectStep,
-];
-
 export type ProcessingResult = {
-  results?: StepResult[];
+  data?: StepResult[];
   error?: string;
 };
 
@@ -117,32 +87,10 @@ const processorOf = (
   };
 
   const process = (image: cv.Mat): ProcessingResult => {
-    const reuseBlur = settingsFor(extractPaperStep).reuseBlur;
-
     let errorMessage = undefined;
     let currentImage = image;
+
     for (const step of processingSteps) {
-      console.log("Step", step.name, reuseBlur);
-      if (reuseBlur) {
-        if (
-          step.name == StepName.BLUR_OBJECT ||
-          step.name == StepName.GRAY_SCALE_OBJECT
-        ) {
-          const copy = new cv.Mat();
-          currentImage.copyTo(copy);
-          stepData.push({
-            stepName: step.name,
-            imageData: imageDataOf(copy),
-            imageColorSpace: step.imageColorSpace,
-            contours: [],
-          });
-          intermediateImages = {
-            ...intermediateImages,
-            [step.name]: copy,
-          };
-          continue;
-        }
-      }
       const result = processStep(currentImage, step, intermediateImages);
       if (result.type == "success") {
         const stepResult = result.stepResult;
@@ -150,7 +98,7 @@ const processorOf = (
         stepData.push({
           stepName: step.name,
           imageData: imageDataOf(currentImage),
-          imageColorSpace: step.imageColorSpace,
+          imageColorSpace: step.imageColorSpace(settings),
           contours: stepResult.contours,
         });
         intermediateImages = {
@@ -163,8 +111,11 @@ const processorOf = (
       }
     }
 
-    Object.values(intermediateImages).forEach((it) => it.delete());
-    return { results: stepData, error: errorMessage };
+    Object.values(intermediateImages).forEach((value) => {
+      value.delete();
+    });
+
+    return { data: stepData, error: errorMessage };
   };
 
   const result = {
@@ -179,7 +130,23 @@ const previousDataOf = (
   intermediateImages: IntermediateImages,
   settings: Settings
 ): PreviousData => {
+  const handleImageSettingsFor = (stepName: StepName): StepName => {
+    if (
+      stepName == StepName.BLUR_OBJECT &&
+      settings[StepName.EXTRACT_PAPER].reuseStep == ReuseStep.BLUR
+    ) {
+      stepName = StepName.EXTRACT_PAPER;
+    }
+    if (
+      (stepName == StepName.BILETERAL_FILTER) ==
+      settings[StepName.BILETERAL_FILTER].disabled
+    ) {
+      stepName = StepName.INPUT;
+    }
+    return stepName;
+  };
   const intermediateImageOf = (stepName: StepName) => {
+    stepName = handleImageSettingsFor(stepName);
     return Object.entries(intermediateImages).findLast(
       ([key]) => key === stepName
     )![1];

@@ -2,8 +2,10 @@ import { Context } from "@/context/DetailsContext";
 import { ProcessingResult } from "./processor/ImageProcessor";
 import StepResult from "./StepResult";
 import Settings, { settingsOf } from "./Settings";
-import { ProcessAll, ProccessStep } from "./processor/ProcessStep";
+import { ProccessStep } from "./processor/ProcessStep";
+import { ProcessAll } from "./processor/ProcessAll";
 import StepName from "./processor/steps/StepName";
+import Steps from "./processor/Steps";
 
 export type OpenCvWork =
   | {
@@ -57,7 +59,7 @@ export const stepWorkOf = (
       imageData: step.imageData,
       imageColorSpace: step.imageColorSpace,
       settings: settings,
-      previousData: filterMandatorySteps(stepResults, stepName),
+      previousData: filterMandatorySteps(stepResults, stepName, settings),
     },
   };
 };
@@ -86,18 +88,14 @@ const previousStepOf = (allSteps: StepResult[], stepName: string) => {
 };
 
 const filterMandatorySteps = (
-  allSteps: StepResult[],
-  stepName: string
+  previousResult: StepResult[],
+  stepName: string,
+  settings: Settings
 ): StepResult[] => {
-  const mandatorySteps = [
-    StepName.BLUR,
-    StepName.EXTRACT_PAPER,
-    StepName.BLUR_OBJECT,
-    StepName.BILETERAL_FILTER
-  ];
-  const stepIndex = indexOfStep(allSteps, stepName);
-  const stepsUntil = allSteps
+  const mandatorySteps = Steps.mandatoryStepsFor(settings);
+  const stepIndex = indexOfStep(previousResult, stepName);
+  const stepsUntil = previousResult
     .slice(0, stepIndex - 1)
     .filter((it) => mandatorySteps.includes(it.stepName));
-  return [...stepsUntil, allSteps[stepIndex - 1]];
+  return [...stepsUntil, previousResult[stepIndex - 1]];
 };

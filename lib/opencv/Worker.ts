@@ -3,12 +3,9 @@ import * as cv from "@techstark/opencv-js";
 import { OpenCvWork, OpenCvResult } from "./OpenCvWork";
 import outlineCheckImageOf from "./processor/OutlineCheckImage";
 import handleOpenCvError from "./OpenCvError";
-import {
-  processImage,
-  ProcessAll,
-  processStep,
-  ProccessStep,
-} from "./processor/ProcessStep";
+import processStep, { ProccessStep } from "./processor/ProcessStep";
+import processImage, { ProcessAll } from "./processor/ProcessAll";
+import StepResult, { stepResultsBefore } from "./StepResult";
 
 const processWork = async (work: OpenCvWork) => {
   console.log("Processing work", work.type, work.data.settings);
@@ -33,12 +30,12 @@ const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
     const stepResults = await processWork(message);
     if (!stepResults.error) {
       const outlineCheckImage = outlineCheckImageOf(
-        stepResults.results!,
+        stepResults.data!,
         settingsOf(message)
       );
       return {
         status: "success",
-        result: stepResults,
+        result: postProcessResult(stepResults, message),
         outlineCheckImage: outlineCheckImage,
       };
     } else {
@@ -54,6 +51,32 @@ const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
       status: "failed",
       result: { error: errorMessage },
     };
+  }
+};
+
+const postProcessResult = (
+  result: ProcessingResult,
+  message: OpenCvWork
+): ProcessingResult => {
+  const filterPreviousSteps = (
+    list: StepResult[],
+    previosSteps: StepResult[]
+  ): StepResult[] => {
+    const previousStepNames = previosSteps.map((it) => it.stepName);
+    return list.filter((it) => !previousStepNames.includes(it.stepName));
+  };
+
+  if (message.type == "step") {
+    const { previousData, stepName } = message.data;
+    return {
+      ...result,
+      data: filterPreviousSteps(
+        result.data!,
+        stepResultsBefore(stepName, previousData)
+      ),
+    };
+  } else {
+    return result;
   }
 };
 

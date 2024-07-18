@@ -54,7 +54,7 @@ const closeContoursStep: ProcessingStep<CloseContoursSettings> = {
       max: 10,
     },
   },
-  imageColorSpace: ColorSpace.GRAY_SCALE,
+  imageColorSpace: () => ColorSpace.GRAY_SCALE,
   process: closeContours,
 };
 

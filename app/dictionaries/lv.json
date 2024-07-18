@@ -29,9 +29,14 @@
     "adaptive": "Adaptīvs",
     "binary": "Binārs"
   },
+  "reuseStep": {
+    "blur": "Aizmiglojumu",
+    "none": "Nevienu"
+  },
   "calibration": {
     "title": "OpenCv Kalibrēšana",
     "step": {
+      "input": "Ievaddati",
       "bilateralFilter": "Bilateral Filter",
       "blur": "Aizmiglojums",
       "blurObject": "Objekta Aizmiglojums",
@@ -71,8 +76,8 @@
       "holeSettings": "Hole Settings",
       "iterations": "Iterations",
       "closeCornerSettings": "Close Corners",
-      "disable": "Disable",
-      "reuseBlur": "Reuse Blur"
+      "disabled": "Disabled",
+      "reuseStep": "Reuse Step"
     },
     "settings": "Iestatījumi",
     "simpleSettings": {
