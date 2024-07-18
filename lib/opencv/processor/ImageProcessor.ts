@@ -138,7 +138,7 @@ const previousDataOf = (
       stepName = StepName.EXTRACT_PAPER;
     }
     if (
-      (stepName == StepName.BILETERAL_FILTER) ==
+      stepName == StepName.BILETERAL_FILTER &&
       settings[StepName.BILETERAL_FILTER].disabled
     ) {
       stepName = StepName.INPUT;

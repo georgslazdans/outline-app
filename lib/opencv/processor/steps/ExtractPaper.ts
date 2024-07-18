@@ -54,8 +54,6 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
     settings.paperSettings
   );
 
-  console.log("Extract paper result channels", result.channels());
-
   contours.delete();
   hierarchy.delete();
   smoothedContour.delete();
