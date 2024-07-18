@@ -7,21 +7,21 @@ import Settings from "../../Settings";
 
 export type ProcessResult = {
   image: cv.Mat;
-  contours?: ContourPoints[]
+  contours?: ContourPoints[];
 };
 
 export type ContourPoints = {
   points: Point[];
-}
+};
 
 export type ErrorResult = {
   message: string;
 };
 
 export type PreviousData = {
-  intermediateImageOf: (stepName: StepName) => cv.Mat,
-  settingsOf: (stepName: StepName) => StepSetting
-}
+  intermediateImageOf: (stepName: StepName) => cv.Mat;
+  settingsOf: (stepName: StepName) => StepSetting;
+};
 
 export type Process<T extends StepSetting> = (
   image: cv.Mat,
@@ -36,5 +36,9 @@ interface ProcessingStep<T extends StepSetting> {
   process: Process<T>;
   config?: { [key: string]: StepSettingConfig };
 }
+
+export type SettingsConfig = {
+  [key: string]: StepSettingConfig;
+};
 
 export default ProcessingStep;

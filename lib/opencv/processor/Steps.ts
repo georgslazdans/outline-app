@@ -7,9 +7,9 @@ import blurStep from "./steps/Blur";
 import cannyStep from "./steps/Canny";
 import closeContoursStep from "./steps/CloseContours";
 import extractObjectStep from "./steps/ExtractObject";
-import extractPaperStep from "./steps/ExtractPaper";
+import extractPaperStep, { ReuseStep } from "./steps/ExtractPaper";
 import grayScaleStep from "./steps/GrayScale";
-import ProcessingStep from "./steps/ProcessingFunction";
+import ProcessingStep, { SettingsConfig } from "./steps/ProcessingFunction";
 import StepName from "./steps/StepName";
 import thresholdStep from "./steps/Threshold";
 
@@ -18,6 +18,21 @@ const withStepName = (
   processingStep: ProcessingStep<any>
 ): ProcessingStep<any> => {
   return { ...processingStep, name: stepName };
+};
+
+const withDisplayOverride = (
+  processingStep: ProcessingStep<any>,
+  displayFunction: (settings: Settings) => boolean
+): ProcessingStep<any> => {
+  const config = Object.entries(processingStep.config!).reduce(
+    (acc, [key, config]) => {
+      acc[key] = { ...config, display: displayFunction };
+      return acc;
+    },
+    {} as SettingsConfig
+  );
+
+  return { ...processingStep, config: config };
 };
 
 const INPUT: ProcessingStep<any> = {
@@ -37,7 +52,13 @@ const PROCESSING_STEPS: ProcessingStep<any>[] = [
   cannyStep,
   extractPaperStep,
   withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
-  withStepName(StepName.BLUR_OBJECT, blurStep),
+  withStepName(
+    StepName.BLUR_OBJECT,
+    withDisplayOverride(
+      blurStep,
+      (settings) => settings[StepName.EXTRACT_PAPER].reuseStep == ReuseStep.NONE
+    )
+  ),
   withStepName(StepName.OBJECT_THRESHOLD, thresholdStep),
   withStepName(StepName.CANNY_OBJECT, cannyStep),
   closeContoursStep,
