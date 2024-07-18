@@ -123,9 +123,7 @@ const scaleFactorFrom = (previous: PreviousData) => {
   const paperDimensions = paperDimensionsOf(
     previous.settingsOf(StepName.EXTRACT_PAPER).paperSettings
   );
-  const imageSize = previous
-    .intermediateImageOf(StepName.INPUT)
-    .size();
+  const imageSize = previous.intermediateImageOf(StepName.INPUT).size();
   return scaleFactorOf(imageSize, paperDimensions);
 };
 
@@ -139,7 +137,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     holeSettings: {
       meanThreshold: 10,
       holeAreaTreshold: 1.0,
-    }
+    },
   },
   config: {
     smoothSettings: {
@@ -153,6 +151,8 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
           min: 0,
           max: 100,
           step: 0.1,
+          display: (settings, currentStep) =>
+            settings[currentStep]?.smoothSettings.smoothOutline,
         },
       },
     },
@@ -168,12 +168,12 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
           type: "number",
           min: 0,
           max: 20,
-          step: 0.01,
+          step: 0.1,
         },
       },
     },
   },
-  imageColorSpace:  () => ColorSpace.RGB,
+  imageColorSpace: () => ColorSpace.RGB,
   process: extractObjectFrom,
 };
 

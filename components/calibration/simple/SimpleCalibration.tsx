@@ -79,8 +79,8 @@ const SimpleCalibration = ({
                 value: StepName.ADAPTIVE_THRESHOLD,
               },
               {
-                label: dictionary.calibration.step[StepName.BILETERAL_FILTER],
-                value: StepName.BILETERAL_FILTER,
+                label: dictionary.calibration.step[StepName.INPUT],
+                value: StepName.INPUT,
               },
             ]}
             onChange={(event) => setBackgroundImageStepName(event.target.value)}

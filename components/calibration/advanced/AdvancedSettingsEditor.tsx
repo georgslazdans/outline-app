@@ -85,6 +85,8 @@ export const AdvancedSettingsEditor = ({
                   config={groupConfig.config}
                   onChange={handleOnGroupChange(key)}
                   dictionary={dictionary}
+                  stepName={step}
+                  allSettings={settings}
                 ></StepSettingGroup>
               );
             } else {

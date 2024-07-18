@@ -15,6 +15,7 @@ export type DisplaySettings = {
 export type CheckboxConfig = {
   type: "checkbox";
 } & DisplaySettings;
+
 export type NumberConfig = {
   type: "number";
   min: number;
