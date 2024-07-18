@@ -20,8 +20,6 @@ const withStepName = (
   return { ...processingStep, name: stepName };
 };
 
-
-
 const INPUT: ProcessingStep<any> = {
   name: StepName.INPUT,
   settings: {},
