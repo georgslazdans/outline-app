@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import DrawOutlineButton from "./DrawOutlineButton";
 
 type Props = {
   className?: string;
   baseImage?: ImageData;
   outlineImage?: ImageData;
-  drawOutline: boolean;
 };
 
 const blendImageData = (
@@ -39,8 +39,8 @@ export const OutlineImageViewer = ({
   className,
   baseImage,
   outlineImage,
-  drawOutline,
 }: Props) => {
+  const [drawOutline, setDrawOutline] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const getContext = () => {
@@ -67,6 +67,12 @@ export const OutlineImageViewer = ({
   return (
     <div className={className}>
       <TransformWrapper>
+        <div className="z-10 relative">
+          <DrawOutlineButton
+            icon={drawOutline ? "eye-slash" : "eye"}
+            onClick={() => setDrawOutline(!drawOutline)}
+          ></DrawOutlineButton>
+        </div>
         <TransformComponent wrapperClass="!mx-auto">
           <canvas
             className="max-w-full max-h-[30vh] xl:max-h-[45vh]"

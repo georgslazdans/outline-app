@@ -56,51 +56,47 @@ const SimpleCalibration = ({
   const [backgroundImageStepName, setBackgroundImageStepName] = useState(
     StepName.ADAPTIVE_THRESHOLD
   );
-  const [drawOutlines, setDrawOutlines] = useState(true);
   const backgroundImageStep = stepResults.find(
     (it) => it.stepName == backgroundImageStepName
   );
 
+  const backgroundImageOptions = () => {
+    const options = [
+      {
+        label: dictionary.calibration.step[StepName.INPUT],
+        value: StepName.INPUT,
+      },
+      {
+        label: dictionary.calibration.step[StepName.BLUR],
+        value: StepName.BLUR,
+      },
+      {
+        label: dictionary.calibration.step[StepName.ADAPTIVE_THRESHOLD],
+        value: StepName.ADAPTIVE_THRESHOLD,
+      },
+    ];
+    const stepResultNames = stepResults.map((it) => it.stepName);
+    return options.filter((it) => stepResultNames.includes(it.value));
+  };
   return (
     <>
       <div className="flex flex-col gap-4 xl:flex-row flex-grow">
         <div className="xl:w-1/2">
-          <div className="flex flex-row mb-2">
+          <div className="mb-2">
             <SelectField
               label={"Bakcground Image"}
               name={"background-image"}
               value={backgroundImageStepName}
-              options={[
-                {
-                  label: dictionary.calibration.step[StepName.INPUT],
-                  value: StepName.INPUT,
-                },
-                {
-                  label: dictionary.calibration.step[StepName.BLUR],
-                  value: StepName.BLUR,
-                },
-                {
-                  label:
-                    dictionary.calibration.step[StepName.ADAPTIVE_THRESHOLD],
-                  value: StepName.ADAPTIVE_THRESHOLD,
-                },
-              ]}
+              options={backgroundImageOptions()}
               onChange={(event) =>
                 setBackgroundImageStepName(event.target.value)
               }
             ></SelectField>
-            <CheckboxField
-              label={"Draw outlines"}
-              name={"draw-outline"}
-              value={drawOutlines}
-              onChange={(event) => setDrawOutlines(event.target.checked)}
-            ></CheckboxField>
           </div>
           <OutlineImageViewer
             className="max-h-[30vh] xl:max-h-[45vh]"
             baseImage={backgroundImageStep?.imageData}
             outlineImage={outlineCheckImage}
-            drawOutline={drawOutlines}
           ></OutlineImageViewer>
         </div>
         <SimpleSettingsEditor

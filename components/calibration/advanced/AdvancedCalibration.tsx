@@ -8,7 +8,7 @@ import { ImageViewer } from "../ImageViewer";
 import StepResult from "@/lib/opencv/StepResult";
 import { Dictionary } from "@/app/dictionaries";
 import { AdvancedSettingsEditor } from "./AdvancedSettingsEditor";
-import { ImageSelector } from "../ImageSelector";
+import { ImageSelector } from "./ImageSelector";
 import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
 
 type Props = {
