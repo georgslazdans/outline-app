@@ -15,6 +15,7 @@ import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import { centerPoints } from "@/lib/Point";
 import SelectField from "@/components/fiields/SelectField";
 import CheckboxField from "@/components/fiields/CheckboxField";
+import SimpleSettingsButtons from "./SimpleSettingsButtons";
 
 type Props = {
   dictionary: Dictionary;
@@ -54,7 +55,7 @@ const SimpleCalibration = ({
   }, [detailsContext, stepResults]);
 
   const [backgroundImageStepName, setBackgroundImageStepName] = useState(
-    StepName.ADAPTIVE_THRESHOLD
+    StepName.INPUT
   );
   const backgroundImageStep = stepResults.find(
     (it) => it.stepName == backgroundImageStepName
@@ -98,21 +99,27 @@ const SimpleCalibration = ({
             baseImage={backgroundImageStep?.imageData}
             outlineImage={outlineCheckImage}
           ></OutlineImageViewer>
+
+          <div className="hidden xl:flex flex-row gap-2 mt-3">
+            <SimpleSettingsButtons
+              dictionary={dictionary}
+              openAdvancedMode={openAdvancedMode}
+              exportSvg={exportSvg}
+            ></SimpleSettingsButtons>
+          </div>
         </div>
         <SimpleSettingsEditor
           dictionary={dictionary}
           settings={settings}
           onChange={handleSettingsChange}
         ></SimpleSettingsEditor>
-      </div>
-
-      <div className="flex flex-col mt-4">
-        <Button onClick={() => openAdvancedMode()} style="secondary">
-          <label>{dictionary.calibration.advancedSettings}</label>
-        </Button>
-        <Button className="mt-2" onClick={exportSvg} style="secondary">
-          <label>{dictionary.calibration.exportSvg}</label>
-        </Button>
+        <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
+          <SimpleSettingsButtons
+            dictionary={dictionary}
+            openAdvancedMode={openAdvancedMode}
+            exportSvg={exportSvg}
+          ></SimpleSettingsButtons>
+        </div>
       </div>
     </>
   );

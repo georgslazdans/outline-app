@@ -85,7 +85,7 @@
       "reuseStep": "Reuse Step"
     },
     "simpleSettings": {
-      "title": "Simple Settings",
+      "title": "Settings",
       "blur": "Blur",
       "findPaper": "Find Paper",
       "findObject": "Find Object",
@@ -93,7 +93,7 @@
       "holeSettings": "Hole Settings"
     },
     "settings": "Settings",
-    "advancedSettings": "Advanced Settings",
+    "advancedSettings": "Detailed Settings",
     "exportSvg": "Export SVG",
     "rerun": "Rerun",
     "done": "Done"

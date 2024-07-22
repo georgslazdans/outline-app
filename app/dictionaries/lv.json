@@ -81,14 +81,14 @@
     },
     "settings": "Iestatījumi",
     "simpleSettings": {
-      "title": "Vienkāršie Iestatījumi",
+      "title": "Iestatījumi",
       "blur": "Blur",
       "findPaper": "Atrast Lapu",
       "findObject": "Atrast Objektu",
       "closeCorners": "Close Corners",
       "holeSettings": "Hole Settings"
     },
-    "advancedSettings": "Pilni iestatījumi",
+    "advancedSettings": "Izvērstie Iestatījumi",
     "exportSvg": "Eksportēt SVG",
     "rerun": "Atkārtoti Izpildīt",
     "done": "Pabeigt"
