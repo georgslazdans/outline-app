@@ -4,6 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import StepResult from "@/lib/opencv/StepResult";
 import { ChangeEvent, useState } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
+import IconButton from "@/components/IconButton";
 
 type Props = {
   dictionary: Dictionary;
@@ -45,12 +46,9 @@ export const ImageSelector = ({
 
   return (
     <div className="flex flex-row items-center">
-      {/* TODO add custom chevron to select */}
-
-      <ArrowLeftIcon
-        className="size-6 m-2"
-        onClick={handleLeft}
-      ></ArrowLeftIcon>
+      <IconButton onClick={handleLeft} className="mr-1">
+        <ArrowLeftIcon className="size-6 m-2"></ArrowLeftIcon>
+      </IconButton>
       <select
         className="flex-grow text-center border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white p-1.5 py-2 pl-6 font-bold"
         id={name}
@@ -64,10 +62,9 @@ export const ImageSelector = ({
           </option>
         ))}
       </select>
-      <ArrowRightIcon
-        className="size-6 m-2"
-        onClick={handleRight}
-      ></ArrowRightIcon>
+      <IconButton onClick={handleRight} className="ml-1">
+        <ArrowRightIcon className="size-6 m-2"></ArrowRightIcon>
+      </IconButton>
     </div>
   );
 };

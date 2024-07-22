@@ -103,6 +103,11 @@ export const AdvancedSettingsEditor = ({
             }
           })}
       </div>
+      {(!currentSetting || Object.keys(currentSetting).length == 0) && (
+        <div className="ml-4">
+          <label>No settings available!</label>
+        </div>
+      )}
     </div>
   );
 };

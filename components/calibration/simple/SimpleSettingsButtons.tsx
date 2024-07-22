@@ -13,8 +13,7 @@ type Props = {
 const SimpleSettingsButtons = ({ dictionary, openAdvancedMode, exportSvg }: Props) => {
   return (
     <>
-      {" "}
-      <Button onClick={openAdvancedMode} style="secondary">
+      <Button className="mb-2" onClick={openAdvancedMode} style="secondary">
         <label>{dictionary.calibration.advancedSettings}</label>
       </Button>
       <Button onClick={exportSvg} style="secondary">

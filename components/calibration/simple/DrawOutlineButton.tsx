@@ -1,5 +1,6 @@
 "use client";
 
+import IconButton from "@/components/IconButton";
 import React from "react";
 
 type Props = {
@@ -48,16 +49,12 @@ const DrawOutlineButton = ({ icon, onClick }: Props) => {
   );
   return (
     <>
-      <button
-        id="draw-outline-button"
+      <IconButton
+        className="absolute px-3 py-3 mr-auto mt-2 ml-2"
         onClick={onClick}
-        className="absolute mr-auto mt-1 ml-1 flex items-center 
-        px-4 py-4 border-4 rounded-full 
-        text-white dark:text-black border-white dark:border-black bg-black dark:bg-white 
-        hover:text-neutral-500 hover:border-neutral-500"
       >
         {icon == "eye" ? eye : eyeSlash}
-      </button>
+      </IconButton>
     </>
   );
 };
