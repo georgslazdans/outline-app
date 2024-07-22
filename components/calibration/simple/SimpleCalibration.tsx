@@ -108,17 +108,19 @@ const SimpleCalibration = ({
             ></SimpleSettingsButtons>
           </div>
         </div>
-        <SimpleSettingsEditor
-          dictionary={dictionary}
-          settings={settings}
-          onChange={handleSettingsChange}
-        ></SimpleSettingsEditor>
-        <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
-          <SimpleSettingsButtons
+        <div className="xl:h-[calc(100vh-10rem)] overflow-auto">
+          <SimpleSettingsEditor
             dictionary={dictionary}
-            openAdvancedMode={openAdvancedMode}
-            exportSvg={exportSvg}
-          ></SimpleSettingsButtons>
+            settings={settings}
+            onChange={handleSettingsChange}
+          ></SimpleSettingsEditor>
+          <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
+            <SimpleSettingsButtons
+              dictionary={dictionary}
+              openAdvancedMode={openAdvancedMode}
+              exportSvg={exportSvg}
+            ></SimpleSettingsButtons>
+          </div>
         </div>
       </div>
     </>
