@@ -1,5 +1,5 @@
 import { Mat } from "@techstark/opencv-js";
-import Settings from "../Settings";
+import Settings, { inSettings } from "../Settings";
 import ColorSpace from "../util/ColorSpace";
 import adaptiveThresholdStep from "./steps/AdaptiveThreshold";
 import bilateralFilterStep from "./steps/BilateralFilter";
@@ -56,7 +56,7 @@ const PROCESSING_STEPS: ProcessingStep<any>[] = [
     StepName.BLUR_OBJECT,
     withDisplayOverride(
       blurStep,
-      (settings) => settings[StepName.EXTRACT_PAPER].reuseStep == ReuseStep.NONE
+      (settings) => !inSettings(settings).isBlurReused()
     )
   ),
   withStepName(StepName.OBJECT_THRESHOLD, thresholdStep),
@@ -70,9 +70,9 @@ const getAll = () => {
 };
 
 const forSettings = (settings: Settings) => {
-  return PROCESSING_STEPS.filter(bilateralFilterDisabled(settings))
-    .filter(blurImageReused(settings))
-    .filter(thresholdImageReused(settings));
+  return PROCESSING_STEPS.filter(bilateralFilterDisabled(settings)).filter(
+    blurImageReused(settings)
+  );
 };
 
 const bilateralFilterDisabled = (settings: Settings) => {
@@ -80,7 +80,7 @@ const bilateralFilterDisabled = (settings: Settings) => {
     if (step.name != StepName.BILETERAL_FILTER) {
       return true;
     } else {
-      return settings[StepName.BILETERAL_FILTER].disabled == false;
+      return !inSettings(settings).isBilateralFiterDisabled();
     }
   };
 };
@@ -91,26 +91,7 @@ const blurImageReused = (settings: Settings) => {
     if (!skipableSteps.includes(step.name)) {
       return true;
     } else {
-      const reusedValues = [StepName.ADAPTIVE_THRESHOLD, StepName.BLUR];
-      return !reusedValues.includes(settings[StepName.EXTRACT_PAPER].reuseStep);
-    }
-  };
-};
-
-const thresholdImageReused = (settings: Settings) => {
-  return (step: ProcessingStep<any>): boolean => {
-    const skipableSteps = [
-      StepName.GRAY_SCALE_OBJECT,
-      StepName.BLUR_OBJECT,
-      StepName.OBJECT_THRESHOLD,
-    ];
-    if (!skipableSteps.includes(step.name)) {
-      return true;
-    } else {
-      return (
-        settings[StepName.EXTRACT_PAPER].reuseStep !=
-        StepName.ADAPTIVE_THRESHOLD
-      );
+      return !inSettings(settings).isBlurReused();
     }
   };
 };
@@ -126,21 +107,15 @@ const mandatoryFor = (settings: Settings) => {
 };
 
 const extractPaperReuseStep = (settings: Settings): StepName => {
-  if (settings[StepName.EXTRACT_PAPER].reuseStep == "none") {
-    return StepName.BILETERAL_FILTER;
-  } else {
+  if (inSettings(settings).isBlurReused()) {
     return StepName.BLUR;
+  } else {
+    return StepName.BILETERAL_FILTER;
   }
 };
 
-const debugSettings = (settings: Settings) => {
-  const result = forSettings(settings);
-  console.log("Result for settings", result);
-  return result;
-};
-
 const Steps = {
-  forSettings: debugSettings,
+  forSettings,
   getAll,
   mandatoryStepsFor: mandatoryFor,
 };

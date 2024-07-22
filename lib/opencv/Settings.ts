@@ -3,6 +3,7 @@ import StepName from "./processor/steps/StepName";
 import deepEqual from "../utils/Objects";
 import StepSetting from "./processor/steps/StepSettings";
 import Steps from "./processor/Steps";
+import { Threshold } from "./processor/steps/Threshold";
 
 type Settings = {
   [key: string]: StepSetting;
@@ -31,6 +32,22 @@ export const firstChangedStep = (
       return step.name;
     }
   }
+};
+
+export const inSettings = (settings: Settings) => {
+  return {
+    isBilateralFiterDisabled: () => {
+      return settings[StepName.BILETERAL_FILTER].disabled;
+    },
+    isBlurReused: () => {
+      return settings[StepName.EXTRACT_PAPER].reuseStep == StepName.BLUR;
+    },
+    isObjectThresholdAdaptive: () => {
+      return (
+        settings[StepName.OBJECT_THRESHOLD].thresholdType == Threshold.ADAPTIVE
+      );
+    },
+  };
 };
 
 export default Settings;

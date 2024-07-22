@@ -11,7 +11,7 @@ import binaryThresholdStep from "./BinaryThreshold";
 import Options from "@/lib/utils/Options";
 import Settings from "../../Settings";
 
-enum Threshold {
+export enum Threshold {
   ADAPTIVE = "adaptive",
   BINARY = "binary",
 }

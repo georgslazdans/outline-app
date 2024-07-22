@@ -38,9 +38,10 @@ const drawPolylines = (points: Point[], image: cv.Mat, color: cv.Scalar) => {
   });
   markersVector.push_back(mv);
 
-  const strokeWidth = 15;
+  const strokeWidth = 8;
   const closed = true;
   cv.polylines(image, markersVector, closed, color, strokeWidth);
+  cv.polylines(image, markersVector, closed, new cv.Scalar(255, 255, 255), 1);
 
   markersVector.delete();
   mv.delete();
@@ -122,7 +123,11 @@ export const drawAllContoursChild = (
   let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
   for (let i = 0; i < contours.size(); ++i) {
     const hierarchyIndex = hierarchy.intPtr(0, i)[3]; // parent contour index
-    if (hierarchyIndex != parentIndex || i == parentIndex || ignoreIndexes.includes(i)) {
+    if (
+      hierarchyIndex != parentIndex ||
+      i == parentIndex ||
+      ignoreIndexes.includes(i)
+    ) {
       continue;
     }
     cv.drawContours(

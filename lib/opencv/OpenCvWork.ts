@@ -51,7 +51,7 @@ export const stepWorkOf = (
   stepName: string,
   settings: Settings
 ): OpenCvWork => {
-  const step = previousStepOf(stepResults, stepName);
+  const step = previousStepWithImageOf(stepResults, stepName);
   return {
     type: "step",
     data: {
@@ -78,13 +78,32 @@ const indexOfStep = (allSteps: StepResult[], stepName: string): number => {
   return index;
 };
 
-const previousStepOf = (allSteps: StepResult[], stepName: string) => {
+const previousStepWithImageOf = (allSteps: StepResult[], stepName: string) => {
   const stepIndex = indexOfStep(allSteps, stepName);
   if (stepIndex == 0) {
     return allSteps[stepIndex];
   } else {
-    return allSteps[stepIndex - 1];
+    return getPreviousStepWithImage(allSteps, stepIndex);
   }
+};
+
+const getPreviousStepWithImage = (
+  allSteps: StepResult[],
+  stepIndex: number
+): StepResult => {
+  let i = stepIndex - 1;
+  let previousStep = allSteps[i];
+  while (!hasImageData(previousStep)) {
+    i = i - 1;
+    previousStep = allSteps[i];
+  }
+  return previousStep;
+};
+
+const hasImageData = (stepResult: StepResult) => {
+  const isImageEmpty = (image: ImageData) =>
+    image.height === 1 && image.width === 1;
+  return stepResult.imageData && !isImageEmpty(stepResult.imageData);
 };
 
 const filterMandatorySteps = (

@@ -12,7 +12,7 @@ import imageWarper from "../ImageWarper";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSettings, { paperDimensionsOf } from "../../PaperSettings";
 import Options from "@/lib/utils/Options";
-import Settings from "../../Settings";
+import Settings, { inSettings } from "../../Settings";
 
 export enum ReuseStep {
   BLUR = StepName.BLUR,
@@ -89,10 +89,10 @@ const warpedImageOf = (
 };
 
 const imageColorSpace = (settings: Settings): ColorSpace => {
-  if (settings[StepName.EXTRACT_PAPER].reuseStep == ReuseStep.NONE) {
-    return ColorSpace.RGBA;
-  } else {
+  if (inSettings(settings).isBlurReused()) {
     return ColorSpace.GRAY_SCALE;
+  } else {
+    return ColorSpace.RGBA;
   }
 };
 

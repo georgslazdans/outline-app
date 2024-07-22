@@ -1,8 +1,9 @@
 import Settings from "@/lib/opencv/Settings";
 import { Dictionary } from "@/app/dictionaries";
-import BlurSettings from "./BlurSettings";
+import FindPaperSettings from "./FindPaperSettings";
 import CloseCornerSettings from "./CloseCornersSettings";
 import HoleSettings from "./HoleSettings";
+import FindObjectSettings from "./FindObjectSettings";
 
 type Props = {
   dictionary: Dictionary;
@@ -21,11 +22,16 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
         {dictionary.calibration.simpleSettings.title}
       </h2>
       <div>
-        <BlurSettings
+        <FindPaperSettings
           dictionary={dictionary}
           settings={settings}
           onSettingsChange={onChange}
         />
+        <FindObjectSettings
+          dictionary={dictionary}
+          settings={settings}
+          onSettingsChange={onChange}
+        ></FindObjectSettings>
         <CloseCornerSettings
           dictionary={dictionary}
           settings={settings}

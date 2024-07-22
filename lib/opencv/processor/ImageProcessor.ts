@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import Settings from "../Settings";
+import Settings, { inSettings } from "../Settings";
 
 import { StepResult } from "../StepResult";
 import ProcessingStep, {
@@ -133,13 +133,13 @@ const previousDataOf = (
   const handleImageSettingsFor = (stepName: StepName): StepName => {
     if (
       stepName == StepName.BLUR_OBJECT &&
-      settings[StepName.EXTRACT_PAPER].reuseStep == ReuseStep.BLUR
+      inSettings(settings).isBlurReused()
     ) {
       stepName = StepName.EXTRACT_PAPER;
     }
     if (
       stepName == StepName.BILETERAL_FILTER &&
-      settings[StepName.BILETERAL_FILTER].disabled
+      inSettings(settings).isBilateralFiterDisabled()
     ) {
       stepName = StepName.INPUT;
     }

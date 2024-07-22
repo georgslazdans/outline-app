@@ -48,7 +48,6 @@ const NumberField = ({
   useEffect(() => {
     const handler = setTimeout(() => {
       if (debouncedEvent) {
-        console.log("Event!");
         onChange(debouncedEvent);
         setDebouncedEvent(undefined);
       }
