@@ -1,5 +1,5 @@
 import { getDictionary } from "./dictionaries";
-import wrenchPic from "./wrench.png";
+import wrenchPic from "./wrench_with_outline.png";
 import Upload from "@/components/image/Upload";
 import ExportedImage from "next-image-export-optimizer";
 
