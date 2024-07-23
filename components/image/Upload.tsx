@@ -38,19 +38,23 @@ const Upload = ({ dictionary }: Props) => {
   };
 
   return (
-    <>
+    <div className="w-full flex flex-col xl:flex-row">
       <PhotoUpload
-        className="mt-4 xl:hidden"
+        className="mt-4 xl:hidden max-w-[50vh]"
         id="camera"
         onChange={onFileUpload}
       >
         {dictionary.capturePhoto}
       </PhotoUpload>
-      <ImageUpload className="mt-4" id="upload" onChange={onFileUpload}>
+      <ImageUpload
+        className="mt-4 max-w-[50vh] mx-auto"
+        id="upload"
+        onChange={onFileUpload}
+      >
         {dictionary.uploadPicture}
       </ImageUpload>
       <canvas ref={canvasRef} style={{ display: "none" }} />
-    </>
+    </div>
   );
 };
 

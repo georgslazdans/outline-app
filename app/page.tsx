@@ -9,7 +9,7 @@ export default async function Home() {
     <main className="flex min-h-full flex-col items-center justify-between p-4">
       <div className="z-10 w-full max-w-5xl items-center justify-between mt-2">
         <h1 className="text-center p-2 mt-12 xl:mt-2">{dictionary.description}</h1>
-        <div className="relative h-[50vh] mt-4">
+        <div className="relative h-[47vh] mt-4">
           <div className="absolute h-full w-full">
             <ExportedImage
               className="object-contain"

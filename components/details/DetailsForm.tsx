@@ -123,7 +123,7 @@ const DetailsForm = ({ dictionary }: Props) => {
   };
 
   return (
-    <form className="m-4 flex flex-col gap-3" onSubmit={onFormSave}>
+    <form className="m-4 flex flex-col gap-3 max-w-[60vh] mx-auto" onSubmit={onFormSave}>
       <ImageField
         dictionary={dictionary}
         blob={detailsContext?.imageFile}
