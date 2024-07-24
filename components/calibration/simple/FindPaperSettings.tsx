@@ -35,7 +35,7 @@ const FindPaperSettings = ({
   };
   return (
     <>
-      <SettingGroup dictionary={dictionary} name="findObject">
+      <SettingGroup dictionary={dictionary} name="findPaper">
         <StepSettingField
           value={settings[StepName.BLUR][BLUR_WIDTH]}
           name={BLUR_WIDTH}
