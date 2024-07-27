@@ -1,0 +1,80 @@
+import ExportedImage from "next-image-export-optimizer";
+import paperOnTable from "./images/paper_on_tble.jpg";
+import caliperOnPaper from "./images/caliper.jpg";
+import detailsForm from "./images/details_form.png";
+import calibrationPage from "./images/calibration_page.png";
+
+<h1 className="text-center p-2 mb-2 mt-2">Instructions</h1>
+
+## Quick Start
+
+### 1. Set up environment
+
+Place a paper on a flat surface that has good contrast with the paper.
+
+<ExportedImage
+  className="object-contain !relative max-h-[30vh]"
+  src={paperOnTable}
+  alt={"A4 Paper on a brown table"}
+  priority
+  fill
+></ExportedImage>
+
+### 2. Place object on top of a paper sheet
+
+<ExportedImage
+  className="object-contain !relative max-h-[30vh]"
+  src={caliperOnPaper}
+  alt={
+    "Digital caliper places on top of the A4 paper which is on a brown talble"
+  }
+  priority
+  fill
+></ExportedImage>
+
+### 3. Take picture
+
+        <ExportedImage
+            className="object-contain !relative max-h-[50vh]"
+            src={detailsForm}
+            alt={"Details form for digital caliper with name field, orentation and paper size"}
+            priority
+            fill
+        ></ExportedImage>
+
+### 4. Adjust settings
+
+<ExportedImage
+  className="object-contain !relative max-h-[30vh]"
+  src={calibrationPage}
+  alt={"Calibration page screenshot"}
+  priority
+  fill
+></ExportedImage>
+
+- Find Paper
+    - Blur size
+    - Block size
+
+## Environment Setup
+
+Make your lighting consisted. Avoid reflections as much as yout can.
+Take Photo zoomed in to have less distortion.
+
+Setting up the environment perfectly will save a lot of time adjusting settings.
+
+## Settings
+
+### Finding object
+
+#### Find Paper
+
+### All Steps
+
+## View Source Code
+
+Code is available on GitHub:
+
+## Support Me
+
+Ko-Fi

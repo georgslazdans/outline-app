@@ -1,7 +1,11 @@
 import withSerwistInit from "@serwist/next";
+import nextMDX from "@next/mdx";
+
+const withMDX = nextMDX();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   output: "export",
   images: {
     loader: "custom",
@@ -31,4 +35,4 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
 });
 
-export default withSerwist(nextConfig);
+export default withSerwist(withMDX(nextConfig));

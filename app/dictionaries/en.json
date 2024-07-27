@@ -108,8 +108,8 @@
     "svg": "SVG",
     "delete": "Delete"
   },
-  "info": {
-    "title": "Info"
+  "instructions": {
+    "title": "Instructions"
   },
   "homepage": "Home",
   "menu": "Menu"

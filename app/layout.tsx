@@ -28,11 +28,15 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <IndexedDbContext></IndexedDbContext>
-        <Navbar dictionary={dictionary} />
-        <LoadingProvider dictionary={dictionary}>
-          <DetailsProvider>{children}</DetailsProvider>
-        </LoadingProvider>
+        <main className="flex min-h-full flex-col items-center justify-between p-4">
+          <div className="z-10 w-full max-w-5xl items-center justify-between">
+            <IndexedDbContext></IndexedDbContext>
+            <Navbar dictionary={dictionary} />
+            <LoadingProvider dictionary={dictionary}>
+              <DetailsProvider>{children}</DetailsProvider>
+            </LoadingProvider>
+          </div>
+        </main>
       </body>
     </html>
   );

@@ -123,11 +123,15 @@ const DetailsForm = ({ dictionary }: Props) => {
   };
 
   return (
-    <form className="m-4 flex flex-col gap-3 max-w-[60vh] mx-auto" onSubmit={onFormSave}>
+    <form
+      className="m-4 flex flex-col gap-3 max-w-[60vh] mx-auto"
+      onSubmit={onFormSave}
+    >
       <ImageField
         dictionary={dictionary}
         blob={detailsContext?.imageFile}
       ></ImageField>
+
       <InputField
         value={formData.name}
         onChange={handleChange}
@@ -137,6 +141,7 @@ const DetailsForm = ({ dictionary }: Props) => {
         autofocus
         required
       ></InputField>
+
       <SelectField
         label={dictionary.details.orientation}
         name={"orientation"}
@@ -151,20 +156,24 @@ const DetailsForm = ({ dictionary }: Props) => {
         value={paperSize}
         onChange={handlePaperChange}
       ></SelectField>
-      <NumberField
-        value={formData.width}
-        onChange={handlePaperSizeChange}
-        label={dictionary.details.width}
-        name={"width"}
-        numberRange={paperSizeNumberRange}
-      ></NumberField>
-      <NumberField
-        value={formData.height}
-        onChange={handlePaperSizeChange}
-        label={dictionary.details.height}
-        name={"height"}
-        numberRange={paperSizeNumberRange}
-      ></NumberField>
+      {paperSize == "custom" && (
+        <>
+          <NumberField
+            value={formData.width}
+            onChange={handlePaperSizeChange}
+            label={dictionary.details.width}
+            name={"width"}
+            numberRange={paperSizeNumberRange}
+          ></NumberField>
+          <NumberField
+            value={formData.height}
+            onChange={handlePaperSizeChange}
+            label={dictionary.details.height}
+            name={"height"}
+            numberRange={paperSizeNumberRange}
+          ></NumberField>
+        </>
+      )}
       <Button className="mt-4">
         <label>{dictionary.details.findOutline}</label>
       </Button>

@@ -103,8 +103,8 @@
     "svg": "SVG",
     "delete": "Izdzēst"
   },
-  "info": {
-    "title": "Informācija"
+  "instructions": {
+    "title": "Instrukcijas"
   },
   "homepage": "Sākums",
   "menu": "Izvēlne"
