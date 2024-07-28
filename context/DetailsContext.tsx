@@ -2,7 +2,6 @@
 
 import Details from "@/lib/Details";
 import Settings from "@/lib/opencv/Settings";
-import { useRouter } from "next/navigation";
 import {
   createContext,
   useState,
@@ -28,13 +27,12 @@ export type Context = {
   imageFile: Blob;
   imageData: ImageData;
   details: Details;
-  contours: ContourPoints[]
+  contours: ContourPoints[];
   settings: Settings;
   addDate: Date;
 };
 
 const DetailsProvider = ({ children }: Props) => {
-  const router = useRouter();
   const [detailsContext, setDetailsContext] = useState<Context>();
   const { getAll } = useIndexedDB("details");
 
@@ -50,12 +48,10 @@ const DetailsProvider = ({ children }: Props) => {
               setDetailsContext({ ...loadedContext, imageData: data });
             }
           );
-        } else {
-          router.push("/");
         }
       });
     }
-  }, [detailsContext, getAll, router]);
+  }, [detailsContext, getAll]);
 
   return (
     <DetailsContext.Provider value={{ detailsContext, setDetailsContext }}>
