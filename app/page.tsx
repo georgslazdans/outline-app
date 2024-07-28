@@ -22,7 +22,9 @@ export default async function Home() {
         </div>
       </div>
       <Upload dictionary={dictionary}></Upload>
-      <p className="mt-6 text-center">{dictionary.learnMore}</p>
+      <p className="mt-6 text-center">
+        <a href="/instructions#quick-start">{dictionary.learnMore}</a>
+      </p>
     </>
   );
 }
