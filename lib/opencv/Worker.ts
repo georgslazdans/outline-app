@@ -2,6 +2,7 @@ import { ProcessingResult } from "./processor/ImageProcessor";
 import * as cv from "@techstark/opencv-js";
 import { OpenCvWork, OpenCvResult } from "./OpenCvWork";
 import outlineCheckImageOf from "./processor/OutlineCheckImage";
+import objectThresholdCheckOf from "./processor/ObjectThresholdCheck";
 import handleOpenCvError from "./OpenCvError";
 import processStep, { ProccessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
@@ -33,10 +34,15 @@ const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
         stepResults.data!,
         settingsOf(message)
       );
+      const thresholdCheck = objectThresholdCheckOf(
+        stepResults.data!,
+        settingsOf(message)
+      );
       return {
         status: "success",
         result: postProcessResult(stepResults, message),
         outlineCheckImage: outlineCheckImage,
+        thresholdCheck: thresholdCheck
       };
     } else {
       return {

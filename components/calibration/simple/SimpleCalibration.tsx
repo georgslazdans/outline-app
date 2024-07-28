@@ -3,10 +3,9 @@
 import { Dictionary } from "@/app/dictionaries";
 import SimpleSettingsEditor from "./SimpleSettingsEditor";
 import Settings from "@/lib/opencv/Settings";
-import Button from "../../Button";
 import { useDetails } from "@/context/DetailsContext";
 import StepName from "@/lib/opencv/processor/steps/StepName";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Svg from "@/lib/Svg";
 import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
@@ -14,7 +13,6 @@ import { OutlineImageViewer } from "./OutlineImageViewer";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import { centerPoints } from "@/lib/Point";
 import SelectField from "@/components/fiields/SelectField";
-import CheckboxField from "@/components/fiields/CheckboxField";
 import SimpleSettingsButtons from "./SimpleSettingsButtons";
 
 type Props = {
@@ -23,6 +21,7 @@ type Props = {
   openAdvancedMode: () => void;
   stepResults: StepResult[];
   outlineCheckImage?: ImageData;
+  thresholdCheckImage?: ImageData;
 };
 
 const SimpleCalibration = ({
@@ -31,6 +30,7 @@ const SimpleCalibration = ({
   openAdvancedMode,
   stepResults,
   outlineCheckImage,
+  thresholdCheckImage,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
 
@@ -57,9 +57,19 @@ const SimpleCalibration = ({
   const [backgroundImageStepName, setBackgroundImageStepName] = useState(
     StepName.INPUT
   );
-  const backgroundImageStep = stepResults.find(
-    (it) => it.stepName == backgroundImageStepName
-  );
+  const [backgroundImageStep, setBackgroundImageStep] = useState<StepResult>();
+
+  useEffect(() => {
+    const backgroundImageOf = (stepName: StepName): StepResult => {
+      let step = stepResults.find((it) => it.stepName == stepName)!;
+      if (stepName == StepName.OBJECT_THRESHOLD) {
+        step = { ...step!, imageData: thresholdCheckImage! };
+      }
+      return step;
+    };
+
+    setBackgroundImageStep(backgroundImageOf(backgroundImageStepName));
+  }, [backgroundImageStepName, stepResults, thresholdCheckImage]);
 
   const backgroundImageOptions = () => {
     const options = [
@@ -74,6 +84,10 @@ const SimpleCalibration = ({
       {
         label: dictionary.calibration.step[StepName.ADAPTIVE_THRESHOLD],
         value: StepName.ADAPTIVE_THRESHOLD,
+      },
+      {
+        label: dictionary.calibration.step[StepName.OBJECT_THRESHOLD],
+        value: StepName.OBJECT_THRESHOLD,
       },
     ];
     const stepResultNames = stepResults.map((it) => it.stepName);

@@ -101,6 +101,7 @@ const mandatoryFor = (settings: Settings) => {
     StepName.INPUT,
     StepName.EXTRACT_PAPER,
     StepName.BLUR_OBJECT,
+    StepName.OBJECT_THRESHOLD,
   ];
   mandatorySteps.push(extractPaperReuseStep(settings));
   return mandatorySteps;

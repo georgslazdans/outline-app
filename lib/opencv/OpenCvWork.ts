@@ -23,6 +23,7 @@ export type SuccessResult = {
   status: "success";
   result: ProcessingResult;
   outlineCheckImage: ImageData;
+  thresholdCheck?: ImageData;
 };
 
 export type FailedResult = {

@@ -9,7 +9,8 @@ type Props = {
   message?: OpenCvWork;
   onWorkerMessage: (
     stepResult: StepResult[],
-    outlineCheckImage: ImageData
+    outlineCheckImage: ImageData,
+    thresholdCheck?: ImageData
   ) => void;
   onStepError: (stepResult: StepResult[], message: string) => void;
   onError: (message: string) => void;
@@ -34,7 +35,7 @@ export const OpenCvWorker = ({
       const result = event.data;
 
       if (result.status == "success") {
-        onWorkerMessage(result.result.data!, result.outlineCheckImage);
+        onWorkerMessage(result.result.data!, result.outlineCheckImage, result.thresholdCheck);
       } else {
         if (result.result.data) {
           onStepError(result.result.data, result.result.error!);
