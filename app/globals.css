@@ -34,7 +34,13 @@ h2 {
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  line-height: 1.25;
+}
+
+h4 {
+  font-size: 1rem;
   font-weight: bold;
   line-height: 1.25;
 }
@@ -117,7 +123,7 @@ input[type="range"]::-moz-range-thumb {
   width: 1.5rem;
 }
 
-input[type="range"]:focus::-moz-range-thumb{
+input[type="range"]:focus::-moz-range-thumb {
   outline: 3px solid #da4167;
   outline-offset: 0.125rem;
 }

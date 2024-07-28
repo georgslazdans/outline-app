@@ -3,14 +3,36 @@ import paperOnTable from "./images/paper_on_tble.jpg";
 import caliperOnPaper from "./images/caliper.jpg";
 import detailsForm from "./images/details_form.png";
 import calibrationPage from "./images/calibration_page.png";
+import "./page.css";
 
-<h1 className="text-center p-2 mb-2 mt-2">Instructions</h1>
+<div className="hidden mt-10 list-inside list-disc my-1">
+  Loads Tailwind CSS classes
+</div>
 
-## Quick Start
+# Instructions
+
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Environment Setup](#environment-setup)
+- [Detailed Settings](#detailed-settings)
+  - [Bilateral Filter](#bilateral-filter)
+  - [Gray Scale](#gray-scale)
+  - [Blur](#blur-setting)
+  - [Adaptive Threshold](#adaptive-threshold)
+  - [Canny Paper](#canny-paper)
+  - [Extract Paper](#extract-paper)
+  - [Object Threshold](#object-threshold)
+  - [Close Corners](#close-corners)
+  - [Extract Object](#extract-object)
+- [View Source Code](#view-source)
+- [Support Me](#support-me)
+
+## <a name="quick-start"> Quick Start </a>
 
 ### 1. Set up environment
 
-Place a paper on a flat surface that has good contrast with the paper.
+Place a paper on a flat surface that has good contrast with the paper. Ensure the lighting is consistent and avoid reflections as much as possible.
 
 <ExportedImage
   className="object-contain !relative max-h-[30vh]"
@@ -22,11 +44,13 @@ Place a paper on a flat surface that has good contrast with the paper.
 
 ### 2. Place object on top of a paper sheet
 
+Place the object you want to measure or calibrate on top of the A4 paper. Make sure the object is centered and not touching the edges of the paper.
+
 <ExportedImage
   className="object-contain !relative max-h-[30vh]"
   src={caliperOnPaper}
   alt={
-    "Digital caliper places on top of the A4 paper which is on a brown talble"
+    "Digital caliper placed on top of the A4 paper which is on a brown table"
   }
   priority
   fill
@@ -34,15 +58,21 @@ Place a paper on a flat surface that has good contrast with the paper.
 
 ### 3. Take picture
 
-        <ExportedImage
-            className="object-contain !relative max-h-[50vh]"
-            src={detailsForm}
-            alt={"Details form for digital caliper with name field, orentation and paper size"}
-            priority
-            fill
-        ></ExportedImage>
+Take a picture of the setup, ensuring the entire paper and object are visible and centered in the frame. Use the camera's highest resolution to capture as much detail as possible.
+
+<ExportedImage
+  className="object-contain !relative max-h-[50vh]"
+  src={detailsForm}
+  alt={
+    "Details form for digital caliper with name field, orientation, and paper size"
+  }
+  priority
+  fill
+></ExportedImage>
 
 ### 4. Adjust settings
+
+Use the provided interface to adjust the settings for detecting the paper and object, closing corners, and hole settings. Fine-tuning these parameters will help in accurately identifying and calibrating the object.
 
 <ExportedImage
   className="object-contain !relative max-h-[30vh]"
@@ -52,29 +82,149 @@ Place a paper on a flat surface that has good contrast with the paper.
   fill
 ></ExportedImage>
 
-- Find Paper
-    - Blur size
-    - Block size
+#### Paper Detection Settings:
 
-## Environment Setup
+- **Blur size:** Adjust the blur size to reduce noise in the image.
+- **Block size:** Set the block size for adaptive thresholding.
 
-Make your lighting consisted. Avoid reflections as much as yout can.
-Take Photo zoomed in to have less distortion.
+#### Object Detection Settings:
 
-Setting up the environment perfectly will save a lot of time adjusting settings.
+- **Blur size:** Similar to paper detection, adjust the blur size to help identify the object.
+- **Block size:** Set the block size for adaptive thresholding specific to the object.
+- **Threshold:** Adjust the threshold value to improve object detection.
+- **Block size:** Another parameter for fine-tuning object detection.
 
-## Settings
+#### Corner Closure Settings:
 
-### Finding object
+- **Kernel Size (px):** Define the kernel size for morphological operations.
+- **Iterations:** Set the number of iterations for closing corners.
 
-#### Find Paper
+#### Hole Settings:
 
-### All Steps
+- **Max Background Difference:** Adjust to distinguish between the object and background.
+- **Area Size Threshold:** Set the minimum area size to identify holes.
 
-## View Source Code
+## <a name="environment-setup">Environment Setup</a>
 
-Code is available on GitHub:
+Ensure your lighting is consistent. Avoid reflections as much as possible to get a clear image. Zoom in when taking the photo to minimize distortion. Setting up the environment perfectly will save a lot of time adjusting settings later.
 
-## Support Me
+## <a name="detailed-settings">Detailed Settings</a>
 
-Ko-Fi
+### <a name="bilateral-filter">Bilateral Filter</a>
+
+Applies a bilateral filter to the image to reduce noise while keeping edges sharp. Disabled by default due to performance on mobile.
+
+- **Disabled** - Checkbox to enable or disable the filter.
+- **Pixel Diameter** - Diameter of each pixel neighborhood used during filtering.
+- **Sigma Color** - Filter sigma in the color space. A larger value means that farther colors within the pixel neighborhood will be mixed together.
+- **Sigma Space** - Filter sigma in the coordinate space. A larger value means that farther pixels will influence each other as long as their colors are close enough.
+
+For more details, see the [OpenCV Bilateral Filter documentation](https://docs.opencv.org/4.10.0/d4/d86/group__imgproc__filter.html#ga9d7064d478c95d60003cf839430737ed).
+
+### <a name="gray-scale">Gray Scale</a>
+
+Converts the input image to grayscale, reducing it to a single color channel.
+
+### <a name="blur-setting">Blur</a>
+
+Blurs the image to reduce noise and details.
+
+- **Blur Size** - The size of the kernel used for blurring the image. Larger values result in a more blurred image.
+
+For more details, see the [OpenCV Gaussian Blur documentation](https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#gae8bdcd9154ed5ca3cbc1766d960f45c1).
+
+### <a name="adaptive-threshold">Adaptive Threshold</a>
+
+Applies adaptive thresholding to binarize the image based on local neighborhood.
+
+- **Max Value** - Maximum value to use.
+- **Block Size** - Size of a pixel neighborhood that is used to calculate a threshold value for the pixel.
+- **Constant** - Constant subtracted from the mean or weighted mean.
+
+For more details, see the [OpenCV Adaptive Threshold documentation](https://docs.opencv.org/4.10.0/d7/d1b/group__imgproc__misc.html#ga72b913f352e4a1b1b397736707afcde3).
+
+### <a name="canny-paper">Canny Paper</a>
+
+Uses the Canny edge detector to find edges in the image.
+
+- **First Threshold** - First threshold for the hysteresis procedure.
+- **Second Threshold** - Second threshold for the hysteresis procedure.
+
+For more details, see the [OpenCV Canny Edge Detection documentation](https://docs.opencv.org/4.10.0/dd/d1a/group__imgproc__feature.html#ga04723e007ed888ddf11d9ba04e2232de).
+
+### <a name="extract-paper">Extract Paper</a>
+
+Finds the largest contour and transforms the image to show only the paper.
+
+- **Reuse Step** - Defines if previous blur data should be reused.
+
+#### Paper Settings
+
+- **Width** - The width of the paper in milimeters.
+- **Height** - The height of the paper in milimeters.
+- **Orientation** - The orientation of the paper: _Portrait_ or _Landscape_.
+
+### Gray Scale Object
+
+Converts the object to grayscale.
+
+See [Gray Scale](#gray-scale) section.
+
+### Blur Object
+
+Disabled if **Reuse Step** is set to _Blur_
+
+See [Blur](#blur-setting) section.
+
+### <a name="object-threshold">Object Threshold</a>
+
+Applies thresholding to binarize the object.
+
+- **Threshold Type** - The type of threshold to apply: _Binary_ or _Adaptive Threshold_.
+
+See [Adaptive Threshold](#adaptive-threshold) section.
+
+#### Binary Threshold
+
+Applies a simple binary threshold.
+
+- **Threshold** - Threshold value.
+- **Inverse Threshold** - Inverse threshold value.
+- **Max Value** - Maximum value to use in result.
+
+For more details, see the [OpenCV Threshold documentation](https://docs.opencv.org/4.10.0/d7/d1b/group__imgproc__misc.html#gae8a4a146d1ca78c626a53577199e9c57).
+
+### Canny Object
+
+Uses the Canny edge detector to find edges of the object. See [Canny Paper](#canny-paper) section.
+
+### <a name="close-corners">Close Corners</a>
+
+Uses morphological operations to close gaps in corners.
+
+- **Kernel Size** - Size of the kernel used for morphological operations.
+- **Iterations** - Number of times the operation is applied.
+
+For more details, see the [OpenCV Morphological Transformations documentation](https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html).
+
+### <a name="extract-object">Extract Object</a>
+
+Finds the largest contour and identifies possible holes in the object.
+
+#### <a name="smooth-settings">Smooth Settings</a>
+
+- **Smooth Outline** - Flag to enable or disable smoothing of the object outline.
+- **Smooth Max Deviation** - Maximum deviation from the original line.
+
+#### Hole Settings
+
+- **Max Background Difference** - Max difference between the background mean value and contour mean value in blur image.
+- **Area Size Threshold (%)** - Minimum area size to consider a contour as a hole.
+
+## <a name="view-source"> View Source Code </a>
+
+The code for this project is available on GitHub. Feel free to review, use, and contribute to the repository.
+
+## <a name="support-me"> Support Me </a>
+
+If you find this project useful, consider supporting me on Ko-Fi.
