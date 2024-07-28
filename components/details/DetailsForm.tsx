@@ -7,6 +7,7 @@ import SelectField from "../fiields/SelectField";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSize, {
   PaperDimensions,
+  paperSizeOfDimensions,
   paperSizeOptionsFor,
 } from "@/lib/PaperSize";
 import { Context, useDetails } from "@/context/DetailsContext";
@@ -18,6 +19,7 @@ import ImageField from "../fiields/ImageField";
 import NumberField from "../fiields/NumberField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import useNavigationHistory from "@/context/NavigationHistory";
+import PaperSettings from "@/lib/opencv/PaperSettings";
 
 type Props = {
   dictionary: any;
@@ -46,6 +48,16 @@ const paperSettingsOf = (context: Context) => {
   }
 };
 
+const paperSizeOfContext = (detailsContext: Context) => {
+  const paperSettings = detailsContext.settings[StepName.EXTRACT_PAPER]
+    .paperSettings as PaperSettings;
+  if (paperSettings) {
+    return paperSizeOfDimensions(paperSettings.width, paperSettings.height);
+  } else {
+    return "A4";
+  }
+};
+
 const DetailsForm = ({ dictionary }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
@@ -53,7 +65,9 @@ const DetailsForm = ({ dictionary }: Props) => {
   const { setLoading } = useLoading();
   const { add } = useIndexedDB("details");
 
-  const [paperSize, setPaperSize] = useState("A4");
+  const [paperSize, setPaperSize] = useState(
+    paperSizeOfContext(detailsContext)
+  );
 
   const [formData, setFormData] = useState<Form>( // TODO what is this???
     paperSettingsOf(detailsContext) || defaultSettings

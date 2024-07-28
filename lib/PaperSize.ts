@@ -26,6 +26,13 @@ export const PaperDimensions = {
   },
 };
 
+export const paperSizeOfDimensions = (width: number, heihgt: number) => {
+  const size = Object.entries(PaperDimensions).find(
+    (it) => it[1].width == width && it[1].height == heihgt
+  );
+  return size ? size[0] : "custom";
+};
+
 const dictionaryPath = "paperSize";
 
 export const paperSizeOptionsFor = (dictionary: any) => {
