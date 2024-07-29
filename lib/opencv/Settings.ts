@@ -3,7 +3,7 @@ import StepName from "./processor/steps/StepName";
 import deepEqual from "../utils/Objects";
 import StepSetting from "./processor/steps/StepSettings";
 import Steps from "./processor/Steps";
-import { Threshold } from "./processor/steps/Threshold";
+import ThresholdType from "./processor/steps/ThresholdType";
 
 type Settings = {
   [key: string]: StepSetting;
@@ -44,7 +44,7 @@ export const inSettings = (settings: Settings) => {
     },
     isObjectThresholdAdaptive: () => {
       return (
-        settings[StepName.OBJECT_THRESHOLD].thresholdType == Threshold.ADAPTIVE
+        settings[StepName.OBJECT_THRESHOLD].thresholdType == ThresholdType.ADAPTIVE
       );
     },
   };

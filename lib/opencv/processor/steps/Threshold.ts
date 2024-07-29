@@ -8,23 +8,14 @@ import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 import adaptiveThresholdStep from "./AdaptiveThreshold";
 import binaryThresholdStep from "./BinaryThreshold";
-import Options from "@/lib/utils/Options";
 import Settings from "../../Settings";
-
-export enum Threshold {
-  ADAPTIVE = "adaptive",
-  BINARY = "binary",
-}
-const dictionaryPath = "threshold";
-
-export const thresholdOptionsFor = (dictionary: any) =>
-  Options.of(Threshold).withTranslation(dictionary, dictionaryPath);
+import ThresholdType, { thresholdOptionsFor }  from "./ThresholdType";
 
 type BinaryThresholdSettings = typeof binaryThresholdStep.settings;
 type AdaptiveThresholdSettings = typeof adaptiveThresholdStep.settings;
 
 type ThresholdSettings = {
-  thresholdType: Threshold;
+  thresholdType: ThresholdType;
   binarySettings: BinaryThresholdSettings;
   adaptiveSettings: AdaptiveThresholdSettings;
 };
@@ -34,7 +25,7 @@ const thresholdOf: Process<ThresholdSettings> = (
   settings: ThresholdSettings,
   previous: PreviousData
 ): ProcessResult => {
-  if (settings.thresholdType == Threshold.ADAPTIVE) {
+  if (settings.thresholdType == ThresholdType.ADAPTIVE) {
     return adaptiveThresholdStep.process(
       image,
       settings.adaptiveSettings,
@@ -43,13 +34,14 @@ const thresholdOf: Process<ThresholdSettings> = (
   } else {
     return binaryThresholdStep.process(
       image,
+
       settings.binarySettings,
       previous
     );
   }
 };
 
-const displaySettings = (thresholdType: Threshold) => {
+const displaySettings = (thresholdType: ThresholdType) => {
   return (settings: Settings, currentStepName: StepName): boolean => {
     return settings[currentStepName]?.thresholdType == thresholdType;
   };
@@ -58,7 +50,7 @@ const displaySettings = (thresholdType: Threshold) => {
 const thresholdStep: ProcessingStep<ThresholdSettings> = {
   name: StepName.THRESHOLD,
   settings: {
-    thresholdType: Threshold.ADAPTIVE,
+    thresholdType: ThresholdType.ADAPTIVE,
     binarySettings: binaryThresholdStep.settings,
     adaptiveSettings: adaptiveThresholdStep.settings,
   },
@@ -69,12 +61,12 @@ const thresholdStep: ProcessingStep<ThresholdSettings> = {
     },
     binarySettings: {
       type: "group",
-      display: displaySettings(Threshold.BINARY),
+      display: displaySettings(ThresholdType.BINARY),
       config: binaryThresholdStep.config!,
     },
     adaptiveSettings: {
       type: "group",
-      display: displaySettings(Threshold.ADAPTIVE),
+      display: displaySettings(ThresholdType.ADAPTIVE),
       config: adaptiveThresholdStep.config!,
     },
   },
