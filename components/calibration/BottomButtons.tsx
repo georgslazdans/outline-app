@@ -9,6 +9,7 @@ type Props = {
   onClose: () => void;
   settingsChanged: boolean;
   dictionary: Dictionary;
+  simpleMode: boolean;
 };
 
 const BottomButtons = ({
@@ -16,6 +17,7 @@ const BottomButtons = ({
   onClose,
   settingsChanged,
   dictionary,
+  simpleMode,
 }: Props) => {
   return (
     <div className="flex gap-4">
@@ -26,7 +28,11 @@ const BottomButtons = ({
         <label>{dictionary.calibration.rerun}</label>
       </Button>
       <Button onClick={() => onClose()}>
-        <label>{dictionary.calibration.done}</label>
+        <label>
+          {simpleMode
+            ? dictionary.calibration.save
+            : dictionary.calibration.done}
+        </label>
       </Button>
     </div>
   );

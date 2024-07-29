@@ -235,6 +235,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
             rerun={rerunOpenCv}
             onClose={() => (simpleMode ? saveAndClose() : setSimpleMode(true))}
             settingsChanged={settingsChanged}
+            simpleMode={simpleMode}
           ></BottomButtons>
         </div>
       </div>

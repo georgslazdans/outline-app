@@ -96,7 +96,8 @@
     "advancedSettings": "Detailed Settings",
     "exportSvg": "Export SVG",
     "rerun": "Rerun",
-    "done": "Done"
+    "done": "Done",
+    "save": "Save"
   },
   "history": {
     "title": "History",
