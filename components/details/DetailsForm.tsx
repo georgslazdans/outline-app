@@ -49,8 +49,10 @@ const paperSettingsOf = (context: Context) => {
 };
 
 const paperSizeOfContext = (detailsContext: Context) => {
-  const paperSettings = detailsContext.settings[StepName.EXTRACT_PAPER]
-    .paperSettings as PaperSettings;
+  const settings = detailsContext?.settings;
+  const paperSettings = settings
+    ? settings[StepName.EXTRACT_PAPER]?.paperSettings
+    : null;
   if (paperSettings) {
     return paperSizeOfDimensions(paperSettings.width, paperSettings.height);
   } else {
