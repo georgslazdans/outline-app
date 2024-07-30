@@ -63,7 +63,12 @@
       "blockSize": "Block Size",
       "c": "Constant",
       "cannySettings": "Canny Settings",
+      "firstThreshold": "First Threshold",
+      "secondThreshold": "Second Threshold",
       "paperSettings": "Paper Settings",
+      "orientation": "Orientation",
+      "width": "Width",
+      "height": "Height",
       "smoothOutline": "Smooth Outline",
       "smoothAccuracy": "Smooth Max Deviation",
       "kernelSize": "Kernel Size (px)",
@@ -79,7 +84,6 @@
       "disabled": "Disabled",
       "reuseStep": "Reuse Step"
     },
-    "settings": "Iestatījumi",
     "simpleSettings": {
       "title": "Iestatījumi",
       "blur": "Blur",
@@ -88,6 +92,7 @@
       "closeCorners": "Close Corners",
       "holeSettings": "Hole Settings"
     },
+    "settings": "Iestatījumi",
     "advancedSettings": "Izvērstie Iestatījumi",
     "exportSvg": "Eksportēt SVG",
     "rerun": "Atkārtoti Izpildīt",

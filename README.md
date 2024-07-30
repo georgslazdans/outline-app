@@ -21,7 +21,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Roadmap
 
 ### Prototype
-[] Add SVG modification - node transformation, cleanup and offset along normals
-[] Add 3d shadow from SVG
-[] Add Gridfinity box generation
-[] Exportable STL file
+- Add SVG modification - node transformation, cleanup and offset along normals
+- Add 3d shadow from SVG
+- Add Gridfinity box generation
+- Exportable STL file
