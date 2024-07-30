@@ -112,6 +112,9 @@
   "instructions": {
     "title": "Instrukcijas"
   },
+  "about": {
+    "title": "Par Applikāciju"
+  },
   "homepage": "Sākums",
   "menu": "Izvēlne"
 }

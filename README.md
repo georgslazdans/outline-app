@@ -25,3 +25,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Add 3d shadow from SVG
 - Add Gridfinity box generation
 - Exportable STL file
+
+
+## Support Me
+If you find this project useful, consider supporting me on Ko-Fi.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/L3L41134QC)

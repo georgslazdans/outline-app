@@ -112,6 +112,9 @@
   "instructions": {
     "title": "Instructions"
   },
+  "about": {
+    "title": "About"
+  },
   "homepage": "Home",
   "menu": "Menu"
 }
