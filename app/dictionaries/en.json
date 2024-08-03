@@ -116,5 +116,8 @@
     "title": "About"
   },
   "homepage": "Home",
-  "menu": "Menu"
+  "menu": "Menu",
+  "editor": {
+    "title": "Editor"
+  }
 }

@@ -11,7 +11,7 @@ type Props = {
   name: string;
   placeholder?: string;
   options: Array<Option>;
-  onChange: (val: any) => void;
+  onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
 };
 
 const SelectField = ({

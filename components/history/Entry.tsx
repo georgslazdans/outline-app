@@ -7,7 +7,7 @@ import BlobImage from "../image/BlobImage";
 import EntryField from "./EntryField";
 import Button from "../Button";
 import { useRouter } from "next/navigation";
-import Svg from "@/lib/Svg";
+import Svg from "@/lib/svg/Svg";
 import { downloadFile } from "@/lib/utils/Download";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";

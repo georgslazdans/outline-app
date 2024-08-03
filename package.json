@@ -15,9 +15,12 @@
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
     "@next/mdx": "^14.2.5",
+    "@react-three/drei": "^9.109.2",
+    "@react-three/fiber": "^8.16.8",
     "@serwist/next": "^9.0.3",
     "@techstark/opencv-js": "^4.9.0-release.3",
     "@types/mdx": "^2.0.13",
+    "@types/three": "^0.167.1",
     "comlink": "^4.4.1",
     "next": "14.2.3",
     "next-image-export-optimizer": "^1.14.1",
@@ -26,7 +29,8 @@
     "react-indexed-db-hook": "^1.0.14",
     "react-loader-spinner": "^6.1.6",
     "react-zoom-pan-pinch": "^3.4.4",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "three": "^0.167.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",

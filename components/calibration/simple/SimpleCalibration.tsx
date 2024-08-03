@@ -6,7 +6,7 @@ import Settings from "@/lib/opencv/Settings";
 import { useDetails } from "@/context/DetailsContext";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useCallback, useEffect, useState } from "react";
-import Svg from "@/lib/Svg";
+import Svg from "@/lib/svg/Svg";
 import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
 import { OutlineImageViewer } from "./OutlineImageViewer";

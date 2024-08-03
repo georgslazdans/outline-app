@@ -116,5 +116,8 @@
     "title": "Par Applikāciju"
   },
   "homepage": "Sākums",
-  "menu": "Izvēlne"
+  "menu": "Izvēlne",
+  "editor": {
+    "title": "Editor"
+  }
 }
