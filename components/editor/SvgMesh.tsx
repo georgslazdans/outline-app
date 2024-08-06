@@ -25,9 +25,8 @@ const SvgMesh = ({
   };
 
   return (
-    // <group scale={new Vector3(0.1, 0.1, 0.1)}>
-    // <group>
     <group>
+    {/* // <group scale={new Vector3(1, -1, 1)}> */}
       {contoursPoints.map((points, index) => {
         const svgPoints = points.points.map((point, index1) => {
           return (

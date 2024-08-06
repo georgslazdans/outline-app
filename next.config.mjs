@@ -23,14 +23,32 @@ const nextConfig = {
     nextImageExportOptimizer_remoteImageCacheTTL: "0",
   },
   webpack: (config) => {
+    config.module.rules.push({
+      test: /\.wasm$/,
+      type: "asset/resource",
+      generator: {
+        filename: "static/chunks/[name].[hash][ext]",
+      },
+    });
+
+    // https://ocjs.org/docs/app-dev-workflow/pre-built
+    config.module.rules.push({
+      test: /\.wasm$/,
+      type: "javascript/auto",
+      loader: "file-loader",
+      options: {
+        name: "static/chunks/[name].[hash].[ext]",
+      },
+    });
+
     config.resolve.fallback = { fs: false };
+    config.experiments = { ...config.experiments, asyncWebAssembly: true };
+
     return config;
   },
 };
 
 const withSerwist = withSerwistInit({
-  // Note: This is only an example. If you use Pages Router,
-  // use something else that works, such as "service-worker/index.ts".
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
 });

@@ -19,69 +19,40 @@ import SvgSelect from "./SvgSelect";
 import SvgMesh from "./SvgMesh";
 import { ContourPoints } from "@/lib/Point";
 import SvgPoint from "./SvgPoint";
-import { Vector3 } from "three";
+import { Object3D, Vector3 } from "three";
+import { ReplicadWorker } from "./ReplicadWorker";
+import { ReplicadResult } from "@/lib/replicad/Worker";
+import ReplicadMesh from "./ReplicadMesh";
 
 type Props = {
   dictionary: Dictionary;
 };
 
-function Cube({
-  color = "white",
-  thickness = 1,
-  roughness = 0.5,
-  envMapIntensity = 1,
-  transmission = 1,
-  metalness = 0,
-  ...props
-}) {
-  const [hovered, setHover] = useState(false);
-  const selected = useSelect().map((sel) => sel.userData.store);
-  const [store, materialProps] = [
-    selected,
-    {
-      color: color,
-      roughness: roughness,
-      thickness: thickness,
-      envMapIntensity: envMapIntensity,
-      transmission: transmission,
-      ...(metalness !== undefined && {
-        metalness: metalness,
-      }),
-    },
-  ];
-  const isSelected = !!selected.find((sel) => sel === store);
-  useCursor(hovered);
-  return (
-    <mesh
-      {...props}
-      userData={{ store }}
-      onPointerOver={(e) => (e.stopPropagation(), setHover(true))}
-      onPointerOut={(e) => setHover(false)}
-    >
-      <boxGeometry />
-      <MeshTransmissionMaterial
-        resolution={128}
-        samples={16}
-        {...materialProps}
-      />
-      <Edges visible={isSelected} scale={1.1} renderOrder={1000}>
-        <meshBasicMaterial transparent color="#333" depthTest={false} />
-      </Edges>
-    </mesh>
-  );
-}
+Object3D.DEFAULT_UP.set(0, 0, 1);
 
 const EditorCanvas = ({ dictionary }: Props) => {
   const [selected, setSelected] = useState<ContourPoints[]>();
   const [disableCamera, setDisableCamera] = useState<boolean>(false);
+  const [replicadMessage, setReplicadMessage] = useState({});
+  const [replicadResult, setReplicadResult] = useState<ReplicadResult>();
   return (
     <>
+      <ReplicadWorker
+        message={replicadMessage}
+        onWorkerMessage={setReplicadResult}
+      ></ReplicadWorker>
       <Canvas
         dpr={[1, 4]}
         orthographic
-        camera={{ position: [0, 0, 15], zoom: 1 }}
+        camera={{ position: [0, 0, 15], zoom: 1, near: 0.001, far: 3000}}
       >
         <pointLight position={[10, 10, 10]} />
+        {replicadResult && (
+          <ReplicadMesh
+            faces={replicadResult.faces}
+            edges={replicadResult.edges}
+          ></ReplicadMesh>
+        )}
         {selected && (
           <SvgMesh
             contoursPoints={selected}
@@ -98,16 +69,17 @@ const EditorCanvas = ({ dictionary }: Props) => {
           far={1}
           blur={2}
         />
-        {/* <OrbitControls
+        <OrbitControls
           makeDefault
-          rotateSpeed={2}
-          minPolarAngle={0}
-          maxPolarAngle={Math.PI / 2.5}
-        /> */}
-        <MapControls
+          //   rotateSpeed={2}
+          //   minPolarAngle={0}
+          //   maxPolarAngle={Math.PI / 2.5}
+          enabled={!disableCamera}
+        />
+        {/* <MapControls
           enableRotate={false}
           enabled={!disableCamera}
-        ></MapControls>
+        ></MapControls> */}
         <Sky />
       </Canvas>
       <SvgSelect
