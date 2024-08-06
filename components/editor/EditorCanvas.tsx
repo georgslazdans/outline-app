@@ -18,7 +18,6 @@ import {
 import SvgSelect from "./SvgSelect";
 import SvgMesh from "./SvgMesh";
 import { ContourPoints } from "@/lib/Point";
-import SvgPoint from "./SvgPoint";
 import { Object3D, Vector3 } from "three";
 import { ReplicadWorker } from "./ReplicadWorker";
 import { ReplicadResult } from "@/lib/replicad/Worker";
@@ -28,13 +27,15 @@ type Props = {
   dictionary: Dictionary;
 };
 
-Object3D.DEFAULT_UP.set(0, 0, 1);
-
 const EditorCanvas = ({ dictionary }: Props) => {
+  Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
+
   const [selected, setSelected] = useState<ContourPoints[]>();
   const [disableCamera, setDisableCamera] = useState<boolean>(false);
   const [replicadMessage, setReplicadMessage] = useState({});
   const [replicadResult, setReplicadResult] = useState<ReplicadResult>();
+
+  const dpr = Math.min(window.devicePixelRatio, 2);
   return (
     <>
       <ReplicadWorker
@@ -42,9 +43,10 @@ const EditorCanvas = ({ dictionary }: Props) => {
         onWorkerMessage={setReplicadResult}
       ></ReplicadWorker>
       <Canvas
-        dpr={[1, 4]}
+        dpr={dpr}
         orthographic
-        camera={{ position: [0, 0, 15], zoom: 1, near: 0.001, far: 3000}}
+        camera={{ position: [0, 0, 2], zoom: 100, near: 0.00001, fov: 90 }}
+        gl={{ precision: "highp", logarithmicDepthBuffer: true }}
       >
         <pointLight position={[10, 10, 10]} />
         {replicadResult && (
@@ -81,6 +83,11 @@ const EditorCanvas = ({ dictionary }: Props) => {
           enabled={!disableCamera}
         ></MapControls> */}
         <Sky />
+        <gridHelper
+          args={[20, 20]}
+          scale={[0.1, 0.1, 0.1]}
+          rotation={[Math.PI / 2, 0, 0]}
+        ></gridHelper>
       </Canvas>
       <SvgSelect
         dictionary={dictionary}

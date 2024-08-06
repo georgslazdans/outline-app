@@ -42,8 +42,10 @@ const ReplicadMesh = React.memo(function ShapeMeshes({ faces, edges }: Props) {
     [invalidate]
   );
 
+  const scale = 0.01;
+
   return (
-    <group>
+    <group scale={[scale, scale, scale]}>
       <mesh geometry={body.current}>
         {/* the offsets are here to avoid z fighting between the mesh and the lines */}
         <meshStandardMaterial

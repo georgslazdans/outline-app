@@ -23,11 +23,22 @@ const SvgMesh = ({
     //   return newPoints;
     // });
   };
+  const scale = 0.01;
 
+  const scaledPoints = contoursPoints.map((it) => {
+    return {
+      points: it.points.map((point) => {
+        return {
+          x: point.x * scale,
+          y: point.y * scale,
+        };
+      }),
+    };
+  });
   return (
+    // <group>
     <group>
-    {/* // <group scale={new Vector3(1, -1, 1)}> */}
-      {contoursPoints.map((points, index) => {
+      {scaledPoints.map((points, index) => {
         const svgPoints = points.points.map((point, index1) => {
           return (
             <DragControls

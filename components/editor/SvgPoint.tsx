@@ -31,13 +31,15 @@ const SvgPoint = ({ position, onDrag }: Props) => {
     event.target.releasePointerCapture(event.pointerId);
   };
 
+  const pointSize = 0.01;
   return (
     <Sphere
       position={position}
       ref={pointRef}
-    //   onPointerDown={handlePointerDown}
-    //   onPointerMove={handlePointerMove}
-    //   onPointerUp={handlePointerUp}
+      scale={[pointSize, pointSize, pointSize]}
+      //   onPointerDown={handlePointerDown}
+      //   onPointerMove={handlePointerMove}
+      //   onPointerUp={handlePointerUp}
     >
       <meshBasicMaterial color="red" />
     </Sphere>
