@@ -57,7 +57,7 @@ const SvgMesh = ({
         return (
           <>
             {svgPoints}
-            <SvgLines key={index} contour={points}></SvgLines>
+            <SvgLines key={"line" + index} contour={points}></SvgLines>
           </>
         );
       })}

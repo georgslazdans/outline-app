@@ -1,10 +1,10 @@
 "use client";
 
-import { ReplicadResult } from "@/lib/replicad/Worker";
+import { ReplicadResult, ReplicadWork } from "@/lib/replicad/Worker";
 import { useCallback, useEffect, useRef } from "react";
 
 type Props = {
-  message?: any;
+  message?: ReplicadWork;
   onWorkerMessage: (result: ReplicadResult) => void;
   onError?: (message: string) => void;
 };
