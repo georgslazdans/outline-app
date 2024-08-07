@@ -1,6 +1,6 @@
-import Point, { ContourPoints } from "@/lib/Point";
-import { min } from "@techstark/opencv-js";
-import { draw, Drawing, DrawingPen } from "replicad";
+import Point, { ContourPoints, minMaxValues } from "@/lib/Point";
+import { draw, Drawing } from "replicad";
+import ModelData from "./ModelData";
 
 const drawContour = (points: Point[]): Drawing => {
   const drawPen = draw();
@@ -12,34 +12,6 @@ const drawContour = (points: Point[]): Drawing => {
     drawPen.lineTo([point.x, point.y]);
   }
   return drawPen.close();
-};
-
-const minMaxValues = (points: Point[]) => {
-  let minX = 0,
-    minY = 0,
-    maxX = 0,
-    maxY = 0;
-
-  points.forEach((point) => {
-    if (minX > point.x) {
-      minX = point.x;
-    }
-    if (maxX < point.x) {
-      maxX = point.x;
-    }
-    if (minY > point.y) {
-      minY = point.y;
-    }
-    if (maxY < point.y) {
-      maxY = point.y;
-    }
-  });
-  return {
-    minX,
-    minY,
-    maxX,
-    maxY,
-  };
 };
 
 const findBase = (contourPoints: ContourPoints[]) => {
@@ -64,7 +36,7 @@ const findBase = (contourPoints: ContourPoints[]) => {
   return base.value;
 };
 
-const drawShadow = (contourPoints: ContourPoints[], height: number) => {
+const drawShadow = (contourPoints: ContourPoints[], height: number): ModelData => {
   let basePoints = findBase(contourPoints);
   let base = drawContour(basePoints.points);
 

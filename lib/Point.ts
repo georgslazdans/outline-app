@@ -52,4 +52,32 @@ const scaleArray = (points: Point[], scaleFactor: number): Point[] => {
   return result;
 };
 
+export const minMaxValues = (points: Point[]) => {
+  let minX = 0,
+    minY = 0,
+    maxX = 0,
+    maxY = 0;
+
+  points.forEach((point) => {
+    if (minX > point.x) {
+      minX = point.x;
+    }
+    if (maxX < point.x) {
+      maxX = point.x;
+    }
+    if (minY > point.y) {
+      minY = point.y;
+    }
+    if (maxY < point.y) {
+      maxY = point.y;
+    }
+  });
+  return {
+    minX,
+    minY,
+    maxX,
+    maxY,
+  };
+};
+
 export default Point;

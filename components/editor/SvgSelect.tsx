@@ -13,6 +13,11 @@ type Props = {
   onSelect: (ContourPoints: ContourPoints[]) => void;
 };
 
+const centeredPointsOf = (context: Context): ContourPoints[] => {
+  const paperDimensions = paperDimensionsOfDetailsContext(context);
+  return context.contours.map((it) => centerPoints(it, paperDimensions));
+};
+
 const SvgSelect = ({ dictionary, onSelect }: Props) => {
   const { getAll } = useIndexedDB("details");
   const [items, setItems] = useState<Context[]>();
@@ -26,11 +31,12 @@ const SvgSelect = ({ dictionary, onSelect }: Props) => {
         label: context.details.name,
       };
     };
-    getAll().then((allContexts) => {
+    getAll().then((allContexts: Context[]) => {
       if (allContexts && allContexts.length > 0) {
         setItems(allContexts);
         setOptions(allContexts.map(asOption));
         setSelected(allContexts[0].id!);
+        onSelect(centeredPointsOf(allContexts[0]));
       }
     });
   }, [getAll]);
@@ -39,10 +45,7 @@ const SvgSelect = ({ dictionary, onSelect }: Props) => {
     const contextId = Number.parseInt(event.target.value);
     const selected = items?.find((it) => it.id == contextId);
     if (selected) {
-      const paperDimensions = paperDimensionsOfDetailsContext(selected);
-      onSelect(
-        selected.contours.map((it) => centerPoints(it, paperDimensions))
-      );
+      onSelect(centeredPointsOf(selected));
       setSelected(contextId);
     }
   };

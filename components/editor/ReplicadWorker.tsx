@@ -1,6 +1,7 @@
 "use client";
 
-import { ReplicadResult, ReplicadWork } from "@/lib/replicad/Worker";
+import { ReplicadWork } from "@/lib/replicad/Work";
+import { ReplicadResult } from "@/lib/replicad/Worker";
 import { useCallback, useEffect, useRef } from "react";
 
 type Props = {

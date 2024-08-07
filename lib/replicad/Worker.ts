@@ -6,11 +6,8 @@ import { ReplicadMeshedEdges } from "replicad-threejs-helper";
 import gridfinityBox from "./models/Gridfinity";
 import { ContourPoints } from "../Point";
 import drawShadow from "./models/OutlineShadow";
-
-export type ReplicadWork = {
-  shadow: ContourPoints[];
-  height: number;
-};
+import { Gridfinity, Model, ReplicadWork, Shadow } from "./Work";
+import ModelData from "./models/ModelData";
 
 export type ReplicadResult = {
   faces: ShapeMesh;
@@ -36,18 +33,36 @@ const waitForInitialization = async () => {
   await initializedPromise;
 };
 
+const processModel = (model: Gridfinity | Shadow): ModelData => {
+  switch (model.type) {
+    case "gridfinity":
+      return gridfinityBox(model.params);
+    case "shadow":
+      return drawShadow(model.points, model.height);
+  }
+};
+
+const processWork = (work: ReplicadWork) => {
+  switch (work.type) {
+    case "full":
+      // TODO
+      break;
+    case "model":
+      const result = processModel(work.value);
+      return {
+        faces: result.mesh(),
+        edges: result.meshEdges(),
+      };
+    case "download":
+      break;
+  }
+};
+
 addEventListener("message", async (event: MessageEvent<ReplicadWork>) => {
-  console.log("Init worker");
   await waitForInitialization();
   const work = event.data;
-  const result = drawShadow(work.shadow, work.height);
-  // const result = drawBox(10);
-  // const result = gridfinityBox({
-  //   keepFull: true,
-  // });
-  console.log("Types", typeof result.mesh(), typeof result.meshEdges());
-  postMessage({
-    faces: result.mesh(),
-    edges: result.meshEdges(),
-  });
+
+  const result = processWork(work);
+
+  postMessage(result);
 });

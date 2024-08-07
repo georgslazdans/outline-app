@@ -20,8 +20,9 @@ import SvgMesh from "./SvgMesh";
 import { ContourPoints } from "@/lib/Point";
 import { Object3D, Vector3 } from "three";
 import { ReplicadWorker } from "./ReplicadWorker";
-import { ReplicadResult, ReplicadWork } from "@/lib/replicad/Worker";
+import { ReplicadResult } from "@/lib/replicad/Worker";
 import ReplicadMesh from "./ReplicadMesh";
+import { ReplicadWork } from "@/lib/replicad/Work";
 
 type Props = {
   dictionary: Dictionary;
@@ -38,8 +39,12 @@ const EditorCanvas = ({ dictionary }: Props) => {
   const onContourSelect = (points: ContourPoints[]) => {
     setSelected(points);
     setReplicadMessage({
-      shadow: points,
-      height: 10,
+      type: "model",
+      value: {
+        type: "shadow",
+        points: points,
+        height: 10,
+      },
     });
   };
 
