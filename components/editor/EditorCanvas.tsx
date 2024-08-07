@@ -22,7 +22,7 @@ import { Object3D, Vector3 } from "three";
 import { ReplicadWorker } from "./ReplicadWorker";
 import { ReplicadResult } from "@/lib/replicad/Worker";
 import ReplicadMesh from "./ReplicadMesh";
-import { ReplicadWork } from "@/lib/replicad/Work";
+import { fullWorkOf, ReplicadWork } from "@/lib/replicad/Work";
 
 type Props = {
   dictionary: Dictionary;
@@ -38,14 +38,7 @@ const EditorCanvas = ({ dictionary }: Props) => {
 
   const onContourSelect = (points: ContourPoints[]) => {
     setSelected(points);
-    setReplicadMessage({
-      type: "model",
-      value: {
-        type: "shadow",
-        points: points,
-        height: 10,
-      },
-    });
+    setReplicadMessage(fullWorkOf(points));
   };
 
   const dpr = Math.min(window.devicePixelRatio, 2);

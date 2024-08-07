@@ -7,7 +7,6 @@ import {
   makeFace,
   EdgeFinder,
 } from "replicad";
-import GridfinityParams from "../GridfinityParams";
 import ModelData from "./ModelData";
 
 const defaultParams = {

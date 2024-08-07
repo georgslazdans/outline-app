@@ -1,13 +1,10 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC, ShapeMesh } from "replicad";
-import drawBox from "./models/Box";
+import { setOC, Shape3D, ShapeMesh } from "replicad";
 import { ReplicadMeshedEdges } from "replicad-threejs-helper";
 import gridfinityBox from "./models/Gridfinity";
-import { ContourPoints } from "../Point";
 import drawShadow from "./models/OutlineShadow";
-import { Gridfinity, Model, ReplicadWork, Shadow } from "./Work";
-import ModelData from "./models/ModelData";
+import { Full, Gridfinity, Model, ReplicadWork, Shadow } from "./Work";
 
 export type ReplicadResult = {
   faces: ShapeMesh;
@@ -33,26 +30,41 @@ const waitForInitialization = async () => {
   await initializedPromise;
 };
 
-const processModel = (model: Gridfinity | Shadow): ModelData => {
+const processModel = (model: Gridfinity | Shadow) => {
+  let result;
   switch (model.type) {
     case "gridfinity":
-      return gridfinityBox(model.params);
+      result = gridfinityBox(model.params);
     case "shadow":
-      return drawShadow(model.points, model.height);
+      const { points, height } = model as Shadow;
+      result = drawShadow(points, height);
   }
+  return {
+    faces: result.mesh(),
+    edges: result.meshEdges(),
+  };
+};
+
+const processFull = (full: Full) => {
+  const box = gridfinityBox(full.gridfinity.params);
+  const offsetToTop = 42 * full.gridfinity.params.height - full.shadow.height;
+  // const offsetToTop = -5;
+  const shadow = drawShadow(full.shadow.points, full.shadow.height).translateZ(
+    offsetToTop
+  );
+  const result = (box as Shape3D).cut(shadow as Shape3D);
+  return {
+    faces: result.mesh(),
+    edges: result.meshEdges(),
+  };
 };
 
 const processWork = (work: ReplicadWork) => {
   switch (work.type) {
     case "full":
-      // TODO
-      break;
+      return processFull(work);
     case "model":
-      const result = processModel(work.value);
-      return {
-        faces: result.mesh(),
-        edges: result.meshEdges(),
-      };
+      return processModel(work.value);
     case "download":
       break;
   }
