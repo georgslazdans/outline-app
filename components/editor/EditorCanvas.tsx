@@ -3,15 +3,16 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useState } from "react";
 
-import SvgSelect from "./SvgSelect";
-import SvgMesh from "./SvgMesh";
+import SvgSelect from "./svg/SvgSelect";
+import SvgMesh from "./svg/SvgMesh";
 import { ContourPoints } from "@/lib/Point";
 import { Object3D, Vector3 } from "three";
 import { ReplicadWorker } from "./ReplicadWorker";
 import { ReplicadResult } from "@/lib/replicad/Worker";
 import ReplicadMesh from "./ReplicadMesh";
-import { fullWorkOf, ReplicadWork } from "@/lib/replicad/Work";
+import { defaultGridfinityParams, fullWorkOf, ReplicadWork } from "@/lib/replicad/Work";
 import ThreeJsContext from "./ThreeJsContext";
+import { Select } from "@react-three/drei";
 
 type Props = {
   dictionary: Dictionary;
@@ -20,16 +21,18 @@ type Props = {
 const EditorCanvas = ({ dictionary }: Props) => {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
-  const [selected, setSelected] = useState<ContourPoints[]>();
+  const [selectedContour, setSelectedContour] = useState<ContourPoints[]>();
   const [disableCamera, setDisableCamera] = useState<boolean>(false);
   const [replicadMessage, setReplicadMessage] = useState<ReplicadWork>();
   const [replicadResult, setReplicadResult] = useState<ReplicadResult>();
 
   const onContourSelect = (points: ContourPoints[]) => {
-    setSelected(points);
-    setReplicadMessage(fullWorkOf(points));
+    setSelectedContour(points);
+    setReplicadMessage(fullWorkOf(points, defaultGridfinityParams()));
   };
 
+  const [selected, setSelected] = useState<Object3D[]>();
+  console.log("Selected", selected);
   return (
     <>
       <ReplicadWorker
@@ -37,19 +40,21 @@ const EditorCanvas = ({ dictionary }: Props) => {
         onWorkerMessage={setReplicadResult}
       ></ReplicadWorker>
       <ThreeJsContext dictionary={dictionary} disableCamera={disableCamera}>
-        {replicadResult && (
-          <ReplicadMesh
-            faces={replicadResult.faces}
-            edges={replicadResult.edges}
-          ></ReplicadMesh>
-        )}
-        {selected && (
-          <SvgMesh
-            contoursPoints={selected}
-            onPointMoveStart={() => setDisableCamera(true)}
-            onPointMoveEnd={() => setDisableCamera(false)}
-          ></SvgMesh>
-        )}
+        <Select onChange={(obj) => setSelected(obj)}>
+          {replicadResult && (
+            <ReplicadMesh
+              faces={replicadResult.faces}
+              edges={replicadResult.edges}
+            ></ReplicadMesh>
+          )}
+          {selectedContour && (
+            <SvgMesh
+              contoursPoints={selectedContour}
+              onPointMoveStart={() => setDisableCamera(true)}
+              onPointMoveEnd={() => setDisableCamera(false)}
+            ></SvgMesh>
+          )}
+        </Select>
       </ThreeJsContext>
       <SvgSelect dictionary={dictionary} onSelect={onContourSelect}></SvgSelect>
     </>

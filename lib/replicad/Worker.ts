@@ -4,7 +4,7 @@ import { setOC, Shape3D, ShapeMesh } from "replicad";
 import { ReplicadMeshedEdges } from "replicad-threejs-helper";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
-import { Full, Gridfinity, Model, ReplicadWork, Shadow } from "./Work";
+import { FullModel, Gridfinity, ModelPart, ReplicadWork, Shadow } from "./Work";
 
 export type ReplicadResult = {
   faces: ShapeMesh;
@@ -45,17 +45,24 @@ const processModel = (model: Gridfinity | Shadow) => {
   };
 };
 
-const processFull = (full: Full) => {
-  const box = gridfinityBox(full.gridfinity.params);
-  const offsetToTop = 42 * full.gridfinity.params.height - full.shadow.height;
-  // const offsetToTop = -5;
-  const shadow = drawShadow(full.shadow.points, full.shadow.height).translateZ(
-    offsetToTop
-  );
-  const result = (box as Shape3D).cut(shadow as Shape3D);
+const processFull = (full: FullModel) => {
+  const processModification = (original: Shape3D, modification: Shadow) => {
+    const offsetToTop =
+      42 * full.gridfinity.params.height - modification.height;
+    // const offsetToTop = -5;
+    const shadow = drawShadow(
+      modification.points,
+      modification.height
+    ).translateZ(offsetToTop);
+    return original.cut(shadow as Shape3D);
+  };
+  let box = gridfinityBox(full.gridfinity.params);
+  for (let i = 0; i < full.modifications.length; i++) {
+    box = processModification(box as Shape3D, full.modifications[i] as Shadow);
+  }
   return {
-    faces: result.mesh(),
-    edges: result.meshEdges(),
+    faces: box.mesh(),
+    edges: box.meshEdges(),
   };
 };
 
