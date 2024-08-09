@@ -9,7 +9,7 @@ import {
   Wire,
 } from "replicad";
 
-type ModelData =
+type ReplicadModelData =
   | Shell
   | Solid
   | CompSolid
@@ -19,4 +19,4 @@ type ModelData =
   | Wire
   | Face;
 
-export default ModelData;
+export default ReplicadModelData;

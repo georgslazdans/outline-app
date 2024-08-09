@@ -1,4 +1,4 @@
-import EditorCanvas from "@/components/editor/EditorCanvas";
+import Editor from "@/components/editor/Editor";
 import { getDictionary } from "../dictionaries";
 
 export default async function Details() {
@@ -8,7 +8,7 @@ export default async function Details() {
     <>
       <h1 className="text-center p-2">{dictionary.editor.title}</h1>
       <div className="w-full h-[70vh]">
-        <EditorCanvas dictionary={dictionary}></EditorCanvas>
+        <Editor dictionary={dictionary}></Editor>
       </div>
     </>
   );

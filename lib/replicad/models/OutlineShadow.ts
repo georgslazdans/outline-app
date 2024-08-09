@@ -1,6 +1,6 @@
 import Point, { ContourPoints, minMaxValues } from "@/lib/Point";
 import { draw, Drawing } from "replicad";
-import ModelData from "./ModelData";
+import ReplicadModelData from "./ReplicadModelData";
 
 const drawContour = (points: Point[]): Drawing => {
   const drawPen = draw();
@@ -36,7 +36,7 @@ const findBase = (contourPoints: ContourPoints[]) => {
   return base.value;
 };
 
-const drawShadow = (contourPoints: ContourPoints[], height: number): ModelData => {
+const drawShadow = (contourPoints: ContourPoints[], height: number): ReplicadModelData => {
   let basePoints = findBase(contourPoints);
   let base = drawContour(basePoints.points);
 

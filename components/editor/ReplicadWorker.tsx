@@ -5,13 +5,13 @@ import { ReplicadResult } from "@/lib/replicad/Worker";
 import { useCallback, useEffect, useRef } from "react";
 
 type Props = {
-  message?: ReplicadWork;
+  messages?: ReplicadWork[];
   onWorkerMessage: (result: ReplicadResult) => void;
   onError?: (message: string) => void;
 };
 
 export const ReplicadWorker = ({
-  message,
+  messages,
   onWorkerMessage,
   onError,
 }: Props) => {
@@ -32,10 +32,13 @@ export const ReplicadWorker = ({
   }, [handleMessage]);
 
   const postWork = useCallback(() => {
-    if (workerRef.current && message) {
-      workerRef.current?.postMessage(message);
+    if (workerRef.current && messages && messages.length > 0) {
+      messages.forEach((message) => {
+        console.log("Posting message", message);
+        workerRef.current?.postMessage(message);
+      });
     }
-  }, [message]);
+  }, [messages]);
 
   useEffect(() => {
     workerRef.current = new Worker(

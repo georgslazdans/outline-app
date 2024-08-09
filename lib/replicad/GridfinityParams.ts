@@ -11,4 +11,19 @@ type GridfinityParams = {
   screwRadius: number;
 };
 
+export const defaultGridfinityParams = (): GridfinityParams => {
+  return {
+    xSize: 5,
+    ySize: 2,
+    height: 0.5, // TODO use standard units of 7mm
+    keepFull: true,
+    wallThickness: 1.2,
+    withMagnet: false,
+    withScrew: false,
+    magnetRadius: 3.25,
+    magnetHeight: 2,
+    screwRadius: 1.5,
+  };
+};
+
 export default GridfinityParams;

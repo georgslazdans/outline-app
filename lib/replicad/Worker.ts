@@ -4,9 +4,12 @@ import { setOC, Shape3D, ShapeMesh } from "replicad";
 import { ReplicadMeshedEdges } from "replicad-threejs-helper";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
-import { FullModel, Gridfinity, ModelPart, ReplicadWork, Shadow } from "./Work";
+import { FullModel, ReplicadWork } from "./Work";
+import { Item, Shadow } from "./Model";
+import ReplicadModelData from "./models/ReplicadModelData";
 
 export type ReplicadResult = {
+  id: string;
   faces: ShapeMesh;
   edges: ReplicadMeshedEdges;
 };
@@ -30,35 +33,32 @@ const waitForInitialization = async () => {
   await initializedPromise;
 };
 
-const processModel = (model: Gridfinity | Shadow) => {
-  let result;
-  switch (model.type) {
+const processItem = (item: Item): ReplicadModelData => {
+  switch (item.type) {
     case "gridfinity":
-      result = gridfinityBox(model.params);
+      return gridfinityBox(item.params);
+
     case "shadow":
-      const { points, height } = model as Shadow;
-      result = drawShadow(points, height);
+      const { points, height } = item as Shadow;
+      return drawShadow(points, height);
+
+    case "primitive":
+      throw new Error("Not Implemented!");
   }
-  return {
-    faces: result.mesh(),
-    edges: result.meshEdges(),
-  };
 };
 
 const processFull = (full: FullModel) => {
-  const processModification = (original: Shape3D, modification: Shadow) => {
-    const offsetToTop =
-      42 * full.gridfinity.params.height - modification.height;
+  const processModification = (base: Shape3D, item: Item) => {
+    // const offsetToTop =
+    //   42 * full.gridfinity.params.height - modification.height;
     // const offsetToTop = -5;
-    const shadow = drawShadow(
-      modification.points,
-      modification.height
-    ).translateZ(offsetToTop);
-    return original.cut(shadow as Shape3D);
+    const model = processItem(item);
+    // .translateZ(offsetToTop);
+    return base.cut(model as Shape3D);
   };
-  let box = gridfinityBox(full.gridfinity.params);
-  for (let i = 0; i < full.modifications.length; i++) {
-    box = processModification(box as Shape3D, full.modifications[i] as Shadow);
+  let box = processItem(full.items[0]);
+  for (let i = 1; i < full.items.length; i++) {
+    box = processModification(box as Shape3D, full.items[i]);
   }
   return {
     faces: box.mesh(),
@@ -71,9 +71,14 @@ const processWork = (work: ReplicadWork) => {
     case "full":
       return processFull(work);
     case "model":
-      return processModel(work.value);
+      const result = processItem(work.item);
+      return {
+        id: work.item.id,
+        faces: result.mesh(),
+        edges: result.meshEdges(),
+      };
     case "download":
-      break;
+      throw new Error("Not Implemented!");
   }
 };
 

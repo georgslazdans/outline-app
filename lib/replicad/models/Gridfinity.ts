@@ -7,7 +7,7 @@ import {
   makeFace,
   EdgeFinder,
 } from "replicad";
-import ModelData from "./ModelData";
+import ReplicadModelData from "./ReplicadModelData";
 
 const defaultParams = {
   xSize: 2,
@@ -185,7 +185,7 @@ function gridfinityBox({
   magnetRadius = 3.25,
   magnetHeight = 2,
   screwRadius = 1.5,
-} = {}):ModelData {
+} = {}):ReplicadModelData {
   const stdHeight = height * SIZE;
 
   let box = drawRoundedRectangle(
