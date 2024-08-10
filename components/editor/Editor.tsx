@@ -3,23 +3,16 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useState } from "react";
 
-import SvgSelect from "./svg/SvgSelect";
-import SvgMesh from "./svg/SvgMesh";
-import { ContourPoints } from "@/lib/Point";
 import { Object3D, Vector3 } from "three";
-import { ReplicadWorker } from "./ReplicadWorker";
-import { ReplicadResult } from "@/lib/replicad/Worker";
-import ReplicadMesh from "./ReplicadMesh";
-import { fullWorkOf, ModelData, ReplicadWork } from "@/lib/replicad/Work";
+import { ModelData } from "@/lib/replicad/Work";
 import ThreeJsContext from "./ThreeJsContext";
-import { Select } from "@react-three/drei";
-import { gridfinityItemOf, shadowItemOf } from "@/lib/replicad/Model";
+import { gridfinityItemOf } from "@/lib/replicad/Model";
 import { defaultGridfinityParams } from "@/lib/replicad/GridfinityParams";
 import EditMode from "./mode/EditMode";
 import Button from "../Button";
-import ImportDialog from "./svg/ImportDialog";
 import EditToolbar from "./mode/EditToolbar";
 import WireframeButton from "./WireframeButton";
+import ResultMode from "./mode/ResultMode";
 
 enum EditorMode {
   EDIT,
@@ -44,11 +37,56 @@ const Editor = ({ dictionary }: Props) => {
   const [wireframe, setWireframe] = useState(false);
 
   const onModelDataChange = (data: ModelData) => {
+    setModelData(data);
     console.log("Data changed", data);
   };
 
   const onFullRender = () => {
-    console.log("Render");
+    if (editorMode != EditorMode.RESULT) {
+      setEditorMode(EditorMode.RESULT);
+    } else {
+      setEditorMode(EditorMode.EDIT);
+    }
+  };
+
+  const editorModes = {
+    [EditorMode.EDIT]: {
+      view: (
+        <EditMode
+          dictionary={dictionary}
+          modelData={modelData}
+          onModelDataChange={onModelDataChange}
+          wireframe={wireframe}
+        ></EditMode>
+      ),
+      toolbar: (
+        <EditToolbar
+          dictionary={dictionary}
+          modelData={modelData}
+          onModelDataUpdate={setModelData}
+        ></EditToolbar>
+      ),
+    },
+    [EditorMode.RESULT]: {
+      view: (
+        <ResultMode
+          dictionary={dictionary}
+          modelData={modelData}
+          wireframe={wireframe}
+        ></ResultMode>
+      ),
+      toolbar: <></>,
+    },
+    [EditorMode.CONTOUR_EDIT]: {
+      view: (
+        <ResultMode
+          dictionary={dictionary}
+          modelData={modelData}
+          wireframe={wireframe}
+        ></ResultMode>
+      ),
+      toolbar: <></>,
+    },
   };
 
   return (
@@ -61,20 +99,11 @@ const Editor = ({ dictionary }: Props) => {
           ></WireframeButton>
         </div>
         <ThreeJsContext dictionary={dictionary} disableCamera={disableCamera}>
-          <EditMode
-            dictionary={dictionary}
-            modelData={modelData}
-            onModelDataChange={onModelDataChange}
-            wireframe={wireframe}
-          ></EditMode>
+          {editorModes[editorMode].view}
         </ThreeJsContext>
       </div>
+      {editorModes[editorMode].toolbar}
 
-      <EditToolbar
-        dictionary={dictionary}
-        modelData={modelData}
-        onModelDataUpdate={setModelData}
-      ></EditToolbar>
       <Button onClick={onFullRender}>Render</Button>
     </>
   );

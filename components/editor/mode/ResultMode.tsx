@@ -4,20 +4,17 @@ import { Dictionary } from "@/app/dictionaries";
 import { fullWorkOf, ModelData } from "@/lib/replicad/Work";
 import React, { useState } from "react";
 import { ReplicadWorker } from "../ReplicadWorker";
-import SvgMesh from "../svg/SvgMesh";
-import SvgSelect from "../svg/SvgSelect";
 import { ReplicadResult } from "@/lib/replicad/Worker";
 import ReplicadMesh from "../ReplicadMesh";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
+  wireframe: boolean;
 };
 
-const ResultMode = ({ dictionary, modelData }: Props) => {
-  const [replicadMessage, setReplicadMessage] = useState(
-    fullWorkOf(modelData.items)
-  );
+const ResultMode = ({ dictionary, modelData, wireframe }: Props) => {
+  const replicadMessage = fullWorkOf(modelData.items);
 
   const [modelResult, setModelResult] = useState<ReplicadResult>();
 
@@ -32,6 +29,8 @@ const ResultMode = ({ dictionary, modelData }: Props) => {
           key={modelResult.id}
           faces={modelResult.faces}
           edges={modelResult.edges}
+          enableGizmo={false}
+          wireframe={wireframe}
         ></ReplicadMesh>
       )}
     </>

@@ -51,11 +51,18 @@ const processFull = (full: FullModel) => {
   const processModification = (base: Shape3D, item: Item) => {
     // const offsetToTop =
     //   42 * full.gridfinity.params.height - modification.height;
-    // const offsetToTop = -5;
-    const model = processItem(item);
-    // .translateZ(offsetToTop);
+    let model = processItem(item);
+    if (item.translation) {
+      const { x, y, z } = item.translation;
+      model = model.translate(x, y, z);
+    }
     return base.cut(model as Shape3D);
   };
+
+  if (full.items[0].type != "gridfinity") {
+    console.warn("First item is not a gridfinity box!");
+  }
+
   let box = processItem(full.items[0]);
   for (let i = 1; i < full.items.length; i++) {
     box = processModification(box as Shape3D, full.items[i]);

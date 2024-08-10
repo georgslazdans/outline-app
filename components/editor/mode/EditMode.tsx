@@ -7,6 +7,7 @@ import { ReplicadWorker } from "../ReplicadWorker";
 import { ReplicadResult } from "@/lib/replicad/Worker";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../ReplicadMesh";
+import { Vector3 } from "three";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,7 +25,7 @@ const EditMode = ({
   const replicadMessages = useMemo(
     () => modelData.items.map((item) => modelWorkOf(item)),
     [modelData]
-  );
+  ); // TODO ignore translation changes...
 
   const [models, setModels] = useState<ReplicadResult[]>([]);
 
@@ -49,6 +50,15 @@ const EditMode = ({
     return modelData.items.find((it) => it.id == id)?.type == "gridfinity";
   };
 
+  const handleTranslationChange = (id: string) => {
+    return (translation: Vector3) => {
+      const index = modelData.items.findIndex((it) => it.id === id);
+      const updatedItems = [...modelData.items];
+      updatedItems[index].translation = translation;
+      onModelDataChange({ items: updatedItems });
+    };
+  };
+
   return (
     <>
       <ReplicadWorker
@@ -64,6 +74,7 @@ const EditMode = ({
               edges={model.edges}
               enableGizmo={!isGridfinity(model.id)}
               wireframe={wireframe}
+              onTranslationChange={handleTranslationChange(model.id)}
             ></ReplicadMesh>
           );
         })}

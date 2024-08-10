@@ -1,3 +1,4 @@
+import { Vector3 } from "three";
 import { ContourPoints } from "../Point";
 import GridfinityParams from "./GridfinityParams";
 
@@ -29,6 +30,8 @@ export type Gridfinity = {
 // TODO item will have transform/rotation and operation type. Can be nested?
 export type Item = {
   id: string;
+  translation?: Vector3,
+  rotation?: Vector3
 } & (Gridfinity | Shadow | Primitive);
 
 export const gridfinityItemOf = (params: GridfinityParams): Item => {

@@ -1,6 +1,6 @@
 import React, { useRef, useLayoutEffect, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
-import { BufferGeometry } from "three";
+import { BufferGeometry, Euler, Matrix4, Vector3 } from "three";
 import {
   ReplicadMeshedEdges,
   syncFaces,
@@ -15,6 +15,7 @@ type Props = {
   edges: ReplicadMeshedEdges;
   enableGizmo: boolean;
   wireframe: boolean;
+  onTranslationChange?: (translation: Vector3) => void;
 };
 
 const ReplicadMesh = React.memo(function ShapeMeshes({
@@ -22,6 +23,7 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   edges,
   enableGizmo,
   wireframe,
+  onTranslationChange,
 }: Props) {
   const { invalidate } = useThree();
 
@@ -52,8 +54,32 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
 
   const scale = 0.01;
 
+  const handleDragging = (
+    l: Matrix4,
+    deltaL: Matrix4,
+    w: Matrix4,
+    deltaW: Matrix4
+  ) => {
+    const position = new Vector3();
+    position.setFromMatrixPosition(l);
+    position.multiplyScalar(1 / scale)
+
+    if(onTranslationChange) {
+        onTranslationChange(position);
+    }
+
+    const rotation = new Euler();
+    rotation.setFromRotationMatrix(l);
+    const degrees = (radians: number) => (radians * 180) / Math.PI;
+    console.log("Rotation X", rotation, degrees(rotation.x));
+  };
+
   return (
-    <PivotControls enabled={enableGizmo} disableScaling={true}>
+    <PivotControls
+      enabled={enableGizmo}
+      disableScaling={true}
+      onDrag={handleDragging}
+    >
       <group scale={[scale, scale, scale]}>
         {!wireframe && (
           <mesh geometry={body.current}>
