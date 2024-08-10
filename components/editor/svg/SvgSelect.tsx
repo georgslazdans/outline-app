@@ -52,15 +52,12 @@ const SvgSelect = ({ dictionary, onSelect }: Props) => {
 
   useEffect(() => refreshData(), []);
 
-  if (!options) {
-    return <></>;
-  }
   return (
     <>
       <SelectField
         label={"Select Contour"}
         name={"Select Contour"}
-        options={options}
+        options={options ? options : []}
         value={selected}
         onChange={onChange}
       ></SelectField>

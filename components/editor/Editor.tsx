@@ -16,6 +16,10 @@ import { Select } from "@react-three/drei";
 import { gridfinityItemOf, shadowItemOf } from "@/lib/replicad/Model";
 import { defaultGridfinityParams } from "@/lib/replicad/GridfinityParams";
 import EditMode from "./mode/EditMode";
+import Button from "../Button";
+import ImportDialog from "./svg/ImportDialog";
+import EditToolbar from "./mode/EditToolbar";
+import WireframeButton from "./WireframeButton";
 
 enum EditorMode {
   EDIT,
@@ -37,18 +41,41 @@ const Editor = ({ dictionary }: Props) => {
     items: [gridfinityItemOf(defaultGridfinityParams())],
   });
 
+  const [wireframe, setWireframe] = useState(false);
+
   const onModelDataChange = (data: ModelData) => {
     console.log("Data changed", data);
   };
+
+  const onFullRender = () => {
+    console.log("Render");
+  };
+
   return (
     <>
-      <ThreeJsContext dictionary={dictionary} disableCamera={disableCamera}>
-        <EditMode
-          dictionary={dictionary}
-          modelData={modelData}
-          onModelDataChange={onModelDataChange}
-        ></EditMode>
-      </ThreeJsContext>
+      <div className="w-full h-[70vh]">
+        <div className="z-10 relative">
+          <WireframeButton
+            icon={wireframe ? "eye-slash" : "eye"}
+            onClick={() => setWireframe(!wireframe)}
+          ></WireframeButton>
+        </div>
+        <ThreeJsContext dictionary={dictionary} disableCamera={disableCamera}>
+          <EditMode
+            dictionary={dictionary}
+            modelData={modelData}
+            onModelDataChange={onModelDataChange}
+            wireframe={wireframe}
+          ></EditMode>
+        </ThreeJsContext>
+      </div>
+
+      <EditToolbar
+        dictionary={dictionary}
+        modelData={modelData}
+        onModelDataUpdate={setModelData}
+      ></EditToolbar>
+      <Button onClick={onFullRender}>Render</Button>
     </>
   );
 };

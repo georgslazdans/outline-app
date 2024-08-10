@@ -12,9 +12,15 @@ type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
   onModelDataChange: (data: ModelData) => void;
+  wireframe: boolean;
 };
 
-const EditMode = ({ dictionary, modelData, onModelDataChange }: Props) => {
+const EditMode = ({
+  dictionary,
+  modelData,
+  onModelDataChange,
+  wireframe,
+}: Props) => {
   const replicadMessages = useMemo(
     () => modelData.items.map((item) => modelWorkOf(item)),
     [modelData]
@@ -39,6 +45,10 @@ const EditMode = ({ dictionary, modelData, onModelDataChange }: Props) => {
     console.log("Selected stuff", obj);
   };
 
+  const isGridfinity = (id: string) => {
+    return modelData.items.find((it) => it.id == id)?.type == "gridfinity";
+  };
+
   return (
     <>
       <ReplicadWorker
@@ -52,6 +62,8 @@ const EditMode = ({ dictionary, modelData, onModelDataChange }: Props) => {
               key={model.id}
               faces={model.faces}
               edges={model.edges}
+              enableGizmo={!isGridfinity(model.id)}
+              wireframe={wireframe}
             ></ReplicadMesh>
           );
         })}

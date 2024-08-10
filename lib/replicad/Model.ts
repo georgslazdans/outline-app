@@ -39,11 +39,14 @@ export const gridfinityItemOf = (params: GridfinityParams): Item => {
   };
 };
 
-export const shadowItemOf = (contourPoints: ContourPoints[]): Item => {
+export const shadowItemOf = (
+  contourPoints: ContourPoints[],
+  height: number
+): Item => {
   return {
     id: crypto.randomUUID(),
     type: "shadow",
     points: contourPoints,
-    height: 10,
+    height: height,
   };
 };

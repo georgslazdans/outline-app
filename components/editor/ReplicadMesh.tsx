@@ -8,13 +8,21 @@ import {
   syncLinesFromFaces,
 } from "replicad-threejs-helper";
 import { ShapeMesh } from "replicad";
+import { PivotControls } from "@react-three/drei";
 
 type Props = {
   faces: ShapeMesh;
   edges: ReplicadMeshedEdges;
+  enableGizmo: boolean;
+  wireframe: boolean;
 };
 
-const ReplicadMesh = React.memo(function ShapeMeshes({ faces, edges }: Props) {
+const ReplicadMesh = React.memo(function ShapeMeshes({
+  faces,
+  edges,
+  enableGizmo,
+  wireframe,
+}: Props) {
   const { invalidate } = useThree();
 
   const body = useRef(new BufferGeometry());
@@ -45,20 +53,23 @@ const ReplicadMesh = React.memo(function ShapeMeshes({ faces, edges }: Props) {
   const scale = 0.01;
 
   return (
-    <group scale={[scale, scale, scale]}>
-      <mesh geometry={body.current}>
-        {/* the offsets are here to avoid z fighting between the mesh and the lines */}
-        <meshStandardMaterial
-          color="#5a8296"
-          polygonOffset
-          polygonOffsetFactor={2.0}
-          polygonOffsetUnits={1.0}
-        />
-      </mesh>
-      <lineSegments geometry={lines.current}>
-        <lineBasicMaterial color="#3c5a6e" />
-      </lineSegments>
-    </group>
+    <PivotControls enabled={enableGizmo} disableScaling={true}>
+      <group scale={[scale, scale, scale]}>
+        {!wireframe && (
+          <mesh geometry={body.current}>
+            <meshStandardMaterial
+              color="#5a8296"
+              polygonOffset
+              polygonOffsetFactor={2.0}
+              polygonOffsetUnits={1.0}
+            />
+          </mesh>
+        )}
+        <lineSegments geometry={lines.current}>
+          <lineBasicMaterial color="#3c5a6e" />
+        </lineSegments>
+      </group>
+    </PivotControls>
   );
 });
 
