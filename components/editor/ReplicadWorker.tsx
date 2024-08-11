@@ -22,7 +22,7 @@ export const ReplicadWorker = ({
       const result = event.data as ReplicadResult;
       onWorkerMessage(result);
     },
-    [onWorkerMessage, onError]
+    [onWorkerMessage]
   );
 
   const addMessageHandler = useCallback(() => {
@@ -30,6 +30,10 @@ export const ReplicadWorker = ({
       workerRef.current.onmessage = handleMessage;
     }
   }, [handleMessage]);
+
+  useEffect(() => {
+    addMessageHandler();
+  }, [addMessageHandler]);
 
   const postWork = useCallback(() => {
     if (workerRef.current && messages && messages.length > 0) {

@@ -1,13 +1,13 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { ModelData, modelWorkOf } from "@/lib/replicad/Work";
-import React, { useMemo, useState } from "react";
-import { ReplicadWorker } from "../ReplicadWorker";
+import { ModelData } from "@/lib/replicad/Work";
+import React, { useState } from "react";
 import { ReplicadResult } from "@/lib/replicad/Worker";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../ReplicadMesh";
 import { Vector3 } from "three";
+import ModelCache from "./ModelCache";
 
 type Props = {
   dictionary: Dictionary;
@@ -22,11 +22,6 @@ const EditMode = ({
   onModelDataChange,
   wireframe,
 }: Props) => {
-  const replicadMessages = useMemo(
-    () => modelData.items.map((item) => modelWorkOf(item)),
-    [modelData]
-  ); // TODO ignore translation changes...
-
   const [models, setModels] = useState<ReplicadResult[]>([]);
 
   const onWorkerResult = (result: ReplicadResult) => {
@@ -61,10 +56,10 @@ const EditMode = ({
 
   return (
     <>
-      <ReplicadWorker
-        messages={replicadMessages}
+      <ModelCache
+        modelData={modelData}
         onWorkerMessage={onWorkerResult}
-      ></ReplicadWorker>
+      ></ModelCache>
       <Select onChange={(obj) => onSelected(obj)}>
         {models.map((model) => {
           return (

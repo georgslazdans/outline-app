@@ -36,11 +36,6 @@ const Editor = ({ dictionary }: Props) => {
 
   const [wireframe, setWireframe] = useState(false);
 
-  const onModelDataChange = (data: ModelData) => {
-    setModelData(data);
-    console.log("Data changed", data);
-  };
-
   const onFullRender = () => {
     if (editorMode != EditorMode.RESULT) {
       setEditorMode(EditorMode.RESULT);
@@ -55,7 +50,7 @@ const Editor = ({ dictionary }: Props) => {
         <EditMode
           dictionary={dictionary}
           modelData={modelData}
-          onModelDataChange={onModelDataChange}
+          onModelDataChange={setModelData}
           wireframe={wireframe}
         ></EditMode>
       ),
@@ -104,7 +99,9 @@ const Editor = ({ dictionary }: Props) => {
       </div>
       {editorModes[editorMode].toolbar}
 
-      <Button onClick={onFullRender}>Render</Button>
+      <Button onClick={onFullRender}>
+        <label>Render</label>
+      </Button>
     </>
   );
 };

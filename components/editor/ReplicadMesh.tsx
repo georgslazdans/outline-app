@@ -16,6 +16,7 @@ type Props = {
   enableGizmo: boolean;
   wireframe: boolean;
   onTranslationChange?: (translation: Vector3) => void;
+  position?: Vector3;
 };
 
 const ReplicadMesh = React.memo(function ShapeMeshes({
@@ -24,6 +25,7 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   enableGizmo,
   wireframe,
   onTranslationChange,
+  position,
 }: Props) {
   const { invalidate } = useThree();
 
@@ -62,16 +64,15 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   ) => {
     const position = new Vector3();
     position.setFromMatrixPosition(l);
-    position.multiplyScalar(1 / scale)
+    position.multiplyScalar(1 / scale);
 
-    if(onTranslationChange) {
-        onTranslationChange(position);
+    if (onTranslationChange) {
+      onTranslationChange(position);
     }
 
     const rotation = new Euler();
     rotation.setFromRotationMatrix(l);
     const degrees = (radians: number) => (radians * 180) / Math.PI;
-    console.log("Rotation X", rotation, degrees(rotation.x));
   };
 
   return (
@@ -80,7 +81,7 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
       disableScaling={true}
       onDrag={handleDragging}
     >
-      <group scale={[scale, scale, scale]}>
+      <group scale={[scale, scale, scale]} position={position}>
         {!wireframe && (
           <mesh geometry={body.current}>
             <meshStandardMaterial
