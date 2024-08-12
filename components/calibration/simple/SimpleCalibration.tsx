@@ -12,7 +12,7 @@ import { downloadFile } from "@/lib/utils/Download";
 import { OutlineImageViewer } from "./OutlineImageViewer";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import { centerPoints } from "@/lib/Point";
-import SelectField from "@/components/fiields/SelectField";
+import SelectField from "@/components/fields/SelectField";
 import SimpleSettingsButtons from "./SimpleSettingsButtons";
 
 type Props = {

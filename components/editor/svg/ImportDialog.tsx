@@ -6,7 +6,7 @@ import SvgSelect from "./SvgSelect";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
-import NumberField from "@/components/fiields/NumberField";
+import NumberField from "@/components/fields/NumberField";
 
 type Props = {
   dictionary: Dictionary;

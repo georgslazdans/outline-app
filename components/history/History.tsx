@@ -5,7 +5,7 @@ import { Context } from "@/context/DetailsContext";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import Entry from "./Entry";
-import InputField from "../fiields/InputField";
+import InputField from "../fields/InputField";
 
 type Props = {
   dictionary: Dictionary;

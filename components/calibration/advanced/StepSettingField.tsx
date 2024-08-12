@@ -1,8 +1,8 @@
-import NumberField from "../../fiields/NumberField";
+import NumberField from "../../fields/NumberField";
 import { ChangeEvent } from "react";
 import { Dictionary } from "@/app/dictionaries";
-import CheckboxField from "../../fiields/CheckboxField";
-import SelectField from "@/components/fiields/SelectField";
+import CheckboxField from "../../fields/CheckboxField";
+import SelectField from "@/components/fields/SelectField";
 import { StepSettingConfig, NumberConfig, SelectConfig } from "@/lib/opencv/processor/steps/StepSettings";
 
 type Props = {

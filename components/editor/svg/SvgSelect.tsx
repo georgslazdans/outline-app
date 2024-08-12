@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
-import SelectField, { Option } from "../../fiields/SelectField";
+import SelectField, { Option } from "../../fields/SelectField";
 import { Context } from "@/context/DetailsContext";
 import { centerPoints, ContourPoints } from "@/lib/Point";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
