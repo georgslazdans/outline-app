@@ -57,10 +57,7 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   const scale = 0.01;
 
   const handleDragging = (
-    l: Matrix4,
-    deltaL: Matrix4,
-    w: Matrix4,
-    deltaW: Matrix4
+    l: Matrix4
   ) => {
     const position = new Vector3();
     position.setFromMatrixPosition(l);
@@ -75,11 +72,21 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
     const degrees = (radians: number) => (radians * 180) / Math.PI;
   };
 
+  const offsetOf = (position?: Vector3): [number, number, number] => {
+    if (position) {
+      const { x, y, z } = position;
+      return [x, y, z];
+    } else {
+      return [0, 0, 0];
+    }
+  };
+
   return (
     <PivotControls
       enabled={enableGizmo}
       disableScaling={true}
       onDrag={handleDragging}
+      offset={offsetOf(position)}
     >
       <group scale={[scale, scale, scale]} position={position}>
         {!wireframe && (

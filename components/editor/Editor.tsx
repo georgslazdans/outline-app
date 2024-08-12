@@ -13,6 +13,7 @@ import Button from "../Button";
 import EditToolbar from "./mode/EditToolbar";
 import WireframeButton from "./WireframeButton";
 import ResultMode from "./mode/ResultMode";
+import { ModelCacheProvider } from "@/context/ModelCacheContext";
 
 enum EditorMode {
   EDIT,
@@ -86,22 +87,24 @@ const Editor = ({ dictionary }: Props) => {
 
   return (
     <>
-      <div className="w-full h-[70vh]">
-        <div className="z-10 relative">
-          <WireframeButton
-            icon={wireframe ? "eye-slash" : "eye"}
-            onClick={() => setWireframe(!wireframe)}
-          ></WireframeButton>
+      <ModelCacheProvider>
+        <div className="w-full h-[70vh]">
+          <div className="z-10 relative">
+            <WireframeButton
+              icon={wireframe ? "eye-slash" : "eye"}
+              onClick={() => setWireframe(!wireframe)}
+            ></WireframeButton>
+          </div>
+          <ThreeJsContext dictionary={dictionary} disableCamera={disableCamera}>
+            {editorModes[editorMode].view}
+          </ThreeJsContext>
         </div>
-        <ThreeJsContext dictionary={dictionary} disableCamera={disableCamera}>
-          {editorModes[editorMode].view}
-        </ThreeJsContext>
-      </div>
-      {editorModes[editorMode].toolbar}
+        {editorModes[editorMode].toolbar}
 
-      <Button onClick={onFullRender}>
-        <label>Render</label>
-      </Button>
+        <Button onClick={onFullRender}>
+          <label>Render</label>
+        </Button>
+      </ModelCacheProvider>
     </>
   );
 };

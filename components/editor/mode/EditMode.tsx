@@ -45,6 +45,15 @@ const EditMode = ({
     return modelData.items.find((it) => it.id == id)?.type == "gridfinity";
   };
 
+  const positionOf = (id: string) => {
+    const translation = modelData.items.find((it) => it.id == id)?.translation;
+    if (translation) {
+      const { x, y, z } = translation;
+      const scaledPosition = new Vector3(x,y,z);
+      return scaledPosition.multiplyScalar(0.01);
+    }
+  };
+
   const handleTranslationChange = (id: string) => {
     return (translation: Vector3) => {
       const index = modelData.items.findIndex((it) => it.id === id);
@@ -70,6 +79,7 @@ const EditMode = ({
               enableGizmo={!isGridfinity(model.id)}
               wireframe={wireframe}
               onTranslationChange={handleTranslationChange(model.id)}
+              position={positionOf(model.id)}
             ></ReplicadMesh>
           );
         })}

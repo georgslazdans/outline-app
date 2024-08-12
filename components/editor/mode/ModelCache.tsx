@@ -2,8 +2,11 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ReplicadWorker } from "../ReplicadWorker";
-import { ModelData, modelWorkOf, ReplicadWork } from "@/lib/replicad/Work";
+import { ModelData, ModelPart, modelWorkOf } from "@/lib/replicad/Work";
 import { ReplicadResult } from "@/lib/replicad/Worker";
+import { useModelCache } from "@/context/ModelCacheContext";
+import deepEqual from "@/lib/utils/Objects";
+import { Item } from "@/lib/replicad/Model";
 
 type Props = {
   modelData: ModelData;
@@ -11,37 +14,65 @@ type Props = {
 };
 
 const ModelCache = ({ modelData, onWorkerMessage }: Props) => {
-  const cacheRef = useRef(new Map());
-  const [replicadMessages, setReplicadMessages] = useState<ReplicadWork[]>();
+  const { addToCache, getFromCache } = useModelCache();
+  const [previousData, setPreviousData] = useState<Item[]>([]);
+  const [replicadMessages, setReplicadMessages] = useState<ModelPart[]>([]);
 
-  const onWorkerResult = useCallback(
-    (result: ReplicadResult) => {
-      const item = modelData.items.find((it) => it.id === result.id);
-      if (item) {
-        const { translation, rotation, ...rest } = item;
-        const cacheKey = JSON.stringify(rest);
-        cacheRef.current.set(cacheKey, result);
-      }
+  useEffect(() => {
+    const items = modelData.items.map((it) => {
+      const { translation, rotation, ...rest } = it;
+      return rest;
+    });
+    if (!deepEqual(previousData, items)) {
+      console.log("Updating previous data", items);
+      setPreviousData(items);
+    }
+  }, [modelData, previousData]);
 
-      onWorkerMessage(result);
+  const alreadyQueued = useCallback(
+    (work: ModelPart) => {
+      return replicadMessages?.some((msg) => deepEqual(msg, work));
     },
-    [modelData, onWorkerMessage]
+    [replicadMessages]
   );
 
   useEffect(() => {
-    const messagesToSend: ReplicadWork[] = [];
-    modelData.items.forEach((item) => {
-      const { translation, rotation, ...rest } = item;
-      const cacheKey = JSON.stringify(rest);
+    const messagesToSend: ModelPart[] = [];
+    previousData.forEach((item) => {
+      const cacheKey = JSON.stringify(item);
+      const cacheEntry = getFromCache(cacheKey);
 
-      if (!cacheRef.current.has(cacheKey)) {
+      if (!cacheEntry) {
         const work = modelWorkOf(item);
-        messagesToSend.push(work);
+        if (!alreadyQueued(work)) {
+          console.log("WORK!", work);
+          messagesToSend.push(work);
+        }
+      } else {
+        onWorkerMessage(cacheEntry);
       }
     });
+    if (messagesToSend.length > 0) {
+      setReplicadMessages((messages) => [...messages, ...messagesToSend]);
+    }
+  }, [alreadyQueued, getFromCache, onWorkerMessage, previousData]);
 
-    setReplicadMessages(messagesToSend);
-  }, [modelData]);
+  const onWorkerResult = useCallback(
+    (result: ReplicadResult) => {
+      const item = previousData.find((it) => it.id === result.id);
+      if (item) {
+        const { translation, rotation, ...rest } = item;
+        const cacheKey = JSON.stringify(rest);
+        addToCache(cacheKey, result);
+      }
+
+      onWorkerMessage(result);
+      setReplicadMessages((messages) =>
+        messages.filter((it) => it.item.id != item?.id)
+      );
+    },
+    [previousData, onWorkerMessage, addToCache]
+  );
 
   return (
     <ReplicadWorker

@@ -12,6 +12,7 @@ export type ReplicadResult = {
   id: string;
   faces: ShapeMesh;
   edges: ReplicadMeshedEdges;
+  messageId?: number;
 };
 
 let initialized = false;
