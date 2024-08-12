@@ -7,6 +7,8 @@ import ImportDialog from "../svg/ImportDialog";
 import { ContourPoints } from "@/lib/Point";
 import { shadowItemOf } from "@/lib/replicad/Model";
 import { ModelData } from "@/lib/replicad/Work";
+import GridfinityEdit from "./GridfinityEdit";
+import GridfinityParams from "@/lib/replicad/GridfinityParams";
 
 type Props = {
   dictionary: Dictionary;
@@ -22,6 +24,21 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
     onModelDataUpdate({ items: [...modelData.items, shadow] });
   };
 
+  const gridfinityParamsOf = (modelData: ModelData): GridfinityParams => {
+    return modelData.items.find((it) => it.type == "gridfinity")!.params;
+  };
+
+  const onGridfinityParamsChange = (params: GridfinityParams) => {
+    const updatedItems = modelData.items.map((item) => {
+      if (item.type === "gridfinity") {
+        return { ...item, params };
+      }
+      return item;
+    });
+  
+    onModelDataUpdate({ ...modelData, items: updatedItems });
+  };
+  
   return (
     <>
       <Button onClick={() => setOpenImportDialog(true)}>
@@ -33,6 +50,11 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
         onClose={() => setOpenImportDialog(false)}
         onContourSelect={onContourSelect}
       ></ImportDialog>
+      <GridfinityEdit
+        dictionary={dictionary}
+        params={gridfinityParamsOf(modelData)}
+        onParamsChange={onGridfinityParamsChange}
+      ></GridfinityEdit>
     </>
   );
 };
