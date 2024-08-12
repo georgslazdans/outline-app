@@ -88,22 +88,29 @@ const Editor = ({ dictionary }: Props) => {
   return (
     <>
       <ModelCacheProvider>
-        <div className="w-full h-[70vh]">
-          <div className="z-10 relative">
-            <WireframeButton
-              icon={wireframe ? "eye-slash" : "eye"}
-              onClick={() => setWireframe(!wireframe)}
-            ></WireframeButton>
+        <div className="flex flex-col xl:flex-row">
+          <div className="w-full xl:w-1/2 h-[70vh]">
+            <div className="z-10 relative">
+              <WireframeButton
+                icon={wireframe ? "eye-slash" : "eye"}
+                onClick={() => setWireframe(!wireframe)}
+              ></WireframeButton>
+            </div>
+            <ThreeJsContext
+              dictionary={dictionary}
+              disableCamera={disableCamera}
+            >
+              {editorModes[editorMode].view}
+            </ThreeJsContext>
           </div>
-          <ThreeJsContext dictionary={dictionary} disableCamera={disableCamera}>
-            {editorModes[editorMode].view}
-          </ThreeJsContext>
-        </div>
-        {editorModes[editorMode].toolbar}
+          <div className="w-full xl:w-1/2">
+            {editorModes[editorMode].toolbar}
 
-        <Button onClick={onFullRender}>
-          <label>Render</label>
-        </Button>
+            <Button onClick={onFullRender}>
+              <label>Render</label>
+            </Button>
+          </div>
+        </div>
       </ModelCacheProvider>
     </>
   );
