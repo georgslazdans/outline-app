@@ -14,6 +14,8 @@ type Props = {
   modelData: ModelData;
   onModelDataChange: (data: ModelData) => void;
   wireframe: boolean;
+  onModelSelect: (id: string) => void;
+  selectedId?: string;
 };
 
 const EditMode = ({
@@ -21,6 +23,8 @@ const EditMode = ({
   modelData,
   onModelDataChange,
   wireframe,
+  onModelSelect,
+  selectedId,
 }: Props) => {
   const [models, setModels] = useState<ReplicadResult[]>([]);
 
@@ -38,7 +42,12 @@ const EditMode = ({
   };
 
   const onSelected = (obj: any) => {
-    console.log("Selected stuff", obj);
+    if (obj.length > 0) {
+      const id = obj[0].userData?.id;
+      if (id) {
+        onModelSelect(id);
+      }
+    }
   };
 
   const isGridfinity = (id: string) => {
@@ -49,7 +58,7 @@ const EditMode = ({
     const translation = modelData.items.find((it) => it.id == id)?.translation;
     if (translation) {
       const { x, y, z } = translation;
-      const scaledPosition = new Vector3(x,y,z);
+      const scaledPosition = new Vector3(x, y, z);
       return scaledPosition.multiplyScalar(0.01);
     }
   };
@@ -63,23 +72,28 @@ const EditMode = ({
     };
   };
 
+  const isSelected = (id: string) => {
+    return selectedId == id;
+  };
+
   return (
     <>
       <ModelCache
         modelData={modelData}
         onWorkerMessage={onWorkerResult}
       ></ModelCache>
-      <Select onChange={(obj) => onSelected(obj)}>
+      <Select onChangePointerUp={(obj) => onSelected(obj)}>
         {models.map((model) => {
           return (
             <ReplicadMesh
               key={model.id}
               faces={model.faces}
               edges={model.edges}
-              enableGizmo={!isGridfinity(model.id)}
+              enableGizmo={!isGridfinity(model.id) && isSelected(model.id)}
               wireframe={wireframe}
               onTranslationChange={handleTranslationChange(model.id)}
               position={positionOf(model.id)}
+              id={model.id}
             ></ReplicadMesh>
           );
         })}

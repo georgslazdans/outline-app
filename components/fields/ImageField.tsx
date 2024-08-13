@@ -13,7 +13,6 @@ const ImageField = ({ blob, dictionary }: Props) => {
   const placeholderDiv = <div className="mx-auto h-[15vh]" />;
   const [image, setImage] = useState(placeholderDiv);
   if (blob && image == placeholderDiv) {
-    console.log("Setting image field!!!")
     setImage(<BlobImage image={blob} className="mx-auto h-[15vh]"></BlobImage>);
   }
 

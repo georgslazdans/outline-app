@@ -24,7 +24,6 @@ const ModelCache = ({ modelData, onWorkerMessage }: Props) => {
       return rest;
     });
     if (!deepEqual(previousData, items)) {
-      console.log("Updating previous data", items);
       setPreviousData(items);
     }
   }, [modelData, previousData]);
@@ -45,7 +44,6 @@ const ModelCache = ({ modelData, onWorkerMessage }: Props) => {
       if (!cacheEntry) {
         const work = modelWorkOf(item);
         if (!alreadyQueued(work)) {
-          console.log("WORK!", work);
           messagesToSend.push(work);
         }
       } else {

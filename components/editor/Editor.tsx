@@ -37,7 +37,9 @@ const Editor = ({ dictionary }: Props) => {
 
   const [wireframe, setWireframe] = useState(false);
 
-  const onFullRender = () => {
+  const [selectedId, setSelectedId] = useState<string>();
+
+  const onFullRenderButton = () => {
     if (editorMode != EditorMode.RESULT) {
       setEditorMode(EditorMode.RESULT);
     } else {
@@ -53,6 +55,8 @@ const Editor = ({ dictionary }: Props) => {
           modelData={modelData}
           onModelDataChange={setModelData}
           wireframe={wireframe}
+          onModelSelect={setSelectedId}
+          selectedId={selectedId}
         ></EditMode>
       ),
       toolbar: (
@@ -60,6 +64,7 @@ const Editor = ({ dictionary }: Props) => {
           dictionary={dictionary}
           modelData={modelData}
           onModelDataUpdate={setModelData}
+          selectedId={selectedId}
         ></EditToolbar>
       ),
     },
@@ -89,7 +94,7 @@ const Editor = ({ dictionary }: Props) => {
     <>
       <ModelCacheProvider>
         <div className="flex flex-col xl:flex-row">
-          <div className="w-full xl:w-1/2 h-[70vh]">
+          <div className="w-full xl:w-1/2 h-[60vh]">
             <div className="z-10 relative">
               <WireframeButton
                 icon={wireframe ? "eye-slash" : "eye"}
@@ -106,7 +111,7 @@ const Editor = ({ dictionary }: Props) => {
           <div className="w-full xl:w-1/2">
             {editorModes[editorMode].toolbar}
 
-            <Button onClick={onFullRender}>
+            <Button onClick={onFullRenderButton}>
               <label>Render</label>
             </Button>
           </div>

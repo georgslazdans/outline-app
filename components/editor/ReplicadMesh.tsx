@@ -8,7 +8,7 @@ import {
   syncLinesFromFaces,
 } from "replicad-threejs-helper";
 import { ShapeMesh } from "replicad";
-import { PivotControls } from "@react-three/drei";
+import { PivotControls, useSelect } from "@react-three/drei";
 
 type Props = {
   faces: ShapeMesh;
@@ -17,6 +17,7 @@ type Props = {
   wireframe: boolean;
   onTranslationChange?: (translation: Vector3) => void;
   position?: Vector3;
+  id?: string;
 };
 
 const ReplicadMesh = React.memo(function ShapeMeshes({
@@ -26,6 +27,7 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   wireframe,
   onTranslationChange,
   position,
+  id,
 }: Props) {
   const { invalidate } = useThree();
 
@@ -56,9 +58,7 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
 
   const scale = 0.01;
 
-  const handleDragging = (
-    l: Matrix4
-  ) => {
+  const handleDragging = (l: Matrix4) => {
     const position = new Vector3();
     position.setFromMatrixPosition(l);
     position.multiplyScalar(1 / scale);
@@ -81,6 +81,8 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
     }
   };
 
+  const selected = useSelect().map((sel) => sel.userData.store);
+
   return (
     <PivotControls
       enabled={enableGizmo}
@@ -88,9 +90,13 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
       onDrag={handleDragging}
       offset={offsetOf(position)}
     >
-      <group scale={[scale, scale, scale]} position={position}>
+      <group
+        scale={[scale, scale, scale]}
+        position={position}
+        userData={{ id: id }}
+      >
         {!wireframe && (
-          <mesh geometry={body.current}>
+          <mesh geometry={body.current} userData={{ id: id }}>
             <meshStandardMaterial
               color="#5a8296"
               polygonOffset
@@ -99,7 +105,7 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
             />
           </mesh>
         )}
-        <lineSegments geometry={lines.current}>
+        <lineSegments geometry={lines.current} userData={{ id: id }}>
           <lineBasicMaterial color="#3c5a6e" />
         </lineSegments>
       </group>

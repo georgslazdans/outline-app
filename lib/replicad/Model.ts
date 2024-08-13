@@ -1,6 +1,6 @@
-import { Vector3 } from "three";
 import { ContourPoints } from "../Point";
 import GridfinityParams from "./GridfinityParams";
+import Point3D from "../Point3D";
 
 enum BooleanOperation {
   UNION,
@@ -30,8 +30,8 @@ export type Gridfinity = {
 // TODO item will have transform/rotation and operation type. Can be nested?
 export type Item = {
   id: string;
-  translation?: Vector3,
-  rotation?: Vector3
+  translation?: Point3D;
+  rotation?: Point3D;
 } & (Gridfinity | Shadow | Primitive);
 
 export const gridfinityItemOf = (params: GridfinityParams): Item => {
@@ -51,5 +51,6 @@ export const shadowItemOf = (
     type: "shadow",
     points: contourPoints,
     height: height,
+    translation: { x: 0, y: 0, z: 0 },
   };
 };
