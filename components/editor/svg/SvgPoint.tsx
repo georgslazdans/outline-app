@@ -20,7 +20,6 @@ const SvgPoint = ({ position, onDrag }: Props) => {
     event.stopPropagation();
     if (event.target.hasPointerCapture(event.pointerId)) {
       const { x, y } = event.intersections[0].point;
-      console.log("New Position", x, y);
       pointRef.current!.position.set(x, y, 0);
       onDrag(new Vector3(x, y, 0));
     }

@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import ImportDialog from "../svg/ImportDialog";
 import { ContourPoints } from "@/lib/Point";
 import { Item, Shadow, shadowItemOf } from "@/lib/replicad/Model";
@@ -31,69 +31,75 @@ const EditToolbar = ({
     onModelDataUpdate({ items: [...modelData.items, shadow] });
   };
 
-  const gridfinityParamsOf = (modelData: ModelData): GridfinityParams => {
-    return modelData.items.find((it) => it.type == "gridfinity")!.params;
-  };
+  const onGridfinityParamsChange = useCallback(
+    (id: string, params: GridfinityParams) => {
+      const updatedItems = modelData.items.map((item) => {
+        if (item.id === id) {
+          return { ...item, params };
+        }
+        return item;
+      });
 
-  const shadowItemFrom = (modelData: ModelData) => {
-    modelData.items.find((it) => it.type == "shadow");
-  };
+      onModelDataUpdate({ ...modelData, items: updatedItems });
+    },
+    [modelData, onModelDataUpdate]
+  );
 
-  const onGridfinityParamsChange = (id: string, params: GridfinityParams) => {
-    const updatedItems = modelData.items.map((item) => {
-      if (item.id === id) {
-        return { ...item, params };
-      }
-      return item;
-    });
+  const onShadowParamsChange = useCallback(
+    (id: string, params: Item & Shadow) => {
+      const updatedItems = modelData.items.map((item) => {
+        if (item.id === id) {
+          return params;
+        }
+        return item;
+      });
 
-    onModelDataUpdate({ ...modelData, items: updatedItems });
-  };
+      onModelDataUpdate({ ...modelData, items: updatedItems });
+    },
+    [modelData, onModelDataUpdate]
+  );
 
-  const onShadowParamsChange = (id: string, params: Item & Shadow) => {
-    const updatedItems = modelData.items.map((item) => {
-      if (item.id === id) {
-        return params;
-      }
-      return item;
-    });
-
-    onModelDataUpdate({ ...modelData, items: updatedItems });
-  };
-
-  const propertiesComponentFor = (item: Item) => {
-    switch (item.type) {
-      case "gridfinity":
-        return (
-          <GridfinityEdit
-            dictionary={dictionary}
-            params={item.params}
-            onParamsChange={(params) =>
-              onGridfinityParamsChange(item.id, params)
-            }
-          ></GridfinityEdit>
-        );
-      case "shadow":
-        return (
-          <>
-            <ShadowEdit
+  const propertiesComponentFor = useCallback(
+    (item: Item) => {
+      switch (item.type) {
+        case "gridfinity":
+          return (
+            <GridfinityEdit
               dictionary={dictionary}
-              params={item}
-              onParamsChange={(params) => onShadowParamsChange(item.id, params)}
-            ></ShadowEdit>
-          </>
-        );
-      case "primitive":
-        break;
-    }
-  };
+              params={item.params}
+              onParamsChange={(params) =>
+                onGridfinityParamsChange(item.id, params)
+              }
+            ></GridfinityEdit>
+          );
+        case "shadow":
+          return (
+            <>
+              <ShadowEdit
+                dictionary={dictionary}
+                params={item}
+                onParamsChange={(params) =>
+                  onShadowParamsChange(item.id, params)
+                }
+              ></ShadowEdit>
+            </>
+          );
+        case "primitive":
+          break;
+      }
+    },
+    [dictionary, onGridfinityParamsChange, onShadowParamsChange]
+  );
 
-  const propertiesFor = (id?: string) => {
-    const item = modelData.items.find((it) => it.id == id);
-    if (item) {
-      return propertiesComponentFor(item);
-    }
-  };
+  const propertiesFor = useCallback(
+    (id?: string) => {
+      const item = modelData.items.find((it) => it.id == id);
+      if (item) {
+        return propertiesComponentFor(item);
+      }
+    },
+    [modelData, propertiesComponentFor]
+  );
 
   return (
     <>

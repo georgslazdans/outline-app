@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useEffect } from "react";
+import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
 import { useThree } from "@react-three/fiber";
 import { BufferGeometry, Euler, Matrix4, Vector3 } from "three";
 import {
@@ -30,6 +30,15 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   id,
 }: Props) {
   const { invalidate } = useThree();
+  const [matrix, setMatrix] = useState(new Matrix4());
+
+  useEffect(() => {
+    if (position) {
+      const updatedMatrix = new Matrix4();
+      updatedMatrix.makeTranslation(position);
+      setMatrix(updatedMatrix);
+    }
+  }, [position]);
 
   const body = useRef(new BufferGeometry());
   const lines = useRef(new BufferGeometry());
@@ -59,12 +68,12 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   const scale = 0.01;
 
   const handleDragging = (l: Matrix4) => {
-    const position = new Vector3();
-    position.setFromMatrixPosition(l);
-    position.multiplyScalar(1 / scale);
+    const pos = new Vector3();
+    pos.setFromMatrixPosition(l);
+    pos.multiplyScalar(1 / scale);
 
     if (onTranslationChange) {
-      onTranslationChange(position);
+      onTranslationChange(pos);
     }
 
     const rotation = new Euler();
@@ -72,29 +81,17 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
     const degrees = (radians: number) => (radians * 180) / Math.PI;
   };
 
-  const offsetOf = (position?: Vector3): [number, number, number] => {
-    if (position) {
-      const { x, y, z } = position;
-      return [x, y, z];
-    } else {
-      return [0, 0, 0];
-    }
-  };
-
-  const selected = useSelect().map((sel) => sel.userData.store);
+  // const selected = useSelect().map((sel) => sel.userData.store);
 
   return (
     <PivotControls
       enabled={enableGizmo}
       disableScaling={true}
+      autoTransform={false}
+      matrix={matrix}
       onDrag={handleDragging}
-      offset={offsetOf(position)}
     >
-      <group
-        scale={[scale, scale, scale]}
-        position={position}
-        userData={{ id: id }}
-      >
+      <group scale={[scale, scale, scale]} userData={{ id: id }}>
         {!wireframe && (
           <mesh geometry={body.current} userData={{ id: id }}>
             <meshStandardMaterial

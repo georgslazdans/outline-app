@@ -1,9 +1,5 @@
 "use client";
-import React, {
-  ChangeEvent,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
 type NumberRange = {
   min: number;
@@ -44,6 +40,10 @@ const NumberField = ({
 
   const sliderSuffix = "-slider";
   const inputClass = slider ? "w-20" : "w-full";
+
+  useEffect(() => {
+    setSliderValue(value as number);
+  }, [value]);
 
   useEffect(() => {
     const handler = setTimeout(() => {

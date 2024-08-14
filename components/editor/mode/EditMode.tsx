@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import { ModelData } from "@/lib/replicad/Work";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ReplicadResult } from "@/lib/replicad/Worker";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../ReplicadMesh";
@@ -63,14 +63,18 @@ const EditMode = ({
     }
   };
 
-  const handleTranslationChange = (id: string) => {
-    return (translation: Vector3) => {
-      const index = modelData.items.findIndex((it) => it.id === id);
-      const updatedItems = [...modelData.items];
-      updatedItems[index].translation = translation;
-      onModelDataChange({ items: updatedItems });
-    };
-  };
+  const handleTranslationChange = useCallback(
+    (id: string) => {
+      return (translation: Vector3) => {
+        const index = modelData.items.findIndex((it) => it.id === id);
+        const updatedItems = [...modelData.items];
+        const { x, y, z } = translation;
+        updatedItems[index].translation = { x, y, z };
+        onModelDataChange({ items: updatedItems });
+      };
+    },
+    [modelData, onModelDataChange]
+  );
 
   const isSelected = (id: string) => {
     return selectedId == id;
