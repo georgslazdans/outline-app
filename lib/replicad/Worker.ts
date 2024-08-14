@@ -4,16 +4,18 @@ import { setOC, Shape3D, ShapeMesh } from "replicad";
 import { ReplicadMeshedEdges } from "replicad-threejs-helper";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
-import { FullModel, ReplicadWork } from "./Work";
+import { ModelData, ReplicadWork } from "./Work";
 import { Item, Shadow } from "./Model";
 import ReplicadModelData from "./models/ReplicadModelData";
 
-export type ReplicadResult = {
+export type ReplicadResultProps = {
   id: string;
   faces: ShapeMesh;
   edges: ReplicadMeshedEdges;
   messageId?: number;
 };
+
+export type ReplicadResult = ReplicadResultProps | Blob;
 
 let initialized = false;
 
@@ -48,10 +50,8 @@ const processItem = (item: Item): ReplicadModelData => {
   }
 };
 
-const processFull = (full: FullModel) => {
+const processFull = (full: ModelData): ReplicadModelData => {
   const processModification = (base: Shape3D, item: Item) => {
-    // const offsetToTop =
-    //   42 * full.gridfinity.params.height - modification.height;
     let model = processItem(item);
     if (item.translation) {
       const { x, y, z } = item.translation;
@@ -68,25 +68,26 @@ const processFull = (full: FullModel) => {
   for (let i = 1; i < full.items.length; i++) {
     box = processModification(box as Shape3D, full.items[i]);
   }
+
+  return box;
+};
+
+const asMesh = (data: ReplicadModelData, id?: string) => {
   return {
-    faces: box.mesh(),
-    edges: box.meshEdges(),
+    id: id ? id : crypto.randomUUID(),
+    faces: data.mesh(),
+    edges: data.meshEdges(),
   };
 };
 
 const processWork = (work: ReplicadWork) => {
   switch (work.type) {
     case "full":
-      return processFull(work);
+      return asMesh(processFull(work));
     case "model":
-      const result = processItem(work.item);
-      return {
-        id: work.item.id,
-        faces: result.mesh(),
-        edges: result.meshEdges(),
-      };
+      return asMesh(processItem(work.item), work.item.id);
     case "download":
-      throw new Error("Not Implemented!");
+      return processFull(work).blobSTL();
   }
 };
 

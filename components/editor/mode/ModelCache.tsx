@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ReplicadWorker } from "../ReplicadWorker";
 import { ModelData, ModelPart, modelWorkOf } from "@/lib/replicad/Work";
-import { ReplicadResult } from "@/lib/replicad/Worker";
+import { ReplicadResult, ReplicadResultProps } from "@/lib/replicad/Worker";
 import { useModelCache } from "@/context/ModelCacheContext";
 import deepEqual from "@/lib/utils/Objects";
 import { Item } from "@/lib/replicad/Model";
@@ -56,7 +56,7 @@ const ModelCache = ({ modelData, onWorkerMessage }: Props) => {
   }, [alreadyQueued, getFromCache, onWorkerMessage, previousData]);
 
   const onWorkerResult = useCallback(
-    (result: ReplicadResult) => {
+    (result: ReplicadResultProps) => {
       const item = previousData.find((it) => it.id === result.id);
       if (item) {
         const { translation, rotation, ...rest } = item;
@@ -75,7 +75,7 @@ const ModelCache = ({ modelData, onWorkerMessage }: Props) => {
   return (
     <ReplicadWorker
       messages={replicadMessages}
-      onWorkerMessage={onWorkerResult}
+      onWorkerMessage={(result) => onWorkerResult(result as ReplicadResultProps)}
     ></ReplicadWorker>
   );
 };

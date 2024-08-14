@@ -1,10 +1,10 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { fullWorkOf, ModelData } from "@/lib/replicad/Work";
-import React, { useState } from "react";
+import { fullWorkOf, ModelData, ReplicadWork } from "@/lib/replicad/Work";
+import React, { useEffect, useMemo, useState } from "react";
 import { ReplicadWorker } from "../ReplicadWorker";
-import { ReplicadResult } from "@/lib/replicad/Worker";
+import { ReplicadResult, ReplicadResultProps } from "@/lib/replicad/Worker";
 import ReplicadMesh from "../ReplicadMesh";
 
 type Props = {
@@ -14,15 +14,28 @@ type Props = {
 };
 
 const ResultMode = ({ dictionary, modelData, wireframe }: Props) => {
-  const replicadMessage = fullWorkOf(modelData.items);
+  const [replicadMessage, setReplicadMessage] = useState<ReplicadWork>();
 
-  const [modelResult, setModelResult] = useState<ReplicadResult>();
+  useEffect(() => {
+    setReplicadMessage(fullWorkOf(modelData.items));
+  }, [modelData]);
+
+  const [modelResult, setModelResult] = useState<ReplicadResultProps>();
+
+  const asMessageArray = () => {
+    return replicadMessage ? [replicadMessage] : [];
+  };
+
+  const onWorkerMessage = (result: ReplicadResult) => {
+    setModelResult(result as ReplicadResultProps);
+    setReplicadMessage(undefined);
+  };
 
   return (
     <>
       <ReplicadWorker
-        messages={[replicadMessage]}
-        onWorkerMessage={setModelResult}
+        messages={asMessageArray()}
+        onWorkerMessage={onWorkerMessage}
       ></ReplicadWorker>
       {modelResult && (
         <ReplicadMesh

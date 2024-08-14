@@ -1,5 +1,3 @@
-import { ContourPoints } from "../Point";
-import GridfinityParams from "./GridfinityParams";
 import { Item } from "./Model";
 
 export type ModelPart = {
@@ -17,9 +15,9 @@ export type FullModel = {
 
 export type Download = {
   type: "download";
-} & FullModel;
+} & ModelData;
 
-export type ReplicadWork = ModelPart | FullModel | Download;
+export type ReplicadWork = Download | ModelPart | FullModel;
 
 export const modelWorkOf = (item: Item): ModelPart => {
   return {
@@ -31,6 +29,13 @@ export const modelWorkOf = (item: Item): ModelPart => {
 export const fullWorkOf = (items: Item[]): FullModel => {
   return {
     type: "full",
+    items: items,
+  };
+};
+
+export const downloadWorkOf = (items: Item[]): Download => {
+  return {
+    type: "download",
     items: items,
   };
 };

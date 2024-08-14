@@ -14,6 +14,7 @@ import EditToolbar from "./mode/EditToolbar";
 import WireframeButton from "./WireframeButton";
 import ResultMode from "./mode/ResultMode";
 import { ModelCacheProvider } from "@/context/ModelCacheContext";
+import ResultToolbar from "./mode/ResultToolbar";
 
 enum EditorMode {
   EDIT,
@@ -76,7 +77,14 @@ const Editor = ({ dictionary }: Props) => {
           wireframe={wireframe}
         ></ResultMode>
       ),
-      toolbar: <></>,
+      toolbar: (
+        <>
+          <ResultToolbar
+            dictionary={dictionary}
+            modelData={modelData}
+          ></ResultToolbar>
+        </>
+      ),
     },
     [EditorMode.CONTOUR_EDIT]: {
       view: (
@@ -93,27 +101,31 @@ const Editor = ({ dictionary }: Props) => {
   return (
     <>
       <ModelCacheProvider>
-        <div className="flex flex-col xl:flex-row">
-          <div className="w-full xl:w-1/2 h-[60vh]">
-            <div className="z-10 relative">
-              <WireframeButton
-                icon={wireframe ? "eye-slash" : "eye"}
-                onClick={() => setWireframe(!wireframe)}
-              ></WireframeButton>
+        <div className="flex flex-col xl:flex-row gap-2">
+          <div className="w-full xl:w-1/2">
+            <div className="w-full h-[60vh]">
+              <div className="z-10 relative">
+                <WireframeButton
+                  icon={wireframe ? "eye-slash" : "eye"}
+                  onClick={() => setWireframe(!wireframe)}
+                ></WireframeButton>
+              </div>
+              <ThreeJsContext
+                dictionary={dictionary}
+                disableCamera={disableCamera}
+              >
+                {editorModes[editorMode].view}
+              </ThreeJsContext>
             </div>
-            <ThreeJsContext
-              dictionary={dictionary}
-              disableCamera={disableCamera}
-            >
-              {editorModes[editorMode].view}
-            </ThreeJsContext>
+            <Button className="mt-2" onClick={onFullRenderButton}>
+              <label>
+                {editorMode == EditorMode.RESULT ? "Edit" : "Render"}
+              </label>
+            </Button>
           </div>
+
           <div className="w-full xl:w-1/2">
             {editorModes[editorMode].toolbar}
-
-            <Button onClick={onFullRenderButton}>
-              <label>Render</label>
-            </Button>
           </div>
         </div>
       </ModelCacheProvider>

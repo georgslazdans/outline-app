@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import { ModelData } from "@/lib/replicad/Work";
 import React, { useCallback, useState } from "react";
-import { ReplicadResult } from "@/lib/replicad/Worker";
+import { ReplicadResultProps } from "@/lib/replicad/Worker";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../ReplicadMesh";
 import { Vector3 } from "three";
@@ -26,9 +26,9 @@ const EditMode = ({
   onModelSelect,
   selectedId,
 }: Props) => {
-  const [models, setModels] = useState<ReplicadResult[]>([]);
+  const [models, setModels] = useState<ReplicadResultProps[]>([]);
 
-  const onWorkerResult = (result: ReplicadResult) => {
+  const onWorkerResult = (result: ReplicadResultProps) => {
     setModels((prevModels) => {
       const existingIndex = prevModels.findIndex((it) => it.id === result.id);
       if (existingIndex !== -1) {
@@ -84,7 +84,9 @@ const EditMode = ({
     <>
       <ModelCache
         modelData={modelData}
-        onWorkerMessage={onWorkerResult}
+        onWorkerMessage={(result) =>
+          onWorkerResult(result as ReplicadResultProps)
+        }
       ></ModelCache>
       <Select onChangePointerUp={(obj) => onSelected(obj)}>
         {models.map((model) => {
