@@ -44,13 +44,14 @@ export const gridfinityItemOf = (params: GridfinityParams): Item => {
 
 export const shadowItemOf = (
   contourPoints: ContourPoints[],
-  height: number
+  height: number,
+  translationZ?: number
 ): Item => {
   return {
     id: crypto.randomUUID(),
     type: "shadow",
     points: contourPoints,
     height: height,
-    translation: { x: 0, y: 0, z: 0 },
+    translation: { x: 0, y: 0, z: translationZ ? translationZ : 0 },
   };
 };

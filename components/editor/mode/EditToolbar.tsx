@@ -18,6 +18,14 @@ type Props = {
   selectedId?: string;
 };
 
+const gridfinityHeightOf = (modelData: ModelData) => {
+  const magicConstant = 42;
+  const gridfinityHeight = modelData.items.find(
+    (it) => it.type == "gridfinity"
+  )!.params.height;
+  return gridfinityHeight * magicConstant;
+};
+
 const EditToolbar = ({
   dictionary,
   modelData,
@@ -27,7 +35,8 @@ const EditToolbar = ({
   const [openImportDialog, setOpenImportDialog] = useState(false);
 
   const onContourSelect = (points: ContourPoints[], height: number) => {
-    const shadow = shadowItemOf(points, height);
+    const gridfinityHeight = gridfinityHeightOf(modelData);
+    const shadow = shadowItemOf(points, height, gridfinityHeight - height);
     onModelDataUpdate({ items: [...modelData.items, shadow] });
   };
 
