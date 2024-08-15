@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import { ModelData } from "@/lib/replicad/Work";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ReplicadResultProps } from "@/lib/replicad/Worker";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../ReplicadMesh";
@@ -79,6 +79,15 @@ const EditMode = ({
   const isSelected = (id: string) => {
     return selectedId == id;
   };
+
+  useEffect(() => {
+    const updatedModels = models.filter((model) =>
+      modelData.items.some((item) => item.id === model.id)
+    );
+    if (models.length != updatedModels.length) {
+      setModels(updatedModels);
+    }
+  }, [modelData, models]);
 
   return (
     <>

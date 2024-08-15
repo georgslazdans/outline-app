@@ -110,6 +110,14 @@ const EditToolbar = ({
     [modelData, propertiesComponentFor]
   );
 
+  const onRemoveContour = () => {
+    if (!selectedId) return;
+    const updatedItems = modelData.items.filter(
+      (item) => item.id !== selectedId
+    );
+    onModelDataUpdate({ ...modelData, items: updatedItems });
+  };
+
   return (
     <>
       <Button onClick={() => setOpenImportDialog(true)}>
@@ -121,6 +129,11 @@ const EditToolbar = ({
         onClose={() => setOpenImportDialog(false)}
         onContourSelect={onContourSelect}
       ></ImportDialog>
+      {selectedId && (
+        <Button onClick={onRemoveContour} className="mt-2">
+          <label>Remove Contour</label>
+        </Button>
+      )}
       {propertiesFor(selectedId)}
     </>
   );
