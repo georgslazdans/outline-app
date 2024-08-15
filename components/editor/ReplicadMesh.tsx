@@ -15,8 +15,9 @@ type Props = {
   edges: ReplicadMeshedEdges;
   enableGizmo: boolean;
   wireframe: boolean;
-  onTranslationChange?: (translation: Vector3) => void;
+  onTransformChange?: (translation: Vector3, rotation: Euler) => void;
   position?: Vector3;
+  rotation?: Euler;
   id?: string;
 };
 
@@ -25,20 +26,31 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   edges,
   enableGizmo,
   wireframe,
-  onTranslationChange,
+  onTransformChange,
   position,
+  rotation,
   id,
 }: Props) {
   const { invalidate } = useThree();
   const [matrix, setMatrix] = useState(new Matrix4());
 
   useEffect(() => {
+    const translationMatrix = new Matrix4();
+    const rotationMatrix = new Matrix4();
+
     if (position) {
-      const updatedMatrix = new Matrix4();
-      updatedMatrix.makeTranslation(position);
+      translationMatrix.makeTranslation(position);
+    }
+    if (rotation) {
+      rotationMatrix.makeRotationFromEuler(rotation);
+    }
+
+    if (position || rotation) {
+      const updatedMatrix = translationMatrix;
+      updatedMatrix.multiply(rotationMatrix);
       setMatrix(updatedMatrix);
     }
-  }, [position]);
+  }, [position, rotation]);
 
   const body = useRef(new BufferGeometry());
   const lines = useRef(new BufferGeometry());
@@ -72,13 +84,12 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
     pos.setFromMatrixPosition(l);
     pos.multiplyScalar(1 / scale);
 
-    if (onTranslationChange) {
-      onTranslationChange(pos);
-    }
-
     const rotation = new Euler();
     rotation.setFromRotationMatrix(l);
-    const degrees = (radians: number) => (radians * 180) / Math.PI;
+
+    if (onTransformChange) {
+      onTransformChange(pos, rotation);
+    }
   };
 
   // const selected = useSelect().map((sel) => sel.userData.store);

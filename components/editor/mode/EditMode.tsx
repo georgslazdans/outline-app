@@ -6,8 +6,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ReplicadResultProps } from "@/lib/replicad/Worker";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../ReplicadMesh";
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 import ModelCache from "./ModelCache";
+import { toDegrees, toRadians } from "@/lib/utils/Math";
 
 type Props = {
   dictionary: Dictionary;
@@ -63,13 +64,27 @@ const EditMode = ({
     }
   };
 
-  const handleTranslationChange = useCallback(
+  const rotationOf = (id: string) => {
+    const rotation = modelData.items.find((it) => it.id == id)?.rotation;
+    if (rotation) {
+      const { x, y, z } = rotation;
+      return new Euler(toRadians(x), toRadians(y), toRadians(z));
+    }
+  };
+
+  const handleTransformChange = useCallback(
     (id: string) => {
-      return (translation: Vector3) => {
+      return (translation: Vector3, rotation: Euler) => {
         const index = modelData.items.findIndex((it) => it.id === id);
         const updatedItems = [...modelData.items];
         const { x, y, z } = translation;
         updatedItems[index].translation = { x, y, z };
+        const { x: rotX, y: rotY, z: rotZ } = rotation;
+        updatedItems[index].rotation = {
+          x: toDegrees(rotX),
+          y: toDegrees(rotY),
+          z: toDegrees(rotZ),
+        };
         onModelDataChange({ items: updatedItems });
       };
     },
@@ -106,8 +121,9 @@ const EditMode = ({
               edges={model.edges}
               enableGizmo={!isGridfinity(model.id) && isSelected(model.id)}
               wireframe={wireframe}
-              onTranslationChange={handleTranslationChange(model.id)}
+              onTransformChange={handleTransformChange(model.id)}
               position={positionOf(model.id)}
+              rotation={rotationOf(model.id)}
               id={model.id}
             ></ReplicadMesh>
           );

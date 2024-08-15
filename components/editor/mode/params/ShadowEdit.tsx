@@ -29,6 +29,15 @@ const ShadowEdit = ({ dictionary, params, onParamsChange }: Props) => {
     };
   };
 
+  const handleRotationChange = (name: string) => {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      const value = Number.parseFloat(event.target.value);
+      const updatedRotation = { ...params.rotation!, [name]: value };
+      const updatedParams = { ...params, rotation: updatedRotation };
+      onParamsChange(updatedParams);
+    };
+  };
+
   return (
     <>
       <NumberField
@@ -54,6 +63,24 @@ const ShadowEdit = ({ dictionary, params, onParamsChange }: Props) => {
         onChange={handleTranslationChange("z")}
         label={"Z"}
         name={"z"}
+      ></NumberField>
+      <NumberField
+        value={params.rotation!.x}
+        onChange={handleRotationChange("x")}
+        label={"Rotation X"}
+        name={"rotationX"}
+      ></NumberField>
+      <NumberField
+        value={params.rotation!.y}
+        onChange={handleRotationChange("y")}
+        label={"Rotation Y"}
+        name={"rotationY"}
+      ></NumberField>
+      <NumberField
+        value={params.rotation!.z}
+        onChange={handleRotationChange("z")}
+        label={"Rotation Z"}
+        name={"rotationZ"}
       ></NumberField>
     </>
   );

@@ -53,5 +53,6 @@ export const shadowItemOf = (
     points: contourPoints,
     height: height,
     translation: { x: 0, y: 0, z: translationZ ? translationZ : 0 },
+    rotation: { x: 0, y: 0, z: 0 },
   };
 };

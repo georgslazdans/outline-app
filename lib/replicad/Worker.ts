@@ -1,12 +1,16 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC, Shape3D, ShapeMesh } from "replicad";
+import { Point, setOC, Shape3D, ShapeMesh } from "replicad";
 import { ReplicadMeshedEdges } from "replicad-threejs-helper";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
 import { ModelData, ReplicadWork } from "./Work";
 import { Item, Shadow } from "./Model";
 import ReplicadModelData from "./models/ReplicadModelData";
+import deepEqual from "../utils/Objects";
+import Point3D from "../Point3D";
+import { Euler } from "three";
+import { eulerToAxisAngle, toDegrees } from "../utils/Math";
 
 export type ReplicadResultProps = {
   id: string;
@@ -53,6 +57,15 @@ const processItem = (item: Item): ReplicadModelData => {
 const processFull = (full: ModelData): ReplicadModelData => {
   const processModification = (base: Shape3D, item: Item) => {
     let model = processItem(item);
+    if (item.rotation) {
+      const axisRotation = eulerToAxisAngle(item.rotation);
+      const axis = [
+        axisRotation.axis.x,
+        axisRotation.axis.y,
+        axisRotation.axis.z,
+      ] as Point;
+      model = model.rotate(toDegrees(axisRotation.angle), [0, 0, 0], axis);
+    }
     if (item.translation) {
       const { x, y, z } = item.translation;
       model = model.translate(x, y, z);
