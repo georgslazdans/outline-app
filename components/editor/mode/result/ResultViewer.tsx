@@ -3,9 +3,9 @@
 import { Dictionary } from "@/app/dictionaries";
 import { fullWorkOf, ModelData, ReplicadWork } from "@/lib/replicad/Work";
 import React, { useEffect, useMemo, useState } from "react";
-import { ReplicadWorker } from "../ReplicadWorker";
+import { ReplicadWorker } from "../../ReplicadWorker";
 import { ReplicadResult, ReplicadResultProps } from "@/lib/replicad/Worker";
-import ReplicadMesh from "../ReplicadMesh";
+import ReplicadMesh from "../../ReplicadMesh";
 
 type Props = {
   dictionary: Dictionary;
@@ -13,7 +13,7 @@ type Props = {
   wireframe: boolean;
 };
 
-const ResultMode = ({ dictionary, modelData, wireframe }: Props) => {
+const ResultViewer = ({ dictionary, modelData, wireframe }: Props) => {
   const [replicadMessage, setReplicadMessage] = useState<ReplicadWork>();
 
   useEffect(() => {
@@ -50,4 +50,4 @@ const ResultMode = ({ dictionary, modelData, wireframe }: Props) => {
   );
 };
 
-export default ResultMode;
+export default ResultViewer;

@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import React, { useCallback, useState } from "react";
-import ImportDialog from "../svg/ImportDialog";
+import ImportDialog from "./ImportDialog";
 import { ContourPoints } from "@/lib/Point";
 import { Item, Shadow, shadowItemOf } from "@/lib/replicad/Model";
 import { ModelData } from "@/lib/replicad/Work";
@@ -16,6 +16,7 @@ type Props = {
   modelData: ModelData;
   onModelDataUpdate: (modelData: ModelData) => void;
   selectedId?: string;
+  onEditContour: () => void;
 };
 
 const gridfinityHeightOf = (modelData: ModelData) => {
@@ -31,6 +32,7 @@ const EditToolbar = ({
   modelData,
   onModelDataUpdate,
   selectedId,
+  onEditContour,
 }: Props) => {
   const [openImportDialog, setOpenImportDialog] = useState(false);
 
@@ -118,6 +120,10 @@ const EditToolbar = ({
     onModelDataUpdate({ ...modelData, items: updatedItems });
   };
 
+  const isGridfinity = (id: string) => {
+    return modelData.items.find((it) => it.id == id)?.type == "gridfinity";
+  };
+
   return (
     <>
       <Button onClick={() => setOpenImportDialog(true)}>
@@ -129,7 +135,12 @@ const EditToolbar = ({
         onClose={() => setOpenImportDialog(false)}
         onContourSelect={onContourSelect}
       ></ImportDialog>
-      {selectedId && (
+      {selectedId && !isGridfinity(selectedId) && (
+        <Button onClick={onEditContour} className="mt-2">
+          <label>Edit Contour</label>
+        </Button>
+      )}
+      {selectedId && !isGridfinity(selectedId) && (
         <Button onClick={onRemoveContour} className="mt-2">
           <label>Remove Contour</label>
         </Button>

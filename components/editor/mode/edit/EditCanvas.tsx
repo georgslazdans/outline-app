@@ -5,9 +5,9 @@ import { ModelData } from "@/lib/replicad/Work";
 import React, { useCallback, useEffect, useState } from "react";
 import { ReplicadResultProps } from "@/lib/replicad/Worker";
 import { Select } from "@react-three/drei";
-import ReplicadMesh from "../ReplicadMesh";
+import ReplicadMesh from "../../ReplicadMesh";
 import { Euler, Vector3 } from "three";
-import ModelCache from "./ModelCache";
+import ModelCache from "../ModelCache";
 import { toDegrees, toRadians } from "@/lib/utils/Math";
 
 type Props = {
@@ -15,16 +15,16 @@ type Props = {
   modelData: ModelData;
   onModelDataChange: (data: ModelData) => void;
   wireframe: boolean;
-  onModelSelect: (id: string) => void;
+  onModelIdSelect: (id: string) => void;
   selectedId?: string;
 };
 
-const EditMode = ({
+const EditCanvas = ({
   dictionary,
   modelData,
   onModelDataChange,
   wireframe,
-  onModelSelect,
+  onModelIdSelect: onModelSelect,
   selectedId,
 }: Props) => {
   const [models, setModels] = useState<ReplicadResultProps[]>([]);
@@ -133,4 +133,4 @@ const EditMode = ({
   );
 };
 
-export default EditMode;
+export default EditCanvas;

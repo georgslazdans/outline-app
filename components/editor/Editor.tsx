@@ -8,19 +8,13 @@ import { ModelData } from "@/lib/replicad/Work";
 import ThreeJsContext from "./ThreeJsContext";
 import { gridfinityItemOf } from "@/lib/replicad/Model";
 import { defaultGridfinityParams } from "@/lib/replicad/GridfinityParams";
-import EditMode from "./mode/EditMode";
 import Button from "../Button";
-import EditToolbar from "./mode/EditToolbar";
 import WireframeButton from "./WireframeButton";
-import ResultMode from "./mode/ResultMode";
 import { ModelCacheProvider } from "@/context/ModelCacheContext";
-import ResultToolbar from "./mode/ResultToolbar";
-
-enum EditorMode {
-  EDIT,
-  CONTOUR_EDIT,
-  RESULT,
-}
+import EditorMode from "./EditorMode";
+import ResultMode from "./mode/result/ResultMode";
+import EditMode from "./mode/edit/EditMode";
+import ContourMode from "./mode/contour/ContourMode";
 
 type Props = {
   dictionary: Dictionary;
@@ -48,55 +42,36 @@ const Editor = ({ dictionary }: Props) => {
     }
   };
 
+  const editMode = EditMode({
+    dictionary: dictionary,
+    modelData: modelData,
+    wireframe: wireframe,
+    setModelData: setModelData,
+    selectedId: selectedId,
+    setSelectedId: setSelectedId,
+    setEditorMode: setEditorMode,
+  });
+  const resultMode = ResultMode({
+    dictionary: dictionary,
+    modelData: modelData,
+    wireframe: wireframe,
+  });
+
+  const contourMode = ContourMode({
+    dictionary,
+    modelData,
+    onModelDataChange: setModelData,
+    selectedId,
+    setDisableCamera,
+  });
+
   const editorModes = {
-    [EditorMode.EDIT]: {
-      view: (
-        <EditMode
-          dictionary={dictionary}
-          modelData={modelData}
-          onModelDataChange={setModelData}
-          wireframe={wireframe}
-          onModelSelect={setSelectedId}
-          selectedId={selectedId}
-        ></EditMode>
-      ),
-      toolbar: (
-        <EditToolbar
-          dictionary={dictionary}
-          modelData={modelData}
-          onModelDataUpdate={setModelData}
-          selectedId={selectedId}
-        ></EditToolbar>
-      ),
-    },
-    [EditorMode.RESULT]: {
-      view: (
-        <ResultMode
-          dictionary={dictionary}
-          modelData={modelData}
-          wireframe={wireframe}
-        ></ResultMode>
-      ),
-      toolbar: (
-        <>
-          <ResultToolbar
-            dictionary={dictionary}
-            modelData={modelData}
-          ></ResultToolbar>
-        </>
-      ),
-    },
-    [EditorMode.CONTOUR_EDIT]: {
-      view: (
-        <ResultMode
-          dictionary={dictionary}
-          modelData={modelData}
-          wireframe={wireframe}
-        ></ResultMode>
-      ),
-      toolbar: <></>,
-    },
+    [EditorMode.EDIT]: editMode,
+    [EditorMode.RESULT]: resultMode,
+    [EditorMode.CONTOUR_EDIT]: contourMode,
   };
+
+  const currentEditorMode = editorModes[editorMode];
 
   return (
     <>
@@ -114,7 +89,7 @@ const Editor = ({ dictionary }: Props) => {
                 dictionary={dictionary}
                 disableCamera={disableCamera}
               >
-                {editorModes[editorMode].view}
+                {currentEditorMode ? currentEditorMode.view() : null}
               </ThreeJsContext>
             </div>
             <Button className="mt-2" onClick={onFullRenderButton}>
@@ -125,7 +100,7 @@ const Editor = ({ dictionary }: Props) => {
           </div>
 
           <div className="w-full xl:w-1/2">
-            {editorModes[editorMode].toolbar}
+          {currentEditorMode ? currentEditorMode.toolbar() : null}
           </div>
         </div>
       </ModelCacheProvider>

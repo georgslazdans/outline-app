@@ -3,10 +3,10 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
-import SelectField, { Option } from "../../fields/SelectField";
 import { Context } from "@/context/DetailsContext";
 import { centerPoints, ContourPoints } from "@/lib/Point";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
+import SelectField, { Option } from "@/components/fields/SelectField";
 
 type Props = {
   dictionary: Dictionary;
@@ -39,7 +39,7 @@ const SvgSelect = ({ dictionary, onSelect }: Props) => {
         onSelect(centeredPointsOf(allContexts[0]));
       }
     });
-  }, [getAll]);
+  }, [getAll, onSelect]);
 
   const onChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const contextId = Number.parseInt(event.target.value);

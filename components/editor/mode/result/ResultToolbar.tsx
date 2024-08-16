@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import React, { useState } from "react";
 import { downloadWorkOf, ModelData, ReplicadWork } from "@/lib/replicad/Work";
-import { ReplicadWorker } from "../ReplicadWorker";
+import { ReplicadWorker } from "../../ReplicadWorker";
 import { ReplicadResult } from "@/lib/replicad/Worker";
 import { downloadFile } from "@/lib/utils/Download";
 

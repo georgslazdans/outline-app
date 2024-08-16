@@ -1,6 +1,6 @@
 import { Sphere } from "@react-three/drei";
 import { ThreeEvent } from "@react-three/fiber";
-import React, { useRef } from "react";
+import React, { memo, useMemo, useRef } from "react";
 import { Vector3 } from "three";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
   onDrag: (newPosition: Vector3) => void;
 };
 
-const SvgPoint = ({ position, onDrag }: Props) => {
+const SvgPoint = memo(function PointMesh({ position, onDrag }: Props) {
   const pointRef = useRef<any>();
 
   const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
@@ -53,6 +53,6 @@ const SvgPoint = ({ position, onDrag }: Props) => {
     //   <meshBasicMaterial color="red" />
     // </mesh>
   );
-};
+});
 
 export default SvgPoint;
