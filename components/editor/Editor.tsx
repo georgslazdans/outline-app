@@ -15,6 +15,7 @@ import EditorMode from "./EditorMode";
 import ResultMode from "./mode/result/ResultMode";
 import EditMode from "./mode/edit/EditMode";
 import ContourMode from "./mode/contour/ContourMode";
+import ContourIndex from "./mode/contour/ContourIndex";
 
 type Props = {
   dictionary: Dictionary;
@@ -57,12 +58,15 @@ const Editor = ({ dictionary }: Props) => {
     wireframe: wireframe,
   });
 
+  const [selectedPoint, setSelectedPoint] = useState<ContourIndex>();
   const contourMode = ContourMode({
     dictionary,
     modelData,
     onModelDataChange: setModelData,
     selectedId,
     setDisableCamera,
+    selectedPoint,
+    setSelectedPoint,
   });
 
   const editorModes = {
@@ -100,7 +104,7 @@ const Editor = ({ dictionary }: Props) => {
           </div>
 
           <div className="w-full xl:w-1/2">
-          {currentEditorMode ? currentEditorMode.toolbar() : null}
+            {currentEditorMode ? currentEditorMode.toolbar() : null}
           </div>
         </div>
       </ModelCacheProvider>

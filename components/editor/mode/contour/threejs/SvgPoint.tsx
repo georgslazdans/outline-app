@@ -1,33 +1,25 @@
 import { Sphere } from "@react-three/drei";
-import { ThreeEvent } from "@react-three/fiber";
-import React, { memo, useMemo, useRef } from "react";
+import React, { memo, useRef } from "react";
 import { Vector3 } from "three";
+import ContourIndex from "../ContourIndex";
 
 type Props = {
+  index: number;
+  contourIndex: number;
   position: Vector3;
-  onDrag: (newPosition: Vector3) => void;
+  color: "red" | "black";
 };
 
-const SvgPoint = memo(function PointMesh({ position, onDrag }: Props) {
+const SvgPoint = memo(function PointMesh({
+  contourIndex,
+  index,
+  position,
+  color,
+}: Props) {
   const pointRef = useRef<any>();
 
-  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
-    event.stopPropagation();
-    event.target.setPointerCapture(event.pointerId);
-  };
-
-  const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
-    event.stopPropagation();
-    if (event.target.hasPointerCapture(event.pointerId)) {
-      const { x, y } = event.intersections[0].point;
-      pointRef.current!.position.set(x, y, 0);
-      onDrag(new Vector3(x, y, 0));
-    }
-  };
-
-  const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
-    event.stopPropagation();
-    event.target.releasePointerCapture(event.pointerId);
+  const asContourIndex = (): ContourIndex => {
+    return { contour: contourIndex, point: index };
   };
 
   const pointSize = 0.01;
@@ -36,22 +28,10 @@ const SvgPoint = memo(function PointMesh({ position, onDrag }: Props) {
       position={position}
       ref={pointRef}
       scale={[pointSize, pointSize, pointSize]}
-      //   onPointerDown={handlePointerDown}
-      //   onPointerMove={handlePointerMove}
-      //   onPointerUp={handlePointerUp}
+      userData={{ contourIndex: asContourIndex() }}
     >
-      <meshBasicMaterial color="red" />
+      <meshBasicMaterial color={color} />
     </Sphere>
-    // <mesh
-    //   ref={pointRef}
-    //   position={position}
-    //   onPointerDown={handlePointerDown}
-    //   onPointerMove={handlePointerMove}
-    //   onPointerUp={handlePointerUp}
-    // >
-    //   <sphereGeometry args={[0.1, 16, 16]} />
-    //   <meshBasicMaterial color="red" />
-    // </mesh>
   );
 });
 

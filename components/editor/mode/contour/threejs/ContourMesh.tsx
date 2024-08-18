@@ -1,77 +1,64 @@
 import { ContourPoints } from "@/lib/Point";
-import React from "react";
+import React, { useCallback } from "react";
 import SvgPoint from "./SvgPoint";
-import { Vector3 } from "three";
+import { Matrix4, Vector3 } from "three";
 import SvgLines from "./SvgLines";
 import { DragControls, Select } from "@react-three/drei";
+import ContourIndex from "../ContourIndex";
 
 type Props = {
-  contoursPoints: ContourPoints[];
+  contourIndex: number;
+  contour: ContourPoints;
+  selectedPoint?: ContourIndex;
   onPointMoveStart?: () => void;
   onPointMoveEnd?: () => void;
-  onPointSelect?: () => void;
 };
 
 const ContourMesh = ({
-  contoursPoints,
+  contourIndex,
+  contour,
+  selectedPoint,
   onPointMoveStart,
   onPointMoveEnd,
 }: Props) => {
-  const handlePointDrag = (index: number) => (newPosition: Vector3) => {
-    // setPoints((points) => {
-    //   const newPoints = [...points];
-    //   newPoints[index] = newPosition;
-    //   return newPoints;
-    // });
-  };
-  const scale = 0.01;
-
-  const scaledPoints = contoursPoints.map((it) => {
-    return {
-      points: it.points.map((point) => {
-        return {
-          x: point.x * scale,
-          y: point.y * scale,
-        };
-      }),
+  const onPointDrag = (pointIndex: number) => {
+    return (l: Matrix4) => {
+      const pos = new Vector3();
+      pos.setFromMatrixPosition(l);
     };
-  });
-
-  const onSelected = (obj: any) => {
-    if (obj.length > 0) {
-      console.log("Selected", obj);
-    }
   };
-  
+
+  const isPointSelected = useCallback((pointIndex: number) => {
+    console.log("isPointSelected", selectedPoint);
+    return (
+      selectedPoint?.contour == contourIndex &&
+      selectedPoint?.point == pointIndex
+    );
+  }, [contourIndex, selectedPoint]);
+
+  // TODO create some hook for threejs render stuff
+  // Maybe there is a camera already there...
   return (
-    // <group>
     <group>
-      <Select onChangePointerUp={(obj) => onSelected(obj)}>
-        {scaledPoints.map((points, index) => {
-          const svgPoints = points.points.map((point, index1) => {
-            return (
-              <DragControls
-                key={"x" + index + "y" + index1}
-                onDragStart={onPointMoveStart}
-                onDragEnd={onPointMoveEnd}
-                axisLock="z"
-              >
-                <SvgPoint
-                  key={"x" + index + "y" + index1}
-                  position={new Vector3(point.x, point.y, 0)}
-                  onDrag={handlePointDrag(index)}
-                />
-              </DragControls>
-            );
-          });
-          return (
-            <>
-              {svgPoints}
-              <SvgLines key={"line" + index} contour={points}></SvgLines>
-            </>
-          );
-        })}
-      </Select>
+      {contour.points.map((point, index) => {
+        return (
+          <DragControls
+            key={index}
+            onDragStart={onPointMoveStart}
+            onDragEnd={onPointMoveEnd}
+            axisLock="z"
+            onDrag={onPointDrag(index)}
+          >
+            <SvgPoint
+              contourIndex={contourIndex}
+              index={index}
+              position={new Vector3(point.x, point.y, 0)}
+              color={isPointSelected(index) ? "red" : "black"}
+            />
+          </DragControls>
+        );
+      })}
+      <SvgLines contour={contour}></SvgLines>
     </group>
   );
 };

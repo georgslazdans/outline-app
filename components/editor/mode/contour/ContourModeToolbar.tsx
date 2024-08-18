@@ -6,6 +6,7 @@ import ContourIndex from "./ContourIndex";
 import { ModelData } from "@/lib/replicad/Work";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
+import Button from "@/components/Button";
 
 type Props = {
   dictionary: Dictionary;
@@ -48,6 +49,9 @@ const ContourModeToolbar = ({
 
   return (
     <>
+      <Button>
+        <label>Done</label>
+      </Button>
       {selectedPoint && (
         <SelectedPointEdit
           dictionary={dictionary}

@@ -4,7 +4,6 @@ import ContourModeEdit from "./ContourModeEdit";
 import { ModelData } from "@/lib/replicad/Work";
 import ContourModeToolbar from "./ContourModeToolbar";
 import ContourIndex from "./ContourIndex";
-import { useState } from "react";
 
 type Props = {
   dictionary: Dictionary;
@@ -12,6 +11,8 @@ type Props = {
   onModelDataChange: (data: ModelData) => void;
   selectedId?: string;
   setDisableCamera: (value: boolean) => void;
+  selectedPoint?: ContourIndex
+  setSelectedPoint: (index: ContourIndex) => void;
 };
 
 const ContourMode = ({
@@ -20,9 +21,9 @@ const ContourMode = ({
   onModelDataChange,
   selectedId,
   setDisableCamera,
+  selectedPoint,
+  setSelectedPoint
 }: Props): EditorModeConfig => {
-  const [selectedPoint, setSelectedPoint] = useState<ContourIndex>();
-
   const mode = {
     view: () => {
       return (
@@ -32,6 +33,7 @@ const ContourMode = ({
           onModelDataChange={onModelDataChange}
           selectedId={selectedId}
           setDisableCamera={setDisableCamera}
+          selectedPoint={selectedPoint}
           onPointSelect={setSelectedPoint}
         ></ContourModeEdit>
       );
