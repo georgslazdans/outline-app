@@ -43,14 +43,14 @@ const SelectedPointEdit = ({
   return (
     <>
       <NumberField
-        value={currentPoint.x}
+        value={currentPoint?.x}
         onChange={handlePointChange("x")}
         label={"X"}
         name={"pointX"}
         numberRange={{ min: -9999999, max: 99999999, step: 0.05 }}
       ></NumberField>
       <NumberField
-        value={currentPoint.y}
+        value={currentPoint?.y}
         onChange={handlePointChange("y")}
         label={"Y"}
         name={"pointY"}

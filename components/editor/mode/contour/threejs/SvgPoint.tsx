@@ -1,4 +1,4 @@
-import { DragControls, Sphere } from "@react-three/drei";
+import { Circle, DragControls, Outlines, Sphere } from "@react-three/drei";
 import React, { memo, useEffect, useRef, useState } from "react";
 import { Matrix4, Vector3 } from "three";
 import ContourIndex from "../ContourIndex";
@@ -23,6 +23,7 @@ const SvgPoint = memo(function PointMesh({
   onDrag,
 }: Props) {
   const pointRef = useRef<any>();
+  const circleRef = useRef<any>();
   const [matrix, setMatrix] = useState(new Matrix4());
 
   useEffect(() => {
@@ -47,13 +48,17 @@ const SvgPoint = memo(function PointMesh({
       autoTransform={false}
       matrix={matrix}
     >
-      <Sphere
+      <Circle ref={circleRef} args={[1/100]} userData={{ contourIndex: asContourIndex() }}>
+        <meshBasicMaterial color={color} wireframe={true} />
+        <Outlines thickness={0.05} color="hotpink" />
+      </Circle>
+      {/* <Sphere
         ref={pointRef}
         scale={[pointSize, pointSize, pointSize]}
         userData={{ contourIndex: asContourIndex() }}
       >
-        <meshBasicMaterial color={color} />
-      </Sphere>
+        <meshBasicMaterial color={color} wireframe={true} />
+      </Sphere> */}
     </DragControls>
   );
 });

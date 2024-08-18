@@ -1,4 +1,4 @@
-import Point, { ContourPoints, minMaxValues } from "@/lib/Point";
+import Point, { ContourPoints, findLargestContourOf } from "@/lib/Point";
 import { draw, Drawing } from "replicad";
 import ReplicadModelData from "./ReplicadModelData";
 
@@ -14,30 +14,8 @@ const drawContour = (points: Point[]): Drawing => {
   return drawPen.close();
 };
 
-const findBase = (contourPoints: ContourPoints[]) => {
-  let base = {
-    value: contourPoints[0],
-    minMax: minMaxValues(contourPoints[0].points),
-  };
-  for (let i = 1; i < contourPoints.length; i++) {
-    const minMax = minMaxValues(contourPoints[i].points);
-    if (
-      minMax.minX < base.minMax.minX &&
-      minMax.minY < base.minMax.minY &&
-      minMax.maxX > base.minMax.maxX &&
-      minMax.maxY > base.minMax.maxY
-    ) {
-      base = {
-        value: contourPoints[i],
-        minMax: minMax,
-      };
-    }
-  }
-  return base.value;
-};
-
 const drawShadow = (contourPoints: ContourPoints[], height: number): ReplicadModelData => {
-  let basePoints = findBase(contourPoints);
+  let basePoints = findLargestContourOf(contourPoints);
   let base = drawContour(basePoints.points);
 
   for (let i = 0; i < contourPoints.length; i++) {

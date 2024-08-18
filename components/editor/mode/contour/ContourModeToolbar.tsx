@@ -7,6 +7,7 @@ import { ModelData } from "@/lib/replicad/Work";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
+import ScaleAlongNormal from "./ScaleAlongNormal";
 
 type Props = {
   dictionary: Dictionary;
@@ -23,7 +24,7 @@ const ContourModeToolbar = ({
   selectedId,
   selectedPoint,
   onModelDataChange,
-  onDone
+  onDone,
 }: Props) => {
   const getSelectedContour = useCallback(() => {
     const selectedItem = modelData.items.find((it) => it.id == selectedId);
@@ -40,7 +41,7 @@ const ContourModeToolbar = ({
     setSelectedContourPoints(getSelectedContour);
   }, [getSelectedContour]);
 
-  const onPointChanged = (contourPoints: ContourPoints[]) => {
+  const onContourChanged = (contourPoints: ContourPoints[]) => {
     setSelectedContourPoints(contourPoints);
 
     const updatedItems = modelData.items.map((it) => {
@@ -52,18 +53,44 @@ const ContourModeToolbar = ({
     onModelDataChange({ items: updatedItems });
   };
 
+  const onDeletePoint = () => {
+    if (selectedContourPoints && selectedPoint) {
+      const updatedPoints = selectedContourPoints.map((contour, index) => {
+        if (index === selectedPoint.contour) {
+          const updatedContour = {
+            points: contour.points.filter(
+              (_, pointIndex) => pointIndex !== selectedPoint.point
+            ),
+          };
+          return updatedContour;
+        }
+        return contour;
+      });
+
+      onContourChanged(updatedPoints);
+    }
+  }
+
   return (
     <>
       <Button onClick={onDone}>
         <label>Done</label>
       </Button>
       {selectedContourPoints && selectedPoint && (
-        <SelectedPointEdit
-          dictionary={dictionary}
-          contourPoints={selectedContourPoints}
-          selectedPoint={selectedPoint}
-          onPointChanged={onPointChanged}
-        ></SelectedPointEdit>
+        <>
+          <ScaleAlongNormal
+            dictionary={dictionary}
+            contour={selectedContourPoints}
+            onContourChanged={onContourChanged}
+          ></ScaleAlongNormal>
+          <Button onClick={onDeletePoint} hotkey="Delete"><label>Delete Point</label></Button>
+          <SelectedPointEdit
+            dictionary={dictionary}
+            contourPoints={selectedContourPoints}
+            selectedPoint={selectedPoint}
+            onPointChanged={onContourChanged}
+          ></SelectedPointEdit>
+        </>
       )}
     </>
   );
