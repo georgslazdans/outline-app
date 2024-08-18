@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEventHandler, ReactNode } from "react";
+import React, { FormEventHandler, ReactNode, useEffect } from "react";
 
 type Props = {
   className?: string;
@@ -8,6 +8,7 @@ type Props = {
   onClick?: FormEventHandler<HTMLButtonElement>;
   type?: "submit" | "reset" | "button";
   style?: "primary" | "secondary" | "red" | "disabled";
+  hotkey?: string;
 };
 
 const STYLES = {
@@ -18,8 +19,25 @@ const STYLES = {
   disabled: "bg-white dark:bg-black text-gray border-4 border-gray",
 };
 
-const Button = ({ className, children, onClick, type, style }: Props) => {
+const Button = ({ className, children, onClick, type, style, hotkey }: Props) => {
   const buttonStyle = style ? STYLES[style] : STYLES["primary"];
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (hotkey && event.key === hotkey) {
+        if (onClick) {
+          onClick(event as any); // Trigger the onClick function
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [hotkey, onClick]);
+  
   return (
     <button
       type={type ? type : "submit"}
