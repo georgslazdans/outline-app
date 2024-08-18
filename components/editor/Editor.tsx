@@ -67,6 +67,7 @@ const Editor = ({ dictionary }: Props) => {
     setDisableCamera,
     selectedPoint,
     setSelectedPoint,
+    setEditorMode,
   });
 
   const editorModes = {

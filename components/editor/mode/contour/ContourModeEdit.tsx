@@ -29,29 +29,39 @@ const ContourModeEdit = ({
 }: Props) => {
   const scale = 0.01;
 
-  const [selectedContour, setSelectedContour] = useState<ContourPoints[]>();
+  const [scaledContours, setScaledContours] = useState<ContourPoints[]>([]);
 
   useEffect(() => {
     const data = modelData.items.find((it) => it.id == selectedId);
     if (data?.type == "shadow") {
+      console.log("Data", data);
       const scaledPoints = data.points.map((it) => scalePoints(it, scale));
-      setSelectedContour(scaledPoints);
+      setScaledContours(scaledPoints);
     } else {
       throw new Error("Can't edit non shadows objects!");
     }
   }, [modelData, selectedId]);
 
-  const onPointsChanged = (contourPoints: ContourPoints[]) => {
-    const scaledPoints = contourPoints.map((it) => scalePoints(it, 1 / scale));
-    const updatedDate = {
+  const updateModelData = (contourPoints: ContourPoints[]) => {
+    console.log("Updating model data", contourPoints);
+    const updatedPoints = contourPoints.map((it) => scalePoints(it, 1 / scale));
+    const updatedData = {
       items: modelData.items.map((it) => {
         if (it.id == selectedId && it.type == "shadow") {
-          return { ...it, points: scaledPoints };
+          return { ...it, points: updatedPoints };
         }
         return it;
       }),
     };
-    onModelDataChange(updatedDate);
+    onModelDataChange(updatedData);
+  };
+
+  const onContourChanged = (contourIndex: number) => {
+    return (contour: ContourPoints) => {
+      const updatedContours = [...scaledContours];
+      updatedContours[contourIndex] = contour;
+      updateModelData(updatedContours);
+    };
   };
 
   const onSelected = (obj: any) => {
@@ -68,13 +78,14 @@ const ContourModeEdit = ({
   return (
     <>
       <Select onChangePointerUp={(obj) => onSelected(obj)}>
-        {selectedContour &&
-          selectedContour.map((contour, index) => {
+        {scaledContours &&
+          scaledContours.map((contour, index) => {
             return (
               <ContourMesh
                 key={"ContourMesh" + index}
                 contourIndex={index}
                 contour={contour}
+                onContourChange={onContourChanged(index)}
                 selectedPoint={selectedPoint}
                 onPointMoveStart={() => setDisableCamera(true)}
                 onPointMoveEnd={() => setDisableCamera(false)}

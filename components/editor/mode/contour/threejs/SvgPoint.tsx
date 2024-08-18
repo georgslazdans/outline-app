@@ -1,6 +1,6 @@
-import { Sphere } from "@react-three/drei";
-import React, { memo, useRef } from "react";
-import { Vector3 } from "three";
+import { DragControls, Sphere } from "@react-three/drei";
+import React, { memo, useEffect, useRef, useState } from "react";
+import { Matrix4, Vector3 } from "three";
 import ContourIndex from "../ContourIndex";
 
 type Props = {
@@ -8,6 +8,9 @@ type Props = {
   contourIndex: number;
   position: Vector3;
   color: "red" | "black";
+  onDragStart: () => void;
+  onDragEnd: () => void;
+  onDrag: (l: Matrix4, dl: Matrix4, w: Matrix4, dW: Matrix4) => void;
 };
 
 const SvgPoint = memo(function PointMesh({
@@ -15,8 +18,20 @@ const SvgPoint = memo(function PointMesh({
   index,
   position,
   color,
+  onDragStart,
+  onDragEnd,
+  onDrag,
 }: Props) {
   const pointRef = useRef<any>();
+  const [matrix, setMatrix] = useState(new Matrix4());
+
+  useEffect(() => {
+    const translationMatrix = new Matrix4();
+    if (position) {
+      translationMatrix.makeTranslation(position);
+      setMatrix(translationMatrix);
+    }
+  }, [position]);
 
   const asContourIndex = (): ContourIndex => {
     return { contour: contourIndex, point: index };
@@ -24,14 +39,22 @@ const SvgPoint = memo(function PointMesh({
 
   const pointSize = 0.01;
   return (
-    <Sphere
-      position={position}
-      ref={pointRef}
-      scale={[pointSize, pointSize, pointSize]}
-      userData={{ contourIndex: asContourIndex() }}
+    <DragControls
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      axisLock="z"
+      onDrag={onDrag}
+      autoTransform={false}
+      matrix={matrix}
     >
-      <meshBasicMaterial color={color} />
-    </Sphere>
+      <Sphere
+        ref={pointRef}
+        scale={[pointSize, pointSize, pointSize]}
+        userData={{ contourIndex: asContourIndex() }}
+      >
+        <meshBasicMaterial color={color} />
+      </Sphere>
+    </DragControls>
   );
 });
 

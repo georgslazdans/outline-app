@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ContourIndex from "./ContourIndex";
 import { ModelData } from "@/lib/replicad/Work";
 import SelectedPointEdit from "./SelectedPointEdit";
@@ -14,6 +14,7 @@ type Props = {
   selectedId?: string;
   selectedPoint?: ContourIndex;
   onModelDataChange: (modelData: ModelData) => void;
+  onDone: () => void;
 };
 
 const ContourModeToolbar = ({
@@ -22,6 +23,7 @@ const ContourModeToolbar = ({
   selectedId,
   selectedPoint,
   onModelDataChange,
+  onDone
 }: Props) => {
   const getSelectedContour = useCallback(() => {
     const selectedItem = modelData.items.find((it) => it.id == selectedId);
@@ -29,15 +31,18 @@ const ContourModeToolbar = ({
       throw Error("Selected item is not a shadow!");
     }
     return selectedItem.points;
-  }, [modelData.items, selectedId]);
+  }, [modelData, selectedId]);
 
-  // Probably need to be upper level?
-  const [selectedContourPoints, setSelectedContourPoints] = useState(
-    getSelectedContour()
-  );
+  const [selectedContourPoints, setSelectedContourPoints] =
+    useState<ContourPoints[]>();
+
+  useEffect(() => {
+    setSelectedContourPoints(getSelectedContour);
+  }, [getSelectedContour]);
 
   const onPointChanged = (contourPoints: ContourPoints[]) => {
     setSelectedContourPoints(contourPoints);
+
     const updatedItems = modelData.items.map((it) => {
       if (it.id == selectedId && it.type == "shadow") {
         return { ...it, points: contourPoints };
@@ -49,10 +54,10 @@ const ContourModeToolbar = ({
 
   return (
     <>
-      <Button>
+      <Button onClick={onDone}>
         <label>Done</label>
       </Button>
-      {selectedPoint && (
+      {selectedContourPoints && selectedPoint && (
         <SelectedPointEdit
           dictionary={dictionary}
           contourPoints={selectedContourPoints}

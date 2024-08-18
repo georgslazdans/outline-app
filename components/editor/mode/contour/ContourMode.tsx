@@ -1,5 +1,5 @@
 import { Dictionary } from "@/app/dictionaries";
-import { EditorModeConfig } from "../../EditorMode";
+import EditorMode, { EditorModeConfig } from "../../EditorMode";
 import ContourModeEdit from "./ContourModeEdit";
 import { ModelData } from "@/lib/replicad/Work";
 import ContourModeToolbar from "./ContourModeToolbar";
@@ -11,8 +11,9 @@ type Props = {
   onModelDataChange: (data: ModelData) => void;
   selectedId?: string;
   setDisableCamera: (value: boolean) => void;
-  selectedPoint?: ContourIndex
+  selectedPoint?: ContourIndex;
   setSelectedPoint: (index: ContourIndex) => void;
+  setEditorMode: (mode: EditorMode) => void;
 };
 
 const ContourMode = ({
@@ -22,7 +23,8 @@ const ContourMode = ({
   selectedId,
   setDisableCamera,
   selectedPoint,
-  setSelectedPoint
+  setSelectedPoint,
+  setEditorMode,
 }: Props): EditorModeConfig => {
   const mode = {
     view: () => {
@@ -46,6 +48,7 @@ const ContourMode = ({
           selectedId={selectedId}
           selectedPoint={selectedPoint}
           onModelDataChange={onModelDataChange}
+          onDone={() => setEditorMode(EditorMode.EDIT)}
         ></ContourModeToolbar>
       );
     },

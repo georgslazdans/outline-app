@@ -30,7 +30,7 @@ const SelectedPointEdit = ({
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = Number.parseFloat(event.target.value);
 
-      const updatedPoints = { ...contourPoints };
+      const updatedPoints = [...contourPoints];
       const { contour, point } = selectedPoint;
       updatedPoints[contour].points[point] = {
         ...getSelectedPoint(),
@@ -47,12 +47,14 @@ const SelectedPointEdit = ({
         onChange={handlePointChange("x")}
         label={"X"}
         name={"pointX"}
+        numberRange={{ min: -9999999, max: 99999999, step: 0.05 }}
       ></NumberField>
       <NumberField
         value={currentPoint.y}
         onChange={handlePointChange("y")}
         label={"Y"}
         name={"pointY"}
+        numberRange={{ min: -9999999, max: 99999999, step: 0.05 }}
       ></NumberField>
     </>
   );
