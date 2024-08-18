@@ -48,17 +48,15 @@ const SvgPoint = memo(function PointMesh({
       autoTransform={false}
       matrix={matrix}
     >
-      <Circle ref={circleRef} args={[1/100]} userData={{ contourIndex: asContourIndex() }}>
-        <meshBasicMaterial color={color} wireframe={true} />
-        <Outlines thickness={0.05} color="hotpink" />
-      </Circle>
-      {/* <Sphere
+      <Sphere
         ref={pointRef}
         scale={[pointSize, pointSize, pointSize]}
         userData={{ contourIndex: asContourIndex() }}
       >
-        <meshBasicMaterial color={color} wireframe={true} />
-      </Sphere> */}
+        <meshBasicMaterial color={color}/>
+        <Outlines thickness={2.5} color="white" />
+        <Outlines thickness={5} color={color} />
+      </Sphere>
     </DragControls>
   );
 });
