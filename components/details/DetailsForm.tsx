@@ -79,11 +79,11 @@ const DetailsForm = ({ dictionary }: Props) => {
     setLoading(false);
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handlePaperChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePaperChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const size = event.target.value;
     setPaperSize(size);
     if (size != "custom") {

@@ -7,77 +7,77 @@ import React, { ChangeEvent } from "react";
 
 type Props = {
   dictionary: Dictionary;
-  params: Item & Shadow;
-  onParamsChange: (params: Item & Shadow) => void;
+  item: Item & Shadow;
+  onItemChange: (item: Item & Shadow) => void;
 };
 
-const ShadowEdit = ({ dictionary, params, onParamsChange }: Props) => {
+const ShadowEdit = ({ dictionary, item, onItemChange }: Props) => {
   const handleNumberChange = (name: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = Number.parseFloat(event.target.value);
-      const updatedParams = { ...params, [name]: value };
-      onParamsChange(updatedParams);
+      const updatedParams = { ...item, [name]: value };
+      onItemChange(updatedParams);
     };
   };
 
   const handleTranslationChange = (name: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = Number.parseFloat(event.target.value);
-      const updatedTranslation = { ...params.translation!, [name]: value };
-      const updatedParams = { ...params, translation: updatedTranslation };
-      onParamsChange(updatedParams);
+      const updatedTranslation = { ...item.translation!, [name]: value };
+      const updatedParams = { ...item, translation: updatedTranslation };
+      onItemChange(updatedParams);
     };
   };
 
   const handleRotationChange = (name: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = Number.parseFloat(event.target.value);
-      const updatedRotation = { ...params.rotation!, [name]: value };
-      const updatedParams = { ...params, rotation: updatedRotation };
-      onParamsChange(updatedParams);
+      const updatedRotation = { ...item.rotation!, [name]: value };
+      const updatedParams = { ...item, rotation: updatedRotation };
+      onItemChange(updatedParams);
     };
   };
 
   return (
     <>
       <NumberField
-        value={params.height}
+        value={item.height}
         onChange={handleNumberChange("height")}
         label={"Height"}
         name={"height"}
       ></NumberField>
       <NumberField
-        value={params.translation!.x}
+        value={item.translation!.x}
         onChange={handleTranslationChange("x")}
         label={"X"}
         name={"x"}
       ></NumberField>
       <NumberField
-        value={params.translation!.y}
+        value={item.translation!.y}
         onChange={handleTranslationChange("y")}
         label={"Y"}
         name={"y"}
       ></NumberField>
       <NumberField
-        value={params.translation!.z}
+        value={item.translation!.z}
         onChange={handleTranslationChange("z")}
         label={"Z"}
         name={"z"}
       ></NumberField>
       <NumberField
-        value={params.rotation!.x}
+        value={item.rotation!.x}
         onChange={handleRotationChange("x")}
         label={"Rotation X"}
         name={"rotationX"}
       ></NumberField>
       <NumberField
-        value={params.rotation!.y}
+        value={item.rotation!.y}
         onChange={handleRotationChange("y")}
         label={"Rotation Y"}
         name={"rotationY"}
       ></NumberField>
       <NumberField
-        value={params.rotation!.z}
+        value={item.rotation!.z}
         onChange={handleRotationChange("z")}
         label={"Rotation Z"}
         name={"rotationZ"}

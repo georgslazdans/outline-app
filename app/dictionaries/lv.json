@@ -119,5 +119,10 @@
   "menu": "Izvēlne",
   "editor": {
     "title": "Editor"
+  },
+  "primitive": {
+    "box": "Kubs",
+    "sphere": "Lode",
+    "cylinder": "Cilindrs"
   }
 }

@@ -11,7 +11,7 @@ type Props = {
 
 const SvgLines = memo(function SvgLineMesh({ contour }: Props) {
   const vertices = contour.points.map((it) => new Vector3(it.x, it.y, 0));
-  return <Line points={vertices} color="black" lineWidth={3}></Line>;
+  return <Line points={[...vertices, vertices[0]]} color="black" lineWidth={3}></Line>;
 });
 
 export default SvgLines;

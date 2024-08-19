@@ -31,8 +31,8 @@ const EditMode = ({
           modelData={modelData}
           onModelDataChange={setModelData}
           wireframe={wireframe}
-          onModelIdSelect={setSelectedId}
           selectedId={selectedId}
+          onModelIdSelect={setSelectedId}
         ></EditCanvas>
       );
     },
@@ -43,6 +43,7 @@ const EditMode = ({
           modelData={modelData}
           onModelDataUpdate={setModelData}
           selectedId={selectedId}
+          onModelIdSelect={setSelectedId}
           onEditContour={() => setEditorMode(EditorMode.CONTOUR_EDIT)}
         ></EditToolbar>
       );

@@ -53,7 +53,7 @@ const SvgPoint = memo(function PointMesh({
         scale={[pointSize, pointSize, pointSize]}
         userData={{ contourIndex: asContourIndex() }}
       >
-        <meshBasicMaterial color={color}/>
+        <meshBasicMaterial color={color} transparent={true} opacity={0}/>
         <Outlines thickness={2.5} color="white" />
         <Outlines thickness={5} color={color} />
       </Sphere>

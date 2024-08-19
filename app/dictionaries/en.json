@@ -119,5 +119,10 @@
   "menu": "Menu",
   "editor": {
     "title": "Editor"
+  },
+  "primitive": {
+    "box": "Box",
+    "sphere": "Sphere",
+    "cylinder": "Cylinder"
   }
 }

@@ -1,19 +1,20 @@
 import { ContourPoints } from "../Point";
 import GridfinityParams from "./GridfinityParams";
 import Point3D from "../Point3D";
+import PrimitiveParams, {
+  defaultParamsFor,
+  defaultTranslationOf,
+} from "./PrimitiveParams";
+import PrimitiveType from "./PrimitiveType";
 
-enum BooleanOperation {
+export enum BooleanOperation {
   UNION,
   INTERSECTION,
 }
 
-type BooleanModifier = {
-  type: BooleanOperation;
-};
-
 export type Primitive = {
   type: "primitive";
-  params: any; // TODO add enum and param types
+  params: PrimitiveParams;
 };
 
 export type Shadow = {
@@ -32,6 +33,7 @@ export type Item = {
   id: string;
   translation?: Point3D;
   rotation?: Point3D;
+  booleanOperation?: BooleanOperation;
 } & (Gridfinity | Shadow | Primitive);
 
 export const gridfinityItemOf = (params: GridfinityParams): Item => {
@@ -54,5 +56,18 @@ export const shadowItemOf = (
     height: height,
     translation: { x: 0, y: 0, z: translationZ ? translationZ : 0 },
     rotation: { x: 0, y: 0, z: 0 },
+  };
+};
+
+export const primitiveOf = (
+  type: PrimitiveType,
+  gridfinityHeight: number
+): Item => {
+  const params = defaultParamsFor(type);
+  return {
+    id: crypto.randomUUID(),
+    type: "primitive",
+    params: params,
+    translation: defaultTranslationOf(params, gridfinityHeight),
   };
 };

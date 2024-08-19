@@ -5,12 +5,10 @@ import { ReplicadMeshedEdges } from "replicad-threejs-helper";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
 import { ModelData, ReplicadWork } from "./Work";
-import { Item, Shadow } from "./Model";
+import { BooleanOperation, Item, Primitive, Shadow } from "./Model";
 import ReplicadModelData from "./models/ReplicadModelData";
-import deepEqual from "../utils/Objects";
-import Point3D from "../Point3D";
-import { Euler } from "three";
 import { eulerToAxisAngle, toDegrees } from "../utils/Math";
+import { drawPrimitive } from "./models/Primtives";
 
 export type ReplicadResultProps = {
   id: string;
@@ -50,7 +48,8 @@ const processItem = (item: Item): ReplicadModelData => {
       return drawShadow(points, height);
 
     case "primitive":
-      throw new Error("Not Implemented!");
+      const { params } = item as Primitive;
+      return drawPrimitive(params);
   }
 };
 
@@ -70,7 +69,12 @@ const processFull = (full: ModelData): ReplicadModelData => {
       const { x, y, z } = item.translation;
       model = model.translate(x, y, z);
     }
-    return base.cut(model as Shape3D);
+
+    if (item.booleanOperation == BooleanOperation.UNION) {
+      return base.fuse(model as Shape3D);
+    } else {
+      return base.cut(model as Shape3D);
+    }
   };
 
   if (full.items[0].type != "gridfinity") {

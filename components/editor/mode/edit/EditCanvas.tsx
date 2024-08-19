@@ -24,7 +24,7 @@ const EditCanvas = ({
   modelData,
   onModelDataChange,
   wireframe,
-  onModelIdSelect: onModelSelect,
+  onModelIdSelect,
   selectedId,
 }: Props) => {
   const [models, setModels] = useState<ReplicadResultProps[]>([]);
@@ -46,7 +46,7 @@ const EditCanvas = ({
     if (obj.length > 0) {
       const id = obj[0].userData?.id;
       if (id) {
-        onModelSelect(id);
+        onModelIdSelect(id);
       }
     }
   };
