@@ -143,6 +143,7 @@ const EditToolbar = ({
       (item) => item.id !== selectedId
     );
     onModelDataUpdate({ ...modelData, items: updatedItems });
+    onModelIdSelect("");
   };
 
   const isGridfinity = (id: string) => {
@@ -175,7 +176,7 @@ const EditToolbar = ({
         </Button>
       )}
       {selectedId && !isGridfinity(selectedId) && (
-        <Button onClick={onRemoveContour} className="mt-2">
+        <Button onClick={onRemoveContour} hotkey="Delete" className="mt-2">
           <label>Remove {isShadow(selectedId) ? "Contour" : "Primitive"}</label>
         </Button>
       )}

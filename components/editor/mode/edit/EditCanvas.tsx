@@ -55,6 +55,10 @@ const EditCanvas = ({
     return modelData.items.find((it) => it.id == id)?.type == "gridfinity";
   };
 
+  const isShadow = (id: string) => {
+    return modelData.items.find((it) => it.id == id)?.type == "shadow";
+  };
+
   const positionOf = (id: string) => {
     const translation = modelData.items.find((it) => it.id == id)?.translation;
     if (translation) {
@@ -104,6 +108,30 @@ const EditCanvas = ({
     }
   }, [modelData, models]);
 
+  const showWireframe = (id: string) => {
+    if (isGridfinity(id)) {
+      return wireframe;
+    }
+    return false;
+  };
+
+  const opacityOf = (id: string) => {
+    if (isGridfinity(id)) {
+      return wireframe ? 0 : 0.8;
+    }
+    return 1;
+  };
+
+  const colorOf = (id: string) => {
+    if (isGridfinity(id)) {
+      return "#2c7d94"; // dark-blue
+    } else if (isShadow(id)) {
+      return "#1296b6";
+    } else {
+      return "#BDBDBD";
+    }
+  };
+
   return (
     <>
       <ModelCache
@@ -120,11 +148,14 @@ const EditCanvas = ({
               faces={model.faces}
               edges={model.edges}
               enableGizmo={!isGridfinity(model.id) && isSelected(model.id)}
-              wireframe={wireframe}
+              wireframe={showWireframe(model.id)}
+              opacity={opacityOf(model.id)}
               onTransformChange={handleTransformChange(model.id)}
               position={positionOf(model.id)}
               rotation={rotationOf(model.id)}
               id={model.id}
+              selected={selectedId == model.id}
+              color={colorOf(model.id)}
             ></ReplicadMesh>
           );
         })}

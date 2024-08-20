@@ -44,6 +44,8 @@ const ResultViewer = ({ dictionary, modelData, wireframe }: Props) => {
           edges={modelResult.edges}
           enableGizmo={false}
           wireframe={wireframe}
+          opacity={1}
+          color="#5a8296"
         ></ReplicadMesh>
       )}
     </>

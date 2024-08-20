@@ -8,17 +8,20 @@ import {
   syncLinesFromFaces,
 } from "replicad-threejs-helper";
 import { ShapeMesh } from "replicad";
-import { PivotControls, useSelect } from "@react-three/drei";
+import { Outlines, PivotControls } from "@react-three/drei";
 
 type Props = {
   faces: ShapeMesh;
   edges: ReplicadMeshedEdges;
   enableGizmo: boolean;
+  opacity: number;
   wireframe: boolean;
   onTransformChange?: (translation: Vector3, rotation: Euler) => void;
   position?: Vector3;
   rotation?: Euler;
   id?: string;
+  selected?: boolean;
+  color: string;
 };
 
 const ReplicadMesh = React.memo(function ShapeMeshes({
@@ -30,6 +33,9 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   position,
   rotation,
   id,
+  opacity,
+  selected,
+  color,
 }: Props) {
   const { invalidate } = useThree();
   const [matrix, setMatrix] = useState(new Matrix4());
@@ -92,7 +98,7 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
     }
   };
 
-  // const selected = useSelect().map((sel) => sel.userData.store);
+  const outlineColor = selected ? "#DA4167" : "#1296b6";
 
   return (
     <PivotControls
@@ -101,20 +107,31 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
       autoTransform={false}
       matrix={matrix}
       onDrag={handleDragging}
+      depthTest={false}
+      scale={0.7}
     >
-      <group scale={[scale, scale, scale]} userData={{ id: id }}>
+      <group
+        scale={[scale, scale, scale]}
+        userData={{ id: id }}
+        renderOrder={selected ? -5000 : 0}
+      >
         {!wireframe && (
           <mesh geometry={body.current} userData={{ id: id }}>
             <meshStandardMaterial
-              color="#5a8296"
+              color={color}
               polygonOffset
               polygonOffsetFactor={2.0}
               polygonOffsetUnits={1.0}
+              transparent={opacity >= 1 ? false : true}
+              opacity={opacity}
             />
+            {body.current && body.current.index && (
+              <Outlines thickness={selected ? 4 : 2} color={outlineColor} />
+            )}
           </mesh>
         )}
         <lineSegments geometry={lines.current} userData={{ id: id }}>
-          <lineBasicMaterial color="#3c5a6e" />
+          <lineBasicMaterial color={outlineColor} />
         </lineSegments>
       </group>
     </PivotControls>

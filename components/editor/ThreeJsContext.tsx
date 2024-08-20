@@ -29,9 +29,9 @@ const ThreeJsContext = ({ dictionary, disableCamera, children }: Props) => {
         camera={{ position: [0, 0, 2], zoom: 100, near: 0.00001, fov: 90 }}
         gl={{ precision: "highp", logarithmicDepthBuffer: true }}
       >
-        <pointLight position={[10, 10, 10]} />
+        <directionalLight position={[10, 10, 10]} />
+        <directionalLight position={[-10, -10, 5]} args={[0xffffff, 0.3]} />
         {children}
-        {/* <Environment preset="city" /> */}
         <ContactShadows
           frames={1}
           position={[0, -0.5, 0]}
