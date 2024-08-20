@@ -12,7 +12,6 @@ type Props = {
 };
 
 const TransformEdit = ({ dictionary, item, onItemChange }: Props) => {
-
   const handleTranslationChange = (name: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = Number.parseFloat(event.target.value);
@@ -31,6 +30,12 @@ const TransformEdit = ({ dictionary, item, onItemChange }: Props) => {
     };
   };
 
+  const translationNumberRange = {
+    min: -9999999,
+    max: 99999999,
+    step: 0.1,
+  };
+
   return (
     <>
       <NumberField
@@ -38,18 +43,21 @@ const TransformEdit = ({ dictionary, item, onItemChange }: Props) => {
         onChange={handleTranslationChange("x")}
         label={"X"}
         name={"x"}
+        numberRange={translationNumberRange}
       ></NumberField>
       <NumberField
         value={item.translation!.y}
         onChange={handleTranslationChange("y")}
         label={"Y"}
         name={"y"}
+        numberRange={translationNumberRange}
       ></NumberField>
       <NumberField
         value={item.translation!.z}
         onChange={handleTranslationChange("z")}
         label={"Z"}
         name={"z"}
+        numberRange={translationNumberRange}
       ></NumberField>
       <NumberField
         value={item.rotation!.x}
