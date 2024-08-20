@@ -3,12 +3,12 @@
 import { Dictionary } from "@/app/dictionaries";
 import { ModelData } from "@/lib/replicad/Work";
 import React, { useCallback, useEffect, useState } from "react";
-import { ReplicadResultProps } from "@/lib/replicad/Worker";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../../ReplicadMesh";
 import { Euler, Vector3 } from "three";
 import ModelCache from "../ModelCache";
 import { toDegrees, toRadians } from "@/lib/utils/Math";
+import ReplicadResult from "@/lib/replicad/WorkerResult";
 
 type Props = {
   dictionary: Dictionary;
@@ -19,6 +19,10 @@ type Props = {
   selectedId?: string;
 };
 
+export type ItemModel = {
+  [id: string]: ReplicadResult;
+};
+
 const EditCanvas = ({
   dictionary,
   modelData,
@@ -27,19 +31,12 @@ const EditCanvas = ({
   onModelIdSelect,
   selectedId,
 }: Props) => {
-  const [models, setModels] = useState<ReplicadResultProps[]>([]);
+  const [models, setModels] = useState<ItemModel>({});
 
-  const onWorkerResult = (result: ReplicadResultProps) => {
-    setModels((prevModels) => {
-      const existingIndex = prevModels.findIndex((it) => it.id === result.id);
-      if (existingIndex !== -1) {
-        const updatedModels = [...prevModels];
-        updatedModels[existingIndex] = result;
-        return updatedModels;
-      } else {
-        return [...prevModels, result];
-      }
-    });
+  const onWorkerResult = (id: string, result: ReplicadResult) => {
+    const updatedModels = { ...models };
+    updatedModels[id] = result;
+    setModels(updatedModels);
   };
 
   const onSelected = (obj: any) => {
@@ -100,10 +97,17 @@ const EditCanvas = ({
   };
 
   useEffect(() => {
-    const updatedModels = models.filter((model) =>
-      modelData.items.some((item) => item.id === model.id)
+    const modelDataKeys = modelData.items.map((it) => it.id);
+    const existingKeys = Object.keys(models);
+    const keysToDelete = existingKeys.filter(
+      (key) => !modelDataKeys.includes(key)
     );
-    if (models.length != updatedModels.length) {
+
+    if (keysToDelete && keysToDelete.length > 0) {
+      let updatedModels = { ...models };
+      keysToDelete.forEach((key) => {
+        delete updatedModels[key];
+      });
       setModels(updatedModels);
     }
   }, [modelData, models]);
@@ -135,27 +139,26 @@ const EditCanvas = ({
   return (
     <>
       <ModelCache
+        models={models}
         modelData={modelData}
-        onWorkerMessage={(result) =>
-          onWorkerResult(result as ReplicadResultProps)
-        }
+        onModelData={onWorkerResult}
       ></ModelCache>
       <Select onChangePointerUp={(obj) => onSelected(obj)}>
-        {models.map((model) => {
+        {Object.entries(models).map(([id, model]) => {
           return (
             <ReplicadMesh
-              key={model.id}
+              key={id}
               faces={model.faces}
               edges={model.edges}
-              enableGizmo={!isGridfinity(model.id) && isSelected(model.id)}
-              wireframe={showWireframe(model.id)}
-              opacity={opacityOf(model.id)}
-              onTransformChange={handleTransformChange(model.id)}
-              position={positionOf(model.id)}
-              rotation={rotationOf(model.id)}
-              id={model.id}
-              selected={selectedId == model.id}
-              color={colorOf(model.id)}
+              enableGizmo={!isGridfinity(id) && isSelected(id)}
+              wireframe={showWireframe(id)}
+              opacity={opacityOf(id)}
+              onTransformChange={handleTransformChange(id)}
+              position={positionOf(id)}
+              rotation={rotationOf(id)}
+              id={id}
+              selected={selectedId == id}
+              color={colorOf(id)}
             ></ReplicadMesh>
           );
         })}

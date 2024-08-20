@@ -2,11 +2,10 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
-import React, { useState } from "react";
-import { downloadWorkOf, ModelData, ReplicadWork } from "@/lib/replicad/Work";
-import { ReplicadWorker } from "../../ReplicadWorker";
-import { ReplicadResult } from "@/lib/replicad/Worker";
+import React, { useCallback } from "react";
+import { ModelData } from "@/lib/replicad/Work";
 import { downloadFile } from "@/lib/utils/Download";
+import newWorkerInstance from "../../ReplicadWorker";
 
 type Props = {
   dictionary: Dictionary;
@@ -14,27 +13,17 @@ type Props = {
 };
 
 const ResultToolbar = ({ dictionary, modelData }: Props) => {
-  const [replicadMessage, setReplicadMessage] = useState<ReplicadWork>();
 
-  const onWorkerMessage = (blob: ReplicadResult) => {
-    downloadFile(blob as Blob, "export.stl");
-    setReplicadMessage(undefined);
-  };
-
-  const onDownload = () => {
-    setReplicadMessage(downloadWorkOf(modelData.items));
-  };
-
-  const asMessageArray = () => {
-    return replicadMessage ? [replicadMessage] : [];
-  };
+  const onDownload = useCallback(() => {
+    const { api, worker } = newWorkerInstance();
+    api.downloadBlob(modelData).then((blob) => {
+      downloadFile(blob as Blob, "export.stl");
+      worker.terminate();
+    });
+  }, []);
 
   return (
     <>
-      <ReplicadWorker
-        messages={asMessageArray()}
-        onWorkerMessage={onWorkerMessage}
-      ></ReplicadWorker>
       <Button onClick={() => onDownload()}>
         <label>Download</label>
       </Button>

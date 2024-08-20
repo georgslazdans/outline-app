@@ -69,21 +69,25 @@ const ContourModeToolbar = ({
 
       onContourChanged(updatedPoints);
     }
-  }
+  };
 
   return (
     <>
       <Button onClick={onDone}>
         <label>Done</label>
       </Button>
+      {selectedContourPoints && (
+        <ScaleAlongNormal
+          dictionary={dictionary}
+          contour={selectedContourPoints}
+          onContourChanged={onContourChanged}
+        ></ScaleAlongNormal>
+      )}
       {selectedContourPoints && selectedPoint && (
         <>
-          <ScaleAlongNormal
-            dictionary={dictionary}
-            contour={selectedContourPoints}
-            onContourChanged={onContourChanged}
-          ></ScaleAlongNormal>
-          <Button onClick={onDeletePoint} hotkey="Delete"><label>Delete Point</label></Button>
+          <Button onClick={onDeletePoint} hotkey="Delete">
+            <label>Delete Point</label>
+          </Button>
           <SelectedPointEdit
             dictionary={dictionary}
             contourPoints={selectedContourPoints}

@@ -34,7 +34,6 @@ const ContourModeEdit = ({
   useEffect(() => {
     const data = modelData.items.find((it) => it.id == selectedId);
     if (data?.type == "shadow") {
-      console.log("Data", data);
       const scaledPoints = data.points.map((it) => scalePoints(it, scale));
       setScaledContours(scaledPoints);
     } else {
@@ -43,7 +42,6 @@ const ContourModeEdit = ({
   }, [modelData, selectedId]);
 
   const updateModelData = (contourPoints: ContourPoints[]) => {
-    console.log("Updating model data", contourPoints);
     const updatedPoints = contourPoints.map((it) => scalePoints(it, 1 / scale));
     const updatedData = {
       items: modelData.items.map((it) => {
@@ -70,7 +68,6 @@ const ContourModeEdit = ({
       const pointIndex = point.userData?.contourIndex as ContourIndex;
       if (pointIndex) {
         onPointSelect(pointIndex);
-        console.log("Selected", pointIndex);
       }
     }
   };

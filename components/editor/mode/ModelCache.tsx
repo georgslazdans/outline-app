@@ -1,83 +1,103 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ReplicadWorker } from "../ReplicadWorker";
-import { ModelData, ModelPart, modelWorkOf } from "@/lib/replicad/Work";
-import { ReplicadResult, ReplicadResultProps } from "@/lib/replicad/Worker";
+import React, { useEffect, useState } from "react";
+import { ModelData } from "@/lib/replicad/Work";
 import { useModelCache } from "@/context/ModelCacheContext";
-import deepEqual from "@/lib/utils/Objects";
-import { Item } from "@/lib/replicad/Model";
+import { Gridfinity, Item, Primitive, Shadow } from "@/lib/replicad/Model";
+import {
+  newWorkerInstance
+} from "../ReplicadWorker";
+import { ItemModel } from "./edit/EditCanvas";
+import ReplicadResult from "@/lib/replicad/WorkerResult";
 
 type Props = {
+  models: ItemModel;
   modelData: ModelData;
-  onWorkerMessage: (message: ReplicadResult) => void;
+  onModelData: (id: string, message: ReplicadResult) => void;
 };
 
-const ModelCache = ({ modelData, onWorkerMessage }: Props) => {
+type MessageGroup = { id: string; key: string; work: Item };
+
+const withoutItemData = (item: Item): Gridfinity | Primitive | Shadow => {
+  const { id, translation, rotation, booleanOperation, ...rest } = item;
+  return rest;
+};
+
+const keyOf = (item: Item) => JSON.stringify(withoutItemData(item));
+
+const ModelCache = ({ modelData, onModelData, models }: Props) => {
   const { addToCache, getFromCache } = useModelCache();
-  const [previousData, setPreviousData] = useState<Item[]>([]);
-  const [replicadMessages, setReplicadMessages] = useState<ModelPart[]>([]);
-
-  useEffect(() => {
-    const items = modelData.items.map((it) => {
-      const { translation, rotation, ...rest } = it;
-      return rest;
-    });
-    if (!deepEqual(previousData, items)) {
-      setPreviousData(items);
-    }
-  }, [modelData, previousData]);
-
-  const alreadyQueued = useCallback(
-    (work: ModelPart) => {
-      return replicadMessages?.some((msg) => deepEqual(msg, work));
-    },
-    [replicadMessages]
+  const [messages, setMessages] = useState<MessageGroup[]>([]);
+  const [workers, setWorkers] = useState<Map<string, { cancel: () => void }>>(
+    new Map()
   );
 
   useEffect(() => {
-    const messagesToSend: ModelPart[] = [];
-    previousData.forEach((item) => {
-      const cacheKey = JSON.stringify(item);
-      const cacheEntry = getFromCache(cacheKey);
+    const newMessages: MessageGroup[] = [];
+    const addItem = (key: string, item: Item) => {
+      newMessages.push({ id: item.id, key: key, work: item });
+    };
+
+    modelData.items.forEach((item) => {
+      const key = keyOf(item);
+      const cacheEntry = getFromCache(key);
 
       if (!cacheEntry) {
-        const work = modelWorkOf(item);
-        if (!alreadyQueued(work)) {
-          messagesToSend.push(work);
+        const currentMessage = messages.find((it) => it.id === item.id);
+        if (currentMessage && currentMessage.key !== key) {
+          const currentWorker = workers.get(currentMessage.key);
+          if (currentWorker) {
+            currentWorker.cancel();
+          }
+          addItem(key, item);
         }
-      } else {
-        onWorkerMessage(cacheEntry);
+        if (!currentMessage) {
+          addItem(key, item);
+        }
+      } else if (!models[item.id] || models[item.id] != cacheEntry) {
+        onModelData(item.id, cacheEntry);
       }
     });
-    if (messagesToSend.length > 0) {
-      setReplicadMessages((messages) => [...messages, ...messagesToSend]);
-    }
-  }, [alreadyQueued, getFromCache, onWorkerMessage, previousData]);
 
-  const onWorkerResult = useCallback(
-    (result: ReplicadResultProps) => {
-      const item = previousData.find((it) => it.id === result.id);
-      if (item) {
-        const { translation, rotation, ...rest } = item;
-        const cacheKey = JSON.stringify(rest);
-        addToCache(cacheKey, result);
+    setMessages(newMessages);
+  }, [models, modelData]);
+
+  useEffect(() => {
+    messages.forEach((item) => {
+      const cacheEntry = getFromCache(item.key);
+
+      if (cacheEntry) {
+        onModelData(item.id, cacheEntry);
+      } else if (!workers.has(item.key)) {
+        const { api, worker } = newWorkerInstance();
+
+        const promise = api.processItem(item.work).then((result) => {
+          addToCache(item.key, result);
+          onModelData(item.id, result);
+
+          setWorkers((prevWorkers) => {
+            const updatedWorkers = new Map(prevWorkers);
+            updatedWorkers.delete(item.key); // Remove worker from the map after it completes
+            return updatedWorkers;
+          });
+
+          worker.terminate();
+        });
+
+        const cancel = () => {
+          worker.terminate();
+        };
+
+        setWorkers((prevWorkers) => {
+          const updatedWorkers = new Map(prevWorkers);
+          updatedWorkers.set(item.key, { cancel });
+          return updatedWorkers;
+        });
       }
+    });
+  }, [messages]);
 
-      onWorkerMessage(result);
-      setReplicadMessages((messages) =>
-        messages.filter((it) => it.item.id != item?.id)
-      );
-    },
-    [previousData, onWorkerMessage, addToCache]
-  );
-
-  return (
-    <ReplicadWorker
-      messages={replicadMessages}
-      onWorkerMessage={(result) => onWorkerResult(result as ReplicadResultProps)}
-    ></ReplicadWorker>
-  );
+  return <></>;
 };
 
 export default ModelCache;

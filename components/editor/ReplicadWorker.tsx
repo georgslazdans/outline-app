@@ -1,63 +1,27 @@
 "use client";
 
-import { ReplicadWork } from "@/lib/replicad/Work";
-import { ReplicadResult } from "@/lib/replicad/Worker";
-import { useCallback, useEffect, useRef } from "react";
+import { Item } from "@/lib/replicad/Model";
+import {  ModelData } from "@/lib/replicad/Work";
+import ReplicadResult from "@/lib/replicad/WorkerResult";
+import * as Comlink from "comlink";
+
+export interface WorkerApi {
+  processModelData: (modelData: ModelData) => Promise<ReplicadResult>;
+  processItem: (item: Item) => Promise<ReplicadResult>;
+  downloadBlob: (modelData: ModelData) => Promise<Blob>;
+  [Comlink.releaseProxy]: () => void;
+}
 
 type Props = {
-  messages?: ReplicadWork[];
-  onWorkerMessage: (result: ReplicadResult) => void;
-  onError?: (message: string) => void;
+  setWorkerApiRef: (api: WorkerApi) => void;
 };
 
-export const ReplicadWorker = ({
-  messages,
-  onWorkerMessage,
-  onError,
-}: Props) => {
-  const workerRef = useRef<Worker>();
-
-  const handleMessage = useCallback(
-    (event: MessageEvent<ReplicadResult>) => {
-      const result = event.data as ReplicadResult;
-      onWorkerMessage(result);
-    },
-    [onWorkerMessage]
+export const newWorkerInstance = () => {
+  const workerInstance = new Worker(
+    new URL("@/lib/replicad/Worker.ts", import.meta.url)
   );
-
-  const addMessageHandler = useCallback(() => {
-    if (workerRef.current) {
-      workerRef.current.onmessage = handleMessage;
-    }
-  }, [handleMessage]);
-
-  useEffect(() => {
-    addMessageHandler();
-  }, [addMessageHandler]);
-
-  const postWork = useCallback(() => {
-    if (workerRef.current && messages && messages.length > 0) {
-      messages.forEach((message) => {
-        console.log("Posting message", message);
-        workerRef.current?.postMessage(message);
-      });
-    }
-  }, [messages]);
-
-  useEffect(() => {
-    workerRef.current = new Worker(
-      new URL("@/lib/replicad/Worker.ts", import.meta.url)
-    );
-    addMessageHandler();
-    postWork();
-    return () => {
-      workerRef.current?.terminate();
-    };
-  }, []);
-
-  useEffect(() => {
-    postWork();
-  }, [postWork]);
-
-  return <></>;
+  const api = Comlink.wrap<WorkerApi>(workerInstance);
+  return {api, worker: workerInstance};
 };
+
+export default newWorkerInstance;

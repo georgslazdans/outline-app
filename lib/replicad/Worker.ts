@@ -1,23 +1,14 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { Point, setOC, Shape3D, ShapeMesh } from "replicad";
-import { ReplicadMeshedEdges } from "replicad-threejs-helper";
+import { Point, setOC, Shape3D } from "replicad";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
-import { ModelData, ReplicadWork } from "./Work";
-import { BooleanOperation, Item, Primitive, Shadow } from "./Model";
+import { ModelData } from "./Work";
+import { BooleanOperation, Gridfinity, Item, Primitive, Shadow } from "./Model";
 import ReplicadModelData from "./models/ReplicadModelData";
 import { eulerToAxisAngle, toDegrees } from "../utils/Math";
-import { drawPrimitive } from "./models/Primtives";
-
-export type ReplicadResultProps = {
-  id: string;
-  faces: ShapeMesh;
-  edges: ReplicadMeshedEdges;
-  messageId?: number;
-};
-
-export type ReplicadResult = ReplicadResultProps | Blob;
+import { drawPrimitive } from "./models/Primitives";
+import * as Comlink from "comlink";
 
 let initialized = false;
 
@@ -38,7 +29,9 @@ const waitForInitialization = async () => {
   await initializedPromise;
 };
 
-const processItem = (item: Item): ReplicadModelData => {
+const processItemInternal = (
+  item: Gridfinity | Shadow | Primitive
+): ReplicadModelData => {
   switch (item.type) {
     case "gridfinity":
       return gridfinityBox(item.params);
@@ -48,14 +41,13 @@ const processItem = (item: Item): ReplicadModelData => {
       return drawShadow(points, height);
 
     case "primitive":
-      const { params } = item as Primitive;
-      return drawPrimitive(params);
+      return drawPrimitive(item.params);
   }
 };
 
 const processFull = (full: ModelData): ReplicadModelData => {
   const processModification = (base: Shape3D, item: Item) => {
-    let model = processItem(item);
+    let model = processItemInternal(item);
     if (item.rotation) {
       const axisRotation = eulerToAxisAngle(item.rotation);
       const axis = [
@@ -81,7 +73,7 @@ const processFull = (full: ModelData): ReplicadModelData => {
     console.warn("First item is not a gridfinity box!");
   }
 
-  let box = processItem(full.items[0]);
+  let box = processItemInternal(full.items[0]);
   for (let i = 1; i < full.items.length; i++) {
     box = processModification(box as Shape3D, full.items[i]);
   }
@@ -89,30 +81,27 @@ const processFull = (full: ModelData): ReplicadModelData => {
   return box;
 };
 
-const asMesh = (data: ReplicadModelData, id?: string) => {
+const asMesh = (data: ReplicadModelData, messageId?: string) => {
   return {
-    id: id ? id : crypto.randomUUID(),
+    messageId: messageId ? messageId : crypto.randomUUID(),
     faces: data.mesh(),
     edges: data.meshEdges(),
   };
 };
 
-const processWork = (work: ReplicadWork) => {
-  switch (work.type) {
-    case "full":
-      return asMesh(processFull(work));
-    case "model":
-      return asMesh(processItem(work.item), work.item.id);
-    case "download":
-      return processFull(work).blobSTL();
-  }
+const processModelData = async (modelData: ModelData) => {
+  await waitForInitialization();
+  return asMesh(processFull(modelData));
 };
 
-addEventListener("message", async (event: MessageEvent<ReplicadWork>) => {
+const processItem = async (item: Item) => {
   await waitForInitialization();
-  const work = event.data;
+  return asMesh(processItemInternal(item));
+};
 
-  const result = processWork(work);
+const downloadBlob = async (modelData: ModelData) => {
+  await waitForInitialization();
+  return processFull(modelData).blobSTL();
+};
 
-  postMessage(result);
-});
+Comlink.expose({ processModelData, processItem, downloadBlob });
