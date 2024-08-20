@@ -69,5 +69,6 @@ export const primitiveOf = (
     type: "primitive",
     params: params,
     translation: defaultTranslationOf(params, gridfinityHeight),
+    rotation: { x: 0, y: 0, z: 0 },
   };
 };

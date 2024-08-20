@@ -54,7 +54,7 @@ export const defaultTranslationOf = (
       const cylinderOffset = gridfinityHeight - params.height;
       return new Vector3(0, 0, cylinderOffset);
     case PrimitiveType.SPHERE:
-      const sphereOffset = gridfinityHeight - params.radius;
+      const sphereOffset = gridfinityHeight;
       return new Vector3(0, 0, sphereOffset);
   }
 };

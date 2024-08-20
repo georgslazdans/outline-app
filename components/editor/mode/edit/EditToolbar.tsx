@@ -118,7 +118,7 @@ const EditToolbar = ({
               <PrimitiveEdit
                 dictionary={dictionary}
                 item={item}
-                onParamsChange={(params) => onItemChanged(item.id, params)}
+                onItemChange={(params) => onItemChanged(item.id, params)}
               ></PrimitiveEdit>
             </>
           );

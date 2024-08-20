@@ -16,26 +16,27 @@ import PrimitiveParams, {
 } from "@/lib/replicad/PrimitiveParams";
 import BoxEdit from "./BoxEdit";
 import CylinderEdit from "./CylinderEdit";
+import TransformEdit from "../TransformEdit";
 
 type Props = {
   dictionary: Dictionary;
   item: Item & Primitive;
-  onParamsChange: (params: Item & Primitive) => void;
+  onItemChange: (params: Item ) => void;
 };
 
-const PrimitiveEdit = ({ dictionary, item, onParamsChange }: Props) => {
+const PrimitiveEdit = ({ dictionary, item, onItemChange}: Props) => {
   const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     if (item.params.type != value) {
       const updatedParams = defaultParamsFor(value as PrimitiveType);
       const updatedItem = { ...item, params: updatedParams };
-      onParamsChange(updatedItem);
+      onItemChange(updatedItem);
     }
   };
 
   const handleParamsChange = (params: PrimitiveParams) => {
     const updatedItem = { ...item, params: params };
-    onParamsChange(updatedItem);
+    onItemChange(updatedItem);
   };
 
   const isCurrentType = (type: PrimitiveType) => {
@@ -72,6 +73,11 @@ const PrimitiveEdit = ({ dictionary, item, onParamsChange }: Props) => {
           onParamsChange={handleParamsChange}
         ></CylinderEdit>
       )}
+      <TransformEdit
+        dictionary={dictionary}
+        item={item}
+        onItemChange={onItemChange}
+      ></TransformEdit>
     </>
   );
 };
