@@ -4,19 +4,29 @@ import { Dictionary } from "@/app/dictionaries";
 import React from "react";
 import Button from "../../Button";
 import { useIndexedDB } from "react-indexed-db-hook";
-import { ModelData } from "@/lib/replicad/ModelData";
+import { useModelContext } from "../ModelContext";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
 };
 
-const SaveModel = ({ dictionary, modelData }: Props) => {
-  const { add } = useIndexedDB("models");
+const SaveModel = ({ dictionary }: Props) => {
+  const { add, update } = useIndexedDB("models");
+
+  const { model, setModel } = useModelContext();
 
   const onSaveModel = () => {
-    // add.
-  }
+    if (model.id) {
+      update(model, model.id).then(() => {});
+    } else {
+      add(model).then(
+        (dbId) => {
+          setModel({ ...model, id: dbId });
+        },
+        (error) => console.error(error)
+      );
+    }
+  };
   return (
     <>
       <Button className="mt-2" onClick={onSaveModel}>

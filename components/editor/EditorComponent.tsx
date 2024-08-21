@@ -1,12 +1,9 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React, { useState } from "react";
-
+import React from "react";
 import { Object3D, Vector3 } from "three";
 import ThreeJsEnvironment from "./ThreeJsEnvironment";
-import { gridfinityItemOf } from "@/lib/replicad/Model";
-import { defaultGridfinityParams } from "@/lib/replicad/GridfinityParams";
 import WireframeButton from "./ui/WireframeButton";
 import EditorMode from "./EditorMode";
 import ResultMode from "./mode/result/ResultMode";
@@ -17,6 +14,7 @@ import ModelName from "./ui/ModelName";
 import { useEditorContext } from "./EditorContext";
 import RenderButton from "./ui/RenderButton";
 import { useModelContext } from "./ModelContext";
+import SaveModel from "./ui/SaveModel";
 
 type Props = {
   dictionary: Dictionary;
@@ -33,7 +31,7 @@ const EditorComponent = ({ dictionary }: Props) => {
       return { ...prev, modelData: modelData };
     });
   };
-  
+
   const editMode = EditMode({
     dictionary,
     modelData: model.modelData,
@@ -73,6 +71,7 @@ const EditorComponent = ({ dictionary }: Props) => {
           </div>
           <div className="flex flex-row gap-2">
             <RenderButton dictionary={dictionary}></RenderButton>
+            <SaveModel dictionary={dictionary}></SaveModel>
           </div>
         </div>
 
