@@ -4,7 +4,6 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { useState } from "react";
 
 import { Object3D, Vector3 } from "three";
-import { ModelData } from "@/lib/replicad/Work";
 import ThreeJsContext from "./ThreeJsContext";
 import { gridfinityItemOf } from "@/lib/replicad/Model";
 import { defaultGridfinityParams } from "@/lib/replicad/GridfinityParams";
@@ -16,6 +15,7 @@ import ResultMode from "./mode/result/ResultMode";
 import EditMode from "./mode/edit/EditMode";
 import ContourMode from "./mode/contour/ContourMode";
 import ContourIndex from "./mode/contour/ContourIndex";
+import { ModelData } from "@/lib/replicad/ModelData";
 
 type Props = {
   dictionary: Dictionary;
@@ -37,6 +37,7 @@ const Editor = ({ dictionary }: Props) => {
 
   const onFullRenderButton = () => {
     if (editorMode != EditorMode.RESULT) {
+      setWireframe(false);
       setEditorMode(EditorMode.RESULT);
     } else {
       setEditorMode(EditorMode.EDIT);
