@@ -11,7 +11,7 @@ type Props = {
   dictionary: Dictionary;
 };
 
-const History = ({ dictionary }: Props) => {
+const ContoursList = ({ dictionary }: Props) => {
   const { getAll } = useIndexedDB("details");
   const [items, setItems] = useState<Context[]>([]);
   const [search, setSearch] = React.useState("");
@@ -42,7 +42,7 @@ const History = ({ dictionary }: Props) => {
   return (
     <>
       <InputField
-        label={dictionary.history.searchByName}
+        label={dictionary.contours.searchByName}
         name={"searchBy"}
         value={search}
         onChange={handleSearch}
@@ -64,4 +64,4 @@ const History = ({ dictionary }: Props) => {
   );
 };
 
-export default History;
+export default ContoursList;

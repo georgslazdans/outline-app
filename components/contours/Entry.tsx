@@ -63,7 +63,7 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
         </div>
         <div className="ml-4 w-full">
           <h2>{context.details?.name}</h2>
-          <EntryField label={dictionary.history.date} value={dateString} />
+          <EntryField label={dictionary.contours.date} value={dateString} />
         </div>
       </div>
       <div className="flex flex-row gap-2 mt-2">
@@ -72,17 +72,17 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
           className={buttonClass}
           style="secondary"
         >
-          <label>{dictionary.history.settings}</label>
+          <label>{dictionary.contours.settings}</label>
         </Button>
         <Button
           onClick={exportSvg}
           className={buttonClass}
           style={hasSvg ? "secondary" : "disabled"}
         >
-          <label>{dictionary.history.svg}</label>
+          <label>{dictionary.contours.svg}</label>
         </Button>
         <Button onClick={deleteEntry} className={buttonClass} style="red">
-          <label>{dictionary.history.delete}</label>
+          <label>{dictionary.contours.delete}</label>
         </Button>
       </div>
     </div>

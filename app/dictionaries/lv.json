@@ -99,12 +99,12 @@
     "done": "Pabeigt",
     "save": "Saglabāt"
   },
-  "history": {
-    "title": "Vēsture",
+  "contours": {
+    "title": "Kontūras",
     "image": "Bilde",
     "name": "Nosaukums",
     "date": "Datums",
-    "searchByName": "Search by Name",
+    "searchByName": "Meklēt pēc nosaukuma",
     "settings": "Iestatījumi",
     "svg": "SVG",
     "delete": "Izdzēst"

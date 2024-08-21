@@ -99,8 +99,8 @@
     "done": "Done",
     "save": "Save"
   },
-  "history": {
-    "title": "History",
+  "contours": {
+    "title": "Contours",
     "image": "Image",
     "name": "Name",
     "date": "Date",
