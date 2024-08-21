@@ -22,13 +22,13 @@ export type ItemModel = {
 };
 
 const EditCanvas = ({ dictionary, modelData, onModelDataChange }: Props) => {
-  const [models, setModels] = useState<ItemModel>({});
+  const [itemModels, setItemModels] = useState<ItemModel>({});
   const { wireframe, selectedId, setSelectedId } = useEditorContext();
 
   const onWorkerResult = (id: string, result: ReplicadResult) => {
-    const updatedModels = { ...models };
+    const updatedModels = { ...itemModels };
     updatedModels[id] = result;
-    setModels(updatedModels);
+    setItemModels(updatedModels);
   };
 
   const onSelected = (obj: any) => {
@@ -90,19 +90,19 @@ const EditCanvas = ({ dictionary, modelData, onModelDataChange }: Props) => {
 
   useEffect(() => {
     const modelDataKeys = modelData.items.map((it) => it.id);
-    const existingKeys = Object.keys(models);
+    const existingKeys = Object.keys(itemModels);
     const keysToDelete = existingKeys.filter(
       (key) => !modelDataKeys.includes(key)
     );
 
     if (keysToDelete && keysToDelete.length > 0) {
-      let updatedModels = { ...models };
+      let updatedModels = { ...itemModels };
       keysToDelete.forEach((key) => {
         delete updatedModels[key];
       });
-      setModels(updatedModels);
+      setItemModels(updatedModels);
     }
-  }, [modelData, models]);
+  }, [modelData, itemModels]);
 
   const showWireframe = (id: string) => {
     if (isGridfinity(id)) {
@@ -131,12 +131,12 @@ const EditCanvas = ({ dictionary, modelData, onModelDataChange }: Props) => {
   return (
     <>
       <ModelCache
-        models={models}
+        models={itemModels}
         modelData={modelData}
         onModelData={onWorkerResult}
       ></ModelCache>
       <Select onChangePointerUp={(obj) => onSelected(obj)}>
-        {Object.entries(models).map(([id, model]) => {
+        {Object.entries(itemModels).map(([id, model]) => {
           return (
             <ReplicadMesh
               key={id}

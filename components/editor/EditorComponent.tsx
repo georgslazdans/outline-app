@@ -16,6 +16,7 @@ import { ModelData } from "@/lib/replicad/ModelData";
 import ModelName from "./ui/ModelName";
 import { useEditorContext } from "./EditorContext";
 import RenderButton from "./ui/RenderButton";
+import { useModelContext } from "./ModelContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -25,24 +26,27 @@ const EditorComponent = ({ dictionary }: Props) => {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
   const { editorMode } = useEditorContext();
+  const { model, setModel } = useModelContext();
 
-  const [modelData, setModelData] = useState<ModelData>({
-    items: [gridfinityItemOf(defaultGridfinityParams())],
-  });
-
+  const setModelData = (modelData: ModelData) => {
+    setModel((prev) => {
+      return { ...prev, modelData: modelData };
+    });
+  };
+  
   const editMode = EditMode({
     dictionary,
-    modelData,
+    modelData: model.modelData,
     setModelData,
   });
   const resultMode = ResultMode({
     dictionary,
-    modelData,
+    modelData: model.modelData,
   });
 
   const contourMode = ContourMode({
     dictionary,
-    modelData,
+    modelData: model.modelData,
     setModelData,
   });
 

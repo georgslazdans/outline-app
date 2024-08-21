@@ -3,17 +3,22 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useState } from "react";
 import InputField from "../../fields/InputField";
+import { useModelContext } from "../ModelContext";
 
 type Props = {
   dictionary: Dictionary;
 };
 
 const ModelName = ({ dictionary }: Props) => {
-  const [name, setName] = useState<string>("Untitled");
+  const { model, setModel } = useModelContext();
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+    const newName = event.target.value;
+    setModel((prev) => {
+      return { ...prev, name: newName };
+    });
   };
 
   const handleEditClick = () => {
@@ -32,7 +37,7 @@ const ModelName = ({ dictionary }: Props) => {
           <InputField
             className="ml-2 mr-auto"
             type="text"
-            value={name}
+            value={model.name}
             onChange={handleNameChange}
             onBlur={handleBlur}
             autofocus
@@ -44,7 +49,7 @@ const ModelName = ({ dictionary }: Props) => {
             onClick={handleEditClick}
             className="ml-2 mr-auto cursor-pointer hover:bg-gray"
           >
-            {name}
+            {model.name}
           </span>
         )}
       </h1>

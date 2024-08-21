@@ -6,6 +6,7 @@ import React from "react";
 import { ModelCacheProvider } from "./cache/ModelCacheContext";
 import { EditorProvider } from "./EditorContext";
 import EditorComponent from "./EditorComponent";
+import { ModelProvider } from "./ModelContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -14,13 +15,13 @@ type Props = {
 const Editor = ({ dictionary }: Props) => {
   return (
     <>
-      <EditorProvider>
-        <ModelCacheProvider>
-          <EditorComponent dictionary={dictionary}>
-
-          </EditorComponent>
-        </ModelCacheProvider>
-      </EditorProvider>
+      <ModelProvider>
+        <EditorProvider>
+          <ModelCacheProvider>
+            <EditorComponent dictionary={dictionary}></EditorComponent>
+          </ModelCacheProvider>
+        </EditorProvider>
+      </ModelProvider>
     </>
   );
 };
