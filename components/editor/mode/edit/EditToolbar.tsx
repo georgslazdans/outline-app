@@ -49,7 +49,7 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
 
   const addPrimitive = () => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
-    const primitive = primitiveOf(PrimitiveType.SPHERE, gridfinityHeight);
+    const primitive = primitiveOf(PrimitiveType.BOX, gridfinityHeight);
     onModelDataUpdate({ items: [...modelData.items, primitive] });
     setSelectedId(primitive.id);
   };

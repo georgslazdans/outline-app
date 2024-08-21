@@ -7,6 +7,7 @@ import { Context } from "@/context/DetailsContext";
 import { centerPoints, ContourPoints } from "@/lib/Point";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import SelectField, { Option } from "@/components/fields/SelectField";
+import { useContourCacheContext } from "../../cache/ContourCacheContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -19,8 +20,7 @@ const centeredPointsOf = (context: Context): ContourPoints[] => {
 };
 
 const SvgSelect = ({ dictionary, onSelect }: Props) => {
-  const { getAll } = useIndexedDB("details");
-  const [items, setItems] = useState<Context[]>();
+  const { items } = useContourCacheContext();
   const [options, setOptions] = useState<Option[]>();
   const [selected, setSelected] = useState<number>();
 
@@ -31,15 +31,12 @@ const SvgSelect = ({ dictionary, onSelect }: Props) => {
         label: context.details.name,
       };
     };
-    getAll().then((allContexts: Context[]) => {
-      if (allContexts && allContexts.length > 0) {
-        setItems(allContexts);
-        setOptions(allContexts.map(asOption));
-        setSelected(allContexts[0].id!);
-        onSelect(centeredPointsOf(allContexts[0]));
-      }
-    });
-  }, [getAll, onSelect]);
+    if (items && items.length > 0) {
+      setOptions(items.map(asOption));
+      setSelected(items[0].id!);
+      onSelect(centeredPointsOf(items[0]));
+    }
+  }, [items, onSelect]);
 
   const onChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const contextId = Number.parseInt(event.target.value);
@@ -50,7 +47,7 @@ const SvgSelect = ({ dictionary, onSelect }: Props) => {
     }
   };
 
-  useEffect(() => refreshData(), []);
+  useEffect(() => refreshData(), [refreshData]);
 
   return (
     <>

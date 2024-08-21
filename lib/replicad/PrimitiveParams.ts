@@ -37,7 +37,7 @@ export const defaultParamsFor = (type: PrimitiveType): PrimitiveParams => {
     case PrimitiveType.SPHERE:
       return {
         type: PrimitiveType.SPHERE,
-        radius: 10,
+        radius: 5,
       };
   }
 };
