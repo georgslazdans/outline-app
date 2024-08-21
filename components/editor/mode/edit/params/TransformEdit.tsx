@@ -36,47 +36,63 @@ const TransformEdit = ({ dictionary, item, onItemChange }: Props) => {
     step: 0.1,
   };
 
+  const rotationNumberRange = {
+    min: -180,
+    max: 180,
+    step: 0.1,
+  };
+
   return (
     <>
-      <NumberField
-        value={item.translation!.x}
-        onChange={handleTranslationChange("x")}
-        label={"X"}
-        name={"x"}
-        numberRange={translationNumberRange}
-      ></NumberField>
-      <NumberField
-        value={item.translation!.y}
-        onChange={handleTranslationChange("y")}
-        label={"Y"}
-        name={"y"}
-        numberRange={translationNumberRange}
-      ></NumberField>
-      <NumberField
-        value={item.translation!.z}
-        onChange={handleTranslationChange("z")}
-        label={"Z"}
-        name={"z"}
-        numberRange={translationNumberRange}
-      ></NumberField>
-      <NumberField
-        value={item.rotation!.x}
-        onChange={handleRotationChange("x")}
-        label={"Rotation X"}
-        name={"rotationX"}
-      ></NumberField>
-      <NumberField
-        value={item.rotation!.y}
-        onChange={handleRotationChange("y")}
-        label={"Rotation Y"}
-        name={"rotationY"}
-      ></NumberField>
-      <NumberField
-        value={item.rotation!.z}
-        onChange={handleRotationChange("z")}
-        label={"Rotation Z"}
-        name={"rotationZ"}
-      ></NumberField>
+      <div className="flex flex-row gap-2">
+        <NumberField
+          value={item.translation!.x}
+          onChange={handleTranslationChange("x")}
+          label={"X"}
+          name={"x"}
+          numberRange={translationNumberRange}
+        ></NumberField>
+        <NumberField
+          value={item.translation!.y}
+          onChange={handleTranslationChange("y")}
+          label={"Y"}
+          name={"y"}
+          numberRange={translationNumberRange}
+        ></NumberField>
+        <NumberField
+          value={item.translation!.z}
+          onChange={handleTranslationChange("z")}
+          label={"Z"}
+          name={"z"}
+          numberRange={translationNumberRange}
+        ></NumberField>
+      </div>
+      <div className="flex flex-row gap-2">
+        <NumberField
+          className="w-full"
+          value={item.rotation!.x}
+          onChange={handleRotationChange("x")}
+          label={"Rotation X"}
+          name={"rotationX"}
+          numberRange={rotationNumberRange}
+        ></NumberField>
+        <NumberField
+          className="w-full"
+          value={item.rotation!.y}
+          onChange={handleRotationChange("y")}
+          label={"Rotation Y"}
+          name={"rotationY"}
+          numberRange={rotationNumberRange}
+        ></NumberField>
+        <NumberField
+          className="w-full"
+          value={item.rotation!.z}
+          onChange={handleRotationChange("z")}
+          label={"Rotation Z"}
+          name={"rotationZ"}
+          numberRange={rotationNumberRange}
+        ></NumberField>
+      </div>
     </>
   );
 };
