@@ -28,7 +28,6 @@ export type Gridfinity = {
   params: GridfinityParams;
 };
 
-// TODO item will have transform/rotation and operation type. Can be nested?
 export type Item = {
   id: string;
   translation?: Point3D;

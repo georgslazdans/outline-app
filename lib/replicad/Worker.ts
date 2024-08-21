@@ -3,7 +3,7 @@ import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url
 import { Point, setOC, Shape3D } from "replicad";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
-import { ModelData } from "./Work";
+import { ModelData } from "./ModelData";
 import { BooleanOperation, Gridfinity, Item, Primitive, Shadow } from "./Model";
 import ReplicadModelData from "./models/ReplicadModelData";
 import { eulerToAxisAngle, toDegrees } from "../utils/Math";

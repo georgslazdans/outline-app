@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { ModelData } from "@/lib/replicad/Work";
+import { ModelData } from "@/lib/replicad/ModelData";
 import React, { useCallback, useEffect, useState } from "react";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../../ReplicadMesh";

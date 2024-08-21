@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ModelData } from "@/lib/replicad/Work";
+import { ModelData } from "@/lib/replicad/ModelData";
 import { useModelCache } from "@/context/ModelCacheContext";
 import { Gridfinity, Item, Primitive, Shadow } from "@/lib/replicad/Model";
 import {

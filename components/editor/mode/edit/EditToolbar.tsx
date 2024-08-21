@@ -12,7 +12,7 @@ import {
   Shadow,
   shadowItemOf,
 } from "@/lib/replicad/Model";
-import { ModelData } from "@/lib/replicad/Work";
+import { ModelData } from "@/lib/replicad/ModelData";
 import GridfinityEdit from "./params/GridfinityEdit";
 import GridfinityParams from "@/lib/replicad/GridfinityParams";
 import ShadowEdit from "./params/ShadowEdit";

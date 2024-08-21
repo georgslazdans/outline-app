@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ContourIndex from "./ContourIndex";
-import { ModelData } from "@/lib/replicad/Work";
+import { ModelData } from "@/lib/replicad/ModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
