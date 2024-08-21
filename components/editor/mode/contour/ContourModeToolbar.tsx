@@ -9,11 +9,12 @@ import Button from "@/components/Button";
 import ScaleAlongNormal from "./ScaleAlongNormal";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../../EditorMode";
+import EditorHistoryType from "../../EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  setModelData: (modelData: ModelData) => void;
+  setModelData: (modelData: ModelData, type: EditorHistoryType) => void;
 };
 
 const ContourModeToolbar = ({
@@ -47,7 +48,7 @@ const ContourModeToolbar = ({
       }
       return it;
     });
-    setModelData({ items: updatedItems });
+    setModelData({ items: updatedItems }, EditorHistoryType.OBJ_UPDATED);
   };
 
   const onDeletePoint = () => {

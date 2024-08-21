@@ -3,11 +3,12 @@ import EditorMode, { EditorModeConfig } from "../../EditorMode";
 import EditCanvas from "./EditCanvas";
 import EditToolbar from "./EditToolbar";
 import { ModelData } from "@/lib/replicad/ModelData";
+import EditorHistoryType from "../../EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  setModelData: (model: ModelData) => void;
+  setModelData: (model: ModelData, type: EditorHistoryType) => void;
 };
 
 const EditMode = ({

@@ -10,11 +10,12 @@ import ModelCache from "../../cache/ModelCache";
 import { toDegrees, toRadians } from "@/lib/utils/Math";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import { useEditorContext } from "../../EditorContext";
+import EditorHistoryType from "../../EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  onModelDataChange: (data: ModelData) => void;
+  onModelDataChange: (data: ModelData, type: EditorHistoryType) => void;
 };
 
 export type ItemModel = {
@@ -78,7 +79,7 @@ const EditCanvas = ({ dictionary, modelData, onModelDataChange }: Props) => {
           y: toDegrees(rotY),
           z: toDegrees(rotZ),
         };
-        onModelDataChange({ items: updatedItems });
+        onModelDataChange({ items: updatedItems }, EditorHistoryType.TRANSLATION);
       };
     },
     [modelData, onModelDataChange]

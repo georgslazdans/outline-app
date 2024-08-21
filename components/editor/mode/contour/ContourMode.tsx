@@ -3,11 +3,12 @@ import { EditorModeConfig } from "../../EditorMode";
 import ContourModeEdit from "./ContourModeEdit";
 import ContourModeToolbar from "./ContourModeToolbar";
 import { ModelData } from "@/lib/replicad/ModelData";
+import EditorHistoryType from "../../EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  setModelData: (data: ModelData) => void;
+  setModelData: (data: ModelData, type: EditorHistoryType) => void;
 };
 
 const ContourMode = ({

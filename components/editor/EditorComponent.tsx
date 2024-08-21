@@ -18,6 +18,7 @@ import SaveModel from "./ui/SaveModel";
 import { useEditorHistoryContext } from "./EditorHistoryContext";
 import UndoButton from "./ui/UndoButton";
 import RedoButton from "./ui/RedoButton";
+import EditorHistoryType from "./EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
@@ -31,11 +32,11 @@ const EditorComponent = ({ dictionary }: Props) => {
   const { addHistoryEvent } = useEditorHistoryContext();
 
   useEffect(() => {
-    addHistoryEvent(model.modelData);
+    addHistoryEvent(model.modelData, { type: EditorHistoryType.INITIAL });
   }, []);
 
-  const setModelData = (modelData: ModelData) => {
-    addHistoryEvent(modelData);
+  const setModelData = (modelData: ModelData, type: EditorHistoryType) => {
+    addHistoryEvent(modelData, { type: type });
     setModel((prev) => {
       return { ...prev, modelData: modelData };
     });

@@ -8,11 +8,12 @@ import { ContourPoints, scalePoints } from "@/lib/Point";
 import ContourIndex from "./ContourIndex";
 import { Select } from "@react-three/drei";
 import { useEditorContext } from "../../EditorContext";
+import EditorHistoryType from "../../EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  setModelData: (data: ModelData) => void;
+  setModelData: (data: ModelData, type: EditorHistoryType) => void;
 };
 
 const ContourModeEdit = ({
@@ -47,7 +48,7 @@ const ContourModeEdit = ({
         return it;
       }),
     };
-    setModelData(updatedData);
+    setModelData(updatedData, EditorHistoryType.OBJ_UPDATED);
   };
 
   const onContourChanged = (contourIndex: number) => {

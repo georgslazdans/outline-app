@@ -20,11 +20,12 @@ import PrimitiveEdit from "./params/primtive/PrimitiveEdit";
 import PrimitiveType from "@/lib/replicad/PrimitiveType";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../../EditorMode";
+import EditorHistoryType from "../../EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  onModelDataUpdate: (modelData: ModelData) => void;
+  onModelDataUpdate: (modelData: ModelData, type: EditorHistoryType) => void;
 };
 
 const gridfinityHeightOf = (modelData: ModelData) => {
@@ -43,14 +44,14 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
   const onContourSelect = (points: ContourPoints[], height: number) => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const shadow = shadowItemOf(points, height, gridfinityHeight - height);
-    onModelDataUpdate({ items: [...modelData.items, shadow] });
+    onModelDataUpdate({ items: [...modelData.items, shadow] }, EditorHistoryType.OBJ_ADDED);
     setSelectedId(shadow.id);
   };
 
   const addPrimitive = () => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const primitive = primitiveOf(PrimitiveType.BOX, gridfinityHeight);
-    onModelDataUpdate({ items: [...modelData.items, primitive] });
+    onModelDataUpdate({ items: [...modelData.items, primitive] }, EditorHistoryType.OBJ_ADDED);
     setSelectedId(primitive.id);
   };
 
@@ -63,7 +64,7 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
         return item;
       });
 
-      onModelDataUpdate({ ...modelData, items: updatedItems });
+      onModelDataUpdate({ ...modelData, items: updatedItems }, EditorHistoryType.OBJ_UPDATED);
     },
     [modelData, onModelDataUpdate]
   );
@@ -77,7 +78,7 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
         return item;
       });
 
-      onModelDataUpdate({ ...modelData, items: updatedItems });
+      onModelDataUpdate({ ...modelData, items: updatedItems }, EditorHistoryType.OBJ_UPDATED);
     },
     [modelData, onModelDataUpdate]
   );
@@ -135,7 +136,7 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
     const updatedItems = modelData.items.filter(
       (item) => item.id !== selectedId
     );
-    onModelDataUpdate({ ...modelData, items: updatedItems });
+    onModelDataUpdate({ ...modelData, items: updatedItems }, EditorHistoryType.OBJ_DELETED);
     setSelectedId("");
   };
 
