@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 import React, { useCallback } from "react";
 import { ModelData } from "@/lib/replicad/ModelData";
 import { downloadFile } from "@/lib/utils/Download";
-import newWorkerInstance from "../../ReplicadWorker";
+import newWorkerInstance from "../../replicad/ReplicadWorker";
 
 type Props = {
   dictionary: Dictionary;

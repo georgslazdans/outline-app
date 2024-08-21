@@ -3,7 +3,7 @@ import React, { ChangeEvent, FocusEventHandler, HTMLInputTypeAttribute } from "r
 
 type Props = {
   value?: string | number;
-  label: string;
+  label?: string;
   name: string;
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
@@ -12,6 +12,7 @@ type Props = {
   autofocus?: boolean;
   required?: boolean;
   onBlur?: FocusEventHandler<HTMLInputElement>;
+  padding?: string;
 };
 
 const InputField = ({
@@ -24,7 +25,8 @@ const InputField = ({
   onChange,
   autofocus,
   required = false,
-  onBlur
+  onBlur,
+  padding = "p-1.5"
 }: Props) => {
   return (
     <div className={"flex flex-col " + className}>
@@ -35,8 +37,8 @@ const InputField = ({
       )}
       <div className="flex flex-row">
         <input
-          className="border-4 rounded-[64px] bg-white dark:bg-black 
-          border-black dark:border-white p-1.5 pl-6 w-full"
+          className={`border-4 rounded-[64px] bg-white dark:bg-black 
+          border-black dark:border-white ${padding} pl-6 w-full`}
           id={name}
           type={type ? type : "text"}
           value={value ? value : ""}

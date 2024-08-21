@@ -11,5 +11,12 @@ export const DBConfig: IndexedDBProps = {
         { name: "name", keypath: "details.name", options: { unique: false } },
       ],
     },
+    {
+      store: "models",
+      storeConfig: { keyPath: "id", autoIncrement: true },
+      storeSchema: [
+        { name: "name", keypath: "name", options: { unique: false } },
+      ],
+    },
   ],
 };

@@ -2,13 +2,14 @@
 
 import IconButton from "@/components/IconButton";
 import React from "react";
+import { useEditorContext } from "../EditorContext";
 
-type Props = {
-  icon: "eye" | "eye-slash";
-  onClick: () => void;
-};
+type Props = {};
 
-const WireframeButton = ({ icon, onClick }: Props) => {
+const WireframeButton = ({}: Props) => {
+  const { wireframe, setWireframe } = useEditorContext();
+  const icon = wireframe ? "eye-slash" : "eye";
+  const onClick = () => setWireframe(!wireframe);
   const eye = (
     <svg
       xmlns="http://www.w3.org/2000/svg"

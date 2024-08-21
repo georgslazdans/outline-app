@@ -7,29 +7,25 @@ import ContourMesh from "./threejs/ContourMesh";
 import { ContourPoints, scalePoints } from "@/lib/Point";
 import ContourIndex from "./ContourIndex";
 import { Select } from "@react-three/drei";
+import { useEditorContext } from "../../EditorContext";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  onModelDataChange: (data: ModelData) => void;
-  setDisableCamera: (disabled: boolean) => void;
-  selectedId?: string;
-  selectedPoint?: ContourIndex;
-  onPointSelect: (point: ContourIndex) => void;
+  setModelData: (data: ModelData) => void;
 };
 
 const ContourModeEdit = ({
   dictionary,
   modelData,
-  selectedId,
-  onModelDataChange,
-  setDisableCamera,
-  selectedPoint,
-  onPointSelect,
+  setModelData
 }: Props) => {
   const scale = 0.01;
 
+  const {selectedId, selectedPoint, setSelectedPoint, setDisableCamera} = useEditorContext();
+
   const [scaledContours, setScaledContours] = useState<ContourPoints[]>([]);
+
 
   useEffect(() => {
     const data = modelData.items.find((it) => it.id == selectedId);
@@ -51,7 +47,7 @@ const ContourModeEdit = ({
         return it;
       }),
     };
-    onModelDataChange(updatedData);
+    setModelData(updatedData);
   };
 
   const onContourChanged = (contourIndex: number) => {
@@ -67,7 +63,7 @@ const ContourModeEdit = ({
       const point = obj[0];
       const pointIndex = point.userData?.contourIndex as ContourIndex;
       if (pointIndex) {
-        onPointSelect(pointIndex);
+        setSelectedPoint(pointIndex);
       }
     }
   };

@@ -10,15 +10,17 @@ import {
   Sky,
 } from "@react-three/drei";
 import { Object3D, Vector3 } from "three";
+import { useEditorContext } from "./EditorContext";
 
 type Props = {
   dictionary: Dictionary;
-  disableCamera: boolean;
   children: ReactNode;
 };
 
-const ThreeJsContext = ({ dictionary, disableCamera, children }: Props) => {
+const ThreeJsEnvironment = ({ dictionary, children }: Props) => {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
+
+  const {disableCamera} = useEditorContext();
 
   const dpr = Math.min(window.devicePixelRatio, 2);
   return (
@@ -58,4 +60,4 @@ const ThreeJsContext = ({ dictionary, disableCamera, children }: Props) => {
   );
 };
 
-export default ThreeJsContext;
+export default ThreeJsEnvironment;

@@ -4,34 +4,26 @@ import { Dictionary } from "@/app/dictionaries";
 import { ModelData } from "@/lib/replicad/ModelData";
 import React, { useCallback, useEffect, useState } from "react";
 import { Select } from "@react-three/drei";
-import ReplicadMesh from "../../ReplicadMesh";
+import ReplicadMesh from "../../replicad/ReplicadMesh";
 import { Euler, Vector3 } from "three";
-import ModelCache from "../ModelCache";
+import ModelCache from "../../cache/ModelCache";
 import { toDegrees, toRadians } from "@/lib/utils/Math";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
+import { useEditorContext } from "../../EditorContext";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
   onModelDataChange: (data: ModelData) => void;
-  wireframe: boolean;
-  onModelIdSelect: (id: string) => void;
-  selectedId?: string;
 };
 
 export type ItemModel = {
   [id: string]: ReplicadResult;
 };
 
-const EditCanvas = ({
-  dictionary,
-  modelData,
-  onModelDataChange,
-  wireframe,
-  onModelIdSelect,
-  selectedId,
-}: Props) => {
+const EditCanvas = ({ dictionary, modelData, onModelDataChange }: Props) => {
   const [models, setModels] = useState<ItemModel>({});
+  const { wireframe, selectedId, setSelectedId } = useEditorContext();
 
   const onWorkerResult = (id: string, result: ReplicadResult) => {
     const updatedModels = { ...models };
@@ -43,7 +35,7 @@ const EditCanvas = ({
     if (obj.length > 0) {
       const id = obj[0].userData?.id;
       if (id) {
-        onModelIdSelect(id);
+        setSelectedId(id);
       }
     }
   };

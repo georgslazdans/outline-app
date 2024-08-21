@@ -6,10 +6,7 @@ export default async function Details() {
 
   return (
     <>
-      <h1 className="text-center p-2">{dictionary.editor.title}</h1>
-      <div className="w-full h-[70vh]">
-        <Editor dictionary={dictionary}></Editor>
-      </div>
+      <Editor dictionary={dictionary}></Editor>
     </>
   );
 }

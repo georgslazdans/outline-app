@@ -2,30 +2,27 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import ContourIndex from "./ContourIndex";
 import { ModelData } from "@/lib/replicad/ModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
 import ScaleAlongNormal from "./ScaleAlongNormal";
+import { useEditorContext } from "../../EditorContext";
+import EditorMode from "../../EditorMode";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  selectedId?: string;
-  selectedPoint?: ContourIndex;
-  onModelDataChange: (modelData: ModelData) => void;
-  onDone: () => void;
+  setModelData: (modelData: ModelData) => void;
 };
 
 const ContourModeToolbar = ({
   dictionary,
   modelData,
-  selectedId,
-  selectedPoint,
-  onModelDataChange,
-  onDone,
+  setModelData,
 }: Props) => {
+  const { selectedId, selectedPoint, setEditorMode } = useEditorContext();
+
   const getSelectedContour = useCallback(() => {
     const selectedItem = modelData.items.find((it) => it.id == selectedId);
     if (selectedItem?.type != "shadow") {
@@ -50,7 +47,7 @@ const ContourModeToolbar = ({
       }
       return it;
     });
-    onModelDataChange({ items: updatedItems });
+    setModelData({ items: updatedItems });
   };
 
   const onDeletePoint = () => {
@@ -73,7 +70,7 @@ const ContourModeToolbar = ({
 
   return (
     <>
-      <Button onClick={onDone}>
+      <Button onClick={() => setEditorMode(EditorMode.EDIT)}>
         <label>Done</label>
       </Button>
       {selectedContourPoints && (

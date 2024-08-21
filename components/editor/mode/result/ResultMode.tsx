@@ -1,28 +1,21 @@
 import { Dictionary } from "@/app/dictionaries";
-import { ModelData } from "@/lib/replicad/Work";
-import { useState } from "react";
 import ResultViewer from "./ResultViewer";
 import ResultToolbar from "./ResultToolbar";
 import { EditorModeConfig } from "../../EditorMode";
+import { ModelData } from "@/lib/replicad/ModelData";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  wireframe: boolean;
 };
 
-const ResultMode = ({
-  dictionary,
-  modelData,
-  wireframe,
-}: Props): EditorModeConfig => {
+const ResultMode = ({ dictionary, modelData }: Props): EditorModeConfig => {
   const mode = {
     view: () => {
       return (
         <ResultViewer
           dictionary={dictionary}
           modelData={modelData}
-          wireframe={wireframe}
         ></ResultViewer>
       );
     },

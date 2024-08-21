@@ -1,5 +1,5 @@
+import ReplicadResult from "@/lib/replicad/WorkerResult";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
-import { ReplicadResult } from "@/lib/replicad/Worker";
 
 const ModelCacheContext = createContext<any>(null);
 

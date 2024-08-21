@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { ModelData } from "@/lib/replicad/ModelData";
-import { useModelCache } from "@/context/ModelCacheContext";
+import { useModelCache } from "./ModelCacheContext";
 import { Gridfinity, Item, Primitive, Shadow } from "@/lib/replicad/Model";
 import {
   newWorkerInstance
-} from "../ReplicadWorker";
-import { ItemModel } from "./edit/EditCanvas";
+} from "../replicad/ReplicadWorker";
+import { ItemModel } from "../mode/edit/EditCanvas";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 
 type Props = {

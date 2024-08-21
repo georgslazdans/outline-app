@@ -18,14 +18,13 @@ import GridfinityParams from "@/lib/replicad/GridfinityParams";
 import ShadowEdit from "./params/ShadowEdit";
 import PrimitiveEdit from "./params/primtive/PrimitiveEdit";
 import PrimitiveType from "@/lib/replicad/PrimitiveType";
+import { useEditorContext } from "../../EditorContext";
+import EditorMode from "../../EditorMode";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
   onModelDataUpdate: (modelData: ModelData) => void;
-  selectedId?: string;
-  onModelIdSelect: (id: string) => void;
-  onEditContour: () => void;
 };
 
 const gridfinityHeightOf = (modelData: ModelData) => {
@@ -36,29 +35,23 @@ const gridfinityHeightOf = (modelData: ModelData) => {
   return gridfinityHeight * magicConstant;
 };
 
-const EditToolbar = ({
-  dictionary,
-  modelData,
-  onModelDataUpdate,
-  selectedId,
-  onModelIdSelect,
-  onEditContour,
-}: Props) => {
+const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
   const [openImportDialog, setOpenImportDialog] = useState(false);
+
+  const { selectedId, setSelectedId, setEditorMode } = useEditorContext();
 
   const onContourSelect = (points: ContourPoints[], height: number) => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const shadow = shadowItemOf(points, height, gridfinityHeight - height);
     onModelDataUpdate({ items: [...modelData.items, shadow] });
-    onModelIdSelect(shadow.id);
+    setSelectedId(shadow.id);
   };
-
 
   const addPrimitive = () => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const primitive = primitiveOf(PrimitiveType.SPHERE, gridfinityHeight);
     onModelDataUpdate({ items: [...modelData.items, primitive] });
-    onModelIdSelect(primitive.id);
+    setSelectedId(primitive.id);
   };
 
   const onGridfinityParamsChange = useCallback(
@@ -143,7 +136,7 @@ const EditToolbar = ({
       (item) => item.id !== selectedId
     );
     onModelDataUpdate({ ...modelData, items: updatedItems });
-    onModelIdSelect("");
+    setSelectedId("");
   };
 
   const isGridfinity = (id: string) => {
@@ -153,7 +146,6 @@ const EditToolbar = ({
   const isShadow = (id: string) => {
     return modelData.items.find((it) => it.id == id)?.type == "shadow";
   };
-
 
   return (
     <>
@@ -171,7 +163,10 @@ const EditToolbar = ({
         onContourSelect={onContourSelect}
       ></ImportDialog>
       {selectedId && isShadow(selectedId) && (
-        <Button onClick={onEditContour} className="mt-2">
+        <Button
+          onClick={() => setEditorMode(EditorMode.CONTOUR_EDIT)}
+          className="mt-2"
+        >
           <label>Edit Contour</label>
         </Button>
       )}
