@@ -4,9 +4,11 @@ import IconButton from "@/components/IconButton";
 import React from "react";
 import { useEditorContext } from "../EditorContext";
 
-type Props = {};
+type Props = {
+  className?: string;
+};
 
-const WireframeButton = ({}: Props) => {
+const WireframeButton = ({ className }: Props) => {
   const { wireframe, setWireframe } = useEditorContext();
   const icon = wireframe ? "eye-slash" : "eye";
   const onClick = () => setWireframe(!wireframe);
@@ -51,8 +53,9 @@ const WireframeButton = ({}: Props) => {
   return (
     <>
       <IconButton
-        className="absolute px-3 py-3 mr-auto mt-2 ml-2"
+        className="px-3 py-3 mr-auto mt-2 ml-2"
         onClick={onClick}
+        hotkey="h"
       >
         {icon == "eye" ? eye : eyeSlash}
       </IconButton>

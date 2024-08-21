@@ -21,10 +21,15 @@ const RenderButton = ({ dictionary }: Props) => {
       setEditorMode(EditorMode.EDIT);
     }
   };
-  
+
   return (
     <>
-      <Button className="mt-2" onClick={onFullRenderButton}>
+      <Button
+        className="mt-2"
+        onClick={onFullRenderButton}
+        hotkey="r"
+        hotkeyCtrl={true}
+      >
         <label>{editorMode == EditorMode.RESULT ? "Edit" : "Render"}</label>
       </Button>
     </>

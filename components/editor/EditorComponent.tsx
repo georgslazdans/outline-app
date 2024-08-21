@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React from "react";
+import React, { useEffect } from "react";
 import { Object3D, Vector3 } from "three";
 import ThreeJsEnvironment from "./ThreeJsEnvironment";
 import WireframeButton from "./ui/WireframeButton";
@@ -15,6 +15,9 @@ import { useEditorContext } from "./EditorContext";
 import RenderButton from "./ui/RenderButton";
 import { useModelContext } from "../../context/ModelContext";
 import SaveModel from "./ui/SaveModel";
+import { useEditorHistoryContext } from "./EditorHistoryContext";
+import UndoButton from "./ui/UndoButton";
+import RedoButton from "./ui/RedoButton";
 
 type Props = {
   dictionary: Dictionary;
@@ -25,8 +28,14 @@ const EditorComponent = ({ dictionary }: Props) => {
 
   const { editorMode } = useEditorContext();
   const { model, setModel } = useModelContext();
+  const { addHistoryEvent } = useEditorHistoryContext();
+
+  useEffect(() => {
+    addHistoryEvent(model.modelData);
+  }, []);
 
   const setModelData = (modelData: ModelData) => {
+    addHistoryEvent(modelData);
     setModel((prev) => {
       return { ...prev, modelData: modelData };
     });
@@ -63,7 +72,13 @@ const EditorComponent = ({ dictionary }: Props) => {
         <div className="w-full xl:w-1/2">
           <div className="w-full h-[60vh]">
             <div className="z-10 relative">
-              <WireframeButton></WireframeButton>
+              <div className="absolute flex flex-col">
+                <div className="flex flex-row">
+                  <UndoButton></UndoButton>
+                  <RedoButton></RedoButton>
+                </div>
+                <WireframeButton></WireframeButton>
+              </div>
             </div>
             <ThreeJsEnvironment dictionary={dictionary}>
               {currentEditorMode ? currentEditorMode.view() : null}

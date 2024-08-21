@@ -9,6 +9,7 @@ type Props = {
   type?: "submit" | "reset" | "button";
   style?: "primary" | "secondary" | "red" | "disabled";
   hotkey?: string;
+  hotkeyCtrl?: boolean;
 };
 
 const STYLES = {
@@ -19,13 +20,24 @@ const STYLES = {
   disabled: "bg-white dark:bg-black text-gray border-4 border-gray",
 };
 
-const Button = ({ className, children, onClick, type, style, hotkey }: Props) => {
+const Button = ({
+  className,
+  children,
+  onClick,
+  type,
+  style,
+  hotkey,
+  hotkeyCtrl,
+}: Props) => {
   const buttonStyle = style ? STYLES[style] : STYLES["primary"];
 
   useEffect(() => {
+    const handleControlKey = (event: KeyboardEvent) =>
+      hotkeyCtrl ? event.ctrlKey : true;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (hotkey && event.key === hotkey) {
+      if (hotkey && event.key === hotkey && handleControlKey(event)) {
         if (onClick) {
+          event.preventDefault();
           onClick(event as any); // Trigger the onClick function
         }
       }
@@ -37,7 +49,7 @@ const Button = ({ className, children, onClick, type, style, hotkey }: Props) =>
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [hotkey, onClick]);
-  
+
   return (
     <button
       type={type ? type : "submit"}

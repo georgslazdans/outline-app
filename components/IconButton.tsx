@@ -1,14 +1,41 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 
 type Props = {
   onClick: () => void;
   children: ReactNode;
   className?: string;
+  hotkey?: string;
+  hotkeyCtrl?: boolean;
 };
 
-const IconButton = ({ onClick, children, className }: Props) => {
+const IconButton = ({
+  onClick,
+  children,
+  className,
+  hotkey,
+  hotkeyCtrl,
+}: Props) => {
+  useEffect(() => {
+    const handleControlKey = (event: KeyboardEvent) =>
+      hotkeyCtrl ? event.ctrlKey : true;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (hotkey && event.key === hotkey && handleControlKey(event)) {
+        if (onClick) {
+          event.preventDefault();
+          onClick();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [hotkey, onClick]);
+
   return (
     <button
       id="draw-outline-button"
