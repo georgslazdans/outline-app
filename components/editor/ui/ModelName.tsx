@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useState } from "react";
 import InputField from "../../fields/InputField";
-import { useModelContext } from "../ModelContext";
+import { useModelContext } from "../../../context/ModelContext";
 
 type Props = {
   dictionary: Dictionary;

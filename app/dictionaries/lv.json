@@ -109,6 +109,14 @@
     "svg": "SVG",
     "delete": "Izdzēst"
   },
+  "models": {
+    "title": "Models",
+    "name": "Nosaukums",
+    "date": "Datums",
+    "searchByName": "Meklēt pēc nosaukuma",
+    "editor": "Redaktors",
+    "delete": "Izdzēst"
+  },
   "instructions": {
     "title": "Instrukcijas"
   },

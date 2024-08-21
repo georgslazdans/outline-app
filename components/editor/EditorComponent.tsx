@@ -13,7 +13,7 @@ import { ModelData } from "@/lib/replicad/ModelData";
 import ModelName from "./ui/ModelName";
 import { useEditorContext } from "./EditorContext";
 import RenderButton from "./ui/RenderButton";
-import { useModelContext } from "./ModelContext";
+import { useModelContext } from "../../context/ModelContext";
 import SaveModel from "./ui/SaveModel";
 
 type Props = {

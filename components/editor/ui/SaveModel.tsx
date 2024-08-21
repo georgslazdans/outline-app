@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import React from "react";
 import Button from "../../Button";
 import { useIndexedDB } from "react-indexed-db-hook";
-import { useModelContext } from "../ModelContext";
+import { useModelContext } from "../../../context/ModelContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -17,7 +17,10 @@ const SaveModel = ({ dictionary }: Props) => {
 
   const onSaveModel = () => {
     if (model.id) {
-      update(model, model.id).then(() => {});
+      update(model).then(
+        () => {},
+        (error) => console.error(error)
+      );
     } else {
       add(model).then(
         (dbId) => {

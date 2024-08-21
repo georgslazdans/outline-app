@@ -109,6 +109,14 @@
     "svg": "SVG",
     "delete": "Delete"
   },
+  "models": {
+    "title": "Models",
+    "name": "Name",
+    "date": "Date",
+    "searchByName": "Search by Name",
+    "editor": "Editor",
+    "delete": "Delete"
+  },
   "instructions": {
     "title": "Instructions"
   },

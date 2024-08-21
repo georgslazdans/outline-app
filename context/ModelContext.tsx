@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import Model from "@/lib/Model";
 import { defaultGridfinityParams } from "@/lib/replicad/GridfinityParams";
@@ -14,6 +16,7 @@ export const ModelProvider = ({ children }: { children: ReactNode }) => {
   const defaultModel = {
     name: "Untitled",
     modelData: { items: [gridfinityItemOf(defaultGridfinityParams())] },
+    addDate: new Date(),
   };
   const [model, setModel] = useState<Model>(defaultModel);
 

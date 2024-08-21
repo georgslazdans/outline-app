@@ -29,7 +29,7 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
   const openSettings = () => {
     setDetailsContext(context);
 
-    addHistory("/history");
+    addHistory("/contours");
     router.push("/calibration");
   };
 
