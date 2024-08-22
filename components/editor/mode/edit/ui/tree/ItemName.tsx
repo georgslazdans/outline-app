@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import InputField from "@/components/fields/InputField";
 import { Item } from "@/lib/replicad/Model";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   dictionary: Dictionary;
@@ -21,6 +21,13 @@ const ItemName = ({ dictionary, item, onChanged }: Props) => {
     const newName = event.target.value;
     onChanged(newName);
   };
+
+  useEffect(() => {
+    if (isEditing && item.id != selectedId) {
+      setIsEditing(false);
+      setInputFieldFocused(false);
+    }
+  }, [isEditing, selectedId]);
 
   const handleEditClick = () => {
     if (item.id == selectedId) {

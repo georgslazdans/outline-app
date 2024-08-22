@@ -1,12 +1,19 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import ModelData from "@/lib/replicad/ModelData";
-import React from "react";
-import TreeElement from "./TreeElement";
-import { Item } from "@/lib/replicad/Model";
+import ModelData, { forModelData } from "@/lib/replicad/ModelData";
+import React, { useMemo } from "react";
+import { groupOf, Item, ModelType } from "@/lib/replicad/Model";
 import { UpdateModelData } from "@/components/editor/EditorComponent";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
+import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
+import DraggableItem from "./DraggableItem";
+
+type ItemGroup = {
+  item: Item;
+  groupLevel: number;
+  localIndex: number;
+};
 
 type Props = {
   dictionary: Dictionary;
@@ -16,29 +23,122 @@ type Props = {
 
 const ItemTree = ({ dictionary, modelData, setModelData }: Props) => {
   const onItemChanged = (item: Item) => {
-    const updatedData = {
-      items: modelData.items.map((it) => {
-        if (it.id == item.id) {
-          return item;
-        }
-        return it;
-      }),
-    };
-    setModelData(updatedData, EditorHistoryType.OBJ_DELETED, item.id);
+    const updatedData = forModelData(modelData).updateById(item.id, item);
+    setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);
   };
+
+  const groupedItems = useMemo(() => {
+    const itemGroups: ItemGroup[] = [];
+    const processGroup = (items: Item[], groupLevel: number) => {
+      let localIndex = 0;
+      items.forEach((item) => {
+        itemGroups.push({
+          item: item,
+          groupLevel: groupLevel,
+          localIndex: localIndex,
+        });
+        localIndex += 1;
+        if (item.type == ModelType.Group) {
+          processGroup(item.items, groupLevel + 1);
+        }
+      });
+    };
+    processGroup(modelData.items, 0);
+    return itemGroups;
+  }, [modelData]);
+
+  const onDragEnd = (result: DropResult) => {
+    if (result.destination?.index == 0 || result.source.index == 0) {
+      return;
+    }
+    if (result.combine) {
+      const combineItem = forModelData(modelData).getById(
+        result.combine.draggableId
+      );
+      if (combineItem && combineItem.type == ModelType.Group) {
+        const item = forModelData(modelData).getById(result.draggableId);
+        if (item) {
+          let updatedData = forModelData(modelData).removeById(
+            result.draggableId
+          );
+          updatedData = forModelData(updatedData).updateById(combineItem.id, {
+            ...combineItem,
+            items: [...combineItem.items, item],
+          });
+          setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
+        } else {
+          throw new Error("Item not found with id: " + result.draggableId);
+        }
+      } else {
+        const parentId = forModelData(modelData).findParentId(combineItem.id);
+        const item = forModelData(modelData).getById(result.draggableId);
+        let updatedData = forModelData(modelData).removeById(item.id);
+        updatedData = forModelData(updatedData).removeById(combineItem.id);
+        const group = groupOf([item, combineItem]);
+        updatedData = forModelData(updatedData).addItem(group, parentId);
+        setModelData(updatedData, EditorHistoryType.GROUP_ADDED);
+      }
+
+      return;
+    }
+
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    const item = forModelData(modelData).getById(result.draggableId);
+    const destinationGroup = groupedItems[result.destination.index];
+    if (destinationGroup.groupLevel > 0) {
+      const parentId = forModelData(modelData).findParentId(
+        destinationGroup.item.id
+      );
+      if (parentId) {
+        let updatedData = forModelData(modelData).removeById(item.id);
+        updatedData = forModelData(updatedData).addItem(item, parentId);
+        updatedData = forModelData(updatedData).reorderData(
+          updatedData.items.length - 1,
+          destinationGroup.localIndex,
+          parentId
+        );
+        setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
+      }
+    } else {
+      let updatedData = forModelData(modelData).removeById(item.id);
+      updatedData = forModelData(updatedData).addItem(item);
+      updatedData = forModelData(updatedData).reorderData(
+        updatedData.items.length - 1,
+        destinationGroup.localIndex
+      );
+      setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
+    }
+  };
+
   return (
     <>
       <div className="w-full border rounded h-[10.4rem] overflow-y-scroll">
-        <ul className="">
-          {modelData.items.map((it, index) => (
-            <TreeElement
-              dictionary={dictionary}
-              index={index}
-              item={it}
-              onItemChanged={onItemChanged}
-            ></TreeElement>
-          ))}
-        </ul>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="item-tree" isCombineEnabled={true}>
+            {(provided, snapshot) => (
+              <ul ref={provided.innerRef} className="">
+                {groupedItems.map(({ item, groupLevel }, index) => (
+                  <DraggableItem
+                    key={item.id}
+                    item={item}
+                    index={index}
+                    dictionary={dictionary}
+                    onItemChanged={onItemChanged}
+                    groupLevel={groupLevel}
+                  ></DraggableItem>
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
     </>
   );

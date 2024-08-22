@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import ModelData from "@/lib/replicad/ModelData";
+import ModelData, { forModelData, ungroupedItemsOf } from "@/lib/replicad/ModelData";
 import React, { useCallback, useEffect, useState } from "react";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../../replicad/ReplicadMesh";
@@ -43,15 +43,17 @@ const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
   };
 
   const isGridfinity = (id: string) => {
-    return modelData.items.find((it) => it.id == id)?.type == "gridfinity";
+    const item = forModelData(modelData).findById(id);
+    return item?.type == "gridfinity";
   };
-
   const isShadow = (id: string) => {
-    return modelData.items.find((it) => it.id == id)?.type == "shadow";
+    const item = forModelData(modelData).findById(id);
+    return item?.type == "shadow";
   };
 
   const positionOf = (id: string) => {
-    const translation = modelData.items.find((it) => it.id == id)?.translation;
+    const item = forModelData(modelData).findById(id);
+    const translation = item?.translation;
     if (translation) {
       const { x, y, z } = translation;
       const scaledPosition = new Vector3(x, y, z);
@@ -60,7 +62,8 @@ const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
   };
 
   const rotationOf = (id: string) => {
-    const rotation = modelData.items.find((it) => it.id == id)?.rotation;
+    const item = forModelData(modelData).findById(id);
+    const rotation = item?.rotation;
     if (rotation) {
       const { x, y, z } = rotation;
       return new Euler(toRadians(x), toRadians(y), toRadians(z));
@@ -70,17 +73,24 @@ const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
   const handleTransformChange = useCallback(
     (id: string) => {
       return (translation: Vector3, rotation: Euler) => {
-        const index = modelData.items.findIndex((it) => it.id === id);
-        const updatedItems = [...modelData.items];
-        const { x, y, z } = translation;
-        updatedItems[index].translation = { x, y, z };
-        const { x: rotX, y: rotY, z: rotZ } = rotation;
-        updatedItems[index].rotation = {
-          x: toDegrees(rotX),
-          y: toDegrees(rotY),
-          z: toDegrees(rotZ),
-        };
-        setModelData({ items: updatedItems }, EditorHistoryType.TRANSLATION, selectedId);
+        let item = forModelData(modelData).getById(id);
+        if (item) {
+          item = { ...item };
+          const { x, y, z } = translation;
+          item.translation = { x, y, z };
+          const { x: rotX, y: rotY, z: rotZ } = rotation;
+          item.rotation = {
+            x: toDegrees(rotX),
+            y: toDegrees(rotY),
+            z: toDegrees(rotZ),
+          };
+
+          setModelData(
+            forModelData(modelData).updateById(id, item),
+            EditorHistoryType.TRANSLATION,
+            selectedId
+          );
+        }
       };
     },
     [modelData, setModelData]
@@ -91,7 +101,7 @@ const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
   };
 
   useEffect(() => {
-    const modelDataKeys = modelData.items.map((it) => it.id);
+    const modelDataKeys = ungroupedItemsOf(modelData.items).map((it) => it.id);
     const existingKeys = Object.keys(itemModels);
     const keysToDelete = existingKeys.filter(
       (key) => !modelDataKeys.includes(key)

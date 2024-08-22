@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import ModelData from "@/lib/replicad/ModelData";
+import ModelData, { forModelData } from "@/lib/replicad/ModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
@@ -11,7 +11,7 @@ import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
-import { Shadow } from "@/lib/replicad/Model";
+import { ModelType, Shadow } from "@/lib/replicad/Model";
 import { useEditorHistoryContext } from "../../history/EditorHistoryContext";
 
 type Props = {
@@ -26,13 +26,13 @@ const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
   const { compressHistoryEvents } = useEditorHistoryContext();
 
   const getSelectedContour = useCallback(() => {
-    const selectedItem = modelData.items.find(
-      (it) => it.id == selectedId && it.type == "shadow"
-    ) as Shadow;
-    if (!selectedItem) {
-      throw new Error("Selected item is not found!");
+    if (selectedId) {
+      const selectedItem = forModelData(modelData).getById(selectedId);
+      if (!selectedItem || selectedItem.type != ModelType.Shadow) {
+        throw new Error("Selected item is not found!");
+      }
+      return selectedItem.points;
     }
-    return selectedItem.points;
   }, [modelData, selectedId]);
 
   const [selectedContourPoints, setSelectedContourPoints] =
@@ -44,18 +44,22 @@ const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
 
   const onContourChanged = (contourPoints: ContourPoints[]) => {
     setSelectedContourPoints(contourPoints);
-
-    const updatedItems = modelData.items.map((it) => {
-      if (it.id == selectedId && it.type == "shadow") {
-        return { ...it, points: contourPoints };
+    if (selectedId) {
+      const item = forModelData(modelData).getById(selectedId);
+      if (item && item.type == ModelType.Shadow) {
+        const updatedData = forModelData(modelData).updateById(item.id, {
+          ...item,
+          points: contourPoints,
+        });
+        setModelData(
+          updatedData,
+          EditorHistoryType.CONTOUR_UPDATED,
+          selectedId
+        );
+      } else {
+        throw new Error("Selected item not found: " + selectedId);
       }
-      return it;
-    });
-    setModelData(
-      { items: updatedItems },
-      EditorHistoryType.CONTOUR_UPDATED,
-      selectedId
-    );
+    }
   };
 
   const onDeletePoint = () => {

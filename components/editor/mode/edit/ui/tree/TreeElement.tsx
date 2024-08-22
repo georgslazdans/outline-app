@@ -3,17 +3,26 @@
 import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import { Item } from "@/lib/replicad/Model";
-import React from "react";
+import React, { CSSProperties } from "react";
 import ItemName from "./ItemName";
 
 type Props = {
+  className?: string;
+  style?: CSSProperties;
   dictionary: Dictionary;
   index: number;
   item: Item;
   onItemChanged: (item: Item) => void;
 };
 
-const TreeElement = ({ dictionary, index, item, onItemChanged }: Props) => {
+const TreeElement = ({
+  dictionary,
+  className,
+  style,
+  index,
+  item,
+  onItemChanged,
+}: Props) => {
   const { selectedId, setSelectedId } = useEditorContext();
 
   const onSelected = () => {
@@ -25,8 +34,16 @@ const TreeElement = ({ dictionary, index, item, onItemChanged }: Props) => {
     onItemChanged(updatedItem);
   };
 
+  const selectedStyle = () => {
+    return item.id == selectedId ? " bg-gray " : "";
+  };
+
   return (
-    <li className={item.id == selectedId ? "bg-gray" : ""} onClick={onSelected}>
+    <li
+      className={selectedStyle() + " " + className}
+      style={style}
+      onClick={onSelected}
+    >
       <div className="flex flex-row ml-2 mr-2">
         <label
           className={

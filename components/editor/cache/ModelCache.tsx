@@ -3,10 +3,15 @@
 import React, { useEffect, useState } from "react";
 import ModelData from "@/lib/replicad/ModelData";
 import { useModelCache } from "./ModelCacheContext";
-import { Gridfinity, Item, Primitive, Shadow } from "@/lib/replicad/Model";
 import {
-  newWorkerInstance
-} from "../replicad/ReplicadWorker";
+  Gridfinity,
+  Item,
+  ItemGroup,
+  ModelType,
+  Primitive,
+  Shadow,
+} from "@/lib/replicad/Model";
+import { newWorkerInstance } from "../replicad/ReplicadWorker";
 import { ItemModel } from "../mode/edit/EditCanvas";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 
@@ -18,7 +23,7 @@ type Props = {
 
 type MessageGroup = { id: string; key: string; work: Item };
 
-const withoutItemData = (item: Item): Gridfinity | Primitive | Shadow => {
+const withoutItemData = (item: Item): Gridfinity | Primitive | Shadow | ItemGroup => {
   const { id, translation, rotation, booleanOperation, ...rest } = item;
   return rest;
 };
@@ -38,7 +43,7 @@ const ModelCache = ({ modelData, onModelData, models }: Props) => {
       newMessages.push({ id: item.id, key: key, work: item });
     };
 
-    modelData.items.forEach((item) => {
+    const processItem = (item: Item) => {
       const key = keyOf(item);
       const cacheEntry = getFromCache(key);
 
@@ -57,8 +62,18 @@ const ModelCache = ({ modelData, onModelData, models }: Props) => {
       } else if (!models[item.id] || models[item.id] != cacheEntry) {
         onModelData(item.id, cacheEntry);
       }
-    });
+    };
 
+    const processItems = (items: Item[]) => {
+      items.forEach((item) => {
+        if (item.type == ModelType.Group) {
+          processItems(item.items);
+        } else {
+          processItem(item);
+        }
+      });
+    };
+    processItems(modelData.items);
     setMessages(newMessages);
   }, [models, modelData]);
 

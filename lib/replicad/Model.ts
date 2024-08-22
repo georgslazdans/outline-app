@@ -12,20 +12,32 @@ export enum BooleanOperation {
   INTERSECTION,
 }
 
+export enum ModelType {
+  Primitive = "primitive",
+  Shadow = "shadow",
+  Gridfinity = "gridfinity",
+  Group = "group",
+}
+
 export type Primitive = {
-  type: "primitive";
+  type: ModelType.Primitive;
   params: PrimitiveParams;
 };
 
 export type Shadow = {
-  type: "shadow";
+  type: ModelType.Shadow;
   points: ContourPoints[];
   height: number;
 };
 
 export type Gridfinity = {
-  type: "gridfinity";
+  type: ModelType.Gridfinity;
   params: GridfinityParams;
+};
+
+export type ItemGroup = {
+  type: ModelType.Group;
+  items: Item[];
 };
 
 export type Item = {
@@ -34,12 +46,12 @@ export type Item = {
   translation?: Point3D;
   rotation?: Point3D;
   booleanOperation?: BooleanOperation;
-} & (Gridfinity | Shadow | Primitive);
+} & (Gridfinity | Shadow | Primitive | ItemGroup);
 
 export const gridfinityItemOf = (params: GridfinityParams): Item => {
   return {
     id: crypto.randomUUID(),
-    type: "gridfinity",
+    type: ModelType.Gridfinity,
     name: "Gridfinity",
     params: params,
   };
@@ -53,8 +65,8 @@ export const shadowItemOf = (
 ): Item => {
   return {
     id: crypto.randomUUID(),
-    type: "shadow",
-    name: name ? name: "Contour",
+    type: ModelType.Shadow,
+    name: name ? name : "Contour",
     points: contourPoints,
     height: height,
     translation: { x: 0, y: 0, z: translationZ ? translationZ : 0 },
@@ -69,10 +81,21 @@ export const primitiveOf = (
   const params = defaultParamsFor(type);
   return {
     id: crypto.randomUUID(),
-    type: "primitive",
+    type: ModelType.Primitive,
     name: "Primitive",
     params: params,
     translation: defaultTranslationOf(params, gridfinityHeight),
+    rotation: { x: 0, y: 0, z: 0 },
+  };
+};
+
+export const groupOf = (items: Item[]): Item => {
+  return {
+    id: crypto.randomUUID(),
+    type: ModelType.Group,
+    name: "Group",
+    items: items,
+    translation: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
   };
 };

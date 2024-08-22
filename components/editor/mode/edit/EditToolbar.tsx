@@ -2,27 +2,31 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import ImportDialog from "./ui/ImportDialog";
 import { ContourPoints } from "@/lib/Point";
 import {
+  Gridfinity,
   Item,
+  ModelType,
   Primitive,
   primitiveOf,
   Shadow,
   shadowItemOf,
 } from "@/lib/replicad/Model";
-import ModelData from "@/lib/replicad/ModelData";
+import ModelData, { forModelData } from "@/lib/replicad/ModelData";
 import GridfinityEdit from "./params/GridfinityEdit";
 import GridfinityParams from "@/lib/replicad/GridfinityParams";
 import ShadowEdit from "./params/ShadowEdit";
-import PrimitiveEdit from "./params/primtive/PrimitiveEdit";
+import PrimitiveEdit from "./params/primitive/PrimitiveEdit";
 import PrimitiveType from "@/lib/replicad/PrimitiveType";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
 import ItemTree from "./ui/tree/ItemTree";
+import GroupEdit from "./params/GroupEdit";
+import ParamsEdit from "./params/ParamsEdit";
 
 type Props = {
   dictionary: Dictionary;
@@ -33,7 +37,7 @@ type Props = {
 const gridfinityHeightOf = (modelData: ModelData) => {
   const magicConstant = 42;
   const gridfinityHeight = modelData.items.find(
-    (it) => it.type == "gridfinity"
+    (it) => it.type == ModelType.Gridfinity
   )!.params.height;
   return gridfinityHeight * magicConstant;
 };
@@ -70,6 +74,7 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
   };
 
   const addPrimitive = () => {
+    // TODO add into current group...
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const primitive = primitiveOf(PrimitiveType.BOX, gridfinityHeight);
     setSelectedId(primitive.id);
@@ -80,109 +85,27 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
     );
   };
 
-  const onGridfinityParamsChange = useCallback(
-    (id: string, params: GridfinityParams) => {
-      const updatedItems = modelData.items.map((item) => {
-        if (item.id === id && item.type == "gridfinity") {
-          return { ...item, params };
-        }
-        return item;
-      });
-
-      setModelData(
-        { ...modelData, items: updatedItems },
-        EditorHistoryType.OBJ_UPDATED,
-        id
-      );
-    },
-    [modelData, setModelData]
-  );
-
-  const onItemChanged = useCallback(
-    (id: string, params: Item) => {
-      const updatedItems = modelData.items.map((item) => {
-        if (item.id === id) {
-          return params;
-        }
-        return item;
-      });
-
-      setModelData(
-        { ...modelData, items: updatedItems },
-        EditorHistoryType.OBJ_UPDATED,
-        id
-      );
-    },
-    [modelData, setModelData]
-  );
-
-  const propertiesComponentFor = useCallback(
-    (item: Item) => {
-      switch (item.type) {
-        case "gridfinity":
-          return (
-            <GridfinityEdit
-              dictionary={dictionary}
-              params={item.params}
-              onParamsChange={(params) =>
-                onGridfinityParamsChange(item.id, params)
-              }
-            ></GridfinityEdit>
-          );
-        case "shadow":
-          return (
-            <>
-              <ShadowEdit
-                dictionary={dictionary}
-                item={item}
-                onItemChange={(params) => onItemChanged(item.id, params)}
-              ></ShadowEdit>
-            </>
-          );
-        case "primitive":
-          return (
-            <>
-              <PrimitiveEdit
-                dictionary={dictionary}
-                item={item}
-                onItemChange={(params) => onItemChanged(item.id, params)}
-              ></PrimitiveEdit>
-            </>
-          );
-      }
-    },
-    [dictionary, onGridfinityParamsChange, onItemChanged]
-  );
-
-  const propertiesFor = useCallback(
-    (id?: string) => {
-      const item = modelData.items.find((it) => it.id == id);
-      if (item) {
-        return propertiesComponentFor(item);
-      }
-    },
-    [modelData, propertiesComponentFor]
-  );
+  const selectedItem = useMemo(() => {
+    if (selectedId) {
+      return forModelData(modelData).findById(selectedId);
+    }
+  }, [selectedId]);
 
   const onRemoveContour = () => {
     if (!selectedId) return;
-    const updatedItems = modelData.items.filter(
-      (item) => item.id !== selectedId
-    );
+
+    const updatedData = forModelData(modelData).removeById(selectedId);
     setSelectedId("");
-    setModelData(
-      { ...modelData, items: updatedItems },
-      EditorHistoryType.OBJ_DELETED,
-      selectedId
-    );
+    setModelData(updatedData, EditorHistoryType.OBJ_DELETED, selectedId);
   };
 
   const isGridfinity = (id: string) => {
-    return modelData.items.find((it) => it.id == id)?.type == "gridfinity";
+    const item = forModelData(modelData).findById(id);
+    return item?.type == "gridfinity";
   };
-
   const isShadow = (id: string) => {
-    return modelData.items.find((it) => it.id == id)?.type == "shadow";
+    const item = forModelData(modelData).findById(id);
+    return item?.type == "shadow";
   };
 
   const openContourDialog = () => {
@@ -227,7 +150,14 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
           <label>Remove {isShadow(selectedId) ? "Contour" : "Primitive"}</label>
         </Button>
       )}
-      {propertiesFor(selectedId)}
+      {selectedItem && (
+        <ParamsEdit
+          dictionary={dictionary}
+          item={selectedItem}
+          modelData={modelData}
+          setModelData={setModelData}
+        ></ParamsEdit>
+      )}
     </>
   );
 };

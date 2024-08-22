@@ -4,7 +4,15 @@ import { Point, setOC, Shape3D } from "replicad";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
 import ModelData from "./ModelData";
-import { BooleanOperation, Gridfinity, Item, Primitive, Shadow } from "./Model";
+import {
+  BooleanOperation,
+  Gridfinity,
+  Item,
+  ItemGroup,
+  ModelType,
+  Primitive,
+  Shadow,
+} from "./Model";
 import ReplicadModelData from "./models/ReplicadModelData";
 import { eulerToAxisAngle, toDegrees } from "../utils/Math";
 import { drawPrimitive } from "./models/Primitives";
@@ -30,18 +38,18 @@ const waitForInitialization = async () => {
 };
 
 const processItemInternal = (
-  item: Gridfinity | Shadow | Primitive
+  item: Gridfinity | Shadow | Primitive | ItemGroup
 ): ReplicadModelData => {
   switch (item.type) {
-    case "gridfinity":
+    case ModelType.Gridfinity:
       return gridfinityBox(item.params);
-
-    case "shadow":
+    case ModelType.Shadow:
       const { points, height } = item as Shadow;
       return drawShadow(points, height);
-
-    case "primitive":
+    case ModelType.Primitive:
       return drawPrimitive(item.params);
+    case ModelType.Group:
+      throw new Error();
   }
 };
 
@@ -69,7 +77,7 @@ const processFull = (full: ModelData): ReplicadModelData => {
     }
   };
 
-  if (full.items[0].type != "gridfinity") {
+  if (full.items[0].type != ModelType.Gridfinity) {
     console.warn("First item is not a gridfinity box!");
   }
 
