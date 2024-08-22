@@ -1,20 +1,23 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
 import SvgSelect from "./SvgSelect";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
-import EditField from "../EditField";
-import { useEditorContext } from "../../EditorContext";
+import { useEditorContext } from "../../../EditorContext";
 import NumberField from "@/components/fields/NumberField";
 
 type Props = {
   dictionary: Dictionary;
   isOpen: boolean;
   onClose: () => void;
-  onContourSelect: (contours: ContourPoints[], height: number) => void;
+  onContourSelect: (
+    contours: ContourPoints[],
+    height: number,
+    name: string
+  ) => void;
 };
 
 const ImportDialog = ({
@@ -23,16 +26,17 @@ const ImportDialog = ({
   onClose,
   onContourSelect,
 }: Props) => {
-  const {setInputFieldFocused} = useEditorContext();
+  const { setInputFieldFocused } = useEditorContext();
   const [selectedContour, setSelectedContour] = useState<ContourPoints[]>();
   const [shadowHeight, setShadowHeight] = useState(10);
+  const [name, setName] = useState("");
 
-  const onImport = () => {
+  const onImport = useCallback(() => {
     if (selectedContour) {
-      onContourSelect(selectedContour, shadowHeight);
+      onContourSelect(selectedContour, shadowHeight, name);
       onModalClose();
     }
-  };
+  }, [selectedContour, shadowHeight, name]);
 
   const onModalClose = () => {
     setSelectedContour(undefined);
@@ -44,12 +48,20 @@ const ImportDialog = ({
     setShadowHeight(parseFloat(event.target.value));
   };
 
+  const onContourNameSelect = useCallback(
+    (contourPoints: ContourPoints[], name: string) => {
+      setSelectedContour(contourPoints);
+      setName(name);
+    },
+    [setSelectedContour, setName]
+  );
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onModalClose}>
         <SvgSelect
           dictionary={dictionary}
-          onSelect={setSelectedContour}
+          onSelect={onContourNameSelect}
         ></SvgSelect>
         <NumberField
           label={"Shadow Height"}

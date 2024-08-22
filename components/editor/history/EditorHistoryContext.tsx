@@ -110,14 +110,10 @@ export const EditorHistoryProvider = ({
     const hasTheSameType = (data: HistoryData) => data.options.type == type;
 
     const currentItem = items[currentIndex];
-    if (!hasTheSameType(currentItem)) {
-      console.warn(
-        "Can't compress events for type: " + type,
-        ", Current item has type: " + currentItem.options.type
-      );
-    } else {
+    if (hasTheSameType(currentItem)) {
       const compressItems = () => {
-        const hasSameItemId = (data: HistoryData) => data.options.itemId == currentItem.options.itemId
+        const hasSameItemId = (data: HistoryData) =>
+          data.options.itemId == currentItem.options.itemId;
         let compressedItems = [currentItem];
         let canCompress = true;
         for (const item of items.toReversed()) {

@@ -30,6 +30,7 @@ export type Gridfinity = {
 
 export type Item = {
   id: string;
+  name: string;
   translation?: Point3D;
   rotation?: Point3D;
   booleanOperation?: BooleanOperation;
@@ -39,6 +40,7 @@ export const gridfinityItemOf = (params: GridfinityParams): Item => {
   return {
     id: crypto.randomUUID(),
     type: "gridfinity",
+    name: "Gridfinity",
     params: params,
   };
 };
@@ -46,11 +48,13 @@ export const gridfinityItemOf = (params: GridfinityParams): Item => {
 export const shadowItemOf = (
   contourPoints: ContourPoints[],
   height: number,
-  translationZ?: number
+  translationZ?: number,
+  name?: string
 ): Item => {
   return {
     id: crypto.randomUUID(),
     type: "shadow",
+    name: name ? name: "Contour",
     points: contourPoints,
     height: height,
     translation: { x: 0, y: 0, z: translationZ ? translationZ : 0 },
@@ -66,6 +70,7 @@ export const primitiveOf = (
   return {
     id: crypto.randomUUID(),
     type: "primitive",
+    name: "Primitive",
     params: params,
     translation: defaultTranslationOf(params, gridfinityHeight),
     rotation: { x: 0, y: 0, z: 0 },

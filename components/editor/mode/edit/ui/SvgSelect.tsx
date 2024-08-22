@@ -6,11 +6,11 @@ import { Context } from "@/context/DetailsContext";
 import { centerPoints, ContourPoints } from "@/lib/Point";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import SelectField, { Option } from "@/components/fields/SelectField";
-import { useContourCacheContext } from "../../cache/ContourCacheContext";
+import { useContourCacheContext } from "../../../cache/ContourCacheContext";
 
 type Props = {
   dictionary: Dictionary;
-  onSelect: (ContourPoints: ContourPoints[]) => void;
+  onSelect: (ContourPoints: ContourPoints[], name: string) => void;
 };
 
 const centeredPointsOf = (context: Context): ContourPoints[] => {
@@ -32,8 +32,9 @@ const SvgSelect = ({ dictionary, onSelect }: Props) => {
     };
     if (items && items.length > 0) {
       setOptions(items.map(asOption));
-      setSelected(items[0].id!);
-      onSelect(centeredPointsOf(items[0]));
+      const item = items[0];
+      setSelected(item.id!);
+      onSelect(centeredPointsOf(item), item.details.name);
     }
   }, [items, onSelect]);
 
@@ -41,7 +42,7 @@ const SvgSelect = ({ dictionary, onSelect }: Props) => {
     const contextId = Number.parseInt(event.target.value);
     const selected = items?.find((it) => it.id == contextId);
     if (selected) {
-      onSelect(centeredPointsOf(selected));
+      onSelect(centeredPointsOf(selected), selected.details.name);
       setSelected(contextId);
     }
   };

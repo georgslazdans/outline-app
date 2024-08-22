@@ -4,21 +4,21 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { useEffect } from "react";
 import { Object3D, Vector3 } from "three";
 import ThreeJsEnvironment from "./ThreeJsEnvironment";
-import WireframeButton from "./ui/WireframeButton";
 import EditorMode from "./mode/EditorMode";
 import ResultMode from "./mode/result/ResultMode";
 import EditMode from "./mode/edit/EditMode";
 import ContourMode from "./mode/contour/ContourMode";
 import ModelData from "@/lib/replicad/ModelData";
-import ModelName from "./ui/ModelName";
 import { useEditorContext } from "./EditorContext";
-import RenderButton from "./ui/RenderButton";
 import { useModelContext } from "../../context/ModelContext";
-import SaveModel from "./ui/SaveModel";
 import { useEditorHistoryContext } from "./history/EditorHistoryContext";
 import UndoButton from "./ui/UndoButton";
 import RedoButton from "./ui/RedoButton";
 import EditorHistoryType from "./history/EditorHistoryType";
+import ModelName from "./ui/ModelName";
+import SaveModel from "./ui/SaveModel";
+import WireframeButton from "./ui/WireframeButton";
+import RenderButton from "./ui/RenderButton";
 
 type Props = {
   dictionary: Dictionary;

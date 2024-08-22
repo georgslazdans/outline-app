@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import React, { useCallback, useState } from "react";
-import ImportDialog from "./ImportDialog";
+import ImportDialog from "./ui/ImportDialog";
 import { ContourPoints } from "@/lib/Point";
 import {
   Item,
@@ -22,6 +22,7 @@ import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
+import ItemTree from "./ui/tree/ItemTree";
 
 type Props = {
   dictionary: Dictionary;
@@ -48,9 +49,18 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
     setInputFieldFocused,
   } = useEditorContext();
 
-  const onContourSelect = (points: ContourPoints[], height: number) => {
+  const onContourSelect = (
+    points: ContourPoints[],
+    height: number,
+    name: string
+  ) => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
-    const shadow = shadowItemOf(points, height, gridfinityHeight - height);
+    const shadow = shadowItemOf(
+      points,
+      height,
+      gridfinityHeight - height,
+      name
+    );
     setSelectedId(shadow.id);
     setModelData(
       { items: [...modelData.items, shadow] },
@@ -182,6 +192,11 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
 
   return (
     <>
+      <ItemTree
+        dictionary={dictionary}
+        modelData={modelData}
+        setModelData={setModelData}
+      ></ItemTree>
       <Button className="mb-2" onClick={() => addPrimitive()}>
         <label>Add Primitive</label>
       </Button>
