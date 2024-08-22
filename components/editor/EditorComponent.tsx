@@ -105,7 +105,9 @@ const EditorComponent = ({ dictionary }: Props) => {
             </ThreeJsEnvironment>
           </div>
           <div className="flex flex-row gap-2">
-            <RenderButton dictionary={dictionary}></RenderButton>
+            {editorMode != EditorMode.CONTOUR_EDIT && (
+              <RenderButton dictionary={dictionary}></RenderButton>
+            )}
             <SaveModel dictionary={dictionary}></SaveModel>
           </div>
         </div>

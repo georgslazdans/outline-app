@@ -11,6 +11,8 @@ import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
+import { Shadow } from "@/lib/replicad/Model";
+import { useEditorHistoryContext } from "../../history/EditorHistoryContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -19,12 +21,16 @@ type Props = {
 };
 
 const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
-  const { selectedId, selectedPoint, setEditorMode } = useEditorContext();
+  const { selectedId, selectedPoint, setSelectedPoint, setEditorMode } =
+    useEditorContext();
+  const { compressHistoryEvents } = useEditorHistoryContext();
 
   const getSelectedContour = useCallback(() => {
-    const selectedItem = modelData.items.find((it) => it.id == selectedId);
-    if (selectedItem?.type != "shadow") {
-      throw Error("Selected item is not a shadow!");
+    const selectedItem = modelData.items.find(
+      (it) => it.id == selectedId && it.type == "shadow"
+    ) as Shadow;
+    if (!selectedItem) {
+      throw new Error("Selected item is not found!");
     }
     return selectedItem.points;
   }, [modelData, selectedId]);
@@ -47,7 +53,7 @@ const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
     });
     setModelData(
       { items: updatedItems },
-      EditorHistoryType.OBJ_UPDATED,
+      EditorHistoryType.CONTOUR_UPDATED,
       selectedId
     );
   };
@@ -65,14 +71,19 @@ const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
         }
         return contour;
       });
-
+      setSelectedPoint(undefined);
       onContourChanged(updatedPoints);
     }
   };
 
+  const onDone = () => {
+    compressHistoryEvents(EditorHistoryType.CONTOUR_UPDATED);
+    setEditorMode(EditorMode.EDIT);
+  };
+
   return (
     <>
-      <Button onClick={() => setEditorMode(EditorMode.EDIT)}>
+      <Button onClick={onDone}>
         <label>Done</label>
       </Button>
       {selectedContourPoints && (

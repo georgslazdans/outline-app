@@ -45,7 +45,7 @@ const ContourModeEdit = ({ dictionary, modelData, setModelData }: Props) => {
         return it;
       }),
     };
-    setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, selectedId);
+    setModelData(updatedData, EditorHistoryType.CONTOUR_UPDATED, selectedId);
   };
 
   const onContourChanged = (contourIndex: number) => {

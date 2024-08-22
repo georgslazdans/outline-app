@@ -10,6 +10,8 @@ import HistoryData, {
 import EditHistoryOptions from "./EditHistoryOptions";
 import { ensureMaxSize } from "@/lib/utils/Arrays";
 import { useEditorContext } from "../EditorContext";
+import EditorMode from "../mode/EditorMode";
+import EditorHistoryType from "./EditorHistoryType";
 
 interface EditHistoryType {
   canUndo(): boolean;
@@ -17,6 +19,7 @@ interface EditHistoryType {
   undo(): void;
   redo(): void;
   addHistoryEvent(data: ModelData, options: EditHistoryOptions): void;
+  compressHistoryEvents(type: EditorHistoryType): void;
 }
 
 const EditorHistoryContext = createContext<EditHistoryType | undefined>(
@@ -30,16 +33,33 @@ export const EditorHistoryProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const { setSelectedId, setSelectedPoint } = useEditorContext();
+  const { selectedId, setSelectedId, setSelectedPoint, editorMode } =
+    useEditorContext();
   const { model, setModel } = useModelContext();
   const [items, setItems] = useState<HistoryData[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const hasSameSelectedId = (data: HistoryData) => {
+    return data.options.selectedId == selectedId;
+  };
+
   const canUndo = () => {
-    return currentIndex > 0;
+    if (editorMode == EditorMode.RESULT) return false;
+    const hasItems = currentIndex > 0;
+    if (hasItems && editorMode == EditorMode.CONTOUR_EDIT) {
+      const potentialItem = items[currentIndex - 1];
+      return hasSameSelectedId(potentialItem);
+    }
+    return hasItems;
   };
   const canRedo = () => {
-    return currentIndex < items.length - 1;
+    if (editorMode == EditorMode.RESULT) return false;
+    const hasItems = currentIndex < items.length - 1;
+    if (hasItems && editorMode == EditorMode.CONTOUR_EDIT) {
+      const potentialItem = items[currentIndex + 1];
+      return hasSameSelectedId(potentialItem);
+    }
+    return hasItems;
   };
 
   const setUpState = (index: number) => {
@@ -86,6 +106,36 @@ export const EditorHistoryProvider = ({
     setCurrentIndex(newItems.length - 1);
   };
 
+  const compressHistoryEvents = (type: EditorHistoryType) => {
+    const hasTheSameType = (data: HistoryData) => data.options.type == type;
+
+    const currentItem = items[currentIndex];
+    if (!hasTheSameType(currentItem)) {
+      console.warn(
+        "Can't compress events for type: " + type,
+        ", Current item has type: " + currentItem.options.type
+      );
+    } else {
+      const compressItems = () => {
+        const hasSameItemId = (data: HistoryData) => data.options.itemId == currentItem.options.itemId
+        let compressedItems = [currentItem];
+        let canCompress = true;
+        for (const item of items.toReversed()) {
+          if (!hasTheSameType(item) || !hasSameItemId(item)) {
+            canCompress = false;
+          }
+          if (!canCompress) {
+            compressedItems.push(item);
+          }
+        }
+        return compressedItems.reverse();
+      };
+      const compressedItems = compressItems();
+      setItems(compressedItems);
+      setCurrentIndex(compressedItems.length - 1);
+    }
+  };
+
   return (
     <EditorHistoryContext.Provider
       value={{
@@ -94,6 +144,7 @@ export const EditorHistoryProvider = ({
         addHistoryEvent,
         canUndo,
         canRedo,
+        compressHistoryEvents,
       }}
     >
       {children}
