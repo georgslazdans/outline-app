@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { ModelData } from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/ModelData";
 import React, { useCallback, useEffect, useState } from "react";
 import { Select } from "@react-three/drei";
 import ReplicadMesh from "../../replicad/ReplicadMesh";
@@ -10,19 +10,20 @@ import ModelCache from "../../cache/ModelCache";
 import { toDegrees, toRadians } from "@/lib/utils/Math";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import { useEditorContext } from "../../EditorContext";
-import EditorHistoryType from "../../EditorHistoryType";
+import EditorHistoryType from "../../history/EditorHistoryType";
+import { UpdateModelData } from "../../EditorComponent";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  onModelDataChange: (data: ModelData, type: EditorHistoryType) => void;
+  setModelData: UpdateModelData;
 };
 
 export type ItemModel = {
   [id: string]: ReplicadResult;
 };
 
-const EditCanvas = ({ dictionary, modelData, onModelDataChange }: Props) => {
+const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
   const [itemModels, setItemModels] = useState<ItemModel>({});
   const { wireframe, selectedId, setSelectedId } = useEditorContext();
 
@@ -79,10 +80,10 @@ const EditCanvas = ({ dictionary, modelData, onModelDataChange }: Props) => {
           y: toDegrees(rotY),
           z: toDegrees(rotZ),
         };
-        onModelDataChange({ items: updatedItems }, EditorHistoryType.TRANSLATION);
+        setModelData({ items: updatedItems }, EditorHistoryType.TRANSLATION, selectedId);
       };
     },
-    [modelData, onModelDataChange]
+    [modelData, setModelData]
   );
 
   const isSelected = (id: string) => {

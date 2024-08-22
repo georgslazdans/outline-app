@@ -2,7 +2,7 @@ import { Dictionary } from "@/app/dictionaries";
 import ResultViewer from "./ResultViewer";
 import ResultToolbar from "./ResultToolbar";
 import { EditorModeConfig } from "../EditorMode";
-import { ModelData } from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/ModelData";
 
 type Props = {
   dictionary: Dictionary;

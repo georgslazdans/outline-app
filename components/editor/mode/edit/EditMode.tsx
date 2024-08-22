@@ -1,20 +1,20 @@
 import { Dictionary } from "@/app/dictionaries";
-import EditorMode, { EditorModeConfig } from "../EditorMode";
+import { EditorModeConfig } from "../EditorMode";
 import EditCanvas from "./EditCanvas";
 import EditToolbar from "./EditToolbar";
-import { ModelData } from "@/lib/replicad/ModelData";
-import EditorHistoryType from "../../EditorHistoryType";
+import ModelData from "@/lib/replicad/ModelData";
+import { UpdateModelData } from "../../EditorComponent";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  setModelData: (model: ModelData, type: EditorHistoryType) => void;
+  setModelData: UpdateModelData;
 };
 
 const EditMode = ({
   dictionary,
   modelData,
-  setModelData
+  setModelData,
 }: Props): EditorModeConfig => {
   const mode = {
     view: () => {
@@ -22,7 +22,7 @@ const EditMode = ({
         <EditCanvas
           dictionary={dictionary}
           modelData={modelData}
-          onModelDataChange={setModelData}
+          setModelData={setModelData}
         ></EditCanvas>
       );
     },
@@ -31,7 +31,7 @@ const EditMode = ({
         <EditToolbar
           dictionary={dictionary}
           modelData={modelData}
-          onModelDataUpdate={setModelData}
+          setModelData={setModelData}
         ></EditToolbar>
       );
     },

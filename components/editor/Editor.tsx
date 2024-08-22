@@ -7,7 +7,7 @@ import { ModelCacheProvider } from "./cache/ModelCacheContext";
 import { EditorProvider } from "./EditorContext";
 import EditorComponent from "./EditorComponent";
 import { ContourCacheProvider } from "./cache/ContourCacheContext";
-import { EditorHistoryProvider } from "./EditorHistoryContext";
+import { EditorHistoryProvider } from "./history/EditorHistoryContext";
 
 type Props = {
   dictionary: Dictionary;

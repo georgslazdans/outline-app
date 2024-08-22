@@ -2,26 +2,23 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ModelData } from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/ModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
 import ScaleAlongNormal from "./ScaleAlongNormal";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
-import EditorHistoryType from "../../EditorHistoryType";
+import EditorHistoryType from "../../history/EditorHistoryType";
+import { UpdateModelData } from "../../EditorComponent";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  setModelData: (modelData: ModelData, type: EditorHistoryType) => void;
+  setModelData: UpdateModelData;
 };
 
-const ContourModeToolbar = ({
-  dictionary,
-  modelData,
-  setModelData,
-}: Props) => {
+const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
   const { selectedId, selectedPoint, setEditorMode } = useEditorContext();
 
   const getSelectedContour = useCallback(() => {
@@ -48,7 +45,11 @@ const ContourModeToolbar = ({
       }
       return it;
     });
-    setModelData({ items: updatedItems }, EditorHistoryType.OBJ_UPDATED);
+    setModelData(
+      { items: updatedItems },
+      EditorHistoryType.OBJ_UPDATED,
+      selectedId
+    );
   };
 
   const onDeletePoint = () => {

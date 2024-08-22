@@ -1,32 +1,29 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { ModelData } from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/ModelData";
 import React, { useEffect, useState } from "react";
 import ContourMesh from "./threejs/ContourMesh";
 import { ContourPoints, scalePoints } from "@/lib/Point";
 import ContourIndex from "./ContourIndex";
 import { Select } from "@react-three/drei";
 import { useEditorContext } from "../../EditorContext";
-import EditorHistoryType from "../../EditorHistoryType";
+import EditorHistoryType from "../../history/EditorHistoryType";
+import { UpdateModelData } from "../../EditorComponent";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  setModelData: (data: ModelData, type: EditorHistoryType) => void;
+  setModelData: UpdateModelData;
 };
 
-const ContourModeEdit = ({
-  dictionary,
-  modelData,
-  setModelData
-}: Props) => {
+const ContourModeEdit = ({ dictionary, modelData, setModelData }: Props) => {
   const scale = 0.01;
 
-  const {selectedId, selectedPoint, setSelectedPoint, setDisableCamera} = useEditorContext();
+  const { selectedId, selectedPoint, setSelectedPoint, setDisableCamera } =
+    useEditorContext();
 
   const [scaledContours, setScaledContours] = useState<ContourPoints[]>([]);
-
 
   useEffect(() => {
     const data = modelData.items.find((it) => it.id == selectedId);
@@ -48,7 +45,7 @@ const ContourModeEdit = ({
         return it;
       }),
     };
-    setModelData(updatedData, EditorHistoryType.OBJ_UPDATED);
+    setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, selectedId);
   };
 
   const onContourChanged = (contourIndex: number) => {

@@ -5,6 +5,8 @@ export type ModelPart = {
   item: Gridfinity | Shadow | Primitive;
 };
 
-export type ModelData = {
+type ModelData = {
   items: Item[];
 };
+
+export default ModelData;

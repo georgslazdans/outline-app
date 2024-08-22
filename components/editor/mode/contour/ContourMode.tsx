@@ -2,19 +2,19 @@ import { Dictionary } from "@/app/dictionaries";
 import { EditorModeConfig } from "../EditorMode";
 import ContourModeEdit from "./ContourModeEdit";
 import ContourModeToolbar from "./ContourModeToolbar";
-import { ModelData } from "@/lib/replicad/ModelData";
-import EditorHistoryType from "../../EditorHistoryType";
+import ModelData from "@/lib/replicad/ModelData";
+import { UpdateModelData } from "../../EditorComponent";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  setModelData: (data: ModelData, type: EditorHistoryType) => void;
+  setModelData: UpdateModelData;
 };
 
 const ContourMode = ({
   dictionary,
   modelData,
-  setModelData
+  setModelData,
 }: Props): EditorModeConfig => {
   const mode = {
     view: () => {

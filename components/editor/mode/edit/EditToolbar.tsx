@@ -12,7 +12,7 @@ import {
   Shadow,
   shadowItemOf,
 } from "@/lib/replicad/Model";
-import { ModelData } from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/ModelData";
 import GridfinityEdit from "./params/GridfinityEdit";
 import GridfinityParams from "@/lib/replicad/GridfinityParams";
 import ShadowEdit from "./params/ShadowEdit";
@@ -20,12 +20,13 @@ import PrimitiveEdit from "./params/primtive/PrimitiveEdit";
 import PrimitiveType from "@/lib/replicad/PrimitiveType";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
-import EditorHistoryType from "../../EditorHistoryType";
+import EditorHistoryType from "../../history/EditorHistoryType";
+import { UpdateModelData } from "../../EditorComponent";
 
 type Props = {
   dictionary: Dictionary;
   modelData: ModelData;
-  onModelDataUpdate: (modelData: ModelData, type: EditorHistoryType) => void;
+  setModelData: UpdateModelData;
 };
 
 const gridfinityHeightOf = (modelData: ModelData) => {
@@ -36,7 +37,7 @@ const gridfinityHeightOf = (modelData: ModelData) => {
   return gridfinityHeight * magicConstant;
 };
 
-const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
+const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
   const [openImportDialog, setOpenImportDialog] = useState(false);
 
   const {
@@ -50,9 +51,10 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
   const onContourSelect = (points: ContourPoints[], height: number) => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const shadow = shadowItemOf(points, height, gridfinityHeight - height);
-    onModelDataUpdate(
+    setModelData(
       { items: [...modelData.items, shadow] },
-      EditorHistoryType.OBJ_ADDED
+      EditorHistoryType.OBJ_ADDED,
+      shadow.id
     );
     setSelectedId(shadow.id);
   };
@@ -60,9 +62,10 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
   const addPrimitive = () => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const primitive = primitiveOf(PrimitiveType.BOX, gridfinityHeight);
-    onModelDataUpdate(
+    setModelData(
       { items: [...modelData.items, primitive] },
-      EditorHistoryType.OBJ_ADDED
+      EditorHistoryType.OBJ_ADDED,
+      primitive.id
     );
     setSelectedId(primitive.id);
   };
@@ -76,12 +79,13 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
         return item;
       });
 
-      onModelDataUpdate(
+      setModelData(
         { ...modelData, items: updatedItems },
-        EditorHistoryType.OBJ_UPDATED
+        EditorHistoryType.OBJ_UPDATED,
+        id
       );
     },
-    [modelData, onModelDataUpdate]
+    [modelData, setModelData]
   );
 
   const onItemChanged = useCallback(
@@ -93,12 +97,13 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
         return item;
       });
 
-      onModelDataUpdate(
+      setModelData(
         { ...modelData, items: updatedItems },
-        EditorHistoryType.OBJ_UPDATED
+        EditorHistoryType.OBJ_UPDATED,
+        id
       );
     },
-    [modelData, onModelDataUpdate]
+    [modelData, setModelData]
   );
 
   const propertiesComponentFor = useCallback(
@@ -154,9 +159,10 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
     const updatedItems = modelData.items.filter(
       (item) => item.id !== selectedId
     );
-    onModelDataUpdate(
+    setModelData(
       { ...modelData, items: updatedItems },
-      EditorHistoryType.OBJ_DELETED
+      EditorHistoryType.OBJ_DELETED,
+      selectedId
     );
     setSelectedId("");
   };

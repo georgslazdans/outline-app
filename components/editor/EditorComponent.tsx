@@ -9,20 +9,26 @@ import EditorMode from "./mode/EditorMode";
 import ResultMode from "./mode/result/ResultMode";
 import EditMode from "./mode/edit/EditMode";
 import ContourMode from "./mode/contour/ContourMode";
-import { ModelData } from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/ModelData";
 import ModelName from "./ui/ModelName";
 import { useEditorContext } from "./EditorContext";
 import RenderButton from "./ui/RenderButton";
 import { useModelContext } from "../../context/ModelContext";
 import SaveModel from "./ui/SaveModel";
-import { useEditorHistoryContext } from "./EditorHistoryContext";
+import { useEditorHistoryContext } from "./history/EditorHistoryContext";
 import UndoButton from "./ui/UndoButton";
 import RedoButton from "./ui/RedoButton";
-import EditorHistoryType from "./EditorHistoryType";
+import EditorHistoryType from "./history/EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
 };
+
+export type UpdateModelData = (
+  modelData: ModelData,
+  type: EditorHistoryType,
+  id?: string
+) => void;
 
 const EditorComponent = ({ dictionary }: Props) => {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
@@ -32,11 +38,18 @@ const EditorComponent = ({ dictionary }: Props) => {
   const { addHistoryEvent } = useEditorHistoryContext();
 
   useEffect(() => {
-    addHistoryEvent(model.modelData, { type: EditorHistoryType.INITIAL });
+    addHistoryEvent(model.modelData, {
+      type: EditorHistoryType.INITIAL,
+      addDate: new Date(),
+    });
   }, []);
 
-  const setModelData = (modelData: ModelData, type: EditorHistoryType) => {
-    addHistoryEvent(modelData, { type: type });
+  const setModelData: UpdateModelData = (
+    modelData: ModelData,
+    type: EditorHistoryType,
+    id?: string
+  ) => {
+    addHistoryEvent(modelData, { type: type, itemId: id, addDate: new Date() });
     setModel((prev) => {
       return { ...prev, modelData: modelData };
     });

@@ -2,7 +2,7 @@
 
 import IconButton from "@/components/IconButton";
 import React from "react";
-import { useEditorHistoryContext } from "../EditorHistoryContext";
+import { useEditorHistoryContext } from "../history/EditorHistoryContext";
 import { useEditorContext } from "../EditorContext";
 
 type Props = {};
