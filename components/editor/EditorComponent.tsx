@@ -33,7 +33,7 @@ export type UpdateModelData = (
 const EditorComponent = ({ dictionary }: Props) => {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
-  const { editorMode } = useEditorContext();
+  const { editorMode, selectedId, selectedPoint } = useEditorContext();
   const { model, setModel } = useModelContext();
   const { addHistoryEvent } = useEditorHistoryContext();
 
@@ -49,7 +49,13 @@ const EditorComponent = ({ dictionary }: Props) => {
     type: EditorHistoryType,
     id?: string
   ) => {
-    addHistoryEvent(modelData, { type: type, itemId: id, addDate: new Date() });
+    addHistoryEvent(modelData, {
+      type: type,
+      itemId: id,
+      addDate: new Date(),
+      selectedId: selectedId,
+      selectedPoint: selectedPoint,
+    });
     setModel((prev) => {
       return { ...prev, modelData: modelData };
     });

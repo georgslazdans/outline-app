@@ -51,23 +51,23 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
   const onContourSelect = (points: ContourPoints[], height: number) => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const shadow = shadowItemOf(points, height, gridfinityHeight - height);
+    setSelectedId(shadow.id);
     setModelData(
       { items: [...modelData.items, shadow] },
       EditorHistoryType.OBJ_ADDED,
       shadow.id
     );
-    setSelectedId(shadow.id);
   };
 
   const addPrimitive = () => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const primitive = primitiveOf(PrimitiveType.BOX, gridfinityHeight);
+    setSelectedId(primitive.id);
     setModelData(
       { items: [...modelData.items, primitive] },
       EditorHistoryType.OBJ_ADDED,
       primitive.id
     );
-    setSelectedId(primitive.id);
   };
 
   const onGridfinityParamsChange = useCallback(
@@ -159,12 +159,12 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
     const updatedItems = modelData.items.filter(
       (item) => item.id !== selectedId
     );
+    setSelectedId("");
     setModelData(
       { ...modelData, items: updatedItems },
       EditorHistoryType.OBJ_DELETED,
       selectedId
     );
-    setSelectedId("");
   };
 
   const isGridfinity = (id: string) => {
