@@ -30,6 +30,7 @@ export const supportsHistoryCompression = (
   const supportedTypes = [
     EditorHistoryType.TRANSLATION,
     EditorHistoryType.ROTATION,
+    EditorHistoryType.OBJ_UPDATED
   ];
   return (
     supportedTypes.includes(historyData.options.type) &&
