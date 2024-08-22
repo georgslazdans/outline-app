@@ -12,6 +12,7 @@ type Props = {
   autofocus?: boolean;
   required?: boolean;
   onBlur?: FocusEventHandler<HTMLInputElement>;
+  onFocus?: FocusEventHandler<HTMLInputElement>;
   padding?: string;
 };
 
@@ -26,6 +27,7 @@ const InputField = ({
   autofocus,
   required = false,
   onBlur,
+  onFocus,
   padding = "p-1.5"
 }: Props) => {
   return (
@@ -48,6 +50,7 @@ const InputField = ({
           autoFocus={autofocus}
           required={required}
           onBlur={onBlur}
+          onFocus={onFocus}
         />
       </div>
     </div>

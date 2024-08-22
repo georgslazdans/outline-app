@@ -1,10 +1,11 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
+import { useEditorContext } from "@/components/editor/EditorContext";
 import CheckboxField from "@/components/fields/CheckboxField";
-import NumberField from "@/components/fields/NumberField";
 import GridfinityParams from "@/lib/replicad/GridfinityParams";
 import React, { ChangeEvent } from "react";
+import EditField from "../../EditField";
 
 type Props = {
   dictionary: Dictionary;
@@ -27,40 +28,41 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
       onParamsChange(updatedParams);
     };
   };
+
   return (
     <>
-      <NumberField
+      <EditField
         value={params.xSize}
         onChange={handleNumberChange("xSize")}
         label={"x Size"}
         name={"xSize"}
-      ></NumberField>
-      <NumberField
+      ></EditField>
+      <EditField
         value={params.ySize}
         onChange={handleNumberChange("ySize")}
         label={"y Size"}
         name={"ySize"}
-      ></NumberField>
-      <NumberField
+      ></EditField>
+      <EditField
         value={params.height}
         onChange={handleNumberChange("height")}
         label={"height"}
         name={"height"}
         numberRange={{ min: 0, max: 99999, step: 0.01 }}
-      ></NumberField>
+      ></EditField>
       <CheckboxField
         value={params.keepFull}
         onChange={handleCheckboxChange("keepFull")}
         label={"Keep Full"}
         name={"keepFull"}
       ></CheckboxField>
-      <NumberField
+      <EditField
         value={params.wallThickness}
         onChange={handleNumberChange("wallThickness")}
         label={"Wall Thickness"}
         name={"wallThickness"}
         numberRange={{ min: 0, max: 99999, step: 0.01 }}
-      ></NumberField>
+      ></EditField>
       <CheckboxField
         value={params.withMagnet}
         onChange={handleCheckboxChange("withMagnet")}
@@ -73,27 +75,27 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
         label={"With Screw"}
         name={"withScrew"}
       ></CheckboxField>
-      <NumberField
+      <EditField
         value={params.magnetRadius}
         onChange={handleNumberChange("magnetRadius")}
         label={"Magnet Radius"}
         name={"magnetRadius"}
         numberRange={{ min: 0, max: 99999, step: 0.01 }}
-      ></NumberField>
-      <NumberField
+      ></EditField>
+      <EditField
         value={params.magnetHeight}
         onChange={handleNumberChange("magnetHeight")}
         label={"Magnet Height"}
         name={"magnetHeight"}
         numberRange={{ min: 0, max: 99999, step: 0.01 }}
-      ></NumberField>
-      <NumberField
+      ></EditField>
+      <EditField
         value={params.screwRadius}
         onChange={handleNumberChange("screwRadius")}
         label={"Screw Radius"}
         name={"screwRadius"}
         numberRange={{ min: 0, max: 99999, step: 0.01 }}
-      ></NumberField>
+      ></EditField>
     </>
   );
 };

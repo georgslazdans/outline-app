@@ -3,10 +3,12 @@
 import IconButton from "@/components/IconButton";
 import React from "react";
 import { useEditorHistoryContext } from "../EditorHistoryContext";
+import { useEditorContext } from "../EditorContext";
 
 type Props = {};
 
 const UndoButton = ({}: Props) => {
+  const { inputFieldFocused } = useEditorContext();
   const { canUndo, undo } = useEditorHistoryContext();
 
   const icon = (
@@ -32,8 +34,8 @@ const UndoButton = ({}: Props) => {
         <IconButton
           className="px-3 py-3 mr-auto mt-2 ml-2"
           onClick={undo}
-          hotkey="z"
-          hotkeyCtrl={true}
+          hotkey={!inputFieldFocused ? "z" : undefined}
+          hotkeyCtrl={!inputFieldFocused ? true : undefined}
         >
           {icon}
         </IconButton>

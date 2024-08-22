@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import EditorMode from "./EditorMode";
+import EditorMode from "./mode/EditorMode";
 import ContourIndex from "./mode/contour/ContourIndex";
 
 type EditorContextType = {
@@ -12,7 +12,11 @@ type EditorContextType = {
   selectedId: string | undefined;
   setSelectedId: React.Dispatch<React.SetStateAction<string | undefined>>;
   selectedPoint: ContourIndex | undefined;
-  setSelectedPoint: React.Dispatch<React.SetStateAction<ContourIndex | undefined>>;
+  setSelectedPoint: React.Dispatch<
+    React.SetStateAction<ContourIndex | undefined>
+  >;
+  inputFieldFocused: boolean;
+  setInputFieldFocused: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
@@ -23,6 +27,7 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
   const [wireframe, setWireframe] = useState(false);
   const [selectedId, setSelectedId] = useState<string>();
   const [selectedPoint, setSelectedPoint] = useState<ContourIndex>();
+  const [inputFieldFocused, setInputFieldFocused] = useState(false);
 
   return (
     <EditorContext.Provider
@@ -37,6 +42,8 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
         setSelectedId,
         selectedPoint,
         setSelectedPoint,
+        inputFieldFocused,
+        setInputFieldFocused,
       }}
     >
       {children}

@@ -9,7 +9,7 @@ type Props = {
 };
 
 const WireframeButton = ({ className }: Props) => {
-  const { wireframe, setWireframe } = useEditorContext();
+  const { wireframe, setWireframe, inputFieldFocused } = useEditorContext();
   const icon = wireframe ? "eye-slash" : "eye";
   const onClick = () => setWireframe(!wireframe);
   const eye = (
@@ -55,7 +55,8 @@ const WireframeButton = ({ className }: Props) => {
       <IconButton
         className="px-3 py-3 mr-auto mt-2 ml-2"
         onClick={onClick}
-        hotkey="h"
+        hotkey={!inputFieldFocused ? "h" : undefined}
+        hotkeyCtrl={!inputFieldFocused ? true : undefined}
       >
         {icon == "eye" ? eye : eyeSlash}
       </IconButton>

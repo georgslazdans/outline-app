@@ -1,9 +1,11 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
+import { useEditorContext } from "@/components/editor/EditorContext";
 import NumberField from "@/components/fields/NumberField";
 import { Item } from "@/lib/replicad/Model";
 import React, { ChangeEvent } from "react";
+import EditField from "../../EditField";
 
 type Props = {
   dictionary: Dictionary;
@@ -45,53 +47,53 @@ const TransformEdit = ({ dictionary, item, onItemChange }: Props) => {
   return (
     <>
       <div className="flex flex-row gap-2">
-        <NumberField
+        <EditField
           value={item.translation!.x}
           onChange={handleTranslationChange("x")}
           label={"X"}
           name={"x"}
           numberRange={translationNumberRange}
-        ></NumberField>
-        <NumberField
+        ></EditField>
+        <EditField
           value={item.translation!.y}
           onChange={handleTranslationChange("y")}
           label={"Y"}
           name={"y"}
           numberRange={translationNumberRange}
-        ></NumberField>
-        <NumberField
+        ></EditField>
+        <EditField
           value={item.translation!.z}
           onChange={handleTranslationChange("z")}
           label={"Z"}
           name={"z"}
           numberRange={translationNumberRange}
-        ></NumberField>
+        ></EditField>
       </div>
       <div className="flex flex-row gap-2">
-        <NumberField
+        <EditField
           className="w-full"
           value={item.rotation!.x}
           onChange={handleRotationChange("x")}
           label={"Rotation X"}
           name={"rotationX"}
           numberRange={rotationNumberRange}
-        ></NumberField>
-        <NumberField
+        ></EditField>
+        <EditField
           className="w-full"
           value={item.rotation!.y}
           onChange={handleRotationChange("y")}
           label={"Rotation Y"}
           name={"rotationY"}
           numberRange={rotationNumberRange}
-        ></NumberField>
-        <NumberField
+        ></EditField>
+        <EditField
           className="w-full"
           value={item.rotation!.z}
           onChange={handleRotationChange("z")}
           label={"Rotation Z"}
           name={"rotationZ"}
           numberRange={rotationNumberRange}
-        ></NumberField>
+        ></EditField>
       </div>
     </>
   );

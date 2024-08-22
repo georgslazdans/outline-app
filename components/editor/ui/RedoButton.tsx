@@ -3,10 +3,12 @@
 import IconButton from "@/components/IconButton";
 import React from "react";
 import { useEditorHistoryContext } from "../EditorHistoryContext";
+import { useEditorContext } from "../EditorContext";
 
 type Props = {};
 
 const RedoButton = ({}: Props) => {
+  const { inputFieldFocused } = useEditorContext();
   const { canRedo, redo } = useEditorHistoryContext();
 
   const icon = (
@@ -32,8 +34,8 @@ const RedoButton = ({}: Props) => {
         <IconButton
           className="px-3 py-3 mr-auto mt-2 ml-2"
           onClick={redo}
-          hotkey="y"
-          hotkeyCtrl={true}
+          hotkey={!inputFieldFocused ? "y" : undefined}
+          hotkeyCtrl={!inputFieldFocused ? true : undefined}
         >
           {icon}
         </IconButton>

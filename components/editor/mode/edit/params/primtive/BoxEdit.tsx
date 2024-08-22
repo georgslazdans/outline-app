@@ -1,9 +1,9 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import NumberField from "@/components/fields/NumberField";
 import { BoxParams } from "@/lib/replicad/PrimitiveParams";
 import React, { ChangeEvent } from "react";
+import EditField from "../../../EditField";
 
 type Props = {
   dictionary: Dictionary;
@@ -22,24 +22,24 @@ const BoxEdit = ({ dictionary, boxParams, onParamsChange }: Props) => {
 
   return (
     <>
-      <NumberField
+      <EditField
         value={boxParams.width}
         onChange={handleNumberChange("width")}
         label={"Width"}
         name={"width"}
-      ></NumberField>
-      <NumberField
+      ></EditField>
+      <EditField
         value={boxParams.length}
         onChange={handleNumberChange("length")}
         label={"Length"}
         name={"length"}
-      ></NumberField>
-      <NumberField
+      ></EditField>
+      <EditField
         value={boxParams.height}
         onChange={handleNumberChange("height")}
         label={"Height"}
         name={"height"}
-      ></NumberField>
+      ></EditField>
     </>
   );
 };

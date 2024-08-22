@@ -19,7 +19,7 @@ import ShadowEdit from "./params/ShadowEdit";
 import PrimitiveEdit from "./params/primtive/PrimitiveEdit";
 import PrimitiveType from "@/lib/replicad/PrimitiveType";
 import { useEditorContext } from "../../EditorContext";
-import EditorMode from "../../EditorMode";
+import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../EditorHistoryType";
 
 type Props = {
@@ -39,19 +39,31 @@ const gridfinityHeightOf = (modelData: ModelData) => {
 const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
   const [openImportDialog, setOpenImportDialog] = useState(false);
 
-  const { selectedId, setSelectedId, setEditorMode } = useEditorContext();
+  const {
+    selectedId,
+    setSelectedId,
+    setEditorMode,
+    inputFieldFocused,
+    setInputFieldFocused,
+  } = useEditorContext();
 
   const onContourSelect = (points: ContourPoints[], height: number) => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const shadow = shadowItemOf(points, height, gridfinityHeight - height);
-    onModelDataUpdate({ items: [...modelData.items, shadow] }, EditorHistoryType.OBJ_ADDED);
+    onModelDataUpdate(
+      { items: [...modelData.items, shadow] },
+      EditorHistoryType.OBJ_ADDED
+    );
     setSelectedId(shadow.id);
   };
 
   const addPrimitive = () => {
     const gridfinityHeight = gridfinityHeightOf(modelData);
     const primitive = primitiveOf(PrimitiveType.BOX, gridfinityHeight);
-    onModelDataUpdate({ items: [...modelData.items, primitive] }, EditorHistoryType.OBJ_ADDED);
+    onModelDataUpdate(
+      { items: [...modelData.items, primitive] },
+      EditorHistoryType.OBJ_ADDED
+    );
     setSelectedId(primitive.id);
   };
 
@@ -64,7 +76,10 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
         return item;
       });
 
-      onModelDataUpdate({ ...modelData, items: updatedItems }, EditorHistoryType.OBJ_UPDATED);
+      onModelDataUpdate(
+        { ...modelData, items: updatedItems },
+        EditorHistoryType.OBJ_UPDATED
+      );
     },
     [modelData, onModelDataUpdate]
   );
@@ -78,7 +93,10 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
         return item;
       });
 
-      onModelDataUpdate({ ...modelData, items: updatedItems }, EditorHistoryType.OBJ_UPDATED);
+      onModelDataUpdate(
+        { ...modelData, items: updatedItems },
+        EditorHistoryType.OBJ_UPDATED
+      );
     },
     [modelData, onModelDataUpdate]
   );
@@ -136,7 +154,10 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
     const updatedItems = modelData.items.filter(
       (item) => item.id !== selectedId
     );
-    onModelDataUpdate({ ...modelData, items: updatedItems }, EditorHistoryType.OBJ_DELETED);
+    onModelDataUpdate(
+      { ...modelData, items: updatedItems },
+      EditorHistoryType.OBJ_DELETED
+    );
     setSelectedId("");
   };
 
@@ -148,12 +169,17 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
     return modelData.items.find((it) => it.id == id)?.type == "shadow";
   };
 
+  const openContourDialog = () => {
+    setInputFieldFocused(true);
+    setOpenImportDialog(true);
+  };
+
   return (
     <>
       <Button className="mb-2" onClick={() => addPrimitive()}>
         <label>Add Primitive</label>
       </Button>
-      <Button onClick={() => setOpenImportDialog(true)}>
+      <Button onClick={openContourDialog}>
         <label>Add Contour</label>
       </Button>
 
@@ -172,7 +198,11 @@ const EditToolbar = ({ dictionary, modelData, onModelDataUpdate }: Props) => {
         </Button>
       )}
       {selectedId && !isGridfinity(selectedId) && (
-        <Button onClick={onRemoveContour} hotkey="Delete" className="mt-2">
+        <Button
+          onClick={onRemoveContour}
+          hotkey={!inputFieldFocused ? "Delete" : ""}
+          className="mt-2"
+        >
           <label>Remove {isShadow(selectedId) ? "Contour" : "Primitive"}</label>
         </Button>
       )}

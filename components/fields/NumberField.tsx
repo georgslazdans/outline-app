@@ -1,7 +1,7 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
-type NumberRange = {
+export type NumberRange = {
   min: number;
   max: number;
   step?: number;
@@ -17,6 +17,8 @@ type Props = {
   autofocus?: boolean;
   slider?: boolean;
   numberRange?: NumberRange;
+  onFocus?: () => void;
+  onBlur?: () => void;
 };
 
 const NumberField = ({
@@ -33,6 +35,8 @@ const NumberField = ({
     max: 255,
     step: 1,
   },
+  onFocus,
+  onBlur,
 }: Props) => {
   const [debouncedEvent, setDebouncedEvent] =
     useState<ChangeEvent<HTMLInputElement>>();
@@ -116,6 +120,8 @@ const NumberField = ({
           placeholder={placeholder}
           onChange={(event) => handleInput(event)}
           autoFocus={autofocus}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
       </div>
     </div>

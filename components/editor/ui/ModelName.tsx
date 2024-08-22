@@ -4,12 +4,15 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { useState } from "react";
 import InputField from "../../fields/InputField";
 import { useModelContext } from "../../../context/ModelContext";
+import { useEditorContext } from "../EditorContext";
 
 type Props = {
   dictionary: Dictionary;
 };
 
 const ModelName = ({ dictionary }: Props) => {
+  const { setInputFieldFocused } = useEditorContext();
+
   const { model, setModel } = useModelContext();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -25,8 +28,13 @@ const ModelName = ({ dictionary }: Props) => {
     setIsEditing(true);
   };
 
+  const handleFocus = () => {
+    setInputFieldFocused(true);
+  };
+
   const handleBlur = () => {
     setIsEditing(false);
+    setInputFieldFocused(false);
   };
 
   return (
@@ -43,6 +51,7 @@ const ModelName = ({ dictionary }: Props) => {
             autofocus
             name={"model-name"}
             padding=""
+            onFocus={handleFocus}
           />
         ) : (
           <span

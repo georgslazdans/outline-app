@@ -6,6 +6,8 @@ import SvgSelect from "./SvgSelect";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
+import EditField from "../EditField";
+import { useEditorContext } from "../../EditorContext";
 import NumberField from "@/components/fields/NumberField";
 
 type Props = {
@@ -21,19 +23,20 @@ const ImportDialog = ({
   onClose,
   onContourSelect,
 }: Props) => {
+  const {setInputFieldFocused} = useEditorContext();
   const [selectedContour, setSelectedContour] = useState<ContourPoints[]>();
   const [shadowHeight, setShadowHeight] = useState(10);
 
   const onImport = () => {
     if (selectedContour) {
       onContourSelect(selectedContour, shadowHeight);
-      setSelectedContour(undefined);
-      onClose();
+      onModalClose();
     }
   };
 
   const onModalClose = () => {
     setSelectedContour(undefined);
+    setInputFieldFocused(false);
     onClose();
   };
 

@@ -1,9 +1,9 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import NumberField from "@/components/fields/NumberField";
 import { SphereParams } from "@/lib/replicad/PrimitiveParams";
 import React, { ChangeEvent } from "react";
+import EditField from "../../../EditField";
 
 type Props = {
   dictionary: Dictionary;
@@ -22,12 +22,12 @@ const SphereEdit = ({ dictionary, sphereParams, onParamsChange }: Props) => {
 
   return (
     <>
-      <NumberField
+      <EditField
         value={sphereParams.radius}
         onChange={handleNumberChange("radius")}
         label={"Radius"}
         name={"radius"}
-      ></NumberField>
+      ></EditField>
     </>
   );
 };

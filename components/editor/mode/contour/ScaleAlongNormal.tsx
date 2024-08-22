@@ -2,15 +2,14 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
-import NumberField from "@/components/fields/NumberField";
 import {
   ContourPoints,
   findLargestContourOf,
   scaleAlongNormal,
   scaleAlongNormalNew,
 } from "@/lib/Point";
-import { ModelData } from "@/lib/replicad/Work";
 import React, { ChangeEvent, useState } from "react";
+import EditField from "../EditField";
 
 type Props = {
   dictionary: Dictionary;
@@ -40,13 +39,13 @@ const ScaleAlongNormal = ({ dictionary, contour, onContourChanged }: Props) => {
   return (
     <>
       <div className="mx-16">
-        <NumberField
+        <EditField
           value={scale}
           onChange={handleScaleChange}
           label={"Scale Along Normal"}
           name={"normal-scale"}
           numberRange={{ min: -9999999, max: 99999999, step: 0.05 }}
-        ></NumberField>
+        ></EditField>
         <Button className="mt-2 mb-2" onClick={scaleContour}>
           <label>Scale</label>
         </Button>

@@ -1,5 +1,5 @@
 import { Dictionary } from "@/app/dictionaries";
-import EditorMode, { EditorModeConfig } from "../../EditorMode";
+import EditorMode, { EditorModeConfig } from "../EditorMode";
 import EditCanvas from "./EditCanvas";
 import EditToolbar from "./EditToolbar";
 import { ModelData } from "@/lib/replicad/ModelData";

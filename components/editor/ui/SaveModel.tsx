@@ -6,6 +6,7 @@ import Button from "../../Button";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useModelContext } from "../../../context/ModelContext";
 import { useLoading } from "@/context/LoadingContext";
+import { useEditorContext } from "../EditorContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -14,6 +15,7 @@ type Props = {
 const SaveModel = ({ dictionary }: Props) => {
   const { add, update } = useIndexedDB("models");
 
+  const { inputFieldFocused } = useEditorContext();
   const { model, setModel } = useModelContext();
   const { loading, setLoading } = useLoading();
 
@@ -48,8 +50,8 @@ const SaveModel = ({ dictionary }: Props) => {
       <Button
         className="mt-2"
         onClick={onSaveModel}
-        hotkey="s"
-        hotkeyCtrl={true}
+        hotkey={!inputFieldFocused ? "s" : undefined}
+        hotkeyCtrl={!inputFieldFocused ? true : undefined}
       >
         <label>Save Model</label>
       </Button>

@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { Object3D, Vector3 } from "three";
 import ThreeJsEnvironment from "./ThreeJsEnvironment";
 import WireframeButton from "./ui/WireframeButton";
-import EditorMode from "./EditorMode";
+import EditorMode from "./mode/EditorMode";
 import ResultMode from "./mode/result/ResultMode";
 import EditMode from "./mode/edit/EditMode";
 import ContourMode from "./mode/contour/ContourMode";

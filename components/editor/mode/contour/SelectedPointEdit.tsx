@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useCallback, useMemo } from "react";
 import ContourIndex from "./ContourIndex";
 import { ContourPoints } from "@/lib/Point";
-import NumberField from "@/components/fields/NumberField";
+import EditField from "../EditField";
 
 type Props = {
   dictionary: Dictionary;
@@ -42,20 +42,20 @@ const SelectedPointEdit = ({
 
   return (
     <>
-      <NumberField
+      <EditField
         value={currentPoint?.x}
         onChange={handlePointChange("x")}
         label={"X"}
         name={"pointX"}
         numberRange={{ min: -9999999, max: 99999999, step: 0.05 }}
-      ></NumberField>
-      <NumberField
+      ></EditField>
+      <EditField
         value={currentPoint?.y}
         onChange={handlePointChange("y")}
         label={"Y"}
         name={"pointY"}
         numberRange={{ min: -9999999, max: 99999999, step: 0.05 }}
-      ></NumberField>
+      ></EditField>
     </>
   );
 };

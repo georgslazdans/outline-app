@@ -8,7 +8,7 @@ import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
 import ScaleAlongNormal from "./ScaleAlongNormal";
 import { useEditorContext } from "../../EditorContext";
-import EditorMode from "../../EditorMode";
+import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../EditorHistoryType";
 
 type Props = {

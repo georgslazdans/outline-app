@@ -1,9 +1,9 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import NumberField from "@/components/fields/NumberField";
 import { CylinderParams } from "@/lib/replicad/PrimitiveParams";
 import React, { ChangeEvent } from "react";
+import EditField from "../../../EditField";
 
 type Props = {
   dictionary: Dictionary;
@@ -26,18 +26,18 @@ const CylinderEdit = ({
 
   return (
     <>
-      <NumberField
+      <EditField
         value={cylinderParams.radius}
         onChange={handleNumberChange("radius")}
         label={"Radius"}
         name={"radius"}
-      ></NumberField>
-      <NumberField
+      ></EditField>
+      <EditField
         value={cylinderParams.height}
         onChange={handleNumberChange("height")}
         label={"Height"}
         name={"height"}
-      ></NumberField>
+      ></EditField>
     </>
   );
 };
