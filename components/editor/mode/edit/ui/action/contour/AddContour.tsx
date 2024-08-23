@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import React, { useState } from "react";
-import ImportDialog from "../ImportDialog";
+import ImportDialog from "../../ImportDialog";
 import { ContourPoints } from "@/lib/Point";
 import { UpdateModelData } from "@/components/editor/EditorComponent";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";

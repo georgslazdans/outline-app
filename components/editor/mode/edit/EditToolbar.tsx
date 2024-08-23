@@ -36,6 +36,7 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
         dictionary={dictionary}
         modelData={modelData}
         setModelData={setModelData}
+        selectedItem={selectedItem}
       ></ActionButtons>
 
       {selectedItem && (
