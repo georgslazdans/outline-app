@@ -5,6 +5,7 @@ import React, { useCallback } from "react";
 import EditItem from "./EditItem";
 import Item from "@/lib/replicad/Item";
 import ModelType from "@/lib/replicad/ModelType";
+import GroupTransform from "./ui/three/GroupTransform";
 
 type Props = {
   dictionary: Dictionary;
@@ -30,13 +31,20 @@ const EditItemList = ({ dictionary, items, parents, onItemChange }: Props) => {
       {items.map((item) => {
         if (item.type == ModelType.Group) {
           return (
-            <EditItemList
-              key={item.id}
-              dictionary={dictionary}
-              items={item.items}
-              onItemChange={onItemChange}
-              parents={getWithParents(item)}
-            ></EditItemList>
+            <>
+              <GroupTransform
+                key={item.id + "transform"}
+                group={item}
+                onItemChange={onItemChange}
+              ></GroupTransform>
+              <EditItemList
+                key={item.id}
+                dictionary={dictionary}
+                items={item.items}
+                onItemChange={onItemChange}
+                parents={getWithParents(item)}
+              ></EditItemList>
+            </>
           );
         } else {
           return (

@@ -18,6 +18,7 @@ import Item from "@/lib/replicad/Item";
 import ModelType from "@/lib/replicad/ModelType";
 import { useModelCache } from "../../cache/ModelCacheContext";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
+import TransformControls from "./ui/three/TransformControls";
 
 type Props = {
   dictionary: Dictionary;
@@ -31,8 +32,6 @@ const EditItem = ({ dictionary, item, parents, onItemChange }: Props) => {
 
   const { getModel } = useModelCache();
   const [model, setModel] = useState<ReplicadResult>();
-
-  const [matrix, setMatrix] = useState(new Matrix4());
 
   useEffect(() => {
     const work = getModel(item);
@@ -51,77 +50,6 @@ const EditItem = ({ dictionary, item, parents, onItemChange }: Props) => {
   const enableGizmo = () => {
     const isNotGridfinity = item.type != ModelType.Gridfinity;
     return isNotGridfinity && isSelected();
-  };
-
-  const scale = 0.01;
-
-  const parentPositionOf = (items?: Item[]): Point3D => {
-    if (items) {
-      const positions = items.map((it) => it.translation).filter((it) => !!it);
-      return addPoints(positions);
-    }
-    return { x: 0, y: 0, z: 0 };
-  };
-
-  const getPosition = useCallback(() => {
-    let translation = parentPositionOf(parents);
-    if (item?.translation) {
-      translation = add(translation, item.translation);
-    }
-    return toVector3(translation).multiplyScalar(scale);
-  }, [item?.translation, parents]);
-
-  const getRotation = useCallback(() => {
-    const rotation = item?.rotation;
-    if (rotation) {
-      return toEuler(rotation);
-    }
-  }, [item?.rotation]);
-
-  const handleTransformChange = useCallback(
-    (translation: Vector3, rotation: Euler) => {
-      if (item) {
-        const newItem = {
-          ...item,
-          translation: fromVector3(translation),
-          rotation: fromEuler(rotation),
-        };
-        onItemChange(newItem);
-      }
-    },
-    [item, onItemChange]
-  );
-
-  useEffect(() => {
-    const position = getPosition();
-    const rotation = getRotation();
-
-    const translationMatrix = new Matrix4();
-    const rotationMatrix = new Matrix4();
-
-    if (position) {
-      translationMatrix.makeTranslation(position);
-    }
-    if (rotation) {
-      rotationMatrix.makeRotationFromEuler(rotation);
-    }
-
-    if (position || rotation) {
-      const updatedMatrix = translationMatrix;
-      updatedMatrix.multiply(rotationMatrix);
-      setMatrix(updatedMatrix);
-    }
-  }, [getPosition, getRotation]);
-
-  const handleDragging = (l: Matrix4) => {
-    const pos = new Vector3();
-    pos.setFromMatrixPosition(l);
-    pos.multiplyScalar(1 / scale);
-
-    const rotation = new Euler();
-    rotation.setFromRotationMatrix(l);
-
-    handleTransformChange(pos, rotation);
   };
 
   const showWireframe = () => {
@@ -150,14 +78,11 @@ const EditItem = ({ dictionary, item, parents, onItemChange }: Props) => {
 
   return (
     <>
-      <PivotControls
-        enabled={enableGizmo()}
-        disableScaling={true}
-        autoTransform={false}
-        matrix={matrix}
-        onDrag={handleDragging}
-        depthTest={false}
-        scale={0.7}
+      <TransformControls
+        item={item}
+        enableGizmo={enableGizmo()}
+        parents={parents}
+        onItemChange={onItemChange}
       >
         {model && (
           <ReplicadMesh
@@ -170,7 +95,7 @@ const EditItem = ({ dictionary, item, parents, onItemChange }: Props) => {
             color={colorOf()}
           ></ReplicadMesh>
         )}
-      </PivotControls>
+      </TransformControls>
     </>
   );
 };

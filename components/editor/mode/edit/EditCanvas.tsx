@@ -26,12 +26,9 @@ export type ItemModel = {
 const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
   const { setSelectedId } = useEditorContext();
 
-  // const onWorkerResult = (id: string, result: ReplicadResult) => {
-  //   const updatedModels = { ...itemModels };
-  //   updatedModels[id] = result;
-  //   setItemModels(updatedModels);
-  // };
-
+  // TODO select 
+  // group by default
+  // if group is selected, then selected the object
   const onSelected = (obj: any) => {
     if (obj.length > 0) {
       const id = obj[0].userData?.id;
@@ -40,22 +37,6 @@ const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
       }
     }
   };
-
-  // useEffect(() => {
-  //   const modelDataKeys = ungroupedItemsOf(modelData.items).map((it) => it.id);
-  //   const existingKeys = Object.keys(itemModels);
-  //   const keysToDelete = existingKeys.filter(
-  //     (key) => !modelDataKeys.includes(key)
-  //   );
-
-  //   if (keysToDelete && keysToDelete.length > 0) {
-  //     let updatedModels = { ...itemModels };
-  //     keysToDelete.forEach((key) => {
-  //       delete updatedModels[key];
-  //     });
-  //     setItemModels(updatedModels);
-  //   }
-  // }, [modelData, itemModels]);
 
   const onItemChange = (item: Item) => {
     setModelData(
