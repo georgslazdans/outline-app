@@ -16,7 +16,9 @@ import TransformEdit from "../TransformEdit";
 import Item from "@/lib/replicad/model/Item";
 import BooleanOperationEdit from "../BooleanOperationEdit";
 import Primitive from "@/lib/replicad/model/item/Primitive";
-import PrimitiveType, { primitiveTypeOptionsFor } from "@/lib/replicad/model/item/PrimitiveType";
+import PrimitiveType, {
+  primitiveTypeOptionsFor,
+} from "@/lib/replicad/model/item/PrimitiveType";
 
 type Props = {
   dictionary: Dictionary;
@@ -45,6 +47,11 @@ const PrimitiveEdit = ({ dictionary, item, onItemChange }: Props) => {
 
   return (
     <>
+      <BooleanOperationEdit
+        dictionary={dictionary}
+        item={item}
+        onItemChange={onItemChange}
+      ></BooleanOperationEdit>
       <SelectField
         label="Primitive Type"
         name={"primitive-type"}
@@ -73,11 +80,7 @@ const PrimitiveEdit = ({ dictionary, item, onItemChange }: Props) => {
           onParamsChange={handleParamsChange}
         ></CylinderEdit>
       )}
-      <BooleanOperationEdit
-        dictionary={dictionary}
-        item={item}
-        onItemChange={onItemChange}
-      ></BooleanOperationEdit>
+
       <TransformEdit
         dictionary={dictionary}
         item={item}

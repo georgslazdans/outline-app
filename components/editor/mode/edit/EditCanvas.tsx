@@ -9,7 +9,7 @@ import { Select } from "@react-three/drei";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import { useEditorContext } from "../../EditorContext";
 import { UpdateModelData } from "../../EditorComponent";
-import EditItemList from "./EditItemList";
+import CanvasItemList from "./CanvasItemList";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 
@@ -48,11 +48,11 @@ const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
   return (
     <>
       <Select onChangePointerUp={(obj) => onSelected(obj)}>
-        <EditItemList
+        <CanvasItemList
           dictionary={dictionary}
           items={modelData.items}
           onItemChange={onItemChange}
-        ></EditItemList>
+        ></CanvasItemList>
       </Select>
     </>
   );

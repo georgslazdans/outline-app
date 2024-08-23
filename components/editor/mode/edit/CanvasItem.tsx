@@ -1,19 +1,9 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReplicadMesh from "../../replicad/ReplicadMesh";
-import { PivotControls } from "@react-three/drei";
-import { Euler, Matrix4, Vector3 } from "three";
 import { useEditorContext } from "../../EditorContext";
-import Point3D, {
-  add,
-  addPoints,
-  fromEuler,
-  fromVector3,
-  toEuler,
-  toVector3,
-} from "@/lib/Point3D";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelCache } from "../../cache/ModelCacheContext";
@@ -27,7 +17,7 @@ type Props = {
   parents?: Item[];
 };
 
-const EditItem = ({ dictionary, item, parents, onItemChange }: Props) => {
+const CanvasItem = ({ dictionary, item, parents, onItemChange }: Props) => {
   const { wireframe, selectedId } = useEditorContext();
 
   const { getModel } = useModelCache();
@@ -100,4 +90,4 @@ const EditItem = ({ dictionary, item, parents, onItemChange }: Props) => {
   );
 };
 
-export default EditItem;
+export default CanvasItem;

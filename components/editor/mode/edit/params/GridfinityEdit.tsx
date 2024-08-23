@@ -30,18 +30,22 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
 
   return (
     <>
-      <EditField
-        value={params.xSize}
-        onChange={handleNumberChange("xSize")}
-        label={"x Size"}
-        name={"xSize"}
-      ></EditField>
-      <EditField
-        value={params.ySize}
-        onChange={handleNumberChange("ySize")}
-        label={"y Size"}
-        name={"ySize"}
-      ></EditField>
+      <div className="flex flex-row gap-2">
+        <EditField
+          className="w-full"
+          value={params.xSize}
+          onChange={handleNumberChange("xSize")}
+          label={"x Size"}
+          name={"xSize"}
+        ></EditField>
+        <EditField
+          className="w-full"
+          value={params.ySize}
+          onChange={handleNumberChange("ySize")}
+          label={"y Size"}
+          name={"ySize"}
+        ></EditField>
+      </div>
       <EditField
         value={params.height}
         onChange={handleNumberChange("height")}
@@ -68,33 +72,41 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
         label={"With Magnet"}
         name={"withMagnet"}
       ></CheckboxField>
+      {params.withMagnet && (
+        <div className="flex flex-row gap-2">
+          <EditField
+            className="w-full"
+            value={params.magnetRadius}
+            onChange={handleNumberChange("magnetRadius")}
+            label={"Magnet Radius"}
+            name={"magnetRadius"}
+            numberRange={{ min: 0, max: 99999, step: 0.01 }}
+          ></EditField>
+          <EditField
+            className="w-full"
+            value={params.magnetHeight}
+            onChange={handleNumberChange("magnetHeight")}
+            label={"Magnet Height"}
+            name={"magnetHeight"}
+            numberRange={{ min: 0, max: 99999, step: 0.01 }}
+          ></EditField>
+        </div>
+      )}
       <CheckboxField
         value={params.withScrew}
         onChange={handleCheckboxChange("withScrew")}
         label={"With Screw"}
         name={"withScrew"}
       ></CheckboxField>
-      <EditField
-        value={params.magnetRadius}
-        onChange={handleNumberChange("magnetRadius")}
-        label={"Magnet Radius"}
-        name={"magnetRadius"}
-        numberRange={{ min: 0, max: 99999, step: 0.01 }}
-      ></EditField>
-      <EditField
-        value={params.magnetHeight}
-        onChange={handleNumberChange("magnetHeight")}
-        label={"Magnet Height"}
-        name={"magnetHeight"}
-        numberRange={{ min: 0, max: 99999, step: 0.01 }}
-      ></EditField>
-      <EditField
-        value={params.screwRadius}
-        onChange={handleNumberChange("screwRadius")}
-        label={"Screw Radius"}
-        name={"screwRadius"}
-        numberRange={{ min: 0, max: 99999, step: 0.01 }}
-      ></EditField>
+      {params.withScrew && (
+        <EditField
+          value={params.screwRadius}
+          onChange={handleNumberChange("screwRadius")}
+          label={"Screw Radius"}
+          name={"screwRadius"}
+          numberRange={{ min: 0, max: 99999, step: 0.01 }}
+        ></EditField>
+      )}
     </>
   );
 };

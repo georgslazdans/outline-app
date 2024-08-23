@@ -1,12 +1,12 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { Shadow } from "@/lib/replicad/model/ItemType";
 import React, { ChangeEvent } from "react";
 import TransformEdit from "./TransformEdit";
 import EditField from "../../EditField";
 import BooleanOperationEdit from "./BooleanOperationEdit";
 import Item from "@/lib/replicad/model/Item";
+import Shadow from "@/lib/replicad/model/item/Shadow";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,17 +24,17 @@ const ShadowEdit = ({ dictionary, item, onItemChange }: Props) => {
   };
   return (
     <>
+      <BooleanOperationEdit
+        dictionary={dictionary}
+        item={item}
+        onItemChange={onItemChange}
+      ></BooleanOperationEdit>
       <EditField
         value={item.height}
         onChange={handleNumberChange("height")}
         label={"Height"}
         name={"height"}
       ></EditField>
-      <BooleanOperationEdit
-        dictionary={dictionary}
-        item={item}
-        onItemChange={onItemChange}
-      ></BooleanOperationEdit>
       <TransformEdit
         dictionary={dictionary}
         item={item}

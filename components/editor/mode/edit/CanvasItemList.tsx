@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback } from "react";
-import EditItem from "./EditItem";
+import CanvasItem from "./CanvasItem";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import GroupTransform from "./ui/three/GroupTransform";
@@ -14,7 +14,7 @@ type Props = {
   onItemChange: (item: Item) => void;
 };
 
-const EditItemList = ({ dictionary, items, parents, onItemChange }: Props) => {
+const CanvasItemList = ({ dictionary, items, parents, onItemChange }: Props) => {
   const getWithParents = useCallback(
     (item: Item) => {
       if (parents) {
@@ -37,24 +37,24 @@ const EditItemList = ({ dictionary, items, parents, onItemChange }: Props) => {
                 group={item}
                 onItemChange={onItemChange}
               ></GroupTransform>
-              <EditItemList
+              <CanvasItemList
                 key={item.id}
                 dictionary={dictionary}
                 items={item.items}
                 onItemChange={onItemChange}
                 parents={getWithParents(item)}
-              ></EditItemList>
+              ></CanvasItemList>
             </>
           );
         } else {
           return (
-            <EditItem
+            <CanvasItem
               key={item.id}
               dictionary={dictionary}
               item={item}
               onItemChange={onItemChange}
               parents={parents}
-            ></EditItem>
+            ></CanvasItem>
           );
         }
       })}
@@ -62,4 +62,4 @@ const EditItemList = ({ dictionary, items, parents, onItemChange }: Props) => {
   );
 };
 
-export default EditItemList;
+export default CanvasItemList;

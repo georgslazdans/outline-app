@@ -22,24 +22,29 @@ const BoxEdit = ({ dictionary, boxParams, onParamsChange }: Props) => {
 
   return (
     <>
-      <EditField
-        value={boxParams.width}
-        onChange={handleNumberChange("width")}
-        label={"Width"}
-        name={"width"}
-      ></EditField>
-      <EditField
-        value={boxParams.length}
-        onChange={handleNumberChange("length")}
-        label={"Length"}
-        name={"length"}
-      ></EditField>
-      <EditField
-        value={boxParams.height}
-        onChange={handleNumberChange("height")}
-        label={"Height"}
-        name={"height"}
-      ></EditField>
+      <div className="flex flex-row gap-2">
+        <EditField
+          className="w-full"
+          value={boxParams.width}
+          onChange={handleNumberChange("width")}
+          label={"Width"}
+          name={"width"}
+        ></EditField>
+        <EditField
+          className="w-full"
+          value={boxParams.length}
+          onChange={handleNumberChange("length")}
+          label={"Length"}
+          name={"length"}
+        ></EditField>
+        <EditField
+          className="w-full"
+          value={boxParams.height}
+          onChange={handleNumberChange("height")}
+          label={"Height"}
+          name={"height"}
+        ></EditField>
+      </div>
     </>
   );
 };

@@ -26,18 +26,22 @@ const CylinderEdit = ({
 
   return (
     <>
-      <EditField
-        value={cylinderParams.radius}
-        onChange={handleNumberChange("radius")}
-        label={"Radius"}
-        name={"radius"}
-      ></EditField>
-      <EditField
-        value={cylinderParams.height}
-        onChange={handleNumberChange("height")}
-        label={"Height"}
-        name={"height"}
-      ></EditField>
+      <div className="flex flex-row gap-2">
+        <EditField
+          className="w-full"
+          value={cylinderParams.radius}
+          onChange={handleNumberChange("radius")}
+          label={"Radius"}
+          name={"radius"}
+        ></EditField>
+        <EditField
+          className="w-full"
+          value={cylinderParams.height}
+          onChange={handleNumberChange("height")}
+          label={"Height"}
+          name={"height"}
+        ></EditField>
+      </div>
     </>
   );
 };
