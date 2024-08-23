@@ -1,6 +1,6 @@
 "use client";
 
-import { Item } from "@/lib/replicad/Model";
+import Item from "@/lib/replicad/Item";
 import ModelData from "@/lib/replicad/ModelData";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import * as Comlink from "comlink";
@@ -23,5 +23,7 @@ export const newWorkerInstance = () => {
   const api = Comlink.wrap<WorkerApi>(workerInstance);
   return {api, worker: workerInstance};
 };
+
+
 
 export default newWorkerInstance;

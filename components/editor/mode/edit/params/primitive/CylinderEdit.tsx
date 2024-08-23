@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { CylinderParams } from "@/lib/replicad/PrimitiveParams";
+import { CylinderParams } from "@/lib/replicad/params/PrimitiveParams";
 import React, { ChangeEvent } from "react";
 import EditField from "../../../EditField";
 

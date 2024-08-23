@@ -1,9 +1,10 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { Item, ItemGroup } from "@/lib/replicad/Model";
-import React, { ChangeEvent } from "react";
+import { ItemGroup } from "@/lib/replicad/ModelType";
+import React from "react";
 import TransformEdit from "./TransformEdit";
+import Item from "@/lib/replicad/Item";
 
 type Props = {
   dictionary: Dictionary;

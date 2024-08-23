@@ -1,11 +1,9 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { useEditorContext } from "@/components/editor/EditorContext";
-import NumberField from "@/components/fields/NumberField";
-import { Item } from "@/lib/replicad/Model";
 import React, { ChangeEvent } from "react";
 import EditField from "../../EditField";
+import Item from "@/lib/replicad/Item";
 
 type Props = {
   dictionary: Dictionary;

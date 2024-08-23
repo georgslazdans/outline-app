@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ModelData, { forModelData } from "@/lib/replicad/ModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
@@ -11,8 +11,8 @@ import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
-import { ModelType, Shadow } from "@/lib/replicad/Model";
 import { useEditorHistoryContext } from "../../history/EditorHistoryContext";
+import ModelType from "@/lib/replicad/ModelType";
 
 type Props = {
   dictionary: Dictionary;

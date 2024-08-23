@@ -2,31 +2,19 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import ImportDialog from "./ui/ImportDialog";
 import { ContourPoints } from "@/lib/Point";
-import {
-  Gridfinity,
-  Item,
-  ModelType,
-  Primitive,
-  primitiveOf,
-  Shadow,
-  shadowItemOf,
-} from "@/lib/replicad/Model";
 import ModelData, { forModelData } from "@/lib/replicad/ModelData";
-import GridfinityEdit from "./params/GridfinityEdit";
-import GridfinityParams from "@/lib/replicad/GridfinityParams";
-import ShadowEdit from "./params/ShadowEdit";
-import PrimitiveEdit from "./params/primitive/PrimitiveEdit";
 import PrimitiveType from "@/lib/replicad/PrimitiveType";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
 import ItemTree from "./ui/tree/ItemTree";
-import GroupEdit from "./params/GroupEdit";
 import ParamsEdit from "./params/ParamsEdit";
+import { shadowItemOf, primitiveOf } from "@/lib/replicad/Item";
+import ModelType from "@/lib/replicad/ModelType";
 
 type Props = {
   dictionary: Dictionary;
@@ -89,7 +77,7 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
     if (selectedId) {
       return forModelData(modelData).findById(selectedId);
     }
-  }, [selectedId]);
+  }, [modelData, selectedId]);
 
   const onRemoveContour = () => {
     if (!selectedId) return;

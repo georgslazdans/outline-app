@@ -3,11 +3,12 @@
 import { Dictionary } from "@/app/dictionaries";
 import ModelData, { forModelData } from "@/lib/replicad/ModelData";
 import React, { useMemo } from "react";
-import { groupOf, Item, ModelType } from "@/lib/replicad/Model";
 import { UpdateModelData } from "@/components/editor/EditorComponent";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import DraggableItem from "./DraggableItem";
+import Item, { groupOf } from "@/lib/replicad/Item";
+import ModelType from "@/lib/replicad/ModelType";
 
 type ItemGroup = {
   item: Item;

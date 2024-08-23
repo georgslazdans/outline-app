@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import NumberField from "@/components/fields/NumberField";
-import { Item, Shadow } from "@/lib/replicad/Model";
+import { Item, Shadow } from "@/lib/replicad/ModelType";
 import React, { ChangeEvent } from "react";
 import TransformEdit from "./TransformEdit";
 import { useEditorContext } from "@/components/editor/EditorContext";

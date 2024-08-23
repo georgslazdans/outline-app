@@ -1,5 +1,6 @@
 import { reorder } from "../utils/Arrays";
-import { Gridfinity, Item, ModelType, Primitive, Shadow } from "./Model";
+import Item from "./Item";
+import ModelType, { Gridfinity, Primitive, Shadow } from "./ModelType";
 
 export type ModelPart = {
   type: "model";

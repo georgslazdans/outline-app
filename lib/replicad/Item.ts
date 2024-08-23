@@ -1,46 +1,17 @@
 import { ContourPoints } from "../Point";
-import GridfinityParams from "./GridfinityParams";
 import Point3D from "../Point3D";
-import PrimitiveParams, {
-  defaultParamsFor,
-  defaultTranslationOf,
-} from "./PrimitiveParams";
+import GridfinityParams from "./params/GridfinityParams";
+import ModelType, {
+  BooleanOperation,
+  Gridfinity,
+  Shadow,
+  Primitive,
+  ItemGroup,
+} from "./ModelType";
+import { defaultParamsFor, defaultTranslationOf } from "./params/PrimitiveParams";
 import PrimitiveType from "./PrimitiveType";
 
-export enum BooleanOperation {
-  UNION,
-  INTERSECTION,
-}
-
-export enum ModelType {
-  Primitive = "primitive",
-  Shadow = "shadow",
-  Gridfinity = "gridfinity",
-  Group = "group",
-}
-
-export type Primitive = {
-  type: ModelType.Primitive;
-  params: PrimitiveParams;
-};
-
-export type Shadow = {
-  type: ModelType.Shadow;
-  points: ContourPoints[];
-  height: number;
-};
-
-export type Gridfinity = {
-  type: ModelType.Gridfinity;
-  params: GridfinityParams;
-};
-
-export type ItemGroup = {
-  type: ModelType.Group;
-  items: Item[];
-};
-
-export type Item = {
+type Item = {
   id: string;
   name: string;
   translation?: Point3D;
@@ -99,3 +70,12 @@ export const groupOf = (items: Item[]): Item => {
     rotation: { x: 0, y: 0, z: 0 },
   };
 };
+
+export const withoutItemData = (
+  item: Item
+): Gridfinity | Primitive | Shadow | ItemGroup => {
+  const { id, translation, rotation, booleanOperation, ...rest } = item;
+  return rest;
+};
+
+export default Item;

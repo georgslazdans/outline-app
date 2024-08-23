@@ -1,28 +1,27 @@
 import { Shape3D, Point } from "replicad";
 import { eulerToAxisAngle, toDegrees } from "../utils/Math";
-import {
+import ModelType, {
   ItemGroup,
   Gridfinity,
   Shadow,
   Primitive,
-  ModelType,
-  Item,
   BooleanOperation,
-} from "./Model";
+} from "./ModelType";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
 import { drawPrimitive } from "./models/Primitives";
 import ReplicadModelData from "./models/ReplicadModelData";
 import ModelData from "./ModelData";
+import Item from "./Item";
 
-const drawItem = (
+export const drawItem = (
   item: Gridfinity | Shadow | Primitive | ItemGroup
 ): ReplicadModelData => {
   switch (item.type) {
     case ModelType.Gridfinity:
       return gridfinityBox(item.params);
     case ModelType.Shadow:
-      const { points, height } = item as Shadow;
+      const { points, height } = item;
       return drawShadow(points, height);
     case ModelType.Primitive:
       return drawPrimitive(item.params);
@@ -71,7 +70,7 @@ const processBooleanOperation = (
   }
 };
 
-export const modelOf = (item: Item): ReplicadModelData => {
+const modelOf = (item: Item): ReplicadModelData => {
   let model =
     item.type == ModelType.Group ? processItems(item.items) : drawItem(item);
   model = rotateModel(model, item);

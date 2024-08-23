@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import InputField from "@/components/fields/InputField";
-import { Item } from "@/lib/replicad/Model";
+import Item from "@/lib/replicad/Item";
 import React, { useEffect, useState } from "react";
 
 type Props = {

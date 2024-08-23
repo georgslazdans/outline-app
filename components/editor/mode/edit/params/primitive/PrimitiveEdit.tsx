@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import SelectField from "@/components/fields/SelectField";
-import { Item, Primitive } from "@/lib/replicad/Model";
+import { Item, Primitive } from "@/lib/replicad/ModelType";
 import PrimitiveType, {
   primitiveTypeOptionsFor,
 } from "@/lib/replicad/PrimitiveType";
@@ -13,7 +13,7 @@ import PrimitiveParams, {
   CylinderParams,
   defaultParamsFor,
   SphereParams,
-} from "@/lib/replicad/PrimitiveParams";
+} from "@/lib/replicad/params/PrimitiveParams";
 import BoxEdit from "./BoxEdit";
 import CylinderEdit from "./CylinderEdit";
 import TransformEdit from "../TransformEdit";

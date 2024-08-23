@@ -1,5 +1,4 @@
 import { Dictionary } from "@/app/dictionaries";
-import { Item, ModelType } from "@/lib/replicad/Model";
 import React, { useCallback } from "react";
 import GridfinityEdit from "./GridfinityEdit";
 import GroupEdit from "./GroupEdit";
@@ -8,7 +7,9 @@ import ShadowEdit from "./ShadowEdit";
 import { UpdateModelData } from "@/components/editor/EditorComponent";
 import ModelData, { forModelData } from "@/lib/replicad/ModelData";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
-import GridfinityParams from "@/lib/replicad/GridfinityParams";
+import GridfinityParams from "@/lib/replicad/params/GridfinityParams";
+import Item from "@/lib/replicad/Item";
+import ModelType from "@/lib/replicad/ModelType";
 
 type Props = {
   dictionary: Dictionary;

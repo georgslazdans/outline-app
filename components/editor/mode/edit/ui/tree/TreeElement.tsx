@@ -2,9 +2,9 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
-import { Item } from "@/lib/replicad/Model";
 import React, { CSSProperties } from "react";
 import ItemName from "./ItemName";
+import Item from "@/lib/replicad/Item";
 
 type Props = {
   className?: string;

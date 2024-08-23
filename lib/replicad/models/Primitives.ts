@@ -3,7 +3,7 @@ import PrimitiveParams, {
   BoxParams,
   CylinderParams,
   SphereParams,
-} from "../PrimitiveParams";
+} from "../params/PrimitiveParams";
 import PrimitiveType from "../PrimitiveType";
 import ReplicadModelData from "./ReplicadModelData";
 

@@ -6,11 +6,7 @@ import React, {
   useState,
   ReactNode,
   useEffect,
-  useCallback,
 } from "react";
-import Model from "@/lib/Model";
-import { defaultGridfinityParams } from "@/lib/replicad/GridfinityParams";
-import { gridfinityItemOf } from "@/lib/replicad/Model";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { Context } from "@/context/DetailsContext";
 

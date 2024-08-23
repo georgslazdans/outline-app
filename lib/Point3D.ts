@@ -1,4 +1,5 @@
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
+import { toDegrees, toRadians } from "./utils/Math";
 
 type Point3D = {
   x: number;
@@ -6,8 +7,26 @@ type Point3D = {
   z: number;
 };
 
-export const toVector = (point: Point3D) => {
+export const toVector3 = (point: Point3D): Vector3 => {
   return new Vector3(point.x, point.y, point.z);
+};
+
+export const fromVector3 = (point: Vector3): Point3D => {
+  const { x, y, z } = point;
+  return { x, y, z };
+};
+
+export const toEuler = (rotation: Point3D): Euler => {
+  const { x, y, z } = rotation;
+  return new Euler(toRadians(x), toRadians(y), toRadians(z));
+};
+
+export const fromEuler = (euler: Euler): Point3D => {
+  return {
+    x: toDegrees(euler.x),
+    y: toDegrees(euler.y),
+    z: toDegrees(euler.z),
+  };
 };
 
 export const add = (a: Point3D, b: Point3D) => {
@@ -16,6 +35,10 @@ export const add = (a: Point3D, b: Point3D) => {
     y: a.y + b.y,
     z: a.z + b.z,
   };
+};
+
+export const addPoints = (points: Point3D[]): Point3D => {
+  return points.reduce((acc, curr) => add(acc, curr), { x: 0, y: 0, z: 0 });
 };
 
 export default Point3D;
