@@ -14,8 +14,8 @@ import Point3D, {
   toEuler,
   toVector3,
 } from "@/lib/Point3D";
-import Item from "@/lib/replicad/Item";
-import ModelType from "@/lib/replicad/ModelType";
+import Item from "@/lib/replicad/model/Item";
+import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelCache } from "../../cache/ModelCacheContext";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import TransformControls from "./ui/three/TransformControls";
@@ -48,28 +48,28 @@ const EditItem = ({ dictionary, item, parents, onItemChange }: Props) => {
   };
 
   const enableGizmo = () => {
-    const isNotGridfinity = item.type != ModelType.Gridfinity;
+    const isNotGridfinity = item.type != ItemType.Gridfinity;
     return isNotGridfinity && isSelected();
   };
 
   const showWireframe = () => {
-    if (item.type == ModelType.Gridfinity) {
+    if (item.type == ItemType.Gridfinity) {
       return wireframe;
     }
     return false;
   };
 
   const opacityOf = () => {
-    if (item.type == ModelType.Gridfinity) {
+    if (item.type == ItemType.Gridfinity) {
       return wireframe ? 0 : 0.8;
     }
     return 1;
   };
 
   const colorOf = () => {
-    if (item.type == ModelType.Gridfinity) {
+    if (item.type == ItemType.Gridfinity) {
       return "#2c7d94"; // dark-blue
-    } else if (item.type == ModelType.Shadow) {
+    } else if (item.type == ItemType.Shadow) {
       return "#1296b6";
     } else {
       return "#BDBDBD";

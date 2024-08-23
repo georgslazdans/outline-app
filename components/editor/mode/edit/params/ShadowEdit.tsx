@@ -1,12 +1,12 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { Shadow } from "@/lib/replicad/ModelType";
+import { Shadow } from "@/lib/replicad/model/ItemType";
 import React, { ChangeEvent } from "react";
 import TransformEdit from "./TransformEdit";
 import EditField from "../../EditField";
 import BooleanOperationEdit from "./BooleanOperationEdit";
-import Item from "@/lib/replicad/Item";
+import Item from "@/lib/replicad/model/Item";
 
 type Props = {
   dictionary: Dictionary;

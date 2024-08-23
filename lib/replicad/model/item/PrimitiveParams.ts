@@ -1,5 +1,5 @@
 import { Vector3 } from "three";
-import PrimitiveType from "../PrimitiveType";
+import PrimitiveType from "./PrimitiveType";
 
 export type BoxParams = {
   type: PrimitiveType.BOX;

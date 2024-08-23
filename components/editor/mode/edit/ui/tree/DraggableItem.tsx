@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import { Draggable } from "@hello-pangea/dnd";
 import React, { CSSProperties } from "react";
 import TreeElement from "./TreeElement";
-import Item from "@/lib/replicad/Item";
+import Item from "@/lib/replicad/model/Item";
 
 type Props = {
   dictionary: Dictionary;

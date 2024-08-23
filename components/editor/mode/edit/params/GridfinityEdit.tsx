@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import CheckboxField from "@/components/fields/CheckboxField";
-import GridfinityParams from "@/lib/replicad/params/GridfinityParams";
+import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
 import React, { ChangeEvent } from "react";
 import EditField from "../../EditField";
 

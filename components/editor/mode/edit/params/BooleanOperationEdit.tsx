@@ -4,8 +4,8 @@ import { Dictionary } from "@/app/dictionaries";
 import SelectField from "@/components/fields/SelectField";
 import BooleanOperation, {
   booleanOperationOptionsFor,
-} from "@/lib/replicad/BooleanOperation";
-import Item from "@/lib/replicad/Item";
+} from "@/lib/replicad/model/BooleanOperation";
+import Item from "@/lib/replicad/model/Item";
 import React, { ChangeEvent } from "react";
 
 type Props = {

@@ -1,7 +1,7 @@
 "use client";
 
-import Item from "@/lib/replicad/Item";
-import ModelData from "@/lib/replicad/ModelData";
+import Item from "@/lib/replicad/model/Item";
+import ModelData from "@/lib/replicad/model/ModelData";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import * as Comlink from "comlink";
 

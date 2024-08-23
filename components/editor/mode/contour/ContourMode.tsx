@@ -2,7 +2,7 @@ import { Dictionary } from "@/app/dictionaries";
 import { EditorModeConfig } from "../EditorMode";
 import ContourModeEdit from "./ContourModeEdit";
 import ContourModeToolbar from "./ContourModeToolbar";
-import ModelData from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/model/ModelData";
 import { UpdateModelData } from "../../EditorComponent";
 
 type Props = {

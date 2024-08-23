@@ -1,8 +1,8 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import Model from "@/lib/Model";
-import { defaultGridfinityParams } from "@/lib/replicad/params/GridfinityParams";
-import { gridfinityItemOf } from "@/lib/replicad/Item";
+import { defaultGridfinityParams } from "@/lib/replicad/model/item/GridfinityParams";
+import { gridfinityItemOf } from "@/lib/replicad/model/item/Gridfinity";
 type ModelContextType = {
   model: Model;
   setModel: React.Dispatch<React.SetStateAction<Model>>;

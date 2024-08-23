@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import ModelData, {
   forModelData,
-} from "@/lib/replicad/ModelData";
+} from "@/lib/replicad/model/ModelData";
 import React, {  } from "react";
 import { Select } from "@react-three/drei";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
@@ -11,7 +11,7 @@ import { useEditorContext } from "../../EditorContext";
 import { UpdateModelData } from "../../EditorComponent";
 import EditItemList from "./EditItemList";
 import EditorHistoryType from "../../history/EditorHistoryType";
-import Item from "@/lib/replicad/Item";
+import Item from "@/lib/replicad/model/Item";
 
 type Props = {
   dictionary: Dictionary;

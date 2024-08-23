@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import React, { CSSProperties } from "react";
 import ItemName from "./ItemName";
-import Item from "@/lib/replicad/Item";
+import Item from "@/lib/replicad/model/Item";
 
 type Props = {
   className?: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { BoxParams } from "@/lib/replicad/params/PrimitiveParams";
+import { BoxParams } from "@/lib/replicad/model/item/PrimitiveParams";
 import React, { ChangeEvent } from "react";
 import EditField from "../../../EditField";
 

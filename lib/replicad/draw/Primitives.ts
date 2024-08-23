@@ -3,19 +3,19 @@ import PrimitiveParams, {
   BoxParams,
   CylinderParams,
   SphereParams,
-} from "../params/PrimitiveParams";
-import PrimitiveType from "../PrimitiveType";
+} from "../model/item/PrimitiveParams";
+import PrimitiveType from "../model/item/PrimitiveType";
 import ReplicadModelData from "./ReplicadModelData";
 
-export const drawBox = (params: BoxParams): ReplicadModelData => {
+const drawBox = (params: BoxParams): ReplicadModelData => {
   return sketchRectangle(params.width, params.length).extrude(params.height);
 };
 
-export const drawCylinder = (params: CylinderParams): ReplicadModelData => {
+const drawCylinder = (params: CylinderParams): ReplicadModelData => {
   return sketchCircle(params.radius).extrude(params.height);
 };
 
-export const drawSphere = (params: SphereParams): ReplicadModelData => {
+const drawSphere = (params: SphereParams): ReplicadModelData => {
   return makeSphere(params.radius);
 };
 

@@ -1,14 +1,15 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import ModelData, { forModelData } from "@/lib/replicad/ModelData";
+import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
 import React, { useMemo } from "react";
 import { UpdateModelData } from "@/components/editor/EditorComponent";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import DraggableItem from "./DraggableItem";
-import Item, { groupOf } from "@/lib/replicad/Item";
-import ModelType from "@/lib/replicad/ModelType";
+import Item from "@/lib/replicad/model/Item";
+import ItemType from "@/lib/replicad/model/ItemType";
+import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
 
 type ItemGroup = {
   item: Item;
@@ -39,7 +40,7 @@ const ItemTree = ({ dictionary, modelData, setModelData }: Props) => {
           localIndex: localIndex,
         });
         localIndex += 1;
-        if (item.type == ModelType.Group) {
+        if (item.type == ItemType.Group) {
           processGroup(item.items, groupLevel + 1);
         }
       });
@@ -56,7 +57,7 @@ const ItemTree = ({ dictionary, modelData, setModelData }: Props) => {
       const combineItem = forModelData(modelData).getById(
         result.combine.draggableId
       );
-      if (combineItem && combineItem.type == ModelType.Group) {
+      if (combineItem && combineItem.type == ItemType.Group) {
         const item = forModelData(modelData).getById(result.draggableId);
         if (item) {
           let updatedData = forModelData(modelData).removeById(
@@ -75,7 +76,7 @@ const ItemTree = ({ dictionary, modelData, setModelData }: Props) => {
         const item = forModelData(modelData).getById(result.draggableId);
         let updatedData = forModelData(modelData).removeById(item.id);
         updatedData = forModelData(updatedData).removeById(combineItem.id);
-        const group = groupOf([item, combineItem]);
+        const group = itemGroupOf([item, combineItem]);
         updatedData = forModelData(updatedData).addItem(group, parentId);
         setModelData(updatedData, EditorHistoryType.GROUP_ADDED);
       }

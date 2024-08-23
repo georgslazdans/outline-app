@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent } from "react";
 import EditField from "../../EditField";
-import Item from "@/lib/replicad/Item";
+import Item from "@/lib/replicad/model/Item";
 
 type Props = {
   dictionary: Dictionary;

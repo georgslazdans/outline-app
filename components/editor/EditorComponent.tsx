@@ -8,7 +8,7 @@ import EditorMode from "./mode/EditorMode";
 import ResultMode from "./mode/result/ResultMode";
 import EditMode from "./mode/edit/EditMode";
 import ContourMode from "./mode/contour/ContourMode";
-import ModelData from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/model/ModelData";
 import { useEditorContext } from "./EditorContext";
 import { useModelContext } from "../../context/ModelContext";
 import { useEditorHistoryContext } from "./history/EditorHistoryContext";

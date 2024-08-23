@@ -1,4 +1,4 @@
-import ModelData from "./replicad/ModelData";
+import ModelData from "./replicad/model/ModelData";
 
 type Model = {
   id?: number;

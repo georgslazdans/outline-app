@@ -1,12 +1,13 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC } from "replicad";
-import ModelData from "./ModelData";
-import ReplicadModelData from "./models/ReplicadModelData";
+import ModelData from "./model/ModelData";
 import * as Comlink from "comlink";
-import { drawItem, processModelData as processData } from "./Processor";
-import Item from "./Item";
-import ModelType from "./ModelType";
+import { processModelData as processData } from "./Processor";
+import Item from "./model/Item";
+import ItemType from "./model/ItemType";
+import ReplicadModelData from "./draw/ReplicadModelData";
+import { drawItem } from "./draw/Draw";
 
 let initialized = false;
 
@@ -42,7 +43,7 @@ const processModelData = async (modelData: ModelData) => {
 
 const processItem = async (item: Item) => {
   await waitForInitialization();
-  if (item.type == ModelType.Group) {
+  if (item.type == ItemType.Group) {
     throw new Error("Group not supported!");
   }
   return asMesh(drawItem(item));

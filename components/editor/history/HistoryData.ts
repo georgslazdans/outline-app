@@ -1,4 +1,4 @@
-import ModelData from "@/lib/replicad/ModelData";
+import ModelData from "@/lib/replicad/model/ModelData";
 import EditHistoryOptions from "./EditHistoryOptions";
 import EditorHistoryType from "./EditorHistoryType";
 

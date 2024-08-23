@@ -1,4 +1,4 @@
-import Options from "../utils/Options";
+import Options from "../../../utils/Options";
 
 enum PrimitiveType {
   BOX = "box",

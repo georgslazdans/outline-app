@@ -1,82 +1,16 @@
-import { Shape3D, Point } from "replicad";
-import { eulerToAxisAngle, toDegrees } from "../utils/Math";
-import ModelType, {
-  ItemGroup,
-  Gridfinity,
-  Shadow,
-  Primitive,
-} from "./ModelType";
-import gridfinityBox from "./models/Gridfinity";
-import drawShadow from "./models/OutlineShadow";
-import { drawPrimitive } from "./models/Primitives";
-import ReplicadModelData from "./models/ReplicadModelData";
-import ModelData from "./ModelData";
-import Item from "./Item";
-import BooleanOperation from "./BooleanOperation";
-
-export const drawItem = (
-  item: Gridfinity | Shadow | Primitive | ItemGroup
-): ReplicadModelData => {
-  switch (item.type) {
-    case ModelType.Gridfinity:
-      return gridfinityBox(item.params);
-    case ModelType.Shadow:
-      const { points, height } = item;
-      return drawShadow(points, height);
-    case ModelType.Primitive:
-      return drawPrimitive(item.params);
-    case ModelType.Group:
-      throw new Error("Can't draw item from a group!");
-  }
-};
-
-const rotateModel = (
-  model: ReplicadModelData,
-  item: Item
-): ReplicadModelData => {
-  if (item.rotation) {
-    const axisRotation = eulerToAxisAngle(item.rotation);
-    const axis = [
-      axisRotation.axis.x,
-      axisRotation.axis.y,
-      axisRotation.axis.z,
-    ] as Point;
-    return model.rotate(toDegrees(axisRotation.angle), [0, 0, 0], axis);
-  } else {
-    return model;
-  }
-};
-
-const translateModel = (
-  model: ReplicadModelData,
-  item: Item
-): ReplicadModelData => {
-  if (item.translation) {
-    const { x, y, z } = item.translation;
-    return model.translate(x, y, z);
-  }
-  return model;
-};
-
-const processBooleanOperation = (
-  base: Shape3D,
-  model: Shape3D,
-  operation?: BooleanOperation
-): ReplicadModelData => {
-  switch (operation) {
-    case BooleanOperation.UNION:
-      return base.fuse(model);
-    case BooleanOperation.CUT:
-      return base.cut(model);
-    case BooleanOperation.INTERSECTION:
-      return base.intersect(model);
-  }
-  throw new Error("Operation not supported! " + operation);
-};
+import { Shape3D } from "replicad";
+import ItemType from "./model/ItemType";
+import ModelData from "./model/ModelData";
+import Item from "./model/Item";
+import ReplicadModelData from "./draw/ReplicadModelData";
+import { drawItem } from "./draw/Draw";
+import rotateModel from "./transform/RotateModel";
+import translateModel from "./transform/TranslateModel";
+import processBooleanOperation from "./transform/BooleanOperation";
 
 const modelOf = (item: Item): ReplicadModelData => {
   let model =
-    item.type == ModelType.Group ? processItems(item.items) : drawItem(item);
+    item.type == ItemType.Group ? processItems(item.items) : drawItem(item);
   model = rotateModel(model, item);
   model = translateModel(model, item);
   return model;
@@ -97,9 +31,8 @@ const processItems = (items: Item[]) => {
 };
 
 export const processModelData = (data: ModelData): ReplicadModelData => {
-  if (data.items[0].type != ModelType.Gridfinity) {
+  if (data.items[0].type != ItemType.Gridfinity) {
     console.warn("First item is not a gridfinity box!");
   }
-
   return processItems(data.items);
 };

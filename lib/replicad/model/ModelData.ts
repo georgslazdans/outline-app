@@ -1,6 +1,9 @@
-import { reorder } from "../utils/Arrays";
+import { reorder } from "../../utils/Arrays";
 import Item from "./Item";
-import ModelType, { Gridfinity, Primitive, Shadow } from "./ModelType";
+import Gridfinity from "./item/Gridfinity";
+import ItemType from "./ItemType";
+import Primitive from "./item/Primitive";
+import Shadow from "./item/Shadow";
 
 export type ModelPart = {
   type: "model";
@@ -17,7 +20,7 @@ const findById = (data: ModelData, id: string) => {
       if (item.id == id) {
         return item;
       }
-      if (item.type == ModelType.Group) {
+      if (item.type == ItemType.Group) {
         const result = findInList(item.items);
         if (result) {
           return result;
@@ -34,7 +37,7 @@ const findParentGroupId = (data: ModelData, id: string): string | undefined => {
       if (item.id == id) {
         return true;
       }
-      if (item.type == ModelType.Group) {
+      if (item.type == ItemType.Group) {
         const result = findParentId(item.items);
         if (result) {
           return item.id;
@@ -68,7 +71,7 @@ export const forModelData = (data: ModelData) => {
           if (it.id == id) {
             return item;
           } else {
-            if (it.type == ModelType.Group) {
+            if (it.type == ItemType.Group) {
               return {
                 ...it,
                 items: mapItems(it.items),
@@ -91,7 +94,7 @@ export const forModelData = (data: ModelData) => {
             if (it.id == id) {
               return null;
             } else {
-              if (it.type == ModelType.Group) {
+              if (it.type == ItemType.Group) {
                 return {
                   ...it,
                   items: filterItems(it.items),
@@ -116,7 +119,7 @@ export const forModelData = (data: ModelData) => {
         };
       } else {
         const groupItem = forModelData(data).getById(groupId);
-        if (groupItem && groupItem.type == ModelType.Group) {
+        if (groupItem && groupItem.type == ItemType.Group) {
           return forModelData(data).updateById(groupId, {
             ...groupItem,
             items: [...groupItem.items, item],
@@ -129,7 +132,7 @@ export const forModelData = (data: ModelData) => {
     reorderData: (sourceIndex: number, endIndex: number, groupId?: string) => {
       if (groupId) {
         const groupItem = forModelData(data).getById(groupId);
-        if (!groupItem || groupItem.type != ModelType.Group) {
+        if (!groupItem || groupItem.type != ItemType.Group) {
           throw new Error("Group not found with Id: " + groupId);
         }
         const reorderedItems = reorder(groupItem.items, sourceIndex, endIndex);
@@ -153,7 +156,7 @@ export const ungroupedItemsOf = (groupedItems: Item[]): Item[] => {
   const addItems = (items: Item[]) => {
     items.forEach((item) => {
       ungroupedItems.push(item);
-      if (item.type == ModelType.Group) {
+      if (item.type == ItemType.Group) {
         addItems(item.items);
       }
     });

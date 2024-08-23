@@ -5,11 +5,11 @@ import GroupEdit from "./GroupEdit";
 import PrimitiveEdit from "./primitive/PrimitiveEdit";
 import ShadowEdit from "./ShadowEdit";
 import { UpdateModelData } from "@/components/editor/EditorComponent";
-import ModelData, { forModelData } from "@/lib/replicad/ModelData";
+import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
-import GridfinityParams from "@/lib/replicad/params/GridfinityParams";
-import Item from "@/lib/replicad/Item";
-import ModelType from "@/lib/replicad/ModelType";
+import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
+import Item from "@/lib/replicad/model/Item";
+import ItemType from "@/lib/replicad/model/ItemType";
 
 type Props = {
   dictionary: Dictionary;
@@ -22,7 +22,7 @@ const ParamsEdit = ({ dictionary, item, modelData, setModelData }: Props) => {
   const onGridfinityParamsChange = useCallback(
     (id: string, params: GridfinityParams) => {
       const item = forModelData(modelData).getById(id);
-      if (item && item.type == ModelType.Gridfinity) {
+      if (item && item.type == ItemType.Gridfinity) {
         const updatedData = forModelData(modelData).updateById(id, {
           ...item,
           params: params,
@@ -45,7 +45,7 @@ const ParamsEdit = ({ dictionary, item, modelData, setModelData }: Props) => {
 
   const propertiesComponentFor = () => {
     switch (item.type) {
-      case ModelType.Gridfinity:
+      case ItemType.Gridfinity:
         return (
           <GridfinityEdit
             dictionary={dictionary}
@@ -55,7 +55,7 @@ const ParamsEdit = ({ dictionary, item, modelData, setModelData }: Props) => {
             }
           ></GridfinityEdit>
         );
-      case ModelType.Shadow:
+      case ItemType.Shadow:
         return (
           <>
             <ShadowEdit
@@ -65,7 +65,7 @@ const ParamsEdit = ({ dictionary, item, modelData, setModelData }: Props) => {
             ></ShadowEdit>
           </>
         );
-      case ModelType.Primitive:
+      case ItemType.Primitive:
         return (
           <>
             <PrimitiveEdit
@@ -75,7 +75,7 @@ const ParamsEdit = ({ dictionary, item, modelData, setModelData }: Props) => {
             ></PrimitiveEdit>
           </>
         );
-      case ModelType.Group:
+      case ItemType.Group:
         return (
           <>
             <GroupEdit

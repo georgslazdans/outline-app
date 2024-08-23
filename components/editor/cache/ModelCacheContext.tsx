@@ -1,7 +1,7 @@
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
 import newWorkerInstance from "../replicad/ReplicadWorker";
-import Item, { withoutItemData } from "@/lib/replicad/Item";
+import Item, { withoutItemData } from "@/lib/replicad/model/Item";
 
 const ModelCacheContext = createContext<any>(null);
 

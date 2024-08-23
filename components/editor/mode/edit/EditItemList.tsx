@@ -3,8 +3,8 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback } from "react";
 import EditItem from "./EditItem";
-import Item from "@/lib/replicad/Item";
-import ModelType from "@/lib/replicad/ModelType";
+import Item from "@/lib/replicad/model/Item";
+import ItemType from "@/lib/replicad/model/ItemType";
 import GroupTransform from "./ui/three/GroupTransform";
 
 type Props = {
@@ -29,7 +29,7 @@ const EditItemList = ({ dictionary, items, parents, onItemChange }: Props) => {
   return (
     <>
       {items.map((item) => {
-        if (item.type == ModelType.Group) {
+        if (item.type == ItemType.Group) {
           return (
             <>
               <GroupTransform

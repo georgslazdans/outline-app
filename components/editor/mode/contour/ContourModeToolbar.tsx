@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useState } from "react";
-import ModelData, { forModelData } from "@/lib/replicad/ModelData";
+import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
@@ -12,7 +12,7 @@ import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
 import { useEditorHistoryContext } from "../../history/EditorHistoryContext";
-import ModelType from "@/lib/replicad/ModelType";
+import ItemType from "@/lib/replicad/model/ItemType";
 
 type Props = {
   dictionary: Dictionary;
@@ -28,7 +28,7 @@ const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
   const getSelectedContour = useCallback(() => {
     if (selectedId) {
       const selectedItem = forModelData(modelData).getById(selectedId);
-      if (!selectedItem || selectedItem.type != ModelType.Shadow) {
+      if (!selectedItem || selectedItem.type != ItemType.Shadow) {
         throw new Error("Selected item is not found!");
       }
       return selectedItem.points;
@@ -46,7 +46,7 @@ const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
     setSelectedContourPoints(contourPoints);
     if (selectedId) {
       const item = forModelData(modelData).getById(selectedId);
-      if (item && item.type == ModelType.Shadow) {
+      if (item && item.type == ItemType.Shadow) {
         const updatedData = forModelData(modelData).updateById(item.id, {
           ...item,
           points: contourPoints,

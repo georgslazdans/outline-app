@@ -1,10 +1,10 @@
 "use client";
 
-import { ItemGroup } from "@/lib/replicad/ModelType";
 import React from "react";
 import TransformControls from "./TransformControls";
-import Item from "@/lib/replicad/Item";
+import Item from "@/lib/replicad/model/Item";
 import { useEditorContext } from "@/components/editor/EditorContext";
+import ItemGroup from "@/lib/replicad/model/item/ItemGroup";
 
 type Props = {
   group: Item & ItemGroup;

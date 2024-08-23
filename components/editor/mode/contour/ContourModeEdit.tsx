@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import ModelData, { forModelData } from "@/lib/replicad/ModelData";
+import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
 import React, { useEffect, useState } from "react";
 import ContourMesh from "./threejs/ContourMesh";
 import { ContourPoints, scalePoints } from "@/lib/Point";
@@ -10,7 +10,7 @@ import { Select } from "@react-three/drei";
 import { useEditorContext } from "../../EditorContext";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
-import ModelType from "@/lib/replicad/ModelType";
+import ItemType from "@/lib/replicad/model/ItemType";
 
 type Props = {
   dictionary: Dictionary;
@@ -29,7 +29,7 @@ const ContourModeEdit = ({ dictionary, modelData, setModelData }: Props) => {
   useEffect(() => {
     if (selectedId) {
       const item = forModelData(modelData).getById(selectedId);
-      if (item?.type == ModelType.Shadow) {
+      if (item?.type == ItemType.Shadow) {
         const scaledPoints = item.points.map((it) => scalePoints(it, scale));
         setScaledContours(scaledPoints);
       } else {
@@ -44,7 +44,7 @@ const ContourModeEdit = ({ dictionary, modelData, setModelData }: Props) => {
         scalePoints(it, 1 / scale)
       );
       const item = forModelData(modelData).getById(selectedId);
-      if (item && item.type == ModelType.Shadow) {
+      if (item && item.type == ItemType.Shadow) {
         const updatedData = forModelData(modelData).updateById(item.id, {
           ...item,
           points: updatedPoints,

@@ -2,9 +2,6 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import SelectField from "@/components/fields/SelectField";
-import PrimitiveType, {
-  primitiveTypeOptionsFor,
-} from "@/lib/replicad/PrimitiveType";
 import React, { ChangeEvent } from "react";
 import SphereEdit from "./SphereEdit";
 import PrimitiveParams, {
@@ -12,13 +9,14 @@ import PrimitiveParams, {
   CylinderParams,
   defaultParamsFor,
   SphereParams,
-} from "@/lib/replicad/params/PrimitiveParams";
+} from "@/lib/replicad/model/item/PrimitiveParams";
 import BoxEdit from "./BoxEdit";
 import CylinderEdit from "./CylinderEdit";
 import TransformEdit from "../TransformEdit";
-import Item from "@/lib/replicad/Item";
-import { Primitive } from "@/lib/replicad/ModelType";
+import Item from "@/lib/replicad/model/Item";
 import BooleanOperationEdit from "../BooleanOperationEdit";
+import Primitive from "@/lib/replicad/model/item/Primitive";
+import PrimitiveType, { primitiveTypeOptionsFor } from "@/lib/replicad/model/item/PrimitiveType";
 
 type Props = {
   dictionary: Dictionary;

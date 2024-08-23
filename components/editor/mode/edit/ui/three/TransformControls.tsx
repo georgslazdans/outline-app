@@ -8,7 +8,7 @@ import Point3D, {
   addPoints,
   add,
 } from "@/lib/Point3D";
-import Item from "@/lib/replicad/Item";
+import Item from "@/lib/replicad/model/Item";
 import { PivotControls } from "@react-three/drei";
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { Euler, Matrix4, Vector3 } from "three";
