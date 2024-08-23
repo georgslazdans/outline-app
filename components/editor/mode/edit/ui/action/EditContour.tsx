@@ -26,7 +26,6 @@ const EditContour = ({ dictionary, modelData }: Props) => {
       {selectedId && isShadow(selectedId) && (
         <Button
           onClick={() => setEditorMode(EditorMode.CONTOUR_EDIT)}
-          className="mt-2"
         >
           <label>Edit Contour</label>
         </Button>

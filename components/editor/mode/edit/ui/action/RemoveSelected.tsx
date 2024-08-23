@@ -35,7 +35,6 @@ const RemoveSelected = ({ dictionary, modelData, setModelData }: Props) => {
         <Button
           onClick={onRemoveContour}
           hotkey={!inputFieldFocused ? "Delete" : ""}
-          className="mt-2"
         >
           <label>Remove Selected</label>
         </Button>

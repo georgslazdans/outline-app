@@ -34,7 +34,7 @@ const AddPrimitive = ({ dictionary, modelData, setModelData }: Props) => {
 
   return (
     <>
-      <Button className="mb-2" onClick={() => addPrimitive()}>
+      <Button onClick={() => addPrimitive()}>
         <label>Add Primitive</label>
       </Button>
     </>
