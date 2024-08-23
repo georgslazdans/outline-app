@@ -24,7 +24,7 @@ const FindPaperSettings = ({
   onSettingsChange,
 }: Props) => {
   const onChange = (stepName: StepName, fieldName: string) => {
-    return (event: React.ChangeEvent<HTMLInputElement>) => {
+    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const value = Number.parseInt(event.target.value);
       const updatedSettings = {
         ...settings,

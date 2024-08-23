@@ -19,7 +19,7 @@ type Props = {
 
 const CloseCornerSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
   const onChange = (field: string) => {
-    return (event: React.ChangeEvent<HTMLInputElement>) => {
+    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const value = Number.parseInt(event.target.value);
         const stepSettings = { ...settings[StepName.CLOSE_CORNERS], [field]: value };
     

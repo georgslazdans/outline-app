@@ -99,12 +99,12 @@ const SimpleCalibration = ({
         <div className="xl:w-1/2">
           <div className="mb-2">
             <SelectField
-              label={"Bakcground Image"}
+              label={"Background Image"}
               name={"background-image"}
               value={backgroundImageStepName}
               options={backgroundImageOptions()}
               onChange={(event) =>
-                setBackgroundImageStepName(event.target.value)
+                setBackgroundImageStepName(event.target.value as StepName)
               }
             ></SelectField>
           </div>
