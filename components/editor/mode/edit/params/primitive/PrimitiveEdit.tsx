@@ -2,7 +2,6 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import SelectField from "@/components/fields/SelectField";
-import { Item, Primitive } from "@/lib/replicad/ModelType";
 import PrimitiveType, {
   primitiveTypeOptionsFor,
 } from "@/lib/replicad/PrimitiveType";
@@ -17,14 +16,17 @@ import PrimitiveParams, {
 import BoxEdit from "./BoxEdit";
 import CylinderEdit from "./CylinderEdit";
 import TransformEdit from "../TransformEdit";
+import Item from "@/lib/replicad/Item";
+import { Primitive } from "@/lib/replicad/ModelType";
+import BooleanOperationEdit from "../BooleanOperationEdit";
 
 type Props = {
   dictionary: Dictionary;
   item: Item & Primitive;
-  onItemChange: (params: Item ) => void;
+  onItemChange: (params: Item) => void;
 };
 
-const PrimitiveEdit = ({ dictionary, item, onItemChange}: Props) => {
+const PrimitiveEdit = ({ dictionary, item, onItemChange }: Props) => {
   const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     if (item.params.type != value) {
@@ -73,6 +75,11 @@ const PrimitiveEdit = ({ dictionary, item, onItemChange}: Props) => {
           onParamsChange={handleParamsChange}
         ></CylinderEdit>
       )}
+      <BooleanOperationEdit
+        dictionary={dictionary}
+        item={item}
+        onItemChange={onItemChange}
+      ></BooleanOperationEdit>
       <TransformEdit
         dictionary={dictionary}
         item={item}

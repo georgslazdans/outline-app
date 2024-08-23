@@ -10,7 +10,7 @@ import { Select } from "@react-three/drei";
 import { useEditorContext } from "../../EditorContext";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { UpdateModelData } from "../../EditorComponent";
-import { ModelType } from "@/lib/replicad/ModelType";
+import ModelType from "@/lib/replicad/ModelType";
 
 type Props = {
   dictionary: Dictionary;

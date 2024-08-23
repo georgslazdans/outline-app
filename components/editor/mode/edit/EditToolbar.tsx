@@ -14,7 +14,7 @@ import { UpdateModelData } from "../../EditorComponent";
 import ItemTree from "./ui/tree/ItemTree";
 import ParamsEdit from "./params/ParamsEdit";
 import { shadowItemOf, primitiveOf } from "@/lib/replicad/Item";
-import ModelType from "@/lib/replicad/ModelType";
+import ModelType, { Gridfinity } from "@/lib/replicad/ModelType";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,9 +24,10 @@ type Props = {
 
 const gridfinityHeightOf = (modelData: ModelData) => {
   const magicConstant = 42;
-  const gridfinityHeight = modelData.items.find(
+  const item = modelData.items.find(
     (it) => it.type == ModelType.Gridfinity
-  )!.params.height;
+  ) as Gridfinity;
+  const gridfinityHeight = item.params.height;
   return gridfinityHeight * magicConstant;
 };
 

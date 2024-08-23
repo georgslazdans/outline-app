@@ -1,7 +1,6 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { useEditorContext } from "@/components/editor/EditorContext";
 import CheckboxField from "@/components/fields/CheckboxField";
 import GridfinityParams from "@/lib/replicad/params/GridfinityParams";
 import React, { ChangeEvent } from "react";

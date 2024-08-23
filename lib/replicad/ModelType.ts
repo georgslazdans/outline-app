@@ -3,11 +3,6 @@ import GridfinityParams from "./params/GridfinityParams";
 import PrimitiveParams from "./params/PrimitiveParams";
 import Item from "./Item";
 
-export enum BooleanOperation {
-  UNION,
-  INTERSECTION,
-}
-
 enum ModelType {
   Primitive = "primitive",
   Shadow = "shadow",

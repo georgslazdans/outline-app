@@ -34,8 +34,13 @@ const TransformControls = ({
 
   const parentPositionOf = (items?: Item[]): Point3D => {
     if (items) {
-      const positions = items.map((it) => it.translation).filter((it) => !!it);
-      return addPoints(positions);
+      const positions = items
+        .map((it) => it.translation)
+        .filter((it) => it != undefined && it != null);
+      if (positions && positions.length > 0) {
+        //ts-ignore
+        return addPoints(positions);
+      }
     }
     return { x: 0, y: 0, z: 0 };
   };

@@ -132,5 +132,10 @@
     "box": "Box",
     "sphere": "Sphere",
     "cylinder": "Cylinder"
+  },
+  "booleanOperation": {
+    "union": "Union",
+    "cut": "Cut",
+    "intersection": "Intersection"
   }
 }

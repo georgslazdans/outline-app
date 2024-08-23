@@ -5,7 +5,6 @@ import ModelType, {
   Gridfinity,
   Shadow,
   Primitive,
-  BooleanOperation,
 } from "./ModelType";
 import gridfinityBox from "./models/Gridfinity";
 import drawShadow from "./models/OutlineShadow";
@@ -13,6 +12,7 @@ import { drawPrimitive } from "./models/Primitives";
 import ReplicadModelData from "./models/ReplicadModelData";
 import ModelData from "./ModelData";
 import Item from "./Item";
+import BooleanOperation from "./BooleanOperation";
 
 export const drawItem = (
   item: Gridfinity | Shadow | Primitive | ItemGroup
@@ -62,12 +62,16 @@ const processBooleanOperation = (
   base: Shape3D,
   model: Shape3D,
   operation?: BooleanOperation
-) => {
-  if (operation == BooleanOperation.UNION) {
-    return base.fuse(model as Shape3D);
-  } else {
-    return base.cut(model as Shape3D);
+): ReplicadModelData => {
+  switch (operation) {
+    case BooleanOperation.UNION:
+      return base.fuse(model);
+    case BooleanOperation.CUT:
+      return base.cut(model);
+    case BooleanOperation.INTERSECTION:
+      return base.intersect(model);
   }
+  throw new Error("Operation not supported! " + operation);
 };
 
 const modelOf = (item: Item): ReplicadModelData => {

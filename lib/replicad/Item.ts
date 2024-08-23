@@ -2,14 +2,17 @@ import { ContourPoints } from "../Point";
 import Point3D from "../Point3D";
 import GridfinityParams from "./params/GridfinityParams";
 import ModelType, {
-  BooleanOperation,
   Gridfinity,
   Shadow,
   Primitive,
   ItemGroup,
 } from "./ModelType";
-import { defaultParamsFor, defaultTranslationOf } from "./params/PrimitiveParams";
+import {
+  defaultParamsFor,
+  defaultTranslationOf,
+} from "./params/PrimitiveParams";
 import PrimitiveType from "./PrimitiveType";
+import BooleanOperation from "./BooleanOperation";
 
 type Item = {
   id: string;
@@ -42,6 +45,7 @@ export const shadowItemOf = (
     height: height,
     translation: { x: 0, y: 0, z: translationZ ? translationZ : 0 },
     rotation: { x: 0, y: 0, z: 0 },
+    booleanOperation: BooleanOperation.CUT,
   };
 };
 
@@ -57,6 +61,7 @@ export const primitiveOf = (
     params: params,
     translation: defaultTranslationOf(params, gridfinityHeight),
     rotation: { x: 0, y: 0, z: 0 },
+    booleanOperation: BooleanOperation.CUT,
   };
 };
 
@@ -68,6 +73,7 @@ export const groupOf = (items: Item[]): Item => {
     items: items,
     translation: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
+    booleanOperation: BooleanOperation.CUT,
   };
 };
 

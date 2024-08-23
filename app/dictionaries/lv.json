@@ -132,5 +132,10 @@
     "box": "Kubs",
     "sphere": "Lode",
     "cylinder": "Cilindrs"
+  },
+  "booleanOperation": {
+    "union": "Apvienojums",
+    "cut": "Griezums",
+    "intersection": "Sķērzgriezums"
   }
 }
