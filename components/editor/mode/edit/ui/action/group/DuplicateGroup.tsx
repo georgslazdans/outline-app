@@ -6,7 +6,6 @@ import { UpdateModelData } from "@/components/editor/EditorComponent";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
-import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
 import ItemType from "@/lib/replicad/model/ItemType";
 import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
 import React from "react";
@@ -46,7 +45,7 @@ const DuplicateGroup = ({
 
   const duplicateSelectedGroup = () => {
     if (selectedItem?.type == ItemType.Group) {
-      const group = itemGroupOf(selectedItem.items.map(duplicateItem));
+      const group = duplicateItem(selectedItem);
       setSelectedId(group.id);
       setModelData(
         forModelData(modelData).addItem(group),
