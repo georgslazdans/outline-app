@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 import TransformControls from "./TransformControls";
 import Item from "@/lib/replicad/model/Item";
 import { useEditorContext } from "@/components/editor/EditorContext";
@@ -8,11 +8,11 @@ import ItemGroup from "@/lib/replicad/model/item/ItemGroup";
 
 type Props = {
   group: Item & ItemGroup;
-  parents?: Item[];
   onItemChange: (item: Item) => void;
+  children?: ReactNode;
 };
 
-const GroupTransform = ({ group, parents, onItemChange }: Props) => {
+const GroupTransform = ({ group, onItemChange, children }: Props) => {
   const { selectedId } = useEditorContext();
 
   const isSelected = () => {
@@ -25,9 +25,8 @@ const GroupTransform = ({ group, parents, onItemChange }: Props) => {
         item={group}
         enableGizmo={isSelected()}
         onItemChange={onItemChange}
-        parents={parents}
       >
-        <></>
+        {children}
       </TransformControls>
     </>
   );

@@ -38,7 +38,9 @@ const asMesh = (data: ReplicadModelData, messageId?: string) => {
 
 const processModelData = async (modelData: ModelData) => {
   await waitForInitialization();
-  return asMesh(processData(modelData));
+  console.log("Processing modelData");
+  const result = processData(modelData);
+  return asMesh(result);
 };
 
 const processItem = async (item: Item) => {
@@ -46,6 +48,8 @@ const processItem = async (item: Item) => {
   if (item.type == ItemType.Group) {
     throw new Error("Group not supported!");
   }
+  console.log("Processing item", item.id, item.type);
+
   return asMesh(drawItem(item));
 };
 

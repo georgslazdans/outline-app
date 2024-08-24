@@ -71,7 +71,6 @@ const CanvasItem = ({ dictionary, item, parents, onItemChange }: Props) => {
       <TransformControls
         item={item}
         enableGizmo={enableGizmo()}
-        parents={parents}
         onItemChange={onItemChange}
       >
         {model && (

@@ -19,10 +19,15 @@ const ResultViewer = ({ dictionary, modelData }: Props) => {
 
   useEffect(() => {
     const { api, worker } = newWorkerInstance();
-    api.processModelData(modelData).then((result) => {
-      setModelResult(result as ReplicadResult);
-      worker.terminate();
-    });
+    api.processModelData(modelData).then(
+      (result) => {
+        setModelResult(result as ReplicadResult);
+        worker.terminate();
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }, [modelData]);
 
   return (

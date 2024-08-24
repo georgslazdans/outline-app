@@ -1,10 +1,14 @@
-import { Euler, Vector3 } from "three";
+import { Euler, Quaternion, Vector3 } from "three";
 import { toDegrees, toRadians } from "./utils/Math";
 
 type Point3D = {
   x: number;
   y: number;
   z: number;
+};
+
+export const zeroPoint = () => {
+  return { x: 0, y: 0, z: 0 };
 };
 
 export const toVector3 = (point: Point3D): Vector3 => {
@@ -37,8 +41,42 @@ export const add = (a: Point3D, b: Point3D) => {
   };
 };
 
+export const subtract = (a: Point3D, b: Point3D) => {
+  return {
+    x: a.x - b.x,
+    y: a.y - b.y,
+    z: a.z - b.z,
+  };
+};
+
 export const addPoints = (points: Point3D[]): Point3D => {
   return points.reduce((acc, curr) => add(acc, curr), { x: 0, y: 0, z: 0 });
+};
+
+const asQuaternion = (a: Point3D, b: Point3D) => {
+  const aQ = new Quaternion().setFromEuler(toEuler(a));
+  const bQ = new Quaternion().setFromEuler(toEuler(a));
+  return {
+    do: (func: (a: Quaternion, b: Quaternion) => void) => {
+      func(aQ, bQ);
+    },
+  };
+};
+
+export const addRotation = (a: Point3D, b: Point3D): Point3D => {
+  let result = new Euler();
+  asQuaternion(a, b).do((aQ, bQ) => {
+    result.setFromQuaternion(aQ.multiply(bQ));
+  });
+  return fromEuler(result);
+};
+
+export const subtractRotation = (a: Point3D, b: Point3D): Point3D => {
+  let result = new Euler();
+  asQuaternion(a, b).do((aQ, bQ) => {
+    result.setFromQuaternion(aQ.multiply(bQ.invert()));
+  });
+  return fromEuler(result);
 };
 
 export default Point3D;

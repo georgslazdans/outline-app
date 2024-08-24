@@ -14,11 +14,15 @@ type Props = {
   onItemChange: (item: Item) => void;
 };
 
-const CanvasItemList = ({ dictionary, items, parents, onItemChange }: Props) => {
+const CanvasItemList = ({
+  dictionary,
+  items,
+  parents,
+  onItemChange,
+}: Props) => {
   const getWithParents = useCallback(
     (item: Item) => {
       if (parents) {
-        console.log("Parents!", parents);
         return [...parents, item];
       }
       return [item];
@@ -36,14 +40,15 @@ const CanvasItemList = ({ dictionary, items, parents, onItemChange }: Props) => 
                 key={item.id + "transform"}
                 group={item}
                 onItemChange={onItemChange}
-              ></GroupTransform>
-              <CanvasItemList
-                key={item.id}
-                dictionary={dictionary}
-                items={item.items}
-                onItemChange={onItemChange}
-                parents={getWithParents(item)}
-              ></CanvasItemList>
+              >
+                <CanvasItemList
+                  key={item.id}
+                  dictionary={dictionary}
+                  items={item.items}
+                  onItemChange={onItemChange}
+                  parents={getWithParents(item)}
+                ></CanvasItemList>
+              </GroupTransform>
             </>
           );
         } else {
