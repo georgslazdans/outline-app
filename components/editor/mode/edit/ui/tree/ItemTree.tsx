@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import React, { useMemo } from "react";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
@@ -25,7 +25,7 @@ const ItemTree = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
   const onItemChanged = (item: Item) => {
-    const updatedData = forModelData(modelData).updateById(item.id, item);
+    const updatedData = forModelData(modelData).updateItem(item);
     setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);
   };
 
@@ -63,7 +63,7 @@ const ItemTree = ({ dictionary }: Props) => {
           let updatedData = forModelData(modelData).removeById(
             result.draggableId
           );
-          updatedData = forModelData(updatedData).updateById(combineItem.id, {
+          updatedData = forModelData(updatedData).updateItem({
             ...combineItem,
             items: [...combineItem.items, item],
           });

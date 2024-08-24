@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import React from "react";
 import CanvasItemList from "./CanvasItemList";
 import EditorHistoryType from "../../history/EditorHistoryType";
@@ -18,7 +18,7 @@ const EditCanvas = ({ dictionary }: Props) => {
 
   const onItemChange = (item: Item) => {
     setModelData(
-      forModelData(modelData).updateById(item.id, item),
+      forModelData(modelData).updateItem(item),
       EditorHistoryType.OBJ_UPDATED
     );
   };

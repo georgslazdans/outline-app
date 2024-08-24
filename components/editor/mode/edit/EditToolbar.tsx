@@ -2,12 +2,12 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useMemo } from "react";
-import { forModelData } from "@/lib/replicad/model/ModelData";
 import { useEditorContext } from "../../EditorContext";
 import ItemTree from "./ui/tree/ItemTree";
 import ParamsEdit from "./params/ParamsEdit";
 import ActionButtons from "./ui/action/ActionButtons";
 import { useModelDataContext } from "../../ModelDataContext";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 
 type Props = {
   dictionary: Dictionary;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import React, { useEffect, useState } from "react";
 import ContourMesh from "./threejs/ContourMesh";
 import { ContourPoints, scalePoints } from "@/lib/Point";
@@ -45,7 +45,7 @@ const ContourModeEdit = ({ dictionary }: Props) => {
       );
       const item = forModelData(modelData).getById(selectedId);
       if (item && item.type == ItemType.Shadow) {
-        const updatedData = forModelData(modelData).updateById(item.id, {
+        const updatedData = forModelData(modelData).updateItem({
           ...item,
           points: updatedPoints,
         });

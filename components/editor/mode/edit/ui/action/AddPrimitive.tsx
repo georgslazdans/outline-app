@@ -8,8 +8,7 @@ import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
 import { primitiveOf } from "@/lib/replicad/model/item/Primitive";
 import PrimitiveType from "@/lib/replicad/model/item/PrimitiveType";
-import 
-{ forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import React from "react";
 
 type Props = {

@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useState } from "react";
-import { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
@@ -47,7 +47,7 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
     if (selectedId) {
       const item = forModelData(modelData).getById(selectedId);
       if (item && item.type == ItemType.Shadow) {
-        const updatedData = forModelData(modelData).updateById(item.id, {
+        const updatedData = forModelData(modelData).updateItem({
           ...item,
           points: contourPoints,
         });

@@ -4,7 +4,7 @@ import GridfinityEdit from "./GridfinityEdit";
 import GroupEdit from "./GroupEdit";
 import PrimitiveEdit from "./primitive/PrimitiveEdit";
 import ShadowEdit from "./ShadowEdit";
-import { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
 import Item from "@/lib/replicad/model/Item";
@@ -23,7 +23,7 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
     (id: string, params: GridfinityParams) => {
       const item = forModelData(modelData).getById(id);
       if (item && item.type == ItemType.Gridfinity) {
-        const updatedData = forModelData(modelData).updateById(id, {
+        const updatedData = forModelData(modelData).updateItem({
           ...item,
           params: params,
         });
@@ -37,7 +37,7 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
 
   const onItemChanged = useCallback(
     (id: string, params: Item) => {
-      const updatedData = forModelData(modelData).updateById(id, params);
+      const updatedData = forModelData(modelData).updateItem(params);
       setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, id);
     },
     [modelData, setModelData]

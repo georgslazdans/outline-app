@@ -8,7 +8,7 @@ import BooleanOperation, {
 } from "@/lib/replicad/model/BooleanOperation";
 import Item from "@/lib/replicad/model/Item";
 import ItemGroup from "@/lib/replicad/model/item/ItemGroup";
-import { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import React, { ChangeEvent } from "react";
 
 type Props = {

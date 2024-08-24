@@ -7,7 +7,7 @@ import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
-import { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import React from "react";
 
 type Props = {

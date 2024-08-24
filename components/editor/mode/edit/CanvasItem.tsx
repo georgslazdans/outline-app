@@ -9,6 +9,8 @@ import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelCache } from "../../cache/ModelCacheContext";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import TransformControls from "./ui/three/TransformControls";
+import { useModelDataContext } from "../../ModelDataContext";
+import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 
 type Props = {
   dictionary: Dictionary;
@@ -18,6 +20,7 @@ type Props = {
 };
 
 const CanvasItem = ({ dictionary, item, parents, onItemChange }: Props) => {
+  const { modelData } = useModelDataContext();
   const { wireframe, selectedId } = useEditorContext();
   const { getModel } = useModelCache();
   const [model, setModel] = useState<ReplicadResult>();
@@ -33,12 +36,18 @@ const CanvasItem = ({ dictionary, item, parents, onItemChange }: Props) => {
   }, [getModel, item]);
 
   const isSelected = () => {
-    return selectedId == item.id;
+    if (selectedId) {
+      const doesItem = forModelData(modelData).doesItem;
+      return (
+        selectedId == item.id || doesItem(selectedId).hasChild(item.id)
+      );
+    }
+    return false;
   };
 
   const enableGizmo = () => {
     const isNotGridfinity = item.type != ItemType.Gridfinity;
-    return isNotGridfinity && isSelected();
+    return isNotGridfinity && selectedId == item.id;
   };
 
   const showWireframe = () => {
