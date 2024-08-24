@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import { useEditorContext } from "../../EditorContext";
 import { Select } from "@react-three/drei";
 import { useModelDataContext } from "../../ModelDataContext";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 
 type Props = {
   children: ReactNode;

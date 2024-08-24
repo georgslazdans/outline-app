@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import ImportDialog from "../../ImportDialog";
 import { ContourPoints } from "@/lib/Point";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 import { shadowItemOf } from "@/lib/replicad/model/item/Shadow";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";

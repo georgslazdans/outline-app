@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React, { useMemo } from "react";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
@@ -39,11 +39,21 @@ const ItemTree = ({ dictionary }: Props) => {
     return itemGroups;
   }, [modelData]);
 
+  const gridfinityId = useMemo(() => {
+    const item = modelData.items.find((it) => it.type == ItemType.Gridfinity);
+    if (item) {
+      return item.id;
+    }
+  }, [modelData]);
+
   const onDragEnd = (result: DropResult) => {
     if (result.destination?.index == 0 || result.source.index == 0) {
       return;
     }
     if (result.combine) {
+      if (result.combine.draggableId == gridfinityId) {
+        return;
+      }
       const combineItem = forModelData(modelData).getById(
         result.combine.draggableId
       );

@@ -10,7 +10,7 @@ import { useModelCache } from "../../cache/ModelCacheContext";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import TransformControls from "./ui/three/TransformControls";
 import { useModelDataContext } from "../../ModelDataContext";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 
 type Props = {
   dictionary: Dictionary;

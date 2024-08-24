@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
 import DraggableItem from "./DraggableItem";
 import TreeElement from "./TreeElement";

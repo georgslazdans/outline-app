@@ -4,7 +4,7 @@ import GridfinityEdit from "./GridfinityEdit";
 import GroupEdit from "./GroupEdit";
 import PrimitiveEdit from "./primitive/PrimitiveEdit";
 import ShadowEdit from "./ShadowEdit";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
 import Item from "@/lib/replicad/model/Item";

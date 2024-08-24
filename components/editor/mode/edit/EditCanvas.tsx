@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
 import CanvasItemList from "./CanvasItemList";
 import EditorHistoryType from "../../history/EditorHistoryType";

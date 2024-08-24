@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React, { useEffect, useState } from "react";
 import ContourMesh from "./threejs/ContourMesh";
 import { ContourPoints, scalePoints } from "@/lib/Point";

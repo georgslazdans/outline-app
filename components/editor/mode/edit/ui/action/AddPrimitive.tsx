@@ -10,7 +10,7 @@ import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
 import { primitiveOf } from "@/lib/replicad/model/item/Primitive";
 import { defaultTranslationOf } from "@/lib/replicad/model/item/PrimitiveParams";
 import PrimitiveType from "@/lib/replicad/model/item/PrimitiveType";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
 
 type Props = {

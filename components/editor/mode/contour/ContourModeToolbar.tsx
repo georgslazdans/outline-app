@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useState } from "react";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";

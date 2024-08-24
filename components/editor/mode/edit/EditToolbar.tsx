@@ -7,7 +7,7 @@ import ItemTree from "./ui/tree/ItemTree";
 import ParamsEdit from "./params/ParamsEdit";
 import ActionButtons from "./ui/action/ActionButtons";
 import { useModelDataContext } from "../../ModelDataContext";
-import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
 
 type Props = {
   dictionary: Dictionary;
