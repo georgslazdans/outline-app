@@ -15,10 +15,8 @@ type Props = {
   selectedItem?: Item;
 };
 
-const DuplicateGroup = ({
-  selectedItem,
-}: Props) => {
-  const {modelData, setModelData} = useModelDataContext();
+const DuplicateGroup = ({ selectedItem }: Props) => {
+  const { modelData, setModelData } = useModelDataContext();
 
   const { setSelectedId } = useEditorContext();
 
@@ -55,8 +53,8 @@ const DuplicateGroup = ({
   return (
     <>
       {isGroup() && (
-        <Button onClick={() => duplicateSelectedGroup()}>
-          <label>Duplicate Group</label>
+        <Button className="w-32 !p-1" onClick={() => duplicateSelectedGroup()}>
+          <label>Duplicate</label>
         </Button>
       )}
     </>

@@ -7,7 +7,7 @@ import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
-import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
+import ItemGroup, { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import GroupedItem from "./GroupedItem";
 import TreeElementList from "./TreeElementList";
@@ -103,13 +103,17 @@ const ItemTree = ({ dictionary }: Props) => {
       const parentId = forModelData(modelData).findParentId(
         destinationGroup.item.id
       );
+      const parentItem = forModelData(modelData).findById(
+        parentId
+      ) as ItemGroup;
       if (parentId) {
         const updatedData = forModelData(modelData)
           .useChaining()
           .removeById(item.id)
           .addItem(item, parentId)
           .reorderData(
-            modelData.items.length - 1, // TODO Should get the last index inside the function
+            // TODO this works only if it isn't in the group
+            parentItem.items.length, // This shouldn't have - 1 since we added a item to it,
             destinationGroup.localIndex,
             parentId
           )

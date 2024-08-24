@@ -7,11 +7,14 @@ import getIconFor from "./Icons";
 
 type Props = {
   itemType: ItemType;
+  className?: string;
 };
 
-const ItemTypeIcon = ({ itemType }: Props) => {
+const ItemTypeIcon = ({ itemType, className }: Props) => {
   return (
-    <div style={{ color: getColorFor(itemType) }}>{getIconFor(itemType)}</div>
+    <div className={className} style={{ color: getColorFor(itemType) }}>
+      {getIconFor(itemType)}
+    </div>
   );
 };
 

@@ -47,8 +47,8 @@ const doesItemFor = (data: ModelData) => {
           return false;
         };
 
-        const item = forModelData(data).getById(itemId);
-        if (item.type == ItemType.Group) {
+        const item = forModelData(data).findById(itemId);
+        if (item && item.type == ItemType.Group) {
           return checkItems(item.items);
         } else {
           // Root elements

@@ -12,33 +12,34 @@ import React from "react";
 
 type Props = {
   dictionary: Dictionary;
-  selectedItem?: Item;
+  item?: Item;
 };
 
-const RemoveSelected = ({ dictionary, selectedItem }: Props) => {
+const RemoveSelected = ({ dictionary, item }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
   const { setSelectedId, inputFieldFocused } = useEditorContext();
 
   const isGridfinity = () => {
-    return selectedItem?.type == ItemType.Gridfinity;
+    return item?.type == ItemType.Gridfinity;
   };
 
   const onRemoveContour = () => {
-    if (!selectedItem) return;
+    if (!item) return;
 
-    const updatedData = forModelData(modelData).removeById(selectedItem.id);
+    const updatedData = forModelData(modelData).removeById(item.id);
     setSelectedId("");
-    setModelData(updatedData, EditorHistoryType.OBJ_DELETED, selectedItem.id);
+    setModelData(updatedData, EditorHistoryType.OBJ_DELETED, item.id);
   };
 
   return (
     <>
-      {selectedItem && !isGridfinity() && (
+      {item && !isGridfinity() && (
         <Button
+          className="w-32 !p-1"
           onClick={onRemoveContour}
           hotkey={!inputFieldFocused ? "Delete" : ""}
         >
-          <label>Remove Selected</label>
+          <label>Remove</label>
         </Button>
       )}
     </>

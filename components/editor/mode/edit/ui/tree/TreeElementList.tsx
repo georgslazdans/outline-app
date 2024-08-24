@@ -27,14 +27,13 @@ const TreeElementList = ({ dictionary, groupedItems }: Props) => {
     <>
       {groupedItems.map(({ item, groupLevel }, index) => (
         <DraggableItem
-          key={item.id}
+          key={index + item.id}
           item={item}
           index={index}
           dictionary={dictionary}
         >
           <TreeElement
             dictionary={dictionary}
-            index={index}
             item={item}
             onItemChanged={onItemChanged}
             groupLevel={groupLevel}

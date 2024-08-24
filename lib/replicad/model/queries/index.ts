@@ -15,7 +15,7 @@ const queriesFor = (data: ModelData) => {
       }
       return result;
     },
-    findById: (id: string): Item | undefined => {
+    findById: (id?: string): Item | undefined => {
       return findById(data, id);
     },
     findParentId: (id: string): string | undefined => {
