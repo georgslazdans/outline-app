@@ -17,6 +17,8 @@ type EditorContextType = {
   >;
   inputFieldFocused: boolean;
   setInputFieldFocused: React.Dispatch<React.SetStateAction<boolean>>;
+  transformEditFocused: boolean;
+  setTransformEditFocused: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
@@ -28,6 +30,8 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
   const [selectedId, setSelectedId] = useState<string>();
   const [selectedPoint, setSelectedPoint] = useState<ContourIndex>();
   const [inputFieldFocused, setInputFieldFocused] = useState(false);
+
+  const [transformEditFocused, setTransformEditFocused] = useState(false);
 
   return (
     <EditorContext.Provider
@@ -44,6 +48,8 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
         setSelectedPoint,
         inputFieldFocused,
         setInputFieldFocused,
+        transformEditFocused,
+        setTransformEditFocused,
       }}
     >
       {children}

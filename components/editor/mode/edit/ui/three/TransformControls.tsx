@@ -1,6 +1,7 @@
 "use client";
 
-import Point3D, {
+import { useEditorContext } from "@/components/editor/EditorContext";
+import {
   toVector3,
   toEuler,
   fromVector3,
@@ -27,6 +28,7 @@ const TransformControls = ({
   enableGizmo,
   onItemChange,
 }: Props) => {
+  const { setTransformEditFocused } = useEditorContext();
   const [matrix, setMatrix] = useState(new Matrix4());
 
   const getPosition = useCallback(() => {
@@ -37,7 +39,7 @@ const TransformControls = ({
     return toVector3(translation).multiplyScalar(SCALE);
   }, [item.translation]);
 
-  const getFullRotation = useCallback(() => {
+  const getRotation = useCallback(() => {
     let rotation = zeroPoint();
     if (item.rotation) {
       rotation = item.rotation;
@@ -48,7 +50,7 @@ const TransformControls = ({
   // Update transform matrix
   useEffect(() => {
     const position = getPosition();
-    const rotation = getFullRotation();
+    const rotation = getRotation();
 
     const translationMatrix = new Matrix4();
     const rotationMatrix = new Matrix4();
@@ -65,28 +67,26 @@ const TransformControls = ({
       updatedMatrix.multiply(rotationMatrix);
       setMatrix(updatedMatrix);
     }
-  }, [getPosition, getFullRotation]);
+  }, [getPosition, getRotation]);
 
   const handleTransformChange = useCallback(
     (translation: Vector3, rotation: Euler) => {
-      if (item) {
-        onItemChange({
-          ...item,
-          translation: fromVector3(translation),
-          rotation: fromEuler(rotation),
-        });
-      }
+      onItemChange({
+        ...item,
+        translation: fromVector3(translation),
+        rotation: fromEuler(rotation),
+      });
     },
     [item, onItemChange]
   );
 
-  const handleDragging = (l: Matrix4, dl: Matrix4, w: Matrix4) => {
+  const handleDragging = (local: Matrix4) => {
     const pos = new Vector3();
-    pos.setFromMatrixPosition(l);
+    pos.setFromMatrixPosition(local);
     pos.multiplyScalar(1 / SCALE);
 
     const rotation = new Euler();
-    rotation.setFromRotationMatrix(l);
+    rotation.setFromRotationMatrix(local);
 
     handleTransformChange(pos, rotation);
   };
@@ -99,9 +99,10 @@ const TransformControls = ({
         autoTransform={false}
         matrix={matrix}
         onDrag={handleDragging}
+        onDragStart={() => setTransformEditFocused(true)}
         depthTest={false}
         scale={0.7}
-        userData={{itemId: item.id}}
+        userData={{ itemId: item.id }}
       >
         {children}
       </PivotControls>

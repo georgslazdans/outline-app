@@ -12,7 +12,12 @@ type Props = {
 
 const CanvasSelection = ({ children }: Props) => {
   const { modelData } = useModelDataContext();
-  const { selectedId, setSelectedId } = useEditorContext();
+  const {
+    selectedId,
+    setSelectedId,
+    transformEditFocused,
+    setTransformEditFocused,
+  } = useEditorContext();
 
   const itemIdOf = (obj: any): string | undefined => {
     if (obj.length > 0) {
@@ -21,6 +26,10 @@ const CanvasSelection = ({ children }: Props) => {
   };
 
   const onSelected = (obj: any) => {
+    if (transformEditFocused) {
+      setTransformEditFocused(false);
+      return;
+    }
     const doesItem = forModelData(modelData).doesItem;
     const itemId = itemIdOf(obj);
     if (itemId) {
