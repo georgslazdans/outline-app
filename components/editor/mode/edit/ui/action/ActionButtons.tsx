@@ -25,12 +25,15 @@ const ActionButtons = ({
         <div className="flex flex-row gap-2">
           <AddPrimitive
             dictionary={dictionary}
+            selectedItem={selectedItem}
           ></AddPrimitive>
           <AddContour
             dictionary={dictionary}
+            selectedItem={selectedItem}
           ></AddContour>
           <AddGroup
             dictionary={dictionary}
+            selectedItem={selectedItem}
           ></AddGroup>
         </div>
         <DuplicateGroup

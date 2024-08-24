@@ -104,7 +104,7 @@ export const forModelData = (data: ModelData) => {
             }
             return false;
           };
-          
+
           const item = forModelData(data).getById(itemId);
           if (item.type == ItemType.Group) {
             return checkItems(item.items);
@@ -114,6 +114,12 @@ export const forModelData = (data: ModelData) => {
           }
         },
       };
+    },
+    getParentIdForObjectCreation: (selectedItem?: Item): string | undefined => {
+      if (selectedItem) {
+        if (selectedItem.type == ItemType.Group) return selectedItem.id;
+        return forModelData(data).findParentId(selectedItem.id);
+      }
     },
   };
 };

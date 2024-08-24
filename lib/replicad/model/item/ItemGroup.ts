@@ -1,3 +1,4 @@
+import { zeroPoint } from "@/lib/Point3D";
 import BooleanOperation from "../BooleanOperation";
 import Item from "../Item";
 import ItemType from "../ItemType";
@@ -13,8 +14,8 @@ export const itemGroupOf = (items: Item[]): Item => {
     type: ItemType.Group,
     name: "Group",
     items: items,
-    translation: { x: 0, y: 0, z: 0 },
-    rotation: { x: 0, y: 0, z: 0 },
+    translation: zeroPoint(),
+    rotation: zeroPoint(),
     booleanOperation: BooleanOperation.CUT,
   };
 };

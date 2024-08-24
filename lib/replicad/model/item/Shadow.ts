@@ -2,6 +2,7 @@ import { ContourPoints } from "@/lib/Point";
 import ItemType from "../ItemType";
 import Item from "../Item";
 import BooleanOperation from "../BooleanOperation";
+import { zeroPoint } from "@/lib/Point3D";
 
 type Shadow = {
   type: ItemType.Shadow;
@@ -12,7 +13,6 @@ type Shadow = {
 export const shadowItemOf = (
   contourPoints: ContourPoints[],
   height: number,
-  translationZ?: number,
   name?: string
 ): Item => {
   return {
@@ -21,8 +21,8 @@ export const shadowItemOf = (
     name: name ? name : "Contour",
     points: contourPoints,
     height: height,
-    translation: { x: 0, y: 0, z: translationZ ? translationZ : 0 },
-    rotation: { x: 0, y: 0, z: 0 },
+    translation: zeroPoint(),
+    rotation: zeroPoint(),
     booleanOperation: BooleanOperation.CUT,
   };
 };

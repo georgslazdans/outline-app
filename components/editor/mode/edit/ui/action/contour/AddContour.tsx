@@ -11,13 +11,15 @@ import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import { shadowItemOf } from "@/lib/replicad/model/item/Shadow";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
+import Item from "@/lib/replicad/model/Item";
 
 type Props = {
   dictionary: Dictionary;
+  selectedItem?: Item;
 };
 
-const AddContour = ({ dictionary }: Props) => {
-  const {modelData, setModelData} = useModelDataContext();
+const AddContour = ({ dictionary, selectedItem }: Props) => {
+  const { modelData, setModelData } = useModelDataContext();
   const { setSelectedId, setInputFieldFocused } = useEditorContext();
 
   const [openImportDialog, setOpenImportDialog] = useState(false);
@@ -32,16 +34,21 @@ const AddContour = ({ dictionary }: Props) => {
     height: number,
     name: string
   ) => {
-    const gridfinityHeight = gridfinityHeightOf(modelData);
-    const shadow = shadowItemOf(
-      points,
-      height,
-      gridfinityHeight - height,
-      name
-    );
+    const { addItem, getParentIdForObjectCreation: parentIdForObjectCreation } = forModelData(modelData);
+
+    const parentId = parentIdForObjectCreation(selectedItem);
+    let shadow = shadowItemOf(points, height, name);
+    if (!parentId) {
+      const gridfinityHeight = gridfinityHeightOf(modelData);
+      shadow = {
+        ...shadow,
+        translation: { x: 0, y: 0, z: gridfinityHeight - height },
+      };
+    }
+
     setSelectedId(shadow.id);
     setModelData(
-      forModelData(modelData).addItem(shadow),
+      addItem(shadow, parentId),
       EditorHistoryType.OBJ_ADDED,
       shadow.id
     );
