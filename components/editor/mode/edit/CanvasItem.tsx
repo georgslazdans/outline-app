@@ -19,7 +19,6 @@ type Props = {
 
 const CanvasItem = ({ dictionary, item, parents, onItemChange }: Props) => {
   const { wireframe, selectedId } = useEditorContext();
-
   const { getModel } = useModelCache();
   const [model, setModel] = useState<ReplicadResult>();
 

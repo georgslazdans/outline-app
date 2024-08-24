@@ -37,12 +37,11 @@ const CanvasItemList = ({
           return (
             <>
               <GroupTransform
-                key={item.id + "transform"}
+                key={item.id}
                 group={item}
                 onItemChange={onItemChange}
               >
                 <CanvasItemList
-                  key={item.id}
                   dictionary={dictionary}
                   items={item.items}
                   onItemChange={onItemChange}
