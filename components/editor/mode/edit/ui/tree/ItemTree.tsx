@@ -121,7 +121,7 @@ const ItemTree = ({ dictionary }: Props) => {
 
   return (
     <>
-      <div className="w-full border rounded h-[10.4rem] overflow-y-scroll">
+      <div className="w-full border rounded h-[12.4rem] overflow-y-scroll">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="item-tree" isCombineEnabled={true}>
             {(provided, snapshot) => (

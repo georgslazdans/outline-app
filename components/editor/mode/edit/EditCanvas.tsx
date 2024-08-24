@@ -3,38 +3,18 @@
 import { Dictionary } from "@/app/dictionaries";
 import { forModelData } from "@/lib/replicad/model/ModelData";
 import React from "react";
-import { Select } from "@react-three/drei";
-import ReplicadResult from "@/lib/replicad/WorkerResult";
-import { useEditorContext } from "../../EditorContext";
 import CanvasItemList from "./CanvasItemList";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 import { useModelDataContext } from "../../ModelDataContext";
+import CanvasSelection from "./CanvasSelection";
 
 type Props = {
   dictionary: Dictionary;
 };
 
-export type ItemModel = {
-  [id: string]: ReplicadResult;
-};
-
 const EditCanvas = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
-
-  const { setSelectedId } = useEditorContext();
-
-  // TODO select
-  // group by default
-  // if group is selected, then selected the object
-  const onSelected = (obj: any) => {
-    if (obj.length > 0) {
-      const id = obj[0].userData?.id;
-      if (id) {
-        setSelectedId(id);
-      }
-    }
-  };
 
   const onItemChange = (item: Item) => {
     setModelData(
@@ -45,13 +25,13 @@ const EditCanvas = ({ dictionary }: Props) => {
 
   return (
     <>
-      <Select onChangePointerUp={(obj) => onSelected(obj)}>
+      <CanvasSelection>
         <CanvasItemList
           dictionary={dictionary}
           items={modelData.items}
           onItemChange={onItemChange}
         ></CanvasItemList>
-      </Select>
+      </CanvasSelection>
     </>
   );
 };
