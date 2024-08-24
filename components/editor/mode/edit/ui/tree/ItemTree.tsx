@@ -5,18 +5,12 @@ import { forModelData } from "@/lib/replicad/model/queries/ForModelData";
 import React, { useMemo } from "react";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
-import DraggableItem from "./DraggableItem";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
-import TreeElement from "./TreeElement";
-
-type ItemGroup = {
-  item: Item;
-  groupLevel: number;
-  localIndex: number;
-};
+import GroupedItem from "./GroupedItem";
+import TreeElementList from "./TreeElementList";
 
 type Props = {
   dictionary: Dictionary;
@@ -25,13 +19,8 @@ type Props = {
 const ItemTree = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
-  const onItemChanged = (item: Item) => {
-    const updatedData = forModelData(modelData).updateItem(item);
-    setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);
-  };
-
   const groupedItems = useMemo(() => {
-    const itemGroups: ItemGroup[] = [];
+    const itemGroups: GroupedItem[] = [];
     const processGroup = (items: Item[], groupLevel: number) => {
       let localIndex = 0;
       items.forEach((item) => {
@@ -127,22 +116,10 @@ const ItemTree = ({ dictionary }: Props) => {
           <Droppable droppableId="item-tree" isCombineEnabled={true}>
             {(provided, snapshot) => (
               <ul ref={provided.innerRef} className="">
-                {groupedItems.map(({ item, groupLevel }, index) => (
-                  <DraggableItem
-                    key={item.id}
-                    item={item}
-                    index={index}
-                    dictionary={dictionary}
-                  >
-                    <TreeElement
-                      dictionary={dictionary}
-                      index={index}
-                      item={item}
-                      onItemChanged={onItemChanged}
-                      groupLevel={groupLevel}
-                    ></TreeElement>
-                  </DraggableItem>
-                ))}
+                <TreeElementList
+                  dictionary={dictionary}
+                  groupedItems={groupedItems}
+                ></TreeElementList>
                 {provided.placeholder}
               </ul>
             )}

@@ -5,6 +5,7 @@ import { useEditorContext } from "@/components/editor/EditorContext";
 import React, { CSSProperties } from "react";
 import ItemName from "./ItemName";
 import Item from "@/lib/replicad/model/Item";
+import ItemTypeIcon from "./icons/ItemTypeIcon";
 
 type Props = {
   className?: string;
@@ -57,7 +58,7 @@ const TreeElement = ({
             "p-1 mr-2 " + (item.id == selectedId ? "dark:text-black " : "")
           }
         >
-          {index + 1}
+          <ItemTypeIcon itemType={item.type}></ItemTypeIcon>
         </label>
 
         <ItemName

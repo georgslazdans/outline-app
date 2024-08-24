@@ -18,8 +18,6 @@ const DraggableItem = ({
   item,
   index
 }: Props) => {
-
-
   return (
     <Draggable key={item.id} draggableId={item.id} index={index}>
       {(provided, snapshot) => (
