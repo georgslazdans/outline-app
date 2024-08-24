@@ -2,20 +2,19 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
-import { UpdateModelData } from "@/components/editor/EditorComponent";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
+import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
-import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/ModelData";
 import React from "react";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
-const AddGroup = ({ dictionary, modelData, setModelData }: Props) => {
+const AddGroup = ({ dictionary }: Props) => {
+  const {modelData, setModelData} = useModelDataContext();
   const { setSelectedId } = useEditorContext();
 
   const addItemGroup = () => {

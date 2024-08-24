@@ -1,15 +1,15 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/ModelData";
 import React, { useMemo } from "react";
-import { UpdateModelData } from "@/components/editor/EditorComponent";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import DraggableItem from "./DraggableItem";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
+import { useModelDataContext } from "@/components/editor/ModelDataContext";
 
 type ItemGroup = {
   item: Item;
@@ -19,11 +19,11 @@ type ItemGroup = {
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
-const ItemTree = ({ dictionary, modelData, setModelData }: Props) => {
+const ItemTree = ({ dictionary }: Props) => {
+  const { modelData, setModelData } = useModelDataContext();
+
   const onItemChanged = (item: Item) => {
     const updatedData = forModelData(modelData).updateById(item.id, item);
     setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);

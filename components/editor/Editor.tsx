@@ -8,6 +8,7 @@ import { EditorProvider } from "./EditorContext";
 import EditorComponent from "./EditorComponent";
 import { ContourCacheProvider } from "./cache/ContourCacheContext";
 import { EditorHistoryProvider } from "./history/EditorHistoryContext";
+import { ModelDataProvider } from "./ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -20,7 +21,9 @@ const Editor = ({ dictionary }: Props) => {
         <ContourCacheProvider>
           <ModelCacheProvider>
             <EditorHistoryProvider>
-              <EditorComponent dictionary={dictionary}></EditorComponent>
+              <ModelDataProvider>
+                <EditorComponent dictionary={dictionary}></EditorComponent>
+              </ModelDataProvider>
             </EditorHistoryProvider>
           </ModelCacheProvider>
         </ContourCacheProvider>

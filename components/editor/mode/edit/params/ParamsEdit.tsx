@@ -4,21 +4,21 @@ import GridfinityEdit from "./GridfinityEdit";
 import GroupEdit from "./GroupEdit";
 import PrimitiveEdit from "./primitive/PrimitiveEdit";
 import ShadowEdit from "./ShadowEdit";
-import { UpdateModelData } from "@/components/editor/EditorComponent";
-import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/ModelData";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
+import { useModelDataContext } from "@/components/editor/ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
   item: Item;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
-const ParamsEdit = ({ dictionary, item, modelData, setModelData }: Props) => {
+const ParamsEdit = ({ dictionary, item }: Props) => {
+  const { modelData, setModelData } = useModelDataContext();
+
   const onGridfinityParamsChange = useCallback(
     (id: string, params: GridfinityParams) => {
       const item = forModelData(modelData).getById(id);

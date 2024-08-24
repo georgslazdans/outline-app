@@ -6,19 +6,18 @@ import { useEditorContext } from "@/components/editor/EditorContext";
 import React, { useState } from "react";
 import ImportDialog from "../../ImportDialog";
 import { ContourPoints } from "@/lib/Point";
-import { UpdateModelData } from "@/components/editor/EditorComponent";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
-import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/ModelData";
 import { shadowItemOf } from "@/lib/replicad/model/item/Shadow";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
+import { useModelDataContext } from "@/components/editor/ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
-const AddContour = ({ dictionary, modelData, setModelData }: Props) => {
+const AddContour = ({ dictionary }: Props) => {
+  const {modelData, setModelData} = useModelDataContext();
   const { setSelectedId, setInputFieldFocused } = useEditorContext();
 
   const [openImportDialog, setOpenImportDialog] = useState(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/ModelData";
 import React, { useEffect, useState } from "react";
 import ContourMesh from "./threejs/ContourMesh";
 import { ContourPoints, scalePoints } from "@/lib/Point";
@@ -9,16 +9,16 @@ import ContourIndex from "./ContourIndex";
 import { Select } from "@react-three/drei";
 import { useEditorContext } from "../../EditorContext";
 import EditorHistoryType from "../../history/EditorHistoryType";
-import { UpdateModelData } from "../../EditorComponent";
 import ItemType from "@/lib/replicad/model/ItemType";
+import { useModelDataContext } from "../../ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
-const ContourModeEdit = ({ dictionary, modelData, setModelData }: Props) => {
+const ContourModeEdit = ({ dictionary }: Props) => {
+  const {modelData, setModelData} = useModelDataContext();
+
   const scale = 0.01;
 
   const { selectedId, selectedPoint, setSelectedPoint, setDisableCamera } =

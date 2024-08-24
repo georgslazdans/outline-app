@@ -2,7 +2,6 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
-import ModelData from "@/lib/replicad/model/ModelData";
 import React from "react";
 import EditorMode from "../../../../EditorMode";
 import Button from "@/components/Button";
@@ -10,11 +9,10 @@ import Item from "@/lib/replicad/model/Item";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
   selectedItem?: Item;
 };
 
-const EditContour = ({ dictionary, modelData, selectedItem }: Props) => {
+const EditContour = ({ dictionary, selectedItem }: Props) => {
   const { setEditorMode } = useEditorContext();
 
   const isShadow = () => {

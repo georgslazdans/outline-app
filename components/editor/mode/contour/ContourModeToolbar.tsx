@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useState } from "react";
-import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/ModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
 import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
@@ -10,17 +10,17 @@ import ScaleAlongNormal from "./ScaleAlongNormal";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
-import { UpdateModelData } from "../../EditorComponent";
 import { useEditorHistoryContext } from "../../history/EditorHistoryContext";
 import ItemType from "@/lib/replicad/model/ItemType";
+import { useModelDataContext } from "../../ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
-const ContourModeToolbar = ({ dictionary, modelData, setModelData }: Props) => {
+const ContourModeToolbar = ({ dictionary }: Props) => {
+  const {modelData, setModelData} = useModelDataContext();
+
   const { selectedId, selectedPoint, setSelectedPoint, setEditorMode } =
     useEditorContext();
   const { compressHistoryEvents } = useEditorHistoryContext();

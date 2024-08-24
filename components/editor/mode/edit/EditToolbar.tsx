@@ -2,20 +2,20 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { useMemo } from "react";
-import ModelData, { forModelData } from "@/lib/replicad/model/ModelData";
+import { forModelData } from "@/lib/replicad/model/ModelData";
 import { useEditorContext } from "../../EditorContext";
-import { UpdateModelData } from "../../EditorComponent";
 import ItemTree from "./ui/tree/ItemTree";
 import ParamsEdit from "./params/ParamsEdit";
 import ActionButtons from "./ui/action/ActionButtons";
+import { useModelDataContext } from "../../ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
-const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
+const EditToolbar = ({ dictionary }: Props) => {
+  const {modelData} = useModelDataContext();
+
   const { selectedId } = useEditorContext();
 
   const selectedItem = useMemo(() => {
@@ -28,14 +28,10 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
     <>
       <ItemTree
         dictionary={dictionary}
-        modelData={modelData}
-        setModelData={setModelData}
       ></ItemTree>
 
       <ActionButtons
         dictionary={dictionary}
-        modelData={modelData}
-        setModelData={setModelData}
         selectedItem={selectedItem}
       ></ActionButtons>
 
@@ -43,8 +39,6 @@ const EditToolbar = ({ dictionary, modelData, setModelData }: Props) => {
         <ParamsEdit
           dictionary={dictionary}
           item={selectedItem}
-          modelData={modelData}
-          setModelData={setModelData}
         ></ParamsEdit>
       )}
     </>

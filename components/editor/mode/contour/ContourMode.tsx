@@ -3,26 +3,19 @@ import { EditorModeConfig } from "../EditorMode";
 import ContourModeEdit from "./ContourModeEdit";
 import ContourModeToolbar from "./ContourModeToolbar";
 import ModelData from "@/lib/replicad/model/ModelData";
-import { UpdateModelData } from "../../EditorComponent";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
 const ContourMode = ({
-  dictionary,
-  modelData,
-  setModelData,
+  dictionary
 }: Props): EditorModeConfig => {
   const mode = {
     view: () => {
       return (
         <ContourModeEdit
           dictionary={dictionary}
-          modelData={modelData}
-          setModelData={setModelData}
         ></ContourModeEdit>
       );
     },
@@ -30,8 +23,6 @@ const ContourMode = ({
       return (
         <ContourModeToolbar
           dictionary={dictionary}
-          modelData={modelData}
-          setModelData={setModelData}
         ></ContourModeToolbar>
       );
     },

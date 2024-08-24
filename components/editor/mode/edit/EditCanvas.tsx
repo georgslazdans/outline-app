@@ -1,32 +1,30 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import ModelData, {
-  forModelData,
-} from "@/lib/replicad/model/ModelData";
-import React, {  } from "react";
+import { forModelData } from "@/lib/replicad/model/ModelData";
+import React from "react";
 import { Select } from "@react-three/drei";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import { useEditorContext } from "../../EditorContext";
-import { UpdateModelData } from "../../EditorComponent";
 import CanvasItemList from "./CanvasItemList";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
+import { useModelDataContext } from "../../ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
-  setModelData: UpdateModelData;
 };
 
 export type ItemModel = {
   [id: string]: ReplicadResult;
 };
 
-const EditCanvas = ({ dictionary, modelData, setModelData }: Props) => {
+const EditCanvas = ({ dictionary }: Props) => {
+  const { modelData, setModelData } = useModelDataContext();
+
   const { setSelectedId } = useEditorContext();
 
-  // TODO select 
+  // TODO select
   // group by default
   // if group is selected, then selected the object
   const onSelected = (obj: any) => {

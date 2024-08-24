@@ -7,13 +7,15 @@ import ReplicadMesh from "../../replicad/ReplicadMesh";
 import newWorkerInstance from "../../replicad/ReplicadWorker";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import { useEditorContext } from "../../EditorContext";
+import { useModelDataContext } from "../../ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
 };
 
-const ResultViewer = ({ dictionary, modelData }: Props) => {
+const ResultViewer = ({ dictionary }: Props) => {
+  const {modelData } = useModelDataContext();
+
   const [modelResult, setModelResult] = useState<ReplicadResult>();
   const { wireframe } = useEditorContext();
 

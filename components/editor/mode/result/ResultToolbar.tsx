@@ -3,16 +3,16 @@
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import React, { useCallback } from "react";
-import ModelData from "@/lib/replicad/model/ModelData";
 import { downloadFile } from "@/lib/utils/Download";
 import newWorkerInstance from "../../replicad/ReplicadWorker";
+import { useModelDataContext } from "../../ModelDataContext";
 
 type Props = {
   dictionary: Dictionary;
-  modelData: ModelData;
 };
 
-const ResultToolbar = ({ dictionary, modelData }: Props) => {
+const ResultToolbar = ({ dictionary }: Props) => {
+  const { modelData } = useModelDataContext();
 
   const onDownload = useCallback(() => {
     const { api, worker } = newWorkerInstance();
