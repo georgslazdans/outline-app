@@ -47,19 +47,16 @@ export const ModelCacheProvider = ({ children }: Props) => {
   const executeWork = (item: Item, key: string): WorkInstance => {
     const { api, worker } = newWorkerInstance();
 
-    const promise = api.processItem(item).then((result) => {
-      addToCache(key, result);
-
-      removeWorkInstance(key);
-
-      worker.terminate();
-
-      return result;
-    });
-
     const cancel = () => {
+      removeWorkInstance(key);
       worker.terminate();
     };
+
+    const promise = api.processItem(item).then((result) => {
+      addToCache(key, result);
+      cancel();
+      return result;
+    });
 
     const instance = { promise, cancel };
     addWorkInstance(key, instance);
