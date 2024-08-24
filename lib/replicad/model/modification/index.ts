@@ -32,7 +32,11 @@ const modificationsFor = (data: ModelData) => {
         items: addItem(item, data.items, group),
       };
     },
-    reorderData: (sourceIndex: number, endIndex: number, groupId?: string) => {
+    reorderData: (
+      sourceIndex: number,
+      endIndex: number,
+      groupId?: string
+    ): ModelData => {
       if (groupId) {
         const groupItem = forModelData(data).getById(groupId);
         if (!groupItem || groupItem.type != ItemType.Group) {

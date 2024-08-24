@@ -54,30 +54,34 @@ const ItemTree = ({ dictionary }: Props) => {
       if (result.combine.draggableId == gridfinityId) {
         return;
       }
-      const combineItem = forModelData(modelData).getById(
-        result.combine.draggableId
-      );
+
+      const { getById, findParentId } = forModelData(modelData);
+      const combineItem = getById(result.combine.draggableId);
       if (combineItem && combineItem.type == ItemType.Group) {
-        const item = forModelData(modelData).getById(result.draggableId);
+        const item = getById(result.draggableId);
         if (item) {
-          let updatedData = forModelData(modelData).removeById(
-            result.draggableId
-          );
-          updatedData = forModelData(updatedData).updateItem({
-            ...combineItem,
-            items: [...combineItem.items, item],
-          });
+          const updatedData = forModelData(modelData)
+            .useChaining()
+            .removeById(result.draggableId)
+            .updateItem({
+              ...combineItem,
+              items: [...combineItem.items, item],
+            });
           setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
         } else {
           throw new Error("Item not found with id: " + result.draggableId);
         }
       } else {
-        const parentId = forModelData(modelData).findParentId(combineItem.id);
-        const item = forModelData(modelData).getById(result.draggableId);
-        let updatedData = forModelData(modelData).removeById(item.id);
-        updatedData = forModelData(updatedData).removeById(combineItem.id);
+        const parentId = findParentId(combineItem.id);
+        const item = getById(result.draggableId);
         const group = itemGroupOf([item, combineItem]);
-        updatedData = forModelData(updatedData).addItem(group, parentId);
+        const updatedData = forModelData(modelData)
+          .useChaining()
+          .removeById(item.id)
+          .removeById(combineItem.id)
+          .addItem(group, parentId)
+          .getData();
+
         setModelData(updatedData, EditorHistoryType.GROUP_ADDED);
       }
 
@@ -92,6 +96,7 @@ const ItemTree = ({ dictionary }: Props) => {
       return;
     }
 
+    // Handle basic drag
     const item = forModelData(modelData).getById(result.draggableId);
     const destinationGroup = groupedItems[result.destination.index];
     if (destinationGroup.groupLevel > 0) {
@@ -99,22 +104,25 @@ const ItemTree = ({ dictionary }: Props) => {
         destinationGroup.item.id
       );
       if (parentId) {
-        let updatedData = forModelData(modelData).removeById(item.id);
-        updatedData = forModelData(updatedData).addItem(item, parentId);
-        updatedData = forModelData(updatedData).reorderData(
-          updatedData.items.length - 1,
-          destinationGroup.localIndex,
-          parentId
-        );
+        const updatedData = forModelData(modelData)
+          .useChaining()
+          .removeById(item.id)
+          .addItem(item, parentId)
+          .reorderData(
+            modelData.items.length - 1, // TODO Should get the last index inside the function
+            destinationGroup.localIndex,
+            parentId
+          )
+          .getData();
         setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
       }
     } else {
-      let updatedData = forModelData(modelData).removeById(item.id);
-      updatedData = forModelData(updatedData).addItem(item);
-      updatedData = forModelData(updatedData).reorderData(
-        updatedData.items.length - 1,
-        destinationGroup.localIndex
-      );
+      const updatedData = forModelData(modelData)
+        .useChaining()
+        .removeById(item.id)
+        .addItem(item)
+        .reorderData(modelData.items.length - 1, destinationGroup.localIndex)
+        .getData();
       setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
     }
   };

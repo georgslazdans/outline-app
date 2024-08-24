@@ -8,7 +8,7 @@ type ItemGroup = {
   items: Item[];
 };
 
-export const itemGroupOf = (items: Item[]): Item => {
+export const itemGroupOf = (items: Item[]): Item & ItemGroup => {
   return {
     id: crypto.randomUUID(),
     type: ItemType.Group,

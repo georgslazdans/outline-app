@@ -16,10 +16,11 @@ const doesItemFor = (data: ModelData) => {
         return false;
       },
       haveNestedSibling: (otherId?: string) => {
-        const parentId = forModelData(data).findParentId(itemId);
+        const { findParentId, getById } = forModelData(data);
+        const parentId = findParentId(itemId);
         if (parentId) {
           if (otherId) {
-            const parent = forModelData(data).getById(parentId) as ItemGroup;
+            const parent = getById(parentId) as ItemGroup;
             const sibling = forModelData({ items: parent.items }).findById(
               otherId
             );

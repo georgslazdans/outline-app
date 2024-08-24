@@ -21,9 +21,10 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
 
   const onGridfinityParamsChange = useCallback(
     (id: string, params: GridfinityParams) => {
-      const item = forModelData(modelData).getById(id);
+      const { getById, updateItem } = forModelData(modelData);
+      const item = getById(id);
       if (item && item.type == ItemType.Gridfinity) {
-        const updatedData = forModelData(modelData).updateItem({
+        const updatedData = updateItem({
           ...item,
           params: params,
         });
