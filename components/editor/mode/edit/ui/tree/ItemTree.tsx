@@ -10,6 +10,7 @@ import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
+import TreeElement from "./TreeElement";
 
 type ItemGroup = {
   item: Item;
@@ -132,9 +133,15 @@ const ItemTree = ({ dictionary }: Props) => {
                     item={item}
                     index={index}
                     dictionary={dictionary}
-                    onItemChanged={onItemChanged}
-                    groupLevel={groupLevel}
-                  ></DraggableItem>
+                  >
+                    <TreeElement
+                      dictionary={dictionary}
+                      index={index}
+                      item={item}
+                      onItemChanged={onItemChanged}
+                      groupLevel={groupLevel}
+                    ></TreeElement>
+                  </DraggableItem>
                 ))}
                 {provided.placeholder}
               </ul>

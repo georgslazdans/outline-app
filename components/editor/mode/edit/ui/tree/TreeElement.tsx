@@ -13,6 +13,7 @@ type Props = {
   index: number;
   item: Item;
   onItemChanged: (item: Item) => void;
+  groupLevel: number;
 };
 
 const TreeElement = ({
@@ -22,6 +23,7 @@ const TreeElement = ({
   index,
   item,
   onItemChanged,
+  groupLevel,
 }: Props) => {
   const { selectedId, setSelectedId } = useEditorContext();
 
@@ -38,10 +40,15 @@ const TreeElement = ({
     return item.id == selectedId ? " bg-gray " : "";
   };
 
+  const groupLevelMargin = () => `${groupLevel * 2}rem`;
+  const getGroupStyle: CSSProperties = {
+    marginLeft: groupLevelMargin(),
+  };
+
   return (
     <li
       className={selectedStyle() + " " + className}
-      style={style}
+      style={getGroupStyle}
       onClick={onSelected}
     >
       <div className="flex flex-row ml-2 mr-2">

@@ -2,36 +2,23 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import { Draggable } from "@hello-pangea/dnd";
-import React, { CSSProperties } from "react";
-import TreeElement from "./TreeElement";
+import React, {  ReactNode } from "react";
 import Item from "@/lib/replicad/model/Item";
 
 type Props = {
+  children: ReactNode;
   dictionary: Dictionary;
   item: Item;
   index: number;
-  onItemChanged: (item: Item) => void;
-  groupLevel: number;
 };
 
 const DraggableItem = ({
+  children,
   dictionary,
   item,
-  index,
-  onItemChanged,
-  groupLevel,
+  index
 }: Props) => {
-  const groupClass = (groupLevel: number) => {
-    if (groupLevel && groupLevel != 0) {
-      const level = 4 * groupLevel;
-      return "ml-" + level;
-    }
-    return "";
-  };
-  const groupLevelMargin = () => `${groupLevel * 2}rem`;
-  const getGroupStyle: CSSProperties = {
-    marginLeft: groupLevelMargin(),
-  };
+
 
   return (
     <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -41,13 +28,7 @@ const DraggableItem = ({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <TreeElement
-            style={getGroupStyle}
-            dictionary={dictionary}
-            index={index}
-            item={item}
-            onItemChanged={onItemChanged}
-          ></TreeElement>
+          {children}
         </div>
       )}
     </Draggable>
