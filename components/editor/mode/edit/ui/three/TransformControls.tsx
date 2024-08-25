@@ -9,8 +9,15 @@ import {
   zeroPoint,
 } from "@/lib/Point3D";
 import Item from "@/lib/replicad/model/Item";
+import useDebounced from "@/lib/utils/Debounced";
 import { PivotControls } from "@react-three/drei";
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, {
+  memo,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Euler, Matrix4, Vector3 } from "three";
 
 type Props = {
@@ -22,14 +29,16 @@ type Props = {
 
 const SCALE = 0.01;
 
-const TransformControls = ({
+const TransformControls = memo(function TransformControls({
   item,
   children,
   enableGizmo,
-  onItemChange,
-}: Props) => {
+  onItemChange: _onItemChanged,
+}: Props) {
   const { setTransformEditFocused } = useEditorContext();
   const [matrix, setMatrix] = useState(new Matrix4());
+  const { onChange: onItemChange, flush: flushChanges } =
+    useDebounced(_onItemChanged);
 
   const getPosition = useCallback(() => {
     let translation = zeroPoint();
@@ -37,7 +46,7 @@ const TransformControls = ({
       translation = item.translation;
     }
     return toVector3(translation).multiplyScalar(SCALE);
-  }, [item.translation]);
+  }, [item]);
 
   const getRotation = useCallback(() => {
     let rotation = zeroPoint();
@@ -45,7 +54,7 @@ const TransformControls = ({
       rotation = item.rotation;
     }
     return toEuler(rotation);
-  }, [item.rotation]);
+  }, [item]);
 
   // Update transform matrix
   useEffect(() => {
@@ -81,6 +90,8 @@ const TransformControls = ({
   );
 
   const handleDragging = (local: Matrix4) => {
+    setMatrix(local); // Since onItemChanged is debounced, update matrix immediately
+
     const pos = new Vector3();
     pos.setFromMatrixPosition(local);
     pos.multiplyScalar(1 / SCALE);
@@ -91,6 +102,10 @@ const TransformControls = ({
     handleTransformChange(pos, rotation);
   };
 
+  const onDragEnd = () => {
+    setTransformEditFocused(false);
+    flushChanges();
+  };
   return (
     <>
       <PivotControls
@@ -100,6 +115,7 @@ const TransformControls = ({
         matrix={matrix}
         onDrag={handleDragging}
         onDragStart={() => setTransformEditFocused(true)}
+        onDragEnd={onDragEnd}
         depthTest={false}
         scale={0.7}
         userData={{ itemId: item.id }}
@@ -108,6 +124,6 @@ const TransformControls = ({
       </PivotControls>
     </>
   );
-};
+});
 
 export default TransformControls;

@@ -21,4 +21,7 @@ export const withoutItemData = (
   return rest;
 };
 
+export const modelKeyOf = (item: Item): string => JSON.stringify(withoutItemData(item));
+
+
 export default Item;

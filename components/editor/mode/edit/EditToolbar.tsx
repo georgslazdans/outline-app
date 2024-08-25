@@ -14,7 +14,7 @@ type Props = {
 };
 
 const EditToolbar = ({ dictionary }: Props) => {
-  const {modelData} = useModelDataContext();
+  const { modelData } = useModelDataContext();
 
   const { selectedId } = useEditorContext();
 
@@ -26,9 +26,7 @@ const EditToolbar = ({ dictionary }: Props) => {
 
   return (
     <>
-      <ItemTree
-        dictionary={dictionary}
-      ></ItemTree>
+      <ItemTree dictionary={dictionary}></ItemTree>
 
       <ActionButtons
         dictionary={dictionary}
@@ -36,10 +34,7 @@ const EditToolbar = ({ dictionary }: Props) => {
       ></ActionButtons>
 
       {selectedItem && (
-        <ParamsEdit
-          dictionary={dictionary}
-          item={selectedItem}
-        ></ParamsEdit>
+        <ParamsEdit dictionary={dictionary} item={selectedItem}></ParamsEdit>
       )}
     </>
   );

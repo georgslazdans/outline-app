@@ -1,7 +1,7 @@
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
 import newWorkerInstance from "../replicad/ReplicadWorker";
-import Item, { withoutItemData } from "@/lib/replicad/model/Item";
+import Item, { modelKeyOf, withoutItemData } from "@/lib/replicad/model/Item";
 import { useModelLoadingIndicatorContext } from "./ModelLoadingIndicatorContext";
 
 const ModelCacheContext = createContext<any>(null);
@@ -33,7 +33,6 @@ export const ModelCacheProvider = ({ children }: Props) => {
       const deleted = workInstancesRef.current.delete(key);
       if (deleted && isLoading) {
         if (workInstancesRef.current.size <= 0) {
-          console.log("Model is not loading!");
           setIsLoading(false);
         }
       }
@@ -72,10 +71,8 @@ export const ModelCacheProvider = ({ children }: Props) => {
     return instance;
   };
 
-  const keyOf = (item: Item) => JSON.stringify(withoutItemData(item));
-
   const getModel = (item: Item): WorkInstance => {
-    const key = keyOf(item);
+    const key = modelKeyOf(item);
     const cacheEntry = getFromCache(key);
     if (cacheEntry) {
       return {

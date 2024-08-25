@@ -18,14 +18,14 @@ const SaveModel = ({ dictionary }: Props) => {
 
   const { inputFieldFocused } = useEditorContext();
   const { model, setModel } = useModelContext();
-  const { loading, setLoading } = useLoading();
+  const { setLoading } = useLoading();
 
   const onSaveModel = () => {
-    console.log("Saving model!");
     setLoading(true);
     if (model.id) {
       update(model).then(
         () => {
+          console.log("Model saved!", model.id);
           setLoading(false);
         },
         (error) => {
@@ -37,6 +37,7 @@ const SaveModel = ({ dictionary }: Props) => {
       add(model).then(
         (dbId) => {
           setModel({ ...model, id: dbId });
+          console.log("Model saved!", model.id);
           setLoading(false);
         },
         (error) => {

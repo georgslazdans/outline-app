@@ -1,10 +1,10 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import ReplicadMesh from "../../replicad/ReplicadMesh";
 import { useEditorContext } from "../../EditorContext";
-import Item from "@/lib/replicad/model/Item";
+import Item, { modelKeyOf } from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelCache } from "../../cache/ModelCacheContext";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
@@ -19,28 +19,36 @@ type Props = {
   parents?: Item[];
 };
 
-const CanvasItem = ({ dictionary, item, parents, onItemChange }: Props) => {
+const CanvasItem = memo(function CanvasItem({
+  dictionary,
+  item,
+  parents,
+  onItemChange,
+}: Props) {
   const { modelData } = useModelDataContext();
   const { wireframe, selectedId } = useEditorContext();
   const { getModel } = useModelCache();
   const [model, setModel] = useState<ReplicadResult>();
+  const [modelKey, setModelKey] = useState<string>();
 
   useEffect(() => {
-    const work = getModel(item);
-    work.promise.then((result) => {
-      setModel(result);
-    });
-    return () => {
-      work.cancel();
-    };
-  }, [getModel, item]);
+    const key = modelKeyOf(item);
+    if (modelKey != key) {
+      const work = getModel(item);
+      work.promise.then((result) => {
+        setModel(result);
+        setModelKey(key);
+      });
+      return () => {
+        work.cancel();
+      };
+    }
+  }, [getModel, item, modelKey]);
 
   const isSelected = () => {
     if (selectedId) {
-      const doesItem = forModelData(modelData).doesItem;
-      return (
-        selectedId == item.id || doesItem(selectedId).hasChild(item.id)
-      );
+      const { doesItem } = forModelData(modelData);
+      return selectedId == item.id || doesItem(selectedId).hasChild(item.id);
     }
     return false;
   };
@@ -95,6 +103,6 @@ const CanvasItem = ({ dictionary, item, parents, onItemChange }: Props) => {
       </TransformControls>
     </>
   );
-};
+});
 
 export default CanvasItem;

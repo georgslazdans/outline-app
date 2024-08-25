@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
-import React from "react";
+import React, { useCallback } from "react";
 import CanvasItemList from "./CanvasItemList";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
@@ -16,12 +16,12 @@ type Props = {
 const EditCanvas = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
-  const onItemChange = (item: Item) => {
+  const onItemChange = useCallback((item: Item) => {
     setModelData(
       forModelData(modelData).updateItem(item),
       EditorHistoryType.OBJ_UPDATED
     );
-  };
+  }, [modelData, setModelData]);
 
   return (
     <>
