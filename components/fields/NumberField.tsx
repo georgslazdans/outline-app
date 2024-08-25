@@ -1,4 +1,5 @@
 "use client";
+import useDebounced from "@/lib/utils/Debounced";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
 export type NumberRange = {
@@ -38,8 +39,6 @@ const NumberField = ({
   onFocus,
   onBlur,
 }: Props) => {
-  const [debouncedEvent, setDebouncedEvent] =
-    useState<ChangeEvent<HTMLInputElement>>();
   const [sliderValue, setSliderValue] = useState<number>(value as number);
 
   const sliderSuffix = "-slider";
@@ -49,18 +48,7 @@ const NumberField = ({
     setSliderValue(value as number);
   }, [value]);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (debouncedEvent) {
-        onChange(debouncedEvent);
-        setDebouncedEvent(undefined);
-      }
-    }, 100);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [debouncedEvent, onChange]);
+  const { onChange: onChangeDebounced } = useDebounced(onChange, 100);
 
   const removeSuffix = (name: string) => {
     return name.replace(sliderSuffix, "");
@@ -74,7 +62,7 @@ const NumberField = ({
         value: sliderEvent.target.value,
       },
     } as ChangeEvent<HTMLInputElement>;
-    setDebouncedEvent(event);
+    onChangeDebounced(event);
     setSliderValue(Number.parseFloat(sliderEvent.target.value));
   };
 
