@@ -2,7 +2,7 @@
 
 import IconButton from "@/components/IconButton";
 import React from "react";
-import { useEditorContext } from "../EditorContext";
+import { useEditorContext } from "../../EditorContext";
 import { Tooltip } from "react-tooltip";
 
 type Props = {

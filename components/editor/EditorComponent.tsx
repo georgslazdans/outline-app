@@ -9,12 +9,13 @@ import ResultMode from "./mode/result/ResultMode";
 import EditMode from "./mode/edit/EditMode";
 import ContourMode from "./mode/contour/ContourMode";
 import { useEditorContext } from "./EditorContext";
-import UndoButton from "./ui/UndoButton";
-import RedoButton from "./ui/RedoButton";
+import UndoButton from "./ui/canvas/UndoButton";
+import RedoButton from "./ui/canvas/RedoButton";
 import ModelName from "./ui/ModelName";
 import SaveModel from "./ui/SaveModel";
-import WireframeButton from "./ui/WireframeButton";
+import WireframeButton from "./ui/canvas/WireframeButton";
 import RenderButton from "./ui/RenderButton";
+import LoadingIndicator from "./ui/canvas/LoadingIndicator";
 
 type Props = {
   dictionary: Dictionary;
@@ -33,7 +34,7 @@ const EditorComponent = ({ dictionary }: Props) => {
       dictionary,
     }),
     [EditorMode.CONTOUR_EDIT]: ContourMode({
-      dictionary
+      dictionary,
     }),
   };
 
@@ -52,6 +53,7 @@ const EditorComponent = ({ dictionary }: Props) => {
                   <RedoButton></RedoButton>
                 </div>
                 <WireframeButton></WireframeButton>
+                <LoadingIndicator></LoadingIndicator>
               </div>
             </div>
             <ThreeJsEnvironment dictionary={dictionary}>

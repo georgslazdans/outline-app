@@ -1,5 +1,12 @@
 import ReplicadResult from "@/lib/replicad/WorkerResult";
-import React, { createContext, ReactNode, useContext, useRef } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import newWorkerInstance from "../replicad/ReplicadWorker";
 import Item, { withoutItemData } from "@/lib/replicad/model/Item";
 
@@ -17,6 +24,7 @@ type WorkInstance = {
 export const ModelCacheProvider = ({ children }: Props) => {
   const cacheRef = useRef(new Map<string, ReplicadResult>());
   const workInstancesRef = useRef<Map<string, WorkInstance>>(new Map());
+  const [isModelLoading, setIsModelLoading] = useState(false);
 
   const addToCache = (key: string, result: ReplicadResult) => {
     cacheRef.current.set(key, result);
@@ -26,11 +34,18 @@ export const ModelCacheProvider = ({ children }: Props) => {
     return cacheRef.current.get(key);
   };
 
-  const removeWorkInstance = (key: string) => {
-    if (workInstancesRef.current) {
-      workInstancesRef.current.delete(key);
-    }
-  };
+  const removeWorkInstance = useCallback(
+    (key: string) => {
+      if (workInstancesRef.current) {
+        workInstancesRef.current.delete(key);
+        if (workInstancesRef.current.size <= 0) {
+          console.log("Model is not loading!");
+          setIsModelLoading(false);
+        }
+      }
+    },
+    [setIsModelLoading]
+  );
 
   const getWorker = (key: string): WorkInstance | undefined => {
     if (workInstancesRef.current) {
@@ -38,11 +53,18 @@ export const ModelCacheProvider = ({ children }: Props) => {
     }
   };
 
-  const addWorkInstance = (key: string, worker: WorkInstance) => {
-    if (workInstancesRef.current) {
-      workInstancesRef.current.set(key, worker);
-    }
-  };
+  const addWorkInstance = useCallback(
+    (key: string, worker: WorkInstance) => {
+      if (workInstancesRef.current) {
+        workInstancesRef.current.set(key, worker);
+        if (!isModelLoading) {
+          console.log("Setting model loading");
+          // setIsModelLoading(true);
+        }
+      }
+    },
+    [isModelLoading, setIsModelLoading]
+  );
 
   const executeWork = (item: Item, key: string): WorkInstance => {
     const { api, worker } = newWorkerInstance();
@@ -86,6 +108,7 @@ export const ModelCacheProvider = ({ children }: Props) => {
     <ModelCacheContext.Provider
       value={{
         getModel,
+        isModelLoading,
       }}
     >
       {children}
@@ -95,6 +118,7 @@ export const ModelCacheProvider = ({ children }: Props) => {
 
 export const useModelCache = (): {
   getModel: (item: Item) => WorkInstance;
+  isModelLoading: boolean;
 } => {
   const context = useContext(ModelCacheContext);
   if (!context) {
