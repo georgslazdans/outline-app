@@ -2,41 +2,29 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React from "react";
-import AddContour from "./contour/AddContour";
-import AddPrimitive from "./AddPrimitive";
-import EditContour from "./contour/EditContour";
-import RemoveSelected from "../tree/action/RemoveSelected";
-import AddGroup from "./group/AddGroup";
 import Item from "@/lib/replicad/model/Item";
-import DuplicateItem from "../tree/action/DuplicateItem";
+import AddButtonGroup from "./add/AddButtonGroup";
+import EditContourGroup from "./contour/EditContourGroup";
 
 type Props = {
   dictionary: Dictionary;
   selectedItem?: Item;
+  className?: string;
 };
 
-const ActionButtons = ({ dictionary, selectedItem }: Props) => {
+const ActionButtons = ({ dictionary, selectedItem, className }: Props) => {
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-row gap-2">
-          <AddPrimitive
-            dictionary={dictionary}
-            selectedItem={selectedItem}
-          ></AddPrimitive>
-          <AddContour
-            dictionary={dictionary}
-            selectedItem={selectedItem}
-          ></AddContour>
-          <AddGroup
-            dictionary={dictionary}
-            selectedItem={selectedItem}
-          ></AddGroup>
-        </div>
-        <EditContour
+      <div className={"flex flex-row gap-4 " + className}>
+        <AddButtonGroup
           dictionary={dictionary}
           selectedItem={selectedItem}
-        ></EditContour>
+        ></AddButtonGroup>
+
+        <EditContourGroup
+          dictionary={dictionary}
+          selectedItem={selectedItem}
+        ></EditContourGroup>
       </div>
     </>
   );

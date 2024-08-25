@@ -10,6 +10,9 @@ import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
 import { Tooltip } from "react-tooltip";
+import ItemType from "@/lib/replicad/model/ItemType";
+import getItemTypeIconFor from "../../icon/itemType/Icons";
+import ActionButton from "../ActionButton";
 
 type Props = {
   dictionary: Dictionary;
@@ -34,12 +37,14 @@ const AddGroup = ({ dictionary, selectedItem }: Props) => {
 
   return (
     <>
-      <Button id="add-group-button" onClick={() => addItemGroup()}>
-        <label>Add Group</label>
-        <Tooltip anchorSelect="#add-group-button" place="top">
-          Add Group
-        </Tooltip>
-      </Button>
+      <ActionButton
+        dictionary={dictionary}
+        id={"add-group-button"}
+        onClick={addItemGroup}
+        icon={getItemTypeIconFor(ItemType.Group)}
+        label="Group"
+        tooltip="Add Group"
+      ></ActionButton>
     </>
   );
 };

@@ -67,7 +67,7 @@ const CanvasItem = ({ dictionary, item, parents, onItemChange }: Props) => {
   const colorOf = () => {
     if (item.type == ItemType.Gridfinity) {
       return "#2c7d94"; // dark-blue
-    } else if (item.type == ItemType.Shadow) {
+    } else if (item.type == ItemType.Contour) {
       return "#1296b6";
     } else {
       return "#BDBDBD";

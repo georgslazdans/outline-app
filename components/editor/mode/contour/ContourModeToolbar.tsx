@@ -28,7 +28,7 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
   const getSelectedContour = useCallback(() => {
     if (selectedId) {
       const selectedItem = forModelData(modelData).getById(selectedId);
-      if (!selectedItem || selectedItem.type != ItemType.Shadow) {
+      if (!selectedItem || selectedItem.type != ItemType.Contour) {
         throw new Error("Selected item is not found!");
       }
       return selectedItem.points;
@@ -46,7 +46,7 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
     setSelectedContourPoints(contourPoints);
     if (selectedId) {
       const item = forModelData(modelData).getById(selectedId);
-      if (item && item.type == ItemType.Shadow) {
+      if (item && item.type == ItemType.Contour) {
         const updatedData = forModelData(modelData).updateItem({
           ...item,
           points: contourPoints,

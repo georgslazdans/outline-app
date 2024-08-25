@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import GridfinityEdit from "./GridfinityEdit";
 import GroupEdit from "./GroupEdit";
 import PrimitiveEdit from "./primitive/PrimitiveEdit";
-import ShadowEdit from "./ShadowEdit";
+import ContourEdit from "./ShadowEdit";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
@@ -56,14 +56,14 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
             }
           ></GridfinityEdit>
         );
-      case ItemType.Shadow:
+      case ItemType.Contour:
         return (
           <>
-            <ShadowEdit
+            <ContourEdit
               dictionary={dictionary}
               item={item}
               onItemChange={(params) => onItemChanged(item.id, params)}
-            ></ShadowEdit>
+            ></ContourEdit>
           </>
         );
       case ItemType.Primitive:

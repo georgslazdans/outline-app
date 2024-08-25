@@ -5,10 +5,10 @@ import { useEditorContext } from "@/components/editor/EditorContext";
 import React, { CSSProperties } from "react";
 import ItemName from "./ItemName";
 import Item from "@/lib/replicad/model/Item";
-import ItemTypeIcon from "./icon/itemType/ItemTypeIcon";
+import ItemTypeIcon from "../icon/itemType/ItemTypeIcon";
 import DuplicateItem from "./action/DuplicateItem";
 import RemoveSelected from "./action/RemoveSelected";
-import BooleanOperationIcon from "./icon/boolean/BooleanOperationIcon";
+import BooleanOperationIcon from "../icon/boolean/BooleanOperationIcon";
 
 type Props = {
   className?: string;

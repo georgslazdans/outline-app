@@ -3,7 +3,7 @@
 import ItemType, { nameItemTypeOf } from "@/lib/replicad/model/ItemType";
 import React from "react";
 import getColorFor from "./IconColors";
-import getIconFor from "./Icons";
+import getItemTypeIconFor from "./Icons";
 import { Tooltip } from "react-tooltip";
 
 type Props = {
@@ -21,7 +21,8 @@ const ItemTypeIcon = ({ itemType, className }: Props) => {
       className={iconClassOf(itemType) + className}
       style={{ color: getColorFor(itemType) }}
     >
-      {getIconFor(itemType)}
+      <div className="size-6">{getItemTypeIconFor(itemType)}</div>
+
       <Tooltip anchorSelect={"." + iconClassOf(itemType)} place="top">
         {nameItemTypeOf(itemType)}
       </Tooltip>

@@ -13,6 +13,10 @@ import PrimitiveType from "@/lib/replicad/model/item/PrimitiveType";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
 import { Tooltip } from "react-tooltip";
+import IconButton from "@/components/IconButton";
+import getItemTypeIconFor from "../../icon/itemType/Icons";
+import ItemType from "@/lib/replicad/model/ItemType";
+import ActionButton from "../ActionButton";
 
 type Props = {
   dictionary: Dictionary;
@@ -48,12 +52,14 @@ const AddPrimitive = ({ dictionary, selectedItem }: Props) => {
 
   return (
     <>
-      <Button id="add-primitive-button" onClick={() => addPrimitive()}>
-        <label>Add Primitive</label>
-        <Tooltip anchorSelect="#add-primitive-button" place="top">
-          Add Primitive
-        </Tooltip>
-      </Button>
+      <ActionButton
+        dictionary={dictionary}
+        id={"add-primitive-button"}
+        onClick={addPrimitive}
+        icon={getItemTypeIconFor(ItemType.Primitive)}
+        label="Primitive"
+        tooltip="Add Primitive"
+      ></ActionButton>
     </>
   );
 };

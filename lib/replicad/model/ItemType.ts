@@ -1,6 +1,6 @@
 enum ItemType {
   Primitive = "primitive",
-  Shadow = "shadow",
+  Contour = "contour",
   Gridfinity = "gridfinity",
   Group = "group",
 }

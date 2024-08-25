@@ -9,6 +9,7 @@ type Props = {
   onClick?: FormEventHandler<HTMLButtonElement>;
   type?: "submit" | "reset" | "button";
   style?: "primary" | "secondary" | "red" | "disabled";
+  size?: "big" | "medium";
   hotkey?: string;
   hotkeyCtrl?: boolean;
 };
@@ -21,6 +22,11 @@ const STYLES = {
   disabled: "bg-white dark:bg-black text-gray border-4 border-gray",
 };
 
+const SIZES = {
+  big: "w-full rounded-[64px] p-4 ",
+  medium: "rounded-[32px] p-2",
+};
+
 const Button = ({
   id,
   className,
@@ -30,6 +36,7 @@ const Button = ({
   style,
   hotkey,
   hotkeyCtrl,
+  size = "big",
 }: Props) => {
   const buttonStyle = style ? STYLES[style] : STYLES["primary"];
 
@@ -52,11 +59,13 @@ const Button = ({
     };
   }, [hotkey, hotkeyCtrl, onClick]);
 
+  const sizeStyle = SIZES[size];
+
   return (
     <button
       id={id}
       type={type ? type : "submit"}
-      className={"rounded-[64px] p-4 w-full " + buttonStyle + " " + className}
+      className={" " + buttonStyle + " " + sizeStyle + " " + className}
       onClick={(event) => onClick && onClick(event)}
     >
       {children}

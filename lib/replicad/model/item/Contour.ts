@@ -5,20 +5,20 @@ import BooleanOperation from "../BooleanOperation";
 import { zeroPoint } from "@/lib/Point3D";
 import { v4 as randomUUID } from 'uuid';
 
-type Shadow = {
-  type: ItemType.Shadow;
+type Contour = {
+  type: ItemType.Contour;
   points: ContourPoints[];
   height: number;
 };
 
-export const shadowItemOf = (
+export const contourItemOf = (
   contourPoints: ContourPoints[],
   height: number,
   name?: string
 ): Item => {
   return {
     id: randomUUID(),
-    type: ItemType.Shadow,
+    type: ItemType.Contour,
     name: name ? name : "Contour",
     points: contourPoints,
     height: height,
@@ -28,4 +28,4 @@ export const shadowItemOf = (
   };
 };
 
-export default Shadow;
+export default Contour;

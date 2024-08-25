@@ -8,11 +8,13 @@ import ImportDialog from "../../ImportDialog";
 import { ContourPoints } from "@/lib/Point";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
-import { shadowItemOf } from "@/lib/replicad/model/item/Shadow";
+import { contourItemOf } from "@/lib/replicad/model/item/Contour";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
-import { Tooltip } from "react-tooltip";
+import ItemType from "@/lib/replicad/model/ItemType";
+import getItemTypeIconFor from "../../icon/itemType/Icons";
+import ActionButton from "../ActionButton";
 
 type Props = {
   dictionary: Dictionary;
@@ -39,28 +41,33 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
       forModelData(modelData);
 
     const parentId = parentIdForObjectCreation(selectedItem);
-    let shadow = shadowItemOf(points, height, name);
+    let item = contourItemOf(points, height, name);
     if (!parentId) {
       const gridfinityHeight = gridfinityHeightOf(modelData);
-      shadow = {
-        ...shadow,
+      item = {
+        ...item,
         translation: { x: 0, y: 0, z: gridfinityHeight - height },
       };
     }
 
     setModelData(
-      addItem(shadow, parentId),
+      addItem(item, parentId),
       EditorHistoryType.OBJ_ADDED,
-      shadow.id
+      item.id
     );
-    setSelectedId(shadow.id);
+    setSelectedId(item.id);
   };
 
   return (
     <>
-      <Button id="add-contour-button" onClick={openContourDialog}>
-        <label>Add Contour</label>
-      </Button>
+      <ActionButton
+        dictionary={dictionary}
+        id={"add-contour-button"}
+        onClick={openContourDialog}
+        icon={getItemTypeIconFor(ItemType.Contour)}
+        label="Contour"
+        tooltip="Add Contour"
+      ></ActionButton>
 
       <ImportDialog
         dictionary={dictionary}
@@ -68,9 +75,6 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
         onClose={() => setOpenImportDialog(false)}
         onContourSelect={onContourSelect}
       ></ImportDialog>
-      <Tooltip anchorSelect="#add-contour-button" place="top">
-        Add Contour
-      </Tooltip>
     </>
   );
 };

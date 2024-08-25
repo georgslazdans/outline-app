@@ -29,11 +29,11 @@ const ContourModeEdit = ({ dictionary }: Props) => {
   useEffect(() => {
     if (selectedId) {
       const item = forModelData(modelData).getById(selectedId);
-      if (item?.type == ItemType.Shadow) {
+      if (item?.type == ItemType.Contour) {
         const scaledPoints = item.points.map((it) => scalePoints(it, scale));
         setScaledContours(scaledPoints);
       } else {
-        throw new Error("Can't edit non shadows objects!");
+        throw new Error("Can't edit non contour objects!");
       }
     }
   }, [modelData, selectedId]);
@@ -44,7 +44,7 @@ const ContourModeEdit = ({ dictionary }: Props) => {
         scalePoints(it, 1 / scale)
       );
       const item = forModelData(modelData).getById(selectedId);
-      if (item && item.type == ItemType.Shadow) {
+      if (item && item.type == ItemType.Contour) {
         const updatedData = forModelData(modelData).updateItem({
           ...item,
           points: updatedPoints,

@@ -6,15 +6,15 @@ import TransformEdit from "./TransformEdit";
 import EditField from "../../EditField";
 import BooleanOperationEdit from "./BooleanOperationEdit";
 import Item from "@/lib/replicad/model/Item";
-import Shadow from "@/lib/replicad/model/item/Shadow";
+import Contour from "@/lib/replicad/model/item/Contour";
 
 type Props = {
   dictionary: Dictionary;
-  item: Item & Shadow;
+  item: Item & Contour;
   onItemChange: (item: Item) => void;
 };
 
-const ShadowEdit = ({ dictionary, item, onItemChange }: Props) => {
+const ContourEdit = ({ dictionary, item, onItemChange }: Props) => {
   const handleNumberChange = (name: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = Number.parseFloat(event.target.value);
@@ -44,4 +44,4 @@ const ShadowEdit = ({ dictionary, item, onItemChange }: Props) => {
   );
 };
 
-export default ShadowEdit;
+export default ContourEdit;
