@@ -7,6 +7,7 @@ import { downloadFile } from "@/lib/utils/Download";
 import newWorkerInstance from "../../replicad/ReplicadWorker";
 import { useModelDataContext } from "../../ModelDataContext";
 import { Tooltip } from "react-tooltip";
+import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -14,14 +15,23 @@ type Props = {
 
 const ResultToolbar = ({ dictionary }: Props) => {
   const { modelData } = useModelDataContext();
+  const { setIsLoading } = useModelLoadingIndicatorContext();
 
   const onDownload = useCallback(() => {
     const { api, worker } = newWorkerInstance();
-    api.downloadBlob(modelData).then((blob) => {
-      downloadFile(blob as Blob, "export.stl");
-      worker.terminate();
-    });
-  }, []);
+    setIsLoading(true);
+    api.downloadBlob(modelData).then(
+      (blob) => {
+        downloadFile(blob as Blob, "export.stl");
+        setIsLoading(false);
+        worker.terminate();
+      },
+      (error) => {
+        console.error(error);
+        setIsLoading(false);
+      }
+    );
+  }, [modelData, setIsLoading]);
 
   return (
     <>

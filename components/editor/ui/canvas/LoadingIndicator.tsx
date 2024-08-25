@@ -3,14 +3,15 @@
 import React from "react";
 import { TailSpin } from "react-loader-spinner";
 import { useModelCache } from "../../cache/ModelCacheContext";
+import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
 
 type Props = {};
 
 const LoadingIndicator = ({}: Props) => {
-  const { isModelLoading } = useModelCache();
+  const { isLoading } = useModelLoadingIndicatorContext();
   return (
     <>
-      {isModelLoading && (
+      {isLoading && (
         <div className="ml-2 mt-2">
           <TailSpin
             visible={true}
