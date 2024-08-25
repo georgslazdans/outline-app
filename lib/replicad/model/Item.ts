@@ -1,12 +1,4 @@
-import { ContourPoints } from "../../Point";
 import Point3D from "../../Point3D";
-import GridfinityParams from "./item/GridfinityParams";
-import ItemType from "./ItemType";
-import {
-  defaultParamsFor,
-  defaultTranslationOf,
-} from "./item/PrimitiveParams";
-import PrimitiveType from "./item/PrimitiveType";
 import BooleanOperation from "./BooleanOperation";
 import Gridfinity from "./item/Gridfinity";
 import ItemGroup from "./item/ItemGroup";
@@ -20,8 +12,6 @@ type Item = {
   rotation?: Point3D;
   booleanOperation?: BooleanOperation;
 } & (Gridfinity | Shadow | Primitive | ItemGroup);
-
-
 
 
 export const withoutItemData = (

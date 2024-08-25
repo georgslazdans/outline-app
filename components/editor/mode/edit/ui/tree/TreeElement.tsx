@@ -5,9 +5,10 @@ import { useEditorContext } from "@/components/editor/EditorContext";
 import React, { CSSProperties } from "react";
 import ItemName from "./ItemName";
 import Item from "@/lib/replicad/model/Item";
-import ItemTypeIcon from "./icons/ItemTypeIcon";
+import ItemTypeIcon from "./icon/itemType/ItemTypeIcon";
 import DuplicateItem from "./action/DuplicateItem";
 import RemoveSelected from "./action/RemoveSelected";
+import BooleanOperationIcon from "./icon/boolean/BooleanOperationIcon";
 
 type Props = {
   className?: string;
@@ -15,6 +16,7 @@ type Props = {
   item: Item;
   onItemChanged: (item: Item) => void;
   groupLevel: number;
+  index: number;
 };
 
 const TreeElement = ({
@@ -23,6 +25,7 @@ const TreeElement = ({
   item,
   onItemChanged,
   groupLevel,
+  index,
 }: Props) => {
   const { selectedId, setSelectedId } = useEditorContext();
 
@@ -44,6 +47,11 @@ const TreeElement = ({
     marginLeft: groupLevelMargin(),
   };
 
+  const showBooleanIcon = () => {
+    console.log("Current index", index);
+    return index != 0;
+  };
+
   return (
     <li
       className={selectedStyle() + " " + className}
@@ -51,8 +59,16 @@ const TreeElement = ({
       onClick={onSelected}
     >
       <div className="flex flex-row ml-2 mr-2">
-        <ItemTypeIcon className="my-auto mr-2" itemType={item.type}></ItemTypeIcon>
-
+        <ItemTypeIcon
+          className="my-auto mr-2"
+          itemType={item.type}
+        ></ItemTypeIcon>
+        {showBooleanIcon() && item.booleanOperation && (
+          <BooleanOperationIcon
+            className="my-auto mr-2"
+            operation={item.booleanOperation}
+          ></BooleanOperationIcon>
+        )}
         <ItemName
           dictionary={dictionary}
           item={item}
