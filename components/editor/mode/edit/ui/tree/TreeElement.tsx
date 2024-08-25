@@ -9,6 +9,7 @@ import ItemTypeIcon from "../icon/itemType/ItemTypeIcon";
 import DuplicateItem from "./action/DuplicateItem";
 import RemoveSelected from "./action/RemoveSelected";
 import BooleanOperationIcon from "../icon/boolean/BooleanOperationIcon";
+import BooleanOperation from "@/lib/replicad/model/BooleanOperation";
 
 type Props = {
   className?: string;
@@ -51,6 +52,14 @@ const TreeElement = ({
     return index != 0 && item.booleanOperation;
   };
 
+  const onGroupClick = () => {
+    let updatedOperation = BooleanOperation.UNION;
+    if (item.booleanOperation == BooleanOperation.UNION) {
+      updatedOperation = BooleanOperation.CUT;
+    }
+    onItemChanged({ ...item, booleanOperation: updatedOperation });
+  };
+
   return (
     <li
       className={selectedStyle() + " " + className}
@@ -62,6 +71,7 @@ const TreeElement = ({
           <BooleanOperationIcon
             className="my-auto mr-2"
             operation={item.booleanOperation!}
+            onClick={onGroupClick}
           ></BooleanOperationIcon>
         )}
         {!showBooleanIcon() && <div className="size-6 mr-2"></div>}

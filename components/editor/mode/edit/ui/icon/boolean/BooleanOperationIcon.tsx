@@ -10,16 +10,17 @@ import { Tooltip } from "react-tooltip";
 type Props = {
   operation: BooleanOperation;
   className?: string;
+  onClick?: () => void;
 };
 
-const BooleanOperationIcon = ({ operation, className }: Props) => {
+const BooleanOperationIcon = ({ operation, className, onClick }: Props) => {
   const iconClassOf = (operation: BooleanOperation) => {
     const name = operation.valueOf();
     return `icon-${name} `;
   };
-  
+
   return (
-    <a className={iconClassOf(operation) + className}>
+    <a className={iconClassOf(operation) + className} onClick={onClick}>
       {getIconFor(operation)}
       <Tooltip anchorSelect={"." + iconClassOf(operation)} place="top">
         {nameOfBooleanOperation(operation)}
