@@ -9,6 +9,7 @@ import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
+import { v4 as randomUUID } from 'uuid';
 
 type Props = {
   dictionary: Dictionary;
@@ -28,13 +29,13 @@ const DuplicateGroup = ({ selectedItem }: Props) => {
     if (item.type == ItemType.Group) {
       return {
         ...item,
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         items: item.items.map(duplicateItem),
       };
     }
     return {
       ...item,
-      id: crypto.randomUUID(),
+      id: randomUUID(),
     };
   };
 

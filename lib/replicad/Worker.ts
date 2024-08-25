@@ -8,6 +8,7 @@ import Item from "./model/Item";
 import ItemType from "./model/ItemType";
 import ReplicadModelData from "./draw/ReplicadModelData";
 import { drawItem } from "./draw/Draw";
+import { v4 as randomUUID } from 'uuid';
 
 let initialized = false;
 
@@ -30,7 +31,7 @@ const waitForInitialization = async () => {
 
 const asMesh = (data: ReplicadModelData, messageId?: string) => {
   return {
-    messageId: messageId ? messageId : crypto.randomUUID(),
+    messageId: messageId ? messageId : randomUUID(),
     faces: data.mesh(),
     edges: data.meshEdges(),
   };

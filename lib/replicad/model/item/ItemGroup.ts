@@ -2,6 +2,7 @@ import { zeroPoint } from "@/lib/Point3D";
 import BooleanOperation from "../BooleanOperation";
 import Item from "../Item";
 import ItemType from "../ItemType";
+import { v4 as randomUUID } from 'uuid';
 
 type ItemGroup = {
   type: ItemType.Group;
@@ -10,7 +11,7 @@ type ItemGroup = {
 
 export const itemGroupOf = (items: Item[]): Item & ItemGroup => {
   return {
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     type: ItemType.Group,
     name: "Group",
     items: items,

@@ -3,6 +3,7 @@ import ItemType from "../ItemType";
 import Item from "../Item";
 import BooleanOperation from "../BooleanOperation";
 import { zeroPoint } from "@/lib/Point3D";
+import { v4 as randomUUID } from 'uuid';
 
 type Shadow = {
   type: ItemType.Shadow;
@@ -16,7 +17,7 @@ export const shadowItemOf = (
   name?: string
 ): Item => {
   return {
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     type: ItemType.Shadow,
     name: name ? name : "Contour",
     points: contourPoints,

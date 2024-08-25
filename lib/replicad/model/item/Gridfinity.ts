@@ -2,6 +2,7 @@ import ModelData from "../ModelData";
 import ItemType from "../ItemType";
 import GridfinityParams from "./GridfinityParams";
 import Item from "../Item";
+import { v4 as randomUUID } from 'uuid';
 
 type Gridfinity = {
   type: ItemType.Gridfinity;
@@ -10,7 +11,7 @@ type Gridfinity = {
 
 export const gridfinityItemOf = (params: GridfinityParams): Item => {
   return {
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     type: ItemType.Gridfinity,
     name: "Gridfinity",
     params: params,
