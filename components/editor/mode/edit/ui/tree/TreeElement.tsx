@@ -48,7 +48,7 @@ const TreeElement = ({
   };
 
   const showBooleanIcon = () => {
-    return index != 0;
+    return index != 0 && item.booleanOperation;
   };
 
   return (
@@ -58,12 +58,14 @@ const TreeElement = ({
       onClick={onSelected}
     >
       <div className="flex flex-row ml-2 mr-2">
-        {showBooleanIcon() && item.booleanOperation && (
+        {showBooleanIcon() && (
           <BooleanOperationIcon
             className="my-auto mr-2"
-            operation={item.booleanOperation}
+            operation={item.booleanOperation!}
           ></BooleanOperationIcon>
         )}
+        {!showBooleanIcon() && <div className="size-6 mr-2"></div>}
+
         <ItemTypeIcon
           className="my-auto mr-2"
           itemType={item.type}
