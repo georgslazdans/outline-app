@@ -7,10 +7,11 @@ import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
-import ItemGroup, { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
+import ItemGroup from "@/lib/replicad/model/item/ItemGroup";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import GroupedItem from "./GroupedItem";
 import TreeElementList from "./TreeElementList";
+import ModelData from "@/lib/replicad/model/ModelData";
 
 type Props = {
   dictionary: Dictionary;
@@ -20,11 +21,11 @@ const ItemTree = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
   const groupedItems = useMemo(() => {
-    const itemGroups: GroupedItem[] = [];
+    const result: GroupedItem[] = [];
     const processGroup = (items: Item[], groupLevel: number) => {
       let localIndex = 0;
       items.forEach((item) => {
-        itemGroups.push({
+        result.push({
           item: item,
           groupLevel: groupLevel,
           localIndex: localIndex,
@@ -36,7 +37,7 @@ const ItemTree = ({ dictionary }: Props) => {
       });
     };
     processGroup(modelData.items, 0);
-    return itemGroups;
+    return result;
   }, [modelData]);
 
   const gridfinityId = useMemo(() => {
@@ -46,6 +47,62 @@ const ItemTree = ({ dictionary }: Props) => {
     }
   }, [modelData]);
 
+  const onItemCombine = (sourceId: string, targetId: string) => {
+    const { getById, moveToGroup, moveToNewGroup } = forModelData(modelData);
+    const item = getById(sourceId);
+    const targetItem = getById(targetId);
+    if (targetItem.type == ItemType.Group) {
+      setModelData(
+        moveToGroup(item, targetItem),
+        EditorHistoryType.OBJ_REORDER
+      );
+    } else {
+      setModelData(
+        moveToNewGroup(item, targetItem),
+        EditorHistoryType.GROUP_ADDED
+      );
+    }
+  };
+
+  const onItemDragged = (source: GroupedItem, target: GroupedItem) => {
+    const { getById, findParentId, doesItem } = forModelData(modelData);
+    const { item: sourceItem } = source;
+    const { item: targetItem } = target;
+
+    if (
+      sourceItem.type == ItemType.Gridfinity ||
+      targetItem.type == ItemType.Gridfinity
+    ) {
+      return;
+    }
+    const parentId = findParentId(targetItem.id);
+
+    let updatedData: ModelData;
+    if (doesItem(sourceItem.id).haveSameParentsAs(targetItem.id)) {
+      updatedData = forModelData(modelData).reorderItems(
+        source.localIndex,
+        target.localIndex,
+        parentId
+      );
+    } else {
+      if(parentId) {
+        const group = getById(parentId) as Item & ItemGroup;
+        const lastElementIndex = group.items.length;
+        updatedData = forModelData(modelData).useChaining()
+        .moveToGroup(sourceItem, group)
+        .reorderItems(lastElementIndex, target.localIndex, group.id )
+        .getData();
+      } else {
+        const lastElementIndex = modelData.items.length;
+        updatedData = forModelData(modelData).useChaining()
+        .moveToRoot(sourceItem)
+        .reorderItems(lastElementIndex, target.localIndex)
+        .getData();
+      }
+    }
+    setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
+  };
+
   const onDragEnd = (result: DropResult) => {
     if (result.destination?.index == 0 || result.source.index == 0) {
       return;
@@ -54,81 +111,18 @@ const ItemTree = ({ dictionary }: Props) => {
       if (result.combine.draggableId == gridfinityId) {
         return;
       }
-
-      const { getById, findParentId } = forModelData(modelData);
-      const combineItem = getById(result.combine.draggableId);
-      if (combineItem && combineItem.type == ItemType.Group) {
-        const item = getById(result.draggableId);
-        if (item) {
-          const updatedData = forModelData(modelData)
-            .useChaining()
-            .removeById(result.draggableId)
-            .updateItem({
-              ...combineItem,
-              items: [...combineItem.items, item],
-            });
-          setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
-        } else {
-          throw new Error("Item not found with id: " + result.draggableId);
-        }
-      } else {
-        const parentId = findParentId(combineItem.id);
-        const item = getById(result.draggableId);
-        const group = itemGroupOf([item, combineItem]);
-        const updatedData = forModelData(modelData)
-          .useChaining()
-          .removeById(item.id)
-          .removeById(combineItem.id)
-          .addItem(group, parentId)
-          .getData();
-
-        setModelData(updatedData, EditorHistoryType.GROUP_ADDED);
-      }
-
+      onItemCombine(result.draggableId, result.combine.draggableId);
       return;
     }
 
-    if (!result.destination) {
+    if (!result.destination || result.destination.index === result.source.index) {
       return;
     }
 
-    if (result.destination.index === result.source.index) {
-      return;
-    }
-
-    // Handle basic drag
-    const item = forModelData(modelData).getById(result.draggableId);
-    const destinationGroup = groupedItems[result.destination.index];
-    if (destinationGroup.groupLevel > 0) {
-      const parentId = forModelData(modelData).findParentId(
-        destinationGroup.item.id
-      );
-      const parentItem = forModelData(modelData).findById(
-        parentId
-      ) as ItemGroup;
-      if (parentId) {
-        const updatedData = forModelData(modelData)
-          .useChaining()
-          .removeById(item.id)
-          .addItem(item, parentId)
-          .reorderData(
-            // TODO this works only if it isn't in the group
-            parentItem.items.length, // This shouldn't have - 1 since we added a item to it,
-            destinationGroup.localIndex,
-            parentId
-          )
-          .getData();
-        setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
-      }
-    } else {
-      const updatedData = forModelData(modelData)
-        .useChaining()
-        .removeById(item.id)
-        .addItem(item)
-        .reorderData(modelData.items.length - 1, destinationGroup.localIndex)
-        .getData();
-      setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
-    }
+    onItemDragged(
+      groupedItems[result.source.index],
+      groupedItems[result.destination.index]
+    );
   };
 
   return (

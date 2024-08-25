@@ -1,5 +1,5 @@
-import Item from "../Item";
-import ItemType from "../ItemType";
+import Item from "../../Item";
+import ItemType from "../../ItemType";
 
 const removeById = (id: string, items: Item[]): Item[] => {
     return items

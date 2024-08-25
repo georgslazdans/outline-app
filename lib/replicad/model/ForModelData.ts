@@ -2,6 +2,14 @@ import ModelData from "./ModelData";
 import queriesFor from "./queries";
 import modificationsFor from "./modification";
 
+type ChainableAPI = ReturnType<typeof queriesFor> & {
+  [K in keyof ReturnType<typeof modificationsFor>]: (
+    ...args: Parameters<ReturnType<typeof modificationsFor>[K]>
+  ) => ChainableAPI;
+} & {
+  getData: () => ModelData;
+};
+
 export const forModelData = (data: ModelData) => {
   const modifications = modificationsFor(data);
 
@@ -24,7 +32,7 @@ export const forModelData = (data: ModelData) => {
   return {
     ...queriesFor(data),
     ...modifications,
-    useChaining: () => {
+    useChaining: (): ChainableAPI => {
       return {
         ...queriesFor(data),
         ...chainableModificationsFor(),

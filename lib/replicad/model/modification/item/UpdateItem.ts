@@ -1,5 +1,5 @@
-import Item from "../Item";
-import ItemType from "../ItemType";
+import Item from "../../Item";
+import ItemType from "../../ItemType";
 
 const updateItem = (item: Item, items: Item[]): Item[] => {
   return items.map((it) => {

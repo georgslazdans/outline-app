@@ -1,5 +1,5 @@
-import Item from "../Item";
-import ItemGroup from "../item/ItemGroup";
+import Item from "../../Item";
+import ItemGroup from "../../item/ItemGroup";
 import updateItem from "./UpdateItem";
 
 const addItem = (

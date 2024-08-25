@@ -11,6 +11,9 @@ const doesItemFor = (data: ModelData) => {
         if (otherId) {
           const parentId = forModelData(data).findParentId(itemId);
           const previousParentId = forModelData(data).findParentId(otherId);
+          if(!parentId && !previousParentId) {
+            return true; // Root elements
+          }
           return parentId == previousParentId;
         }
         return false;
