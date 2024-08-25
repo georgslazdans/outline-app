@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import InputField from "../../fields/InputField";
 import { useModelContext } from "../../../context/ModelContext";
 import { useEditorContext } from "../EditorContext";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   dictionary: Dictionary;
@@ -55,6 +56,7 @@ const ModelName = ({ dictionary }: Props) => {
           />
         ) : (
           <span
+            id="model-name-field"
             onClick={handleEditClick}
             className="ml-2 mr-auto cursor-pointer hover:bg-gray"
           >
@@ -62,6 +64,9 @@ const ModelName = ({ dictionary }: Props) => {
           </span>
         )}
       </h1>
+      <Tooltip anchorSelect={"#model-name-field"} place="top">
+        Edit
+      </Tooltip>
     </>
   );
 };

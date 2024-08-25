@@ -6,6 +6,7 @@ import React from "react";
 import EditorMode from "../../../../EditorMode";
 import Button from "@/components/Button";
 import Item from "@/lib/replicad/model/Item";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   dictionary: Dictionary;
@@ -22,8 +23,11 @@ const EditContour = ({ dictionary, selectedItem }: Props) => {
   return (
     <>
       {selectedItem && isShadow() && (
-        <Button onClick={() => setEditorMode(EditorMode.CONTOUR_EDIT)}>
+        <Button id="edit-contour-button" onClick={() => setEditorMode(EditorMode.CONTOUR_EDIT)}>
           <label>Edit Contour</label>
+          <Tooltip anchorSelect="#edit-contour-button" place="top">
+            Edit Contour
+          </Tooltip>
         </Button>
       )}
     </>

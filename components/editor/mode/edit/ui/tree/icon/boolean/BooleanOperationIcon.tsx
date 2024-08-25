@@ -2,7 +2,10 @@
 
 import React from "react";
 import getIconFor from "./Icons";
-import BooleanOperation from "@/lib/replicad/model/BooleanOperation";
+import BooleanOperation, {
+  nameOfBooleanOperation,
+} from "@/lib/replicad/model/BooleanOperation";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   operation: BooleanOperation;
@@ -10,10 +13,18 @@ type Props = {
 };
 
 const BooleanOperationIcon = ({ operation, className }: Props) => {
+  const iconClassOf = (operation: BooleanOperation) => {
+    const name = operation.valueOf();
+    return `icon-${name} `;
+  };
+  
   return (
-    <div className={"text-black dark:text-white stroke-black dark:stroke-white " + className}>
+    <a className={iconClassOf(operation) + className}>
       {getIconFor(operation)}
-    </div>
+      <Tooltip anchorSelect={"." + iconClassOf(operation)} place="top">
+        {nameOfBooleanOperation(operation)}
+      </Tooltip>
+    </a>
   );
 };
 

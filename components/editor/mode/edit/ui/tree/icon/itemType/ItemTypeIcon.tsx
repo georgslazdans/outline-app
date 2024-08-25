@@ -1,9 +1,10 @@
 "use client";
 
-import ItemType from "@/lib/replicad/model/ItemType";
+import ItemType, { nameItemTypeOf } from "@/lib/replicad/model/ItemType";
 import React from "react";
 import getColorFor from "./IconColors";
 import getIconFor from "./Icons";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   itemType: ItemType;
@@ -11,10 +12,20 @@ type Props = {
 };
 
 const ItemTypeIcon = ({ itemType, className }: Props) => {
+  const iconClassOf = (type: ItemType) => {
+    const name = type.valueOf();
+    return `icon-${name} `;
+  };
   return (
-    <div className={className} style={{ color: getColorFor(itemType) }}>
+    <a
+      className={iconClassOf(itemType) + className}
+      style={{ color: getColorFor(itemType) }}
+    >
       {getIconFor(itemType)}
-    </div>
+      <Tooltip anchorSelect={"." + iconClassOf(itemType)} place="top">
+        {nameItemTypeOf(itemType)}
+      </Tooltip>
+    </a>
   );
 };
 

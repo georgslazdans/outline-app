@@ -9,6 +9,7 @@ import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   dictionary: Dictionary;
@@ -23,23 +24,27 @@ const RemoveSelected = ({ dictionary, item }: Props) => {
     return item?.type == ItemType.Gridfinity;
   };
 
-  const onRemoveContour = () => {
+  const onRemoveItem = () => {
     if (!item) return;
-
-    const updatedData = forModelData(modelData).removeById(item.id);
+    const { removeById } = forModelData(modelData);
     setSelectedId("");
-    setModelData(updatedData, EditorHistoryType.OBJ_DELETED, item.id);
+    setModelData(removeById(item.id), EditorHistoryType.OBJ_DELETED, item.id);
   };
 
+  const id = "remove-selected-button";
   return (
     <>
       {item && !isGridfinity() && (
         <Button
+          id={id}
           className="w-32 !p-1"
-          onClick={onRemoveContour}
+          onClick={onRemoveItem}
           hotkey={!inputFieldFocused ? "Delete" : ""}
         >
           <label>Remove</label>
+          <Tooltip anchorSelect={"#" + id} place="top">
+            Remove (Delete)
+          </Tooltip>
         </Button>
       )}
     </>

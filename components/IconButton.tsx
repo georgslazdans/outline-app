@@ -8,9 +8,11 @@ type Props = {
   className?: string;
   hotkey?: string;
   hotkeyCtrl?: boolean;
+  id?: string;
 };
 
 const IconButton = ({
+  id,
   onClick,
   children,
   className,
@@ -38,7 +40,7 @@ const IconButton = ({
 
   return (
     <button
-      id="draw-outline-button"
+      id={id}
       onClick={onClick}
       className={`flex items-center border-4 rounded-full 
         text-white dark:text-black border-white dark:border-black bg-black dark:bg-white 

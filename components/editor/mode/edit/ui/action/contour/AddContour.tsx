@@ -12,6 +12,7 @@ import { shadowItemOf } from "@/lib/replicad/model/item/Shadow";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   dictionary: Dictionary;
@@ -57,7 +58,7 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
 
   return (
     <>
-      <Button onClick={openContourDialog}>
+      <Button id="add-contour-button" onClick={openContourDialog}>
         <label>Add Contour</label>
       </Button>
 
@@ -67,6 +68,9 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
         onClose={() => setOpenImportDialog(false)}
         onContourSelect={onContourSelect}
       ></ImportDialog>
+      <Tooltip anchorSelect="#add-contour-button" place="top">
+        Add Contour
+      </Tooltip>
     </>
   );
 };

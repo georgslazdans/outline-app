@@ -12,6 +12,7 @@ import { defaultTranslationOf } from "@/lib/replicad/model/item/PrimitiveParams"
 import PrimitiveType from "@/lib/replicad/model/item/PrimitiveType";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,7 +25,8 @@ const AddPrimitive = ({ dictionary, selectedItem }: Props) => {
   const { setSelectedId } = useEditorContext();
 
   const addPrimitive = () => {
-    const { addItem, getParentIdForObjectCreation: parentIdForObjectCreation } = forModelData(modelData);
+    const { addItem, getParentIdForObjectCreation: parentIdForObjectCreation } =
+      forModelData(modelData);
 
     const parentId = parentIdForObjectCreation(selectedItem);
     let primitive = primitiveOf(PrimitiveType.BOX);
@@ -42,13 +44,15 @@ const AddPrimitive = ({ dictionary, selectedItem }: Props) => {
       primitive.id
     );
     setSelectedId(primitive.id);
-
   };
 
   return (
     <>
-      <Button onClick={() => addPrimitive()}>
+      <Button id="add-primitive-button" onClick={() => addPrimitive()}>
         <label>Add Primitive</label>
+        <Tooltip anchorSelect="#add-primitive-button" place="top">
+          Add Primitive
+        </Tooltip>
       </Button>
     </>
   );

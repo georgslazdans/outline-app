@@ -4,6 +4,7 @@ import IconButton from "@/components/IconButton";
 import React from "react";
 import { useEditorHistoryContext } from "../history/EditorHistoryContext";
 import { useEditorContext } from "../EditorContext";
+import { Tooltip } from "react-tooltip";
 
 type Props = {};
 
@@ -27,17 +28,21 @@ const UndoButton = ({}: Props) => {
       />
     </svg>
   );
-
+  const id = "undo-button";
   return (
     <>
       {canUndo() && (
         <IconButton
+          id={id}
           className="px-3 py-3 mr-auto mt-2 ml-2"
           onClick={undo}
           hotkey={!inputFieldFocused ? "z" : undefined}
           hotkeyCtrl={!inputFieldFocused ? true : undefined}
         >
           {icon}
+          <Tooltip anchorSelect={"#" + id} place="top">
+            Undo (Ctrl + Z)
+          </Tooltip>
         </IconButton>
       )}
     </>

@@ -3,6 +3,7 @@
 import React, { FormEventHandler, ReactNode, useEffect } from "react";
 
 type Props = {
+  id?: string;
   className?: string;
   children?: ReactNode;
   onClick?: FormEventHandler<HTMLButtonElement>;
@@ -21,6 +22,7 @@ const STYLES = {
 };
 
 const Button = ({
+  id,
   className,
   children,
   onClick,
@@ -52,6 +54,7 @@ const Button = ({
 
   return (
     <button
+      id={id}
       type={type ? type : "submit"}
       className={"rounded-[64px] p-4 w-full " + buttonStyle + " " + className}
       onClick={(event) => onClick && onClick(event)}

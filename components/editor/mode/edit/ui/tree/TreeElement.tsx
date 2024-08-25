@@ -48,7 +48,6 @@ const TreeElement = ({
   };
 
   const showBooleanIcon = () => {
-    console.log("Current index", index);
     return index != 0;
   };
 

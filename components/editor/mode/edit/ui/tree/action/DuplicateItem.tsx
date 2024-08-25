@@ -9,6 +9,7 @@ import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   dictionary: Dictionary;
@@ -39,16 +40,21 @@ const DuplicateItem = ({ selectedItem }: Props) => {
     }
   };
 
+  const id = "duplicate-item-button";
   return (
     <>
       {canDuplicate() && (
         <Button
+          id={id}
           className="w-32 !p-1"
           onClick={() => onItemDuplicate()}
           hotkey={!inputFieldFocused ? "d" : undefined}
           hotkeyCtrl={!inputFieldFocused ? true : undefined}
         >
           <label>Duplicate</label>
+          <Tooltip anchorSelect={"#" + id} place="top">
+            Duplicate (Ctrl + D)
+          </Tooltip>
         </Button>
       )}
     </>

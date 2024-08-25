@@ -4,6 +4,7 @@ import IconButton from "@/components/IconButton";
 import React from "react";
 import { useEditorHistoryContext } from "../history/EditorHistoryContext";
 import { useEditorContext } from "../EditorContext";
+import { Tooltip } from "react-tooltip";
 
 type Props = {};
 
@@ -27,17 +28,21 @@ const RedoButton = ({}: Props) => {
       />
     </svg>
   );
-
+  const id = "redo-button";
   return (
     <>
       {canRedo() && (
         <IconButton
+          id={id}
           className="px-3 py-3 mr-auto mt-2 ml-2"
           onClick={redo}
           hotkey={!inputFieldFocused ? "y" : undefined}
           hotkeyCtrl={!inputFieldFocused ? true : undefined}
         >
           {icon}
+          <Tooltip anchorSelect={"#" + id} place="top">
+            Redo (Ctrl + Y)
+          </Tooltip>
         </IconButton>
       )}
     </>

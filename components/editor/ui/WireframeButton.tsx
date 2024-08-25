@@ -3,6 +3,7 @@
 import IconButton from "@/components/IconButton";
 import React from "react";
 import { useEditorContext } from "../EditorContext";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   className?: string;
@@ -50,15 +51,21 @@ const WireframeButton = ({ className }: Props) => {
       />
     </svg>
   );
+
+  const id = "wireframe-button";
   return (
     <>
       <IconButton
+        id={id}
         className="px-3 py-3 mr-auto mt-2 ml-2"
         onClick={onClick}
         hotkey={!inputFieldFocused ? "h" : undefined}
-        hotkeyCtrl={!inputFieldFocused ? true : undefined}
+        hotkeyCtrl={!inputFieldFocused ? false : undefined}
       >
         {icon == "eye" ? eye : eyeSlash}
+        <Tooltip anchorSelect={"#" + id} place="top">
+          Toggle Wireframe (H)
+        </Tooltip>
       </IconButton>
     </>
   );

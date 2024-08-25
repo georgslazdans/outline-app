@@ -6,6 +6,7 @@ import React, { useCallback } from "react";
 import { downloadFile } from "@/lib/utils/Download";
 import newWorkerInstance from "../../replicad/ReplicadWorker";
 import { useModelDataContext } from "../../ModelDataContext";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,8 +25,11 @@ const ResultToolbar = ({ dictionary }: Props) => {
 
   return (
     <>
-      <Button onClick={() => onDownload()}>
+      <Button id="download-stl-model" onClick={() => onDownload()}>
         <label>Download</label>
+        <Tooltip anchorSelect={"#download-stl-model"} place="top">
+          Download STL Model
+        </Tooltip>
       </Button>
     </>
   );

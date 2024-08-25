@@ -5,6 +5,7 @@ import { useEditorContext } from "@/components/editor/EditorContext";
 import InputField from "@/components/fields/InputField";
 import Item from "@/lib/replicad/model/Item";
 import React, { useEffect, useState } from "react";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   dictionary: Dictionary;
@@ -44,6 +45,7 @@ const ItemName = ({ dictionary, item, onChanged }: Props) => {
     setInputFieldFocused(false);
   };
 
+  const id = `edit-item-name-${item.id}`;
   return (
     <>
       {isEditing ? (
@@ -60,6 +62,7 @@ const ItemName = ({ dictionary, item, onChanged }: Props) => {
         />
       ) : (
         <label
+          id={id}
           className={
             "flex-grow content-center cursor-pointer hover:bg-gray " +
             (item.id == selectedId ? "dark:text-black " : "")
@@ -69,6 +72,14 @@ const ItemName = ({ dictionary, item, onChanged }: Props) => {
           {item.name}
         </label>
       )}
+
+      <Tooltip
+        anchorSelect={"#" + id}
+        place="top"
+        hidden={item.id != selectedId}
+      >
+        Edit Name
+      </Tooltip>
     </>
   );
 };
