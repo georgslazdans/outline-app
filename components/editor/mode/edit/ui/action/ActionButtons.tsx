@@ -8,7 +8,7 @@ import EditContour from "./contour/EditContour";
 import RemoveSelected from "../tree/action/RemoveSelected";
 import AddGroup from "./group/AddGroup";
 import Item from "@/lib/replicad/model/Item";
-import DuplicateGroup from "../tree/action/DuplicateGroup";
+import DuplicateItem from "../tree/action/DuplicateItem";
 
 type Props = {
   dictionary: Dictionary;

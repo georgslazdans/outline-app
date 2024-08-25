@@ -34,7 +34,8 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
     height: number,
     name: string
   ) => {
-    const { addItem, getParentIdForObjectCreation: parentIdForObjectCreation } = forModelData(modelData);
+    const { addItem, getParentIdForObjectCreation: parentIdForObjectCreation } =
+      forModelData(modelData);
 
     const parentId = parentIdForObjectCreation(selectedItem);
     let shadow = shadowItemOf(points, height, name);
@@ -46,12 +47,12 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
       };
     }
 
-    setSelectedId(shadow.id);
     setModelData(
       addItem(shadow, parentId),
       EditorHistoryType.OBJ_ADDED,
       shadow.id
     );
+    setSelectedId(shadow.id);
   };
 
   return (

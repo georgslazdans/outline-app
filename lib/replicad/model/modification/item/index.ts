@@ -3,6 +3,7 @@ import Item from "../../Item";
 import ItemGroup from "../../item/ItemGroup";
 import ModelData from "../../ModelData";
 import addItem from "./AddItem";
+import duplicateItemFor from "./DuplicateItem";
 import removeById from "./RemoveById";
 import reorderItems from "./ReorderItems";
 import updateItem from "./UpdateItem";
@@ -32,6 +33,7 @@ const itemModificationsFor = (data: ModelData) => {
       };
     },
     reorderItems: reorderItems(data),
+    duplicateItem: duplicateItemFor(data)
   };
 };
 

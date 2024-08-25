@@ -6,7 +6,7 @@ import React, { CSSProperties } from "react";
 import ItemName from "./ItemName";
 import Item from "@/lib/replicad/model/Item";
 import ItemTypeIcon from "./icons/ItemTypeIcon";
-import DuplicateGroup from "./action/DuplicateGroup";
+import DuplicateItem from "./action/DuplicateItem";
 import RemoveSelected from "./action/RemoveSelected";
 
 type Props = {
@@ -60,10 +60,10 @@ const TreeElement = ({
         ></ItemName>
         {selectedId == item.id && (
           <>
-            <DuplicateGroup
+            <DuplicateItem
               dictionary={dictionary}
               selectedItem={item}
-            ></DuplicateGroup>
+            ></DuplicateItem>
             <RemoveSelected
               dictionary={dictionary}
               item={item}

@@ -36,12 +36,13 @@ const AddPrimitive = ({ dictionary, selectedItem }: Props) => {
       };
     }
 
-    setSelectedId(primitive.id);
     setModelData(
       addItem(primitive, parentId),
       EditorHistoryType.OBJ_ADDED,
       primitive.id
     );
+    setSelectedId(primitive.id);
+
   };
 
   return (

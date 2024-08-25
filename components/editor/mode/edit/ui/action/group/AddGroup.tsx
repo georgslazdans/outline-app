@@ -20,14 +20,15 @@ const AddGroup = ({ dictionary, selectedItem }: Props) => {
   const { setSelectedId } = useEditorContext();
 
   const addItemGroup = () => {
-    const { addItem, getParentIdForObjectCreation: parentIdForObjectCreation } = forModelData(modelData);
+    const { addItem, getParentIdForObjectCreation: parentIdForObjectCreation } =
+      forModelData(modelData);
     const group = itemGroupOf([]);
-    setSelectedId(group.id);
     setModelData(
       addItem(group, parentIdForObjectCreation(selectedItem)),
       EditorHistoryType.GROUP_ADDED,
       group.id
     );
+    setSelectedId(group.id);
   };
 
   return (
