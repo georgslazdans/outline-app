@@ -18,7 +18,7 @@ type Props = {
 const SUPPORTED_TYPES = [ItemType.Group, ItemType.Primitive, ItemType.Shadow];
 const DuplicateItem = ({ selectedItem }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
-
+  const { inputFieldFocused } = useEditorContext();
   const { setSelectedId } = useEditorContext();
 
   const canDuplicate = () => {
@@ -30,18 +30,24 @@ const DuplicateItem = ({ selectedItem }: Props) => {
   const onItemDuplicate = () => {
     if (selectedItem) {
       let duplicateId;
-      const data = forModelData(modelData).duplicateItem(selectedItem, (it) =>
-        duplicateId = it.id
+      const data = forModelData(modelData).duplicateItem(
+        selectedItem,
+        (it) => (duplicateId = it.id)
       );
       setModelData(data, EditorHistoryType.OBJ_ADDED, duplicateId);
-      setSelectedId(duplicateId)
+      setSelectedId(duplicateId);
     }
   };
 
   return (
     <>
       {canDuplicate() && (
-        <Button className="w-32 !p-1" onClick={() => onItemDuplicate()}>
+        <Button
+          className="w-32 !p-1"
+          onClick={() => onItemDuplicate()}
+          hotkey={!inputFieldFocused ? "d" : undefined}
+          hotkeyCtrl={!inputFieldFocused ? true : undefined}
+        >
           <label>Duplicate</label>
         </Button>
       )}
