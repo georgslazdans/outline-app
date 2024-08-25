@@ -58,23 +58,24 @@ const TreeElement = ({
       onClick={onSelected}
     >
       <div className="flex flex-row ml-2 mr-2">
-        <ItemTypeIcon
-          className="my-auto mr-2"
-          itemType={item.type}
-        ></ItemTypeIcon>
         {showBooleanIcon() && item.booleanOperation && (
           <BooleanOperationIcon
             className="my-auto mr-2"
             operation={item.booleanOperation}
           ></BooleanOperationIcon>
         )}
+        <ItemTypeIcon
+          className="my-auto mr-2"
+          itemType={item.type}
+        ></ItemTypeIcon>
+
         <ItemName
           dictionary={dictionary}
           item={item}
           onChanged={onNameChanged}
         ></ItemName>
         {selectedId == item.id && (
-          <>
+          <div className="flex flex-row gap-1">
             <DuplicateItem
               dictionary={dictionary}
               selectedItem={item}
@@ -83,7 +84,7 @@ const TreeElement = ({
               dictionary={dictionary}
               item={item}
             ></RemoveSelected>
-          </>
+          </div>
         )}
       </div>
     </li>
