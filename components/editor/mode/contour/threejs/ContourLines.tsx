@@ -9,7 +9,7 @@ type Props = {
   points: Point[];
 };
 
-const SvgLines = memo(function SvgLineMesh({ points }: Props) {
+const ContourLines = memo(function SvgLineMesh({ points }: Props) {
   const vertices = points.map((it) => new Vector3(it.x, it.y, 0));
   return (
     <Line
@@ -21,4 +21,4 @@ const SvgLines = memo(function SvgLineMesh({ points }: Props) {
   );
 });
 
-export default SvgLines;
+export default ContourLines;

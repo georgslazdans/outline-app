@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import PointMesh from "./PointMesh";
+import ContourPoint from "./ContourPoint";
 import { Matrix4, Vector3 } from "three";
-import SvgLines from "./SvgLines";
+import ContourLines from "./ContourLines";
 import ContourIndex from "../ContourIndex";
 import ContourPoints from "@/lib/point/ContourPoints";
 import Draggable from "./Draggable";
@@ -85,7 +85,7 @@ const ContourMesh = memo(function ContourMeshFun({
                 position={new Vector3(point.x, point.y, 0)}
                 onPointDrag={onPointDrag(index)}
               >
-                <PointMesh
+                <ContourPoint
                   contourIndex={contourIndex}
                   index={index}
                   color={isPointSelected(index) ? "red" : "black"}
@@ -95,7 +95,7 @@ const ContourMesh = memo(function ContourMeshFun({
               </Draggable>
             );
           })}
-          <SvgLines points={currentPoints}></SvgLines>
+          <ContourLines points={currentPoints}></ContourLines>
         </>
       )}
     </group>

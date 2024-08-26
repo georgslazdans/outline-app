@@ -16,7 +16,7 @@ type Props = {
   size: number;
 };
 
-const PointMesh = memo(function PointMesh({
+const ContourPoint = memo(function PointMesh({
   contourIndex,
   index,
   color,
@@ -54,4 +54,4 @@ const PointMesh = memo(function PointMesh({
   );
 });
 
-export default PointMesh;
+export default ContourPoint;
