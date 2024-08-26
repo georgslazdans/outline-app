@@ -6,7 +6,7 @@ const moveToRoot = (modelData: ModelData) => {
   return (item: Item) => {
     return forModelData(modelData)
       .useChaining()
-      .removeById(item.id)
+      .deleteById(item.id)
       .addItem(item)
       .getData();
   };

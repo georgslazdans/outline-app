@@ -43,7 +43,7 @@ const RemoveSelected = ({ dictionary, item }: Props) => {
 
   const onRemoveItem = () => {
     if (!item) return;
-    const { removeById } = forModelData(modelData);
+    const { deleteById: removeById } = forModelData(modelData);
     setSelectedId("");
     setModelData(removeById(item.id), EditorHistoryType.OBJ_DELETED, item.id);
   };

@@ -1,7 +1,7 @@
 import Item from "../../Item";
 import ItemType from "../../ItemType";
 
-const removeById = (id: string, items: Item[]): Item[] => {
+const deleteById = (id: string, items: Item[]): Item[] => {
     return items
       .map((it) => {
         if (it.id == id) {
@@ -10,7 +10,7 @@ const removeById = (id: string, items: Item[]): Item[] => {
           if (it.type == ItemType.Group) {
             return {
               ...it,
-              items: removeById(id, it.items),
+              items: deleteById(id, it.items),
             };
           } else {
             return it;
@@ -20,4 +20,4 @@ const removeById = (id: string, items: Item[]): Item[] => {
       .filter((it) => it != null);
   };
 
-  export default removeById;
+  export default deleteById;

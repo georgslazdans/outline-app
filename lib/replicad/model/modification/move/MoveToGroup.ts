@@ -6,7 +6,7 @@ const moveToGroup = (modelData: ModelData) => {
   return (item: Item, group: Item) => {
     return forModelData(modelData)
       .useChaining()
-      .removeById(item.id)
+      .deleteById(item.id)
       .addItem(item, group.id)
       .getData();
   };

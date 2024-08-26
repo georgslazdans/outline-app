@@ -9,8 +9,8 @@ const moveToNewGroup = (modelData: ModelData) => {
     const group = itemGroupOf([item, target]);
     return forModelData(modelData)
       .useChaining()
-      .removeById(item.id)
-      .removeById(target.id)
+      .deleteById(item.id)
+      .deleteById(target.id)
       .addItem(group, parentId)
       .getData();
   };

@@ -4,7 +4,7 @@ import ItemGroup from "../../item/ItemGroup";
 import ModelData from "../../ModelData";
 import addItem from "./AddItem";
 import duplicateItemFor from "./DuplicateItem";
-import removeById from "./RemoveById";
+import deleteById from "./RemoveById";
 import reorderItems from "./ReorderItems";
 import updateItem from "./UpdateItem";
 
@@ -16,10 +16,10 @@ const itemModificationsFor = (data: ModelData) => {
         items: updateItem(item, data.items),
       };
     },
-    removeById: (id: string): ModelData => {
+    deleteById: (id: string): ModelData => {
       return {
         ...data,
-        items: removeById(id, data.items),
+        items: deleteById(id, data.items),
       };
     },
     addItem: (item: Item, groupId?: string): ModelData => {
