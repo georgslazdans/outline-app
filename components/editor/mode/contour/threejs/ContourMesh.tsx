@@ -6,12 +6,15 @@ import ContourIndex from "../ContourIndex";
 import ContourPoints from "@/lib/point/ContourPoints";
 import Draggable from "./Draggable";
 import Point from "@/lib/point/Point";
+import { useFrame, useThree } from "@react-three/fiber";
+import useDebounced from "@/lib/utils/Debounced";
 
 type Props = {
   contourIndex: number;
   contour: ContourPoints;
   onContourChange: (contour: ContourPoints) => void;
   selectedPoint?: ContourIndex;
+  transparent: boolean;
 };
 
 const ContourMesh = memo(function ContourMeshFun({
@@ -19,12 +22,31 @@ const ContourMesh = memo(function ContourMeshFun({
   contour,
   onContourChange,
   selectedPoint,
+  transparent,
 }: Props) {
+  const { camera } = useThree();
   const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
+  const [pointSize, setPointSize] = useState(1);
 
   useEffect(() => {
     setCurrentPoints(contour.points);
   }, [contour]);
+
+  const { onChange: setPointSizeDebounced } = useDebounced(setPointSize, 200);
+
+  const cameraScaleFunction = (x: number) => {
+    const maxValue = 5;
+    const minValue = 0.2;
+    const result = 4.4 - (1.1 * Math.log10(x)) + 0.1;
+    return Math.max(Math.min(result, maxValue), minValue);
+  };
+
+  useFrame((state, delta, xrFrame) => {
+    const size = cameraScaleFunction(camera.zoom);
+    if (size != pointSize) {
+      setPointSizeDebounced(size);
+    }
+  });
 
   const onPointDrag = (pointIndex: number) => {
     return (l: Matrix4, _dl: Matrix4, w: Matrix4, dw: Matrix4) => {
@@ -67,6 +89,8 @@ const ContourMesh = memo(function ContourMeshFun({
                   contourIndex={contourIndex}
                   index={index}
                   color={isPointSelected(index) ? "red" : "black"}
+                  transparent={transparent}
+                  size={pointSize}
                 />
               </Draggable>
             );

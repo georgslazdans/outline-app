@@ -30,18 +30,16 @@ const CanvasSelection = ({ children }: Props) => {
       setTransformEditFocused(false);
       return;
     }
-    const doesItem = forModelData(modelData).doesItem;
     const itemId = itemIdOf(obj);
     if (itemId) {
+      const { haveSameParentsAs, haveNestedSibling } =
+        forModelData(modelData).doesItem(itemId);
       const parentId = forModelData(modelData).findParentId(itemId);
       if (parentId) {
         if (parentId == selectedId) {
           setSelectedId(itemId);
         } else {
-          if (
-            doesItem(itemId).haveSameParentsAs(selectedId) ||
-            doesItem(itemId).haveNestedSibling(selectedId)
-          ) {
+          if (haveSameParentsAs(selectedId) || haveNestedSibling(selectedId)) {
             setSelectedId(itemId);
           } else {
             setSelectedId(parentId);

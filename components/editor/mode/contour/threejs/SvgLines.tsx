@@ -16,6 +16,7 @@ const SvgLines = memo(function SvgLineMesh({ points }: Props) {
       points={[...vertices, vertices[0]]}
       color="black"
       lineWidth={3}
+      depthTest={false}
     ></Line>
   );
 });

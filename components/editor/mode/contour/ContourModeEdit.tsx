@@ -20,7 +20,7 @@ type Props = {
 const ContourModeEdit = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
-  const { selectedId, selectedPoint } = useEditorContext();
+  const { selectedId, selectedPoint, wireframe } = useEditorContext();
 
   const selectedItem = useMemo(() => {
     if (selectedId) {
@@ -41,7 +41,9 @@ const ContourModeEdit = ({ dictionary }: Props) => {
     if (selectedItem?.type == ItemType.Contour) {
       const { updateItem } = forModelData(modelData);
 
-      const updatedPoints = modifyContourList(contours).scalePoints(1 / POINT_SCALE_THREEJS);
+      const updatedPoints = modifyContourList(contours).scalePoints(
+        1 / POINT_SCALE_THREEJS
+      );
       setModelData(
         updateItem({
           ...selectedItem,
@@ -75,6 +77,7 @@ const ContourModeEdit = ({ dictionary }: Props) => {
                 contour={contour}
                 onContourChange={onContourChanged(index)}
                 selectedPoint={selectedPoint}
+                transparent={wireframe}
               ></ContourMesh>
             );
           })}

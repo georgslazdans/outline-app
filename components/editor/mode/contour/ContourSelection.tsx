@@ -13,10 +13,11 @@ const ContourSelection = ({ children }: Props) => {
   const { setSelectedPoint } = useEditorContext();
 
   const onSelected = (obj: any) => {
-    console.log("Selected", obj);
     if (obj.length > 0) {
       const point = obj[0];
       const pointIndex = point.userData?.contourIndex as ContourIndex;
+      console.log("Selected", pointIndex, obj);
+
       if (pointIndex) {
         setSelectedPoint(pointIndex);
       }
@@ -25,7 +26,9 @@ const ContourSelection = ({ children }: Props) => {
 
   return (
     <>
-      <Select onChangePointerUp={(obj) => onSelected(obj)}>{children}</Select>
+      <Select multiple onChangePointerUp={(obj) => onSelected(obj)}>
+        {children}
+      </Select>
     </>
   );
 };
