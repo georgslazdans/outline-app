@@ -7,7 +7,7 @@ import ItemName from "./ItemName";
 import Item from "@/lib/replicad/model/Item";
 import ItemTypeIcon from "../icon/itemType/ItemTypeIcon";
 import DuplicateItem from "./action/DuplicateItem";
-import RemoveSelected from "./action/RemoveSelected";
+import DeleteSelected from "./action/DeleteSelected";
 import BooleanOperationIcon from "../icon/boolean/BooleanOperationIcon";
 import BooleanOperation from "@/lib/replicad/model/BooleanOperation";
 
@@ -92,10 +92,10 @@ const TreeElement = ({
               dictionary={dictionary}
               selectedItem={item}
             ></DuplicateItem>
-            <RemoveSelected
+            <DeleteSelected
               dictionary={dictionary}
               item={item}
-            ></RemoveSelected>
+            ></DeleteSelected>
           </div>
         )}
       </div>

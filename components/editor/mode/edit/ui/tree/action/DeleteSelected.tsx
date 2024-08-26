@@ -33,7 +33,7 @@ const trashCanSvg = (
   </svg>
 );
 
-const RemoveSelected = ({ dictionary, item }: Props) => {
+const DeleteSelected = ({ dictionary, item }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
   const { setSelectedId, inputFieldFocused } = useEditorContext();
 
@@ -68,4 +68,4 @@ const RemoveSelected = ({ dictionary, item }: Props) => {
   );
 };
 
-export default RemoveSelected;
+export default DeleteSelected;
