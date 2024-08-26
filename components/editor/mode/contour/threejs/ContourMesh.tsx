@@ -1,17 +1,17 @@
-import React, { memo, useCallback } from "react";
-import SvgPoint from "./SvgPoint";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import PointMesh from "./PointMesh";
 import { Matrix4, Vector3 } from "three";
 import SvgLines from "./SvgLines";
 import ContourIndex from "../ContourIndex";
 import ContourPoints from "@/lib/point/ContourPoints";
+import Draggable from "./Draggable";
+import Point from "@/lib/point/Point";
 
 type Props = {
   contourIndex: number;
   contour: ContourPoints;
   onContourChange: (contour: ContourPoints) => void;
   selectedPoint?: ContourIndex;
-  onPointMoveStart: () => void;
-  onPointMoveEnd: () => void;
 };
 
 const ContourMesh = memo(function ContourMeshFun({
@@ -19,9 +19,13 @@ const ContourMesh = memo(function ContourMeshFun({
   contour,
   onContourChange,
   selectedPoint,
-  onPointMoveStart,
-  onPointMoveEnd,
 }: Props) {
+  const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
+
+  useEffect(() => {
+    setCurrentPoints(contour.points);
+  }, [contour]);
+
   const onPointDrag = (pointIndex: number) => {
     return (l: Matrix4, _dl: Matrix4, w: Matrix4, dw: Matrix4) => {
       const pos = new Vector3();
@@ -30,8 +34,9 @@ const ContourMesh = memo(function ContourMeshFun({
       const delta = new Vector3();
       delta.setFromMatrixPosition(dw);
 
-      const updatedPoints = [...contour.points];
+      const updatedPoints = [...currentPoints];
       updatedPoints[pointIndex] = { x: pos.x + delta.x, y: pos.y + delta.y };
+      setCurrentPoints(updatedPoints);
       onContourChange({ points: updatedPoints });
     };
   };
@@ -46,27 +51,29 @@ const ContourMesh = memo(function ContourMeshFun({
     [contourIndex, selectedPoint]
   );
 
-  // TODO onPointMoveStart and onPointMoveEnd is ugly
-  // TODO create some hook for threejs render stuff
-  // Maybe there is a camera already there...
-
   return (
     <group>
-      {contour.points.map((point, index) => {
-        return (
-          <SvgPoint
-            key={index}
-            contourIndex={contourIndex}
-            index={index}
-            position={new Vector3(point.x, point.y, 0)}
-            color={isPointSelected(index) ? "red" : "black"}
-            onDragStart={onPointMoveStart}
-            onDragEnd={onPointMoveEnd}
-            onDrag={onPointDrag(index)}
-          />
-        );
-      })}
-      <SvgLines contour={contour}></SvgLines>
+      {currentPoints?.length > 0 && (
+        <>
+          {currentPoints.map((point, index) => {
+            return (
+              <Draggable
+                key={index}
+                enabled={isPointSelected(index)}
+                position={new Vector3(point.x, point.y, 0)}
+                onPointDrag={onPointDrag(index)}
+              >
+                <PointMesh
+                  contourIndex={contourIndex}
+                  index={index}
+                  color={isPointSelected(index) ? "red" : "black"}
+                />
+              </Draggable>
+            );
+          })}
+          <SvgLines points={currentPoints}></SvgLines>
+        </>
+      )}
     </group>
   );
 });

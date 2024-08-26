@@ -2,15 +2,16 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ContourMesh from "./threejs/ContourMesh";
-import ContourIndex from "./ContourIndex";
-import { Select } from "@react-three/drei";
 import { useEditorContext } from "../../EditorContext";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
-import ContourPoints, { modifyContour, modifyContourList } from "@/lib/point/ContourPoints";
+import ContourPoints, { modifyContourList } from "@/lib/point/ContourPoints";
+import ContourSelection from "./ContourSelection";
+import useDebounced from "@/lib/utils/Debounced";
+import { POINT_SCALE_THREEJS } from "@/lib/point/Point";
 
 type Props = {
   dictionary: Dictionary;
@@ -19,66 +20,52 @@ type Props = {
 const ContourModeEdit = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
-  const scale = 0.01;
+  const { selectedId, selectedPoint } = useEditorContext();
 
-  const { selectedId, selectedPoint, setSelectedPoint, setDisableCamera } =
-    useEditorContext();
+  const selectedItem = useMemo(() => {
+    if (selectedId) {
+      return forModelData(modelData).findById(selectedId);
+    }
+  }, [modelData, selectedId]);
 
   const [scaledContours, setScaledContours] = useState<ContourPoints[]>([]);
 
   useEffect(() => {
-    if (selectedId) {
-      const item = forModelData(modelData).getById(selectedId);
-      if (item?.type == ItemType.Contour) {
-        const scaledPoints = modifyContourList(item.points).scalePoints(scale);
-        setScaledContours(scaledPoints);
-      } else {
-        throw new Error("Can't edit non contour objects!");
-      }
+    if (selectedItem?.type == ItemType.Contour) {
+      const { scalePoints } = modifyContourList(selectedItem.points);
+      setScaledContours(scalePoints(POINT_SCALE_THREEJS));
     }
-  }, [modelData, selectedId]);
+  }, [modelData, selectedItem]);
 
-  const updateModelData = (contourPoints: ContourPoints[]) => {
-    if (selectedId) {
-      const updatedPoints = modifyContourList(contourPoints).scalePoints(1/scale);
-      const item = forModelData(modelData).getById(selectedId);
-      if (item && item.type == ItemType.Contour) {
-        const updatedData = forModelData(modelData).updateItem({
-          ...item,
+  const updateModelData = (contours: ContourPoints[]) => {
+    if (selectedItem?.type == ItemType.Contour) {
+      const { updateItem } = forModelData(modelData);
+
+      const updatedPoints = modifyContourList(contours).scalePoints(1 / POINT_SCALE_THREEJS);
+      setModelData(
+        updateItem({
+          ...selectedItem,
           points: updatedPoints,
-        });
-        setModelData(
-          updatedData,
-          EditorHistoryType.CONTOUR_UPDATED,
-          selectedId
-        );
-      } else {
-        throw new Error("Item not found: " + selectedId);
-      }
+        }),
+        EditorHistoryType.CONTOUR_UPDATED,
+        selectedItem.id
+      );
     }
   };
+
+  const { onChange: debouncedUpdate } = useDebounced(updateModelData);
 
   const onContourChanged = (contourIndex: number) => {
     return (contour: ContourPoints) => {
       const updatedContours = [...scaledContours];
       updatedContours[contourIndex] = contour;
-      updateModelData(updatedContours);
+      debouncedUpdate(updatedContours);
     };
-  };
-
-  const onSelected = (obj: any) => {
-    if (obj.length > 0) {
-      const point = obj[0];
-      const pointIndex = point.userData?.contourIndex as ContourIndex;
-      if (pointIndex) {
-        setSelectedPoint(pointIndex);
-      }
-    }
   };
 
   return (
     <>
-      <Select onChangePointerUp={(obj) => onSelected(obj)}>
+      <ContourSelection>
         {scaledContours &&
           scaledContours.map((contour, index) => {
             return (
@@ -88,12 +75,10 @@ const ContourModeEdit = ({ dictionary }: Props) => {
                 contour={contour}
                 onContourChange={onContourChanged(index)}
                 selectedPoint={selectedPoint}
-                onPointMoveStart={() => setDisableCamera(true)}
-                onPointMoveEnd={() => setDisableCamera(false)}
               ></ContourMesh>
             );
           })}
-      </Select>
+      </ContourSelection>
     </>
   );
 };

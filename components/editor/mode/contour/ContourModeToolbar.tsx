@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useState } from "react";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
-import SelectedPointEdit from "./SelectedPointEdit";
+import SelectedPointEdit from "./ui/SelectedPointEdit";
 import Button from "@/components/Button";
 import ScaleAlongNormal from "./actions/ScaleAlongNormal";
 import { useEditorContext } from "../../EditorContext";

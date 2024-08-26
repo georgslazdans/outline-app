@@ -3,10 +3,6 @@ import ContourPoints from "../ContourPoints";
 
 const centerPoints = (contour: ContourPoints) => {
   return (paperDimensions: PaperDimensions): ContourPoints => {
-    if (!paperDimensions?.width) {
-      console.log("WTF");
-      debugger;
-    }
     const translateX = paperDimensions.width / 2;
     const translateY = paperDimensions.height / 2;
     return {

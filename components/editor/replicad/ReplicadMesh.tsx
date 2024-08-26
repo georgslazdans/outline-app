@@ -9,6 +9,7 @@ import {
 } from "replicad-threejs-helper";
 import { ShapeMesh } from "replicad";
 import { Outlines } from "@react-three/drei";
+import { POINT_SCALE_THREEJS } from "@/lib/point/Point";
 
 type Props = {
   faces: ShapeMesh;
@@ -57,12 +58,13 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
     [invalidate]
   );
 
-  const scale = 0.01;
-
   const outlineColor = selected ? "#DA4167" : "#1296b6";
 
   return (
-    <group scale={[scale, scale, scale]} userData={{ id: id }}>
+    <group
+      scale={[POINT_SCALE_THREEJS, POINT_SCALE_THREEJS, POINT_SCALE_THREEJS]}
+      userData={{ id: id }}
+    >
       {!wireframe && (
         <mesh geometry={body.current} userData={{ id: id }}>
           <meshStandardMaterial

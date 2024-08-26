@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditorContext } from "@/components/editor/EditorContext";
+import { POINT_SCALE_THREEJS } from "@/lib/point/Point";
 import {
   zeroPoint,
   toVector3,
@@ -27,8 +28,6 @@ type Props = {
   onItemChange: (item: Item) => void;
 };
 
-const SCALE = 0.01;
-
 const TransformControls = memo(function TransformControls({
   item,
   children,
@@ -45,7 +44,7 @@ const TransformControls = memo(function TransformControls({
     if (item.translation) {
       translation = item.translation;
     }
-    return toVector3(translation).multiplyScalar(SCALE);
+    return toVector3(translation).multiplyScalar(POINT_SCALE_THREEJS);
   }, [item]);
 
   const getRotation = useCallback(() => {
@@ -94,7 +93,7 @@ const TransformControls = memo(function TransformControls({
 
     const pos = new Vector3();
     pos.setFromMatrixPosition(local);
-    pos.multiplyScalar(1 / SCALE);
+    pos.multiplyScalar(1 / POINT_SCALE_THREEJS);
 
     const rotation = new Euler();
     rotation.setFromRotationMatrix(local);
