@@ -35,7 +35,7 @@ const trashCanSvg = (
 
 const DeleteSelected = ({ dictionary, item }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
-  const { setSelectedId, inputFieldFocused } = useEditorContext();
+  const { setSelectedId, useHotkey } = useEditorContext();
 
   const isGridfinity = () => {
     return item?.type == ItemType.Gridfinity;
@@ -56,7 +56,7 @@ const DeleteSelected = ({ dictionary, item }: Props) => {
           id={id}
           className="!w-8 !p-1 !text-red"
           onClick={onRemoveItem}
-          hotkey={!inputFieldFocused ? "Delete" : ""}
+          {...useHotkey("Delete")}
         >
           {trashCanSvg}
           <Tooltip anchorSelect={"#" + id} place="top">

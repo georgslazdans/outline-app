@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import SelectedPointEdit from "./ui/SelectedPointEdit";
 import Button from "@/components/Button";
-import ScaleAlongNormal from "./ui/actions/ScaleAlongNormal";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
@@ -13,6 +12,8 @@ import { useEditorHistoryContext } from "../../history/EditorHistoryContext";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
 import ContourPoints from "@/lib/point/ContourPoints";
+import ScaleAlongNormal from "./ui/ScaleAlongNormal";
+import DeletePoint from "./ui/DeletePoint";
 
 type Props = {
   dictionary: Dictionary;
@@ -21,8 +22,7 @@ type Props = {
 const ContourModeToolbar = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
-  const { selectedId, selectedPoint, setSelectedPoint, setEditorMode } =
-    useEditorContext();
+  const { selectedId, selectedPoint, setEditorMode } = useEditorContext();
   const { compressHistoryEvents } = useEditorHistoryContext();
 
   const getSelectedContour = useCallback(() => {
@@ -62,24 +62,6 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
     }
   };
 
-  const onDeletePoint = () => {
-    if (selectedContourPoints && selectedPoint) {
-      const updatedPoints = selectedContourPoints.map((contour, index) => {
-        if (index === selectedPoint.contour) {
-          const updatedContour = {
-            points: contour.points.filter(
-              (_, pointIndex) => pointIndex !== selectedPoint.point
-            ),
-          };
-          return updatedContour;
-        }
-        return contour;
-      });
-      setSelectedPoint(undefined);
-      onContourChanged(updatedPoints);
-    }
-  };
-
   const onDone = () => {
     compressHistoryEvents(EditorHistoryType.CONTOUR_UPDATED);
     setEditorMode(EditorMode.EDIT);
@@ -87,7 +69,7 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
 
   return (
     <>
-      <Button onClick={onDone}>
+      <Button className="mb-2" onClick={onDone}>
         <label>Done</label>
       </Button>
       {selectedContourPoints && (
@@ -101,9 +83,11 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
       )}
       {selectedContourPoints && selectedPoint && (
         <>
-          <Button onClick={onDeletePoint} hotkey="Delete">
-            <label>Delete Point</label>
-          </Button>
+          <DeletePoint
+            dictionary={dictionary}
+            selectedContour={selectedContourPoints}
+            onContourChanged={onContourChanged}
+          ></DeletePoint>
           <SelectedPointEdit
             dictionary={dictionary}
             contourPoints={selectedContourPoints}

@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
 import EditorMode from "./mode/EditorMode";
 import ContourIndex from "./mode/contour/ContourIndex";
 
@@ -15,10 +21,16 @@ type EditorContextType = {
   setSelectedPoint: React.Dispatch<
     React.SetStateAction<ContourIndex | undefined>
   >;
-  inputFieldFocused: boolean;
   setInputFieldFocused: React.Dispatch<React.SetStateAction<boolean>>;
   transformEditFocused: boolean;
   setTransformEditFocused: React.Dispatch<React.SetStateAction<boolean>>;
+  useHotkey: (
+    key: string,
+    hotkeyCtrl?: boolean
+  ) => {
+    hotkey: string;
+    hotkeyCtrl: boolean | undefined;
+  };
 };
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
@@ -33,6 +45,16 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
 
   const [transformEditFocused, setTransformEditFocused] = useState(false);
 
+  const useHotkey = useCallback(
+    (key: string, hotkeyCtrl?: boolean) => {
+      return {
+        hotkey: !inputFieldFocused ? key : "",
+        hotkeyCtrl: hotkeyCtrl && !inputFieldFocused ? true : undefined,
+      };
+    },
+    [inputFieldFocused]
+  );
+
   return (
     <EditorContext.Provider
       value={{
@@ -46,10 +68,10 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
         setSelectedId,
         selectedPoint,
         setSelectedPoint,
-        inputFieldFocused,
         setInputFieldFocused,
         transformEditFocused,
         setTransformEditFocused,
+        useHotkey,
       }}
     >
       {children}

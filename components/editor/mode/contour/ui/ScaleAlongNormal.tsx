@@ -2,11 +2,11 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useState } from "react";
-import EditField from "../../../EditField";
 import ContourPoints, { modifyContour } from "@/lib/point/ContourPoints";
 import findLargestContourOf from "@/lib/point/queries/FindLargestContourOf";
 import ActionGroup from "@/components/editor/ui/action/ActionGroup";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
+import EditField from "../../EditField";
 
 type Props = {
   dictionary: Dictionary;

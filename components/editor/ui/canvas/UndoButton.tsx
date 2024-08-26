@@ -9,7 +9,7 @@ import { Tooltip } from "react-tooltip";
 type Props = {};
 
 const UndoButton = ({}: Props) => {
-  const { inputFieldFocused } = useEditorContext();
+  const { useHotkey } = useEditorContext();
   const { canUndo, undo } = useEditorHistoryContext();
 
   const icon = (
@@ -36,8 +36,7 @@ const UndoButton = ({}: Props) => {
           id={id}
           className="px-3 py-3 mr-auto mt-2 ml-2"
           onClick={undo}
-          hotkey={!inputFieldFocused ? "z" : undefined}
-          hotkeyCtrl={!inputFieldFocused ? true : undefined}
+          {...useHotkey("z", true)}
         >
           {icon}
           <Tooltip anchorSelect={"#" + id} place="top">
