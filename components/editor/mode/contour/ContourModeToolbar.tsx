@@ -14,6 +14,8 @@ import { useModelDataContext } from "../../ModelDataContext";
 import ContourPoints from "@/lib/point/ContourPoints";
 import ScaleAlongNormal from "./ui/ScaleAlongNormal";
 import DeletePoint from "./ui/DeletePoint";
+import AddButtonGroup from "./ui/add/AddGroup";
+import ActionButtons from "../../ui/action/ActionButtons";
 
 type Props = {
   dictionary: Dictionary;
@@ -72,15 +74,20 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
       <Button className="mb-2" onClick={onDone}>
         <label>Done</label>
       </Button>
-      {selectedContourPoints && (
-        <div className="mb-2">
-          <ScaleAlongNormal
-            dictionary={dictionary}
-            contour={selectedContourPoints}
-            onContourChanged={onContourChanged}
-          ></ScaleAlongNormal>
-        </div>
-      )}
+
+      <ActionButtons dictionary={dictionary}>
+        {selectedContourPoints && (
+          <>
+            <ScaleAlongNormal
+              dictionary={dictionary}
+              contour={selectedContourPoints}
+              onContourChanged={onContourChanged}
+            ></ScaleAlongNormal>
+            <AddButtonGroup dictionary={dictionary}></AddButtonGroup>
+          </>
+        )}
+      </ActionButtons>
+
       {selectedContourPoints && selectedPoint && (
         <>
           <DeletePoint
