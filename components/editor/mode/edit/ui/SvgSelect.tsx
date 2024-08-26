@@ -3,10 +3,10 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Context } from "@/context/DetailsContext";
-import { centerPoints, ContourPoints } from "@/lib/Point";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import SelectField, { Option } from "@/components/fields/SelectField";
 import { useContourCacheContext } from "../../../cache/ContourCacheContext";
+import ContourPoints, { modifyContourList } from "@/lib/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;
@@ -15,7 +15,10 @@ type Props = {
 
 const centeredPointsOf = (context: Context): ContourPoints[] => {
   const paperDimensions = paperDimensionsOfDetailsContext(context);
-  return context.contours.map((it) => centerPoints(it, paperDimensions));
+  if (context.contours && context.contours.length > 0) {
+    return modifyContourList(context.contours).centerPoints(paperDimensions);
+  }
+  return [];
 };
 
 const SvgSelect = ({ dictionary, onSelect }: Props) => {

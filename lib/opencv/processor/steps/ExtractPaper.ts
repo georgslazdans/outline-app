@@ -5,7 +5,7 @@ import ProcessingStep, {
   ProcessResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
-import Point, { pointsFrom } from "../../../Point";
+import Point from "../../../point/Point";
 import { contoursOf, largestContourOf } from "../../util/contours/Contours";
 import StepName from "./StepName";
 import imageWarper from "../ImageWarper";
@@ -13,6 +13,7 @@ import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSettings, { paperDimensionsOf } from "../../PaperSettings";
 import Options from "@/lib/utils/Options";
 import Settings, { inSettings } from "../../Settings";
+import { pointsFrom } from "@/lib/point/ContourPoints";
 
 export enum ReuseStep {
   BLUR = StepName.BLUR,

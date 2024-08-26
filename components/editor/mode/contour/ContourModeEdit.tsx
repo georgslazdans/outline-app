@@ -4,20 +4,20 @@ import { Dictionary } from "@/app/dictionaries";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React, { useEffect, useState } from "react";
 import ContourMesh from "./threejs/ContourMesh";
-import { ContourPoints, scalePoints } from "@/lib/Point";
 import ContourIndex from "./ContourIndex";
 import { Select } from "@react-three/drei";
 import { useEditorContext } from "../../EditorContext";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
+import ContourPoints, { modifyContour, modifyContourList } from "@/lib/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;
 };
 
 const ContourModeEdit = ({ dictionary }: Props) => {
-  const {modelData, setModelData} = useModelDataContext();
+  const { modelData, setModelData } = useModelDataContext();
 
   const scale = 0.01;
 
@@ -30,7 +30,7 @@ const ContourModeEdit = ({ dictionary }: Props) => {
     if (selectedId) {
       const item = forModelData(modelData).getById(selectedId);
       if (item?.type == ItemType.Contour) {
-        const scaledPoints = item.points.map((it) => scalePoints(it, scale));
+        const scaledPoints = modifyContourList(item.points).scalePoints(scale);
         setScaledContours(scaledPoints);
       } else {
         throw new Error("Can't edit non contour objects!");
@@ -40,9 +40,7 @@ const ContourModeEdit = ({ dictionary }: Props) => {
 
   const updateModelData = (contourPoints: ContourPoints[]) => {
     if (selectedId) {
-      const updatedPoints = contourPoints.map((it) =>
-        scalePoints(it, 1 / scale)
-      );
+      const updatedPoints = modifyContourList(contourPoints).scalePoints(1/scale);
       const item = forModelData(modelData).getById(selectedId);
       if (item && item.type == ItemType.Contour) {
         const updatedData = forModelData(modelData).updateItem({

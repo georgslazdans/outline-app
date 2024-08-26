@@ -1,9 +1,9 @@
 "use client";
 
-import { ContourPoints } from "@/lib/Point";
 import React, { memo } from "react";
 import { Vector3 } from "three";
 import { Line } from "@react-three/drei";
+import ContourPoints from "@/lib/point/ContourPoints";
 
 type Props = {
   contour: ContourPoints;

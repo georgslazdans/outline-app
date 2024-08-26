@@ -3,11 +3,11 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useCallback, useState } from "react";
 import SvgSelect from "./SvgSelect";
-import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import { useEditorContext } from "../../../EditorContext";
 import NumberField from "@/components/fields/NumberField";
+import ContourPoints from "@/lib/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;

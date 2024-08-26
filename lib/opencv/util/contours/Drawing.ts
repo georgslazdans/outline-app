@@ -1,6 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import ImageContours, { largestContourOf } from "./Contours";
-import Point, { ContourPoints } from "@/lib/Point";
+import Point from "@/lib/point/Point";
+import ContourPoints from "@/lib/point/ContourPoints";
 
 const PRIMARY_COLOR = new cv.Scalar(218, 65, 103);
 

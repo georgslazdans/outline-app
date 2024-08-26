@@ -1,5 +1,6 @@
 import { SVGLoader } from "three-stdlib";
-import Point, { ContourPoints } from "../Point";
+import Point from "../point/Point";
+import ContourPoints from "../point/ContourPoints";
 
 
 // TODO Add support for holes

@@ -11,8 +11,8 @@ import Svg from "@/lib/svg/Svg";
 import { downloadFile } from "@/lib/utils/Download";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
-import { centerPoints } from "@/lib/Point";
 import useNavigationHistory from "@/context/NavigationHistory";
+import { modifyContourList } from "@/lib/point/ContourPoints";
 
 type Props = {
   context: Context;
@@ -38,8 +38,8 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
   const exportSvg = () => {
     if (hasSvg) {
       const paperDimensions = paperDimensionsOfDetailsContext(context);
-      const contours = context.contours!.map((it) =>
-        centerPoints(it, paperDimensions)
+      const contours = modifyContourList(context.contours!).centerPoints(
+        paperDimensions
       );
       const svg = Svg.from(contours, paperDimensions);
       const blob = new Blob([svg], {

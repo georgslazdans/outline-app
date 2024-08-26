@@ -2,11 +2,11 @@
 
 import { useEditorContext } from "@/components/editor/EditorContext";
 import {
+  zeroPoint,
   toVector3,
   toEuler,
   fromVector3,
   fromEuler,
-  zeroPoint,
 } from "@/lib/Point3D";
 import Item from "@/lib/replicad/model/Item";
 import useDebounced from "@/lib/utils/Debounced";

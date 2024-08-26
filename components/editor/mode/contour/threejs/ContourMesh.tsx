@@ -1,10 +1,9 @@
-import { ContourPoints } from "@/lib/Point";
 import React, { memo, useCallback } from "react";
 import SvgPoint from "./SvgPoint";
 import { Matrix4, Vector3 } from "three";
 import SvgLines from "./SvgLines";
-import { DragControls, Select } from "@react-three/drei";
 import ContourIndex from "../ContourIndex";
+import ContourPoints from "@/lib/point/ContourPoints";
 
 type Props = {
   contourIndex: number;

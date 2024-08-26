@@ -2,14 +2,12 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
-import {
-  ContourPoints,
-  findLargestContourOf,
-  scaleAlongNormal,
-  scaleAlongNormalNew,
-} from "@/lib/Point";
 import React, { ChangeEvent, useState } from "react";
-import EditField from "../EditField";
+import EditField from "../../EditField";
+import ContourPoints, {
+  modifyContourList,
+} from "@/lib/point/ContourPoints";
+import findLargestContourOf from "@/lib/point/queries/FindLargestContourOf";
 
 type Props = {
   dictionary: Dictionary;
@@ -27,12 +25,14 @@ const ScaleAlongNormal = ({ dictionary, contour, onContourChanged }: Props) => {
 
   const scaleContour = () => {
     const base = findLargestContourOf(contour);
-    const scaledContours = contour.map((it) => {
-      if (it == base) {
-        scaleAlongNormalNew(it, -scale);
-      }
-      return scaleAlongNormalNew(it, scale);
-    });
+    const scaledContours = modifyContourList(contour).scaleAlongNormal(
+      base ? -scale : scale
+    );
+
+    // contour.map((it) => {
+    //   const { scaleAlongNormal } = modifyContour(it);
+    //   return scaleAlongNormal(it == base ? -scale : scale);
+    // });
     onContourChanged(scaledContours);
   };
 

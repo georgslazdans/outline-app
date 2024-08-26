@@ -4,15 +4,15 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useState } from "react";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import SelectedPointEdit from "./SelectedPointEdit";
-import { ContourPoints } from "@/lib/Point";
 import Button from "@/components/Button";
-import ScaleAlongNormal from "./ScaleAlongNormal";
+import ScaleAlongNormal from "./actions/ScaleAlongNormal";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import { useEditorHistoryContext } from "../../history/EditorHistoryContext";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
+import ContourPoints from "@/lib/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;

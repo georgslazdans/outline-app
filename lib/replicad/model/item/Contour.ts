@@ -1,9 +1,9 @@
-import { ContourPoints } from "@/lib/Point";
 import ItemType from "../ItemType";
 import Item from "../Item";
 import BooleanOperation from "../BooleanOperation";
-import { zeroPoint } from "@/lib/Point3D";
 import { v4 as randomUUID } from 'uuid';
+import ContourPoints from "@/lib/point/ContourPoints";
+import { zeroPoint } from "@/lib/Point3D";
 
 type Contour = {
   type: ItemType.Contour;

@@ -5,8 +5,8 @@ import PrimitiveParams, {
 import BooleanOperation from "../BooleanOperation";
 import Item from "../Item";
 import PrimitiveType from "./PrimitiveType";
-import { zeroPoint } from "@/lib/Point3D";
 import { v4 as randomUUID } from 'uuid';
+import { zeroPoint } from "@/lib/Point3D";
 
 type Primitive = {
   type: ItemType.Primitive;

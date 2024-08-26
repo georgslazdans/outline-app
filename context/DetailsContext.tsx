@@ -14,7 +14,7 @@ import {
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
-import { ContourPoints } from "@/lib/Point";
+import ContourPoints from "@/lib/point/ContourPoints";
 
 const DetailsContext = createContext<any>(null);
 

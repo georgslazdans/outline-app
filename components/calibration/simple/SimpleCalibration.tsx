@@ -11,9 +11,9 @@ import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
 import { OutlineImageViewer } from "./OutlineImageViewer";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
-import { centerPoints } from "@/lib/Point";
 import SelectField from "@/components/fields/SelectField";
 import SimpleSettingsButtons from "./SimpleSettingsButtons";
+import { modifyContourList } from "@/lib/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;
@@ -44,8 +44,8 @@ const SimpleCalibration = ({
   const exportSvg = useCallback(() => {
     const lastStep = stepResults[stepResults.length - 1];
     const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
-    const contours = lastStep.contours!.map((it) =>
-      centerPoints(it, paperDimensions)
+    const contours = modifyContourList(lastStep.contours!).centerPoints(
+      paperDimensions
     );
     const svg = Svg.from(contours, paperDimensions);
     const blob = new Blob([svg], {

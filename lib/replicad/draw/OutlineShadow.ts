@@ -1,6 +1,8 @@
-import Point, { ContourPoints, findLargestContourOf } from "@/lib/Point";
+import Point from "@/lib/point/Point";
 import { draw, Drawing } from "replicad";
 import ReplicadModelData from "./ReplicadModelData";
+import ContourPoints from "@/lib/point/ContourPoints";
+import findLargestContourOf from "@/lib/point/queries/FindLargestContourOf";
 
 const drawContour = (points: Point[]): Drawing => {
   const drawPen = draw();

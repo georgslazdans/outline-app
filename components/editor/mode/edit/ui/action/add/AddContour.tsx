@@ -1,11 +1,9 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import Button from "@/components/Button";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import React, { useState } from "react";
 import ImportDialog from "../../ImportDialog";
-import { ContourPoints } from "@/lib/Point";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import { contourItemOf } from "@/lib/replicad/model/item/Contour";
@@ -15,6 +13,7 @@ import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import getItemTypeIconFor from "../../icon/itemType/Icons";
 import ActionButton from "../ActionButton";
+import ContourPoints from "@/lib/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;
