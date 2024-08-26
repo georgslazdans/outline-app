@@ -2,8 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useState } from "react";
-import ContourPoints, { modifyContour } from "@/lib/point/ContourPoints";
-import findLargestContourOf from "@/lib/point/queries/FindLargestContourOf";
+import ContourPoints, { modifyContour, queryContourList } from "@/lib/point/ContourPoints";
 import ActionGroup from "@/components/editor/ui/action/ActionGroup";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
 import EditField from "../../EditField";
@@ -39,7 +38,8 @@ const ScaleAlongNormal = ({ dictionary, contour, onContourChanged }: Props) => {
   };
 
   const scaleContour = () => {
-    const base = findLargestContourOf(contour);
+    const {findLargestContourOf} = queryContourList(contour);
+    const base = findLargestContourOf();
     const scaledContours = contour.map((it) => {
       const { scaleAlongNormal } = modifyContour(it);
       console.log("Is base", it == base, it, base);

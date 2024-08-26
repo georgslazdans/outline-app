@@ -1,7 +1,8 @@
 import ContourPoints from "../ContourPoints";
 import centerPoints from "./CenterPoints";
-import deleteContourPoint from "./DeleteContourIndex";
-import deletePoint from "./DeletePoint";
+import { crudListOnlyApi, crudSingleOnlyApi } from "./crud";
+import deleteContourPoint from "./crud/DeleteContourIndex";
+import deletePoint from "./crud/DeletePoint";
 import scaleAlongNormalNew from "./ScaleAlongNormal";
 import scalePoints from "./ScalePoints";
 
@@ -19,13 +20,13 @@ const modificationApi = () => {
 
 const singleOnlyApi = () => {
   return {
-    deletePoint: deletePoint,
+    ...crudSingleOnlyApi(),
   };
 };
 
 const listOnlyApi = () => {
   return {
-    deleteContourPoint: deleteContourPoint,
+    ...crudListOnlyApi(),
   };
 };
 

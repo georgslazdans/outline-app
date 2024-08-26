@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import ContourPoint from "./ContourPoint";
 import { Matrix4, Vector3 } from "three";
 import ContourLines from "./ContourLines";
-import ContourIndex from "../ContourIndex";
+import ContourIndex from "../../../../../lib/point/ContourIndex";
 import ContourPoints from "@/lib/point/ContourPoints";
 import Draggable from "./Draggable";
 import Point from "@/lib/point/Point";

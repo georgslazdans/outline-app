@@ -1,8 +1,7 @@
 import Point from "@/lib/point/Point";
 import { draw, Drawing } from "replicad";
 import ReplicadModelData from "./ReplicadModelData";
-import ContourPoints from "@/lib/point/ContourPoints";
-import findLargestContourOf from "@/lib/point/queries/FindLargestContourOf";
+import ContourPoints, { queryContourList } from "@/lib/point/ContourPoints";
 
 const drawContour = (points: Point[]): Drawing => {
   const drawPen = draw();
@@ -16,8 +15,12 @@ const drawContour = (points: Point[]): Drawing => {
   return drawPen.close();
 };
 
-const drawShadow = (contourPoints: ContourPoints[], height: number): ReplicadModelData => {
-  let basePoints = findLargestContourOf(contourPoints);
+const drawShadow = (
+  contourPoints: ContourPoints[],
+  height: number
+): ReplicadModelData => {
+  const { findLargestContourOf } = queryContourList(contourPoints);
+  let basePoints = findLargestContourOf();
   let base = drawContour(basePoints.points);
 
   for (let i = 0; i < contourPoints.length; i++) {

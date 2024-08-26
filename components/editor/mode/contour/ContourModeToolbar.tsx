@@ -4,18 +4,16 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback, useEffect, useState } from "react";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import SelectedPointEdit from "./ui/SelectedPointEdit";
-import Button from "@/components/Button";
 import { useEditorContext } from "../../EditorContext";
-import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
-import { useEditorHistoryContext } from "../../history/EditorHistoryContext";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
 import ContourPoints from "@/lib/point/ContourPoints";
 import ScaleAlongNormal from "./ui/ScaleAlongNormal";
 import DeletePoint from "./ui/DeletePoint";
-import AddButtonGroup from "./ui/add/AddGroup";
+import AddButtonGroup from "./ui/add";
 import ActionButtons from "../../ui/action/ActionButtons";
+import DoneButton from "./ui/DoneButton";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,8 +22,7 @@ type Props = {
 const ContourModeToolbar = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
-  const { selectedId, selectedPoint, setEditorMode } = useEditorContext();
-  const { compressHistoryEvents } = useEditorHistoryContext();
+  const { selectedId, selectedPoint } = useEditorContext();
 
   const getSelectedContour = useCallback(() => {
     if (selectedId) {
@@ -64,17 +61,9 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
     }
   };
 
-  const onDone = () => {
-    compressHistoryEvents(EditorHistoryType.CONTOUR_UPDATED);
-    setEditorMode(EditorMode.EDIT);
-  };
-
   return (
     <>
-      <Button className="mb-2" onClick={onDone}>
-        <label>Done</label>
-      </Button>
-
+      <DoneButton dictionary={dictionary}></DoneButton>
       <ActionButtons dictionary={dictionary}>
         {selectedContourPoints && (
           <>
@@ -83,7 +72,11 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
               contour={selectedContourPoints}
               onContourChanged={onContourChanged}
             ></ScaleAlongNormal>
-            <AddButtonGroup dictionary={dictionary}></AddButtonGroup>
+            <AddButtonGroup
+              dictionary={dictionary}
+              selectedContour={selectedContourPoints}
+              onContourChanged={onContourChanged}
+            ></AddButtonGroup>
           </>
         )}
       </ActionButtons>

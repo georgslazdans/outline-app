@@ -1,6 +1,7 @@
 import modificationsFor, { modificationsForList } from "./modification";
 import Point from "./Point";
 import * as cv from "@techstark/opencv-js";
+import { listQueriesFor, queriesFor } from "./queries";
 
 type ContourPoints = {
   points: Point[];
@@ -23,6 +24,14 @@ export const modifyContour = (contour: ContourPoints) => {
 
 export const modifyContourList = (contours: ContourPoints[]) => {
   return modificationsForList(contours);
+};
+
+export const queryContour = (contour: ContourPoints) => {
+  return queriesFor(contour);
+};
+
+export const queryContourList = (contour: ContourPoints[]) => {
+  return listQueriesFor(contour);
 };
 
 export default ContourPoints;
