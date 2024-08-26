@@ -1,7 +1,6 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import Button from "@/components/Button";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
@@ -9,10 +8,9 @@ import Item from "@/lib/replicad/model/Item";
 import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
-import { Tooltip } from "react-tooltip";
 import ItemType from "@/lib/replicad/model/ItemType";
 import getItemTypeIconFor from "../../icon/itemType/Icons";
-import ActionButton from "../ActionButton";
+import ActionButton from "../../../../../ui/action/ActionButton";
 
 type Props = {
   dictionary: Dictionary;

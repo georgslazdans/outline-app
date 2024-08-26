@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import SelectedPointEdit from "./ui/SelectedPointEdit";
 import Button from "@/components/Button";
-import ScaleAlongNormal from "./actions/ScaleAlongNormal";
+import ScaleAlongNormal from "./ui/actions/ScaleAlongNormal";
 import { useEditorContext } from "../../EditorContext";
 import EditorMode from "../EditorMode";
 import EditorHistoryType from "../../history/EditorHistoryType";
@@ -19,7 +19,7 @@ type Props = {
 };
 
 const ContourModeToolbar = ({ dictionary }: Props) => {
-  const {modelData, setModelData} = useModelDataContext();
+  const { modelData, setModelData } = useModelDataContext();
 
   const { selectedId, selectedPoint, setSelectedPoint, setEditorMode } =
     useEditorContext();
@@ -91,11 +91,13 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
         <label>Done</label>
       </Button>
       {selectedContourPoints && (
-        <ScaleAlongNormal
-          dictionary={dictionary}
-          contour={selectedContourPoints}
-          onContourChanged={onContourChanged}
-        ></ScaleAlongNormal>
+        <div className="mb-2">
+          <ScaleAlongNormal
+            dictionary={dictionary}
+            contour={selectedContourPoints}
+            onContourChanged={onContourChanged}
+          ></ScaleAlongNormal>
+        </div>
       )}
       {selectedContourPoints && selectedPoint && (
         <>

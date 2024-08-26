@@ -16,7 +16,7 @@ import { Tooltip } from "react-tooltip";
 import IconButton from "@/components/IconButton";
 import getItemTypeIconFor from "../../icon/itemType/Icons";
 import ItemType from "@/lib/replicad/model/ItemType";
-import ActionButton from "../ActionButton";
+import ActionButton from "../../../../../ui/action/ActionButton";
 
 type Props = {
   dictionary: Dictionary;

@@ -6,7 +6,7 @@ import NumberField, { NumberRange } from "@/components/fields/NumberField";
 
 type Props = {
   value?: string | number;
-  label: string;
+  label?: string;
   name: string;
   className?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;

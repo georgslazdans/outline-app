@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React from "react";
-import ActionGroup from "../ActionGroup";
+import ActionGroup from "../../../../../ui/action/ActionGroup";
 import AddContour from "./AddContour";
 import AddGroup from "./AddGroup";
 import AddPrimitive from "./AddPrimitive";

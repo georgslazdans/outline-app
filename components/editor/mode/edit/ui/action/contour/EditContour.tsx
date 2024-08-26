@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import React from "react";
 import EditorMode from "../../../../EditorMode";
-import ActionButton from "../ActionButton";
+import ActionButton from "../../../../../ui/action/ActionButton";
 
 type Props = {
   dictionary: Dictionary;

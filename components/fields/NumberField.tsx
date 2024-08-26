@@ -10,7 +10,7 @@ export type NumberRange = {
 
 type Props = {
   value?: string | number;
-  label: string;
+  label?: string;
   name: string;
   placeholder?: string;
   className?: string;

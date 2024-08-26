@@ -12,7 +12,7 @@ import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import getItemTypeIconFor from "../../icon/itemType/Icons";
-import ActionButton from "../ActionButton";
+import ActionButton from "../../../../../ui/action/ActionButton";
 import ContourPoints from "@/lib/point/ContourPoints";
 
 type Props = {
