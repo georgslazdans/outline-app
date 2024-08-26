@@ -36,7 +36,7 @@ const ContourMesh = memo(function ContourMeshFun({
 
   const cameraScaleFunction = (x: number) => {
     const maxValue = 5;
-    const minValue = 0.2;
+    const minValue = 0.1;
     const result = 4.4 - (1.1 * Math.log10(x)) + 0.1;
     return Math.max(Math.min(result, maxValue), minValue);
   };

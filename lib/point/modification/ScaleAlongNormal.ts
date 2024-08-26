@@ -50,37 +50,37 @@ const scaleAlongNormal = (
   return { points: scaledPoints };
 };
 
+const calculateNormal = (p1: Point, p2: Point): Point => {
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  const length = Math.sqrt(dx * dx + dy * dy);
+  return { x: -dy / length, y: dx / length };
+};
+
+const doSegmentsIntersect = (
+  p1: Point,
+  p2: Point,
+  q1: Point,
+  q2: Point
+): boolean => {
+  const cross = (a: Point, b: Point, c: Point) =>
+    (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+  const d1 = cross(q1, q2, p1);
+  const d2 = cross(q1, q2, p2);
+  const d3 = cross(p1, p2, q1);
+  const d4 = cross(p1, p2, q2);
+
+  return (
+    ((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) &&
+    ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))
+  );
+};
+
 const scaleAlongNormalNew = (contour: ContourPoints) => {
   return (scale: number): ContourPoints => {
     const scaledPoints: Point[] = [...contour.points];
 
-    function calculateNormal(p1: Point, p2: Point): Point {
-      const dx = p2.x - p1.x;
-      const dy = p2.y - p1.y;
-      const length = Math.sqrt(dx * dx + dy * dy);
-      return { x: -dy / length, y: dx / length };
-    }
-
-    function doSegmentsIntersect(
-      p1: Point,
-      p2: Point,
-      q1: Point,
-      q2: Point
-    ): boolean {
-      const cross = (a: Point, b: Point, c: Point) =>
-        (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-      const d1 = cross(q1, q2, p1);
-      const d2 = cross(q1, q2, p2);
-      const d3 = cross(p1, p2, q1);
-      const d4 = cross(p1, p2, q2);
-
-      return (
-        ((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) &&
-        ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))
-      );
-    }
-
-    function scaleAndCheckIntersections(): boolean {
+    const scaleAndCheckIntersections = (): boolean => {
       let hasIntersections = false;
       const tempScaledPoints: Point[] = [];
 
@@ -144,7 +144,7 @@ const scaleAlongNormalNew = (contour: ContourPoints) => {
       }
 
       return hasIntersections;
-    }
+    };
 
     let hasIntersections = scaleAndCheckIntersections();
 

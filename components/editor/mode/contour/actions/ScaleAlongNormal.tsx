@@ -5,6 +5,7 @@ import Button from "@/components/Button";
 import React, { ChangeEvent, useState } from "react";
 import EditField from "../../EditField";
 import ContourPoints, {
+  modifyContour,
   modifyContourList,
 } from "@/lib/point/ContourPoints";
 import findLargestContourOf from "@/lib/point/queries/FindLargestContourOf";
@@ -25,14 +26,11 @@ const ScaleAlongNormal = ({ dictionary, contour, onContourChanged }: Props) => {
 
   const scaleContour = () => {
     const base = findLargestContourOf(contour);
-    const scaledContours = modifyContourList(contour).scaleAlongNormal(
-      base ? -scale : scale
-    );
-
-    // contour.map((it) => {
-    //   const { scaleAlongNormal } = modifyContour(it);
-    //   return scaleAlongNormal(it == base ? -scale : scale);
-    // });
+    const scaledContours = contour.map((it) => {
+      const { scaleAlongNormal } = modifyContour(it);
+      console.log("Is base", it == base, it, base);
+      return scaleAlongNormal(it == base ? scale : scale);
+    });
     onContourChanged(scaledContours);
   };
 
