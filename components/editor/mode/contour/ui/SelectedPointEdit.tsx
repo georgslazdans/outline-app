@@ -2,9 +2,9 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useCallback, useMemo } from "react";
-import ContourIndex from "../../../../../lib/data/point/ContourIndex";
+import ContourIndex from "../../../../../lib/data/contour/ContourIndex";
 import EditField from "../../EditField";
-import ContourPoints from "@/lib/data/point/ContourPoints";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;

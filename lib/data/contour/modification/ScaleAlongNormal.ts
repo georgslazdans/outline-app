@@ -1,4 +1,4 @@
-import Point, { calculateNormal, centerPointOf } from "../Point";
+import Point, { calculateNormal, centerPointOf } from "../../Point";
 import ContourPoints, { modifyContour } from "../ContourPoints";
 import LineSegment, { toLineSegments } from "../../line/LineSegment";
 import LineIntersection, {

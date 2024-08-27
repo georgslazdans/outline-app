@@ -13,7 +13,7 @@ import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import getItemTypeIconFor from "../../icon/itemType/Icons";
 import ActionButton from "../../../../../ui/action/ActionButton";
-import ContourPoints from "@/lib/data/point/ContourPoints";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;

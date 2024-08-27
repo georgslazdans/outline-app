@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useState } from "react";
-import ContourPoints, { modifyContour, queryContourList } from "@/lib/data/point/ContourPoints";
+import ContourPoints, { modifyContour, queryContourList } from "@/lib/data/contour/ContourPoints";
 import ActionGroup from "@/components/editor/ui/action/ActionGroup";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
 import EditField from "../../EditField";

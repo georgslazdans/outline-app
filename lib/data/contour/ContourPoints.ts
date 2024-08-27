@@ -1,5 +1,5 @@
 import modificationsFor, { modificationsForList } from "./modification";
-import Point from "./Point";
+import Point from "../Point";
 import * as cv from "@techstark/opencv-js";
 import { listQueriesFor, queriesFor } from "./queries";
 

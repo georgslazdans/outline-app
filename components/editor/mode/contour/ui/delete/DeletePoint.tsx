@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
-import ContourPoints, { modifyContourList } from "@/lib/data/point/ContourPoints";
+import ContourPoints, { modifyContourList } from "@/lib/data/contour/ContourPoints";
 import React from "react";
 import { TRASH_CAN_SVG } from "../../../edit/ui/icon/GlobalIcons";
 

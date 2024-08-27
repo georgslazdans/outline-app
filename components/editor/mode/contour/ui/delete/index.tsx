@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import ActionGroup from "@/components/editor/ui/action/ActionGroup";
 import React from "react";
-import ContourPoints from "@/lib/data/point/ContourPoints";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 import DeletePoint from "./DeletePoint";
 import { useEditorContext } from "@/components/editor/EditorContext";
 

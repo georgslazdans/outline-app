@@ -1,5 +1,5 @@
 import ContourPoints from "../../ContourPoints";
-import Point from "../../Point";
+import Point from "../../../Point";
 
 const addPoint = (contour: ContourPoints) => {
   return (point: Point, index?: number): ContourPoints => {

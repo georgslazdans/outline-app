@@ -3,7 +3,7 @@
 import { Select } from "@react-three/drei";
 import React, { ReactNode } from "react";
 import { useEditorContext } from "../../EditorContext";
-import ContourIndex from "../../../../lib/data/point/ContourIndex";
+import ContourIndex from "../../../../lib/data/contour/ContourIndex";
 
 type Props = {
   children: ReactNode;

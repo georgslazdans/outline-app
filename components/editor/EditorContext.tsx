@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import EditorMode from "./mode/EditorMode";
-import ContourIndex from "../../lib/data/point/ContourIndex";
+import ContourIndex from "../../lib/data/contour/ContourIndex";
 
 type EditorContextType = {
   editorMode: EditorMode;

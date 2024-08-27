@@ -8,7 +8,7 @@ import { useEditorContext } from "../../EditorContext";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
-import ContourPoints from "@/lib/data/point/ContourPoints";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 import ScaleAlongNormal from "./ui/ScaleAlongNormal";
 import AddButtonGroup from "./ui/add";
 import ActionButtons from "../../ui/action/ActionButtons";

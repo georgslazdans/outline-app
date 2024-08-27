@@ -9,7 +9,7 @@ import {
 } from "replicad-threejs-helper";
 import { ShapeMesh } from "replicad";
 import { Outlines } from "@react-three/drei";
-import { POINT_SCALE_THREEJS } from "@/lib/data/point/Point";
+import { POINT_SCALE_THREEJS } from "@/lib/data/Point";
 
 type Props = {
   faces: ShapeMesh;

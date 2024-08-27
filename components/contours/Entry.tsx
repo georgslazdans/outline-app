@@ -12,7 +12,7 @@ import { downloadFile } from "@/lib/utils/Download";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import useNavigationHistory from "@/context/NavigationHistory";
-import { modifyContourList } from "@/lib/data/point/ContourPoints";
+import { modifyContourList } from "@/lib/data/contour/ContourPoints";
 
 type Props = {
   context: Context;

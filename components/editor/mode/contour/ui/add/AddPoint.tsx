@@ -3,11 +3,11 @@
 import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
-import ContourIndex from "@/lib/data/point/ContourIndex";
+import ContourIndex from "@/lib/data/contour/ContourIndex";
 import ContourPoints, {
   modifyContourList,
   queryContour,
-} from "@/lib/data/point/ContourPoints";
+} from "@/lib/data/contour/ContourPoints";
 import React from "react";
 
 type Props = {

@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import { useEditorContext } from "../../../EditorContext";
 import NumberField from "@/components/fields/NumberField";
-import ContourPoints from "@/lib/data/point/ContourPoints";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;

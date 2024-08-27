@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
-import ContourPoints from "@/lib/data/point/ContourPoints";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 import React from "react";
 
 type Props = {

@@ -1,4 +1,4 @@
-import Point from "../point/Point";
+import Point from "../Point";
 import Line, { lineOf, lineOfSegment, linesCrossPointOf } from "./Line";
 import LineSegment, { doLineSegmentsIntersect } from "./LineSegment";
 

@@ -1,6 +1,6 @@
 import ContourIndex from "../../ContourIndex";
 import ContourPoints, { modifyContour } from "../../ContourPoints";
-import Point from "../../Point";
+import Point from "../../../Point";
 
 const addPointContourIndex = (contour: ContourPoints[]) => {
   return (index: ContourIndex, point: Point): ContourPoints[] => {

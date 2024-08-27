@@ -1,7 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 
 import ImageContours from "./Contours";
-import ContourPoints, { pointsFrom } from "@/lib/data/point/ContourPoints";
+import ContourPoints, { pointsFrom } from "@/lib/data/contour/ContourPoints";
 
 export type HoleSettings = {
   meanThreshold: number;

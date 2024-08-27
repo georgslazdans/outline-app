@@ -1,6 +1,6 @@
 import ColorSpace from "./util/ColorSpace";
 import StepName from "./processor/steps/StepName";
-import ContourPoints from "../data/point/ContourPoints";
+import ContourPoints from "../data/contour/ContourPoints";
 
 export type StepResult = {
   stepName: StepName;

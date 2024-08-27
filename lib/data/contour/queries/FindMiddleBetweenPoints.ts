@@ -1,5 +1,5 @@
 import ContourPoints from "../ContourPoints";
-import Point, { centerPointOf } from "../Point";
+import Point, { centerPointOf } from "../../Point";
 
 const findMiddleBetweenPoints = (contour: ContourPoints) => {
   return (indexA: number, indexB: number): Point => {

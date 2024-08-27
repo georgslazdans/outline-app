@@ -3,7 +3,7 @@
 import React, { memo } from "react";
 import { Vector3 } from "three";
 import { Line } from "@react-three/drei";
-import Point from "@/lib/data/point/Point";
+import Point from "@/lib/data/Point";
 
 type Props = {
   points: Point[];
