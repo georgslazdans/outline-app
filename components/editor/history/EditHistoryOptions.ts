@@ -1,4 +1,4 @@
-import ContourIndex from "../../../lib/point/ContourIndex";
+import ContourIndex from "../../../lib/data/point/ContourIndex";
 import EditorHistoryType from "./EditorHistoryType";
 
 type EditHistoryOptions = {

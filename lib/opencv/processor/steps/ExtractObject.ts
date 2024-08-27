@@ -22,7 +22,7 @@ import holeFinder, {
   HoleSettings,
   contourPointsOf,
 } from "../../util/contours/Holes";
-import { modifyContour, modifyContourList, pointsFrom } from "@/lib/point/ContourPoints";
+import { modifyContour, modifyContourList, pointsFrom } from "@/lib/data/point/ContourPoints";
 
 type SnoothSettings = {
   smoothOutline: boolean;

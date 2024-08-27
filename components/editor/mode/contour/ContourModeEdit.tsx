@@ -8,10 +8,10 @@ import { useEditorContext } from "../../EditorContext";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
-import ContourPoints, { modifyContourList } from "@/lib/point/ContourPoints";
+import ContourPoints, { modifyContourList } from "@/lib/data/point/ContourPoints";
 import ContourSelection from "./ContourSelection";
 import useDebounced from "@/lib/utils/Debounced";
-import { POINT_SCALE_THREEJS } from "@/lib/point/Point";
+import { POINT_SCALE_THREEJS } from "@/lib/data/point/Point";
 
 type Props = {
   dictionary: Dictionary;

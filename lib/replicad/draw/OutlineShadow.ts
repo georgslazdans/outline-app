@@ -1,7 +1,7 @@
-import Point from "@/lib/point/Point";
+import Point from "@/lib/data/point/Point";
 import { draw, Drawing } from "replicad";
 import ReplicadModelData from "./ReplicadModelData";
-import ContourPoints, { queryContourList } from "@/lib/point/ContourPoints";
+import ContourPoints, { queryContourList } from "@/lib/data/point/ContourPoints";
 
 const drawContour = (points: Point[]): Drawing => {
   const drawPen = draw();

@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import Point from "../../point/Point";
+import Point from "../../data/point/Point";
 import StepResult from "../StepResult";
 import imageWarper from "./ImageWarper";
 import imageDataOf, { convertToRGBA, imageOf } from "../util/ImageData";

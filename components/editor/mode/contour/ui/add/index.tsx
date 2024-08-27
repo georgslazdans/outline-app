@@ -5,7 +5,7 @@ import ActionGroup from "@/components/editor/ui/action/ActionGroup";
 import React from "react";
 import AddPoint from "./AddPoint";
 import AddHole from "./AddHole";
-import ContourPoints from "@/lib/point/ContourPoints";
+import ContourPoints from "@/lib/data/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;

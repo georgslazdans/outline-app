@@ -2,7 +2,7 @@ import ItemType from "../ItemType";
 import Item from "../Item";
 import BooleanOperation from "../BooleanOperation";
 import { v4 as randomUUID } from 'uuid';
-import ContourPoints from "@/lib/point/ContourPoints";
+import ContourPoints from "@/lib/data/point/ContourPoints";
 import { zeroPoint } from "@/lib/Point3D";
 
 type Contour = {

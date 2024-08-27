@@ -1,7 +1,7 @@
 "use client";
 
 import { useEditorContext } from "@/components/editor/EditorContext";
-import { POINT_SCALE_THREEJS } from "@/lib/point/Point";
+import { POINT_SCALE_THREEJS } from "@/lib/data/point/Point";
 import {
   zeroPoint,
   toVector3,

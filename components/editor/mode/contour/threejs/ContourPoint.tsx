@@ -1,7 +1,7 @@
 import React, { memo, useRef } from "react";
 import { Vector3 } from "three";
-import ContourIndex from "../../../../../lib/point/ContourIndex";
-import { POINT_SCALE_THREEJS, scaleVectorOf } from "@/lib/point/Point";
+import ContourIndex from "../../../../../lib/data/point/ContourIndex";
+import { POINT_SCALE_THREEJS, scaleVectorOf } from "@/lib/data/point/Point";
 import pointShaderMaterialOf from "./PointShader";
 import { useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";

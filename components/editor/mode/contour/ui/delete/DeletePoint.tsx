@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
-import ContourPoints, { modifyContourList } from "@/lib/point/ContourPoints";
+import ContourPoints, { modifyContourList } from "@/lib/data/point/ContourPoints";
 import React from "react";
 import { TRASH_CAN_SVG } from "../../../edit/ui/icon/GlobalIcons";
 
@@ -34,11 +34,11 @@ const DeletePoint = ({
         dictionary={dictionary}
         id={"delete-selected-point"}
         onClick={onDeletePoint}
-        {...useHotkey("Delete")}
         icon={TRASH_CAN_SVG}
         label="Delete"
         tooltip="Delete selected point (Delete)"
         className="text-red"
+        {...useHotkey("Delete")}
       ></ActionButton>
     </>
   );

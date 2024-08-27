@@ -2,10 +2,10 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import ContourPoint from "./ContourPoint";
 import { Matrix4, Vector3 } from "three";
 import ContourLines from "./ContourLines";
-import ContourIndex from "../../../../../lib/point/ContourIndex";
-import ContourPoints from "@/lib/point/ContourPoints";
+import ContourIndex from "../../../../../lib/data/point/ContourIndex";
+import ContourPoints from "@/lib/data/point/ContourPoints";
 import Draggable from "./Draggable";
-import Point from "@/lib/point/Point";
+import Point from "@/lib/data/point/Point";
 import { useFrame, useThree } from "@react-three/fiber";
 import useDebounced from "@/lib/utils/Debounced";
 

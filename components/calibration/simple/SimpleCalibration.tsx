@@ -13,7 +13,7 @@ import { OutlineImageViewer } from "./OutlineImageViewer";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import SelectField from "@/components/fields/SelectField";
 import SimpleSettingsButtons from "./SimpleSettingsButtons";
-import { modifyContourList } from "@/lib/point/ContourPoints";
+import { modifyContourList } from "@/lib/data/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;

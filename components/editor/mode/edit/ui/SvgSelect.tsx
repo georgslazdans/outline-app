@@ -6,7 +6,7 @@ import { Context } from "@/context/DetailsContext";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import SelectField, { Option } from "@/components/fields/SelectField";
 import { useContourCacheContext } from "../../../cache/ContourCacheContext";
-import ContourPoints, { modifyContourList } from "@/lib/point/ContourPoints";
+import ContourPoints, { modifyContourList } from "@/lib/data/point/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;

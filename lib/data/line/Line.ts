@@ -1,4 +1,4 @@
-import Point from "../Point";
+import Point from "../point/Point";
 import LineSegment from "./LineSegment";
 
 type Line = {

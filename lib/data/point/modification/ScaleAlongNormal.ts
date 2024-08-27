@@ -1,9 +1,9 @@
 import Point, { calculateNormal, centerPointOf } from "../Point";
 import ContourPoints, { modifyContour } from "../ContourPoints";
-import LineSegment, { toLineSegments } from "../line/LineSegment";
+import LineSegment, { toLineSegments } from "../../line/LineSegment";
 import LineIntersection, {
   findIntersectingSegments,
-} from "../line/LineIntersection";
+} from "../../line/LineIntersection";
 
 const calculatePointsNormal = (
   prevPoint: Point,
@@ -54,7 +54,7 @@ const indexDistance = (a: number, b: number, pointCount: number) => {
   if (b > a) {
     return b - a;
   } else {
-    return pointCount - b + a;
+    return pointCount - a + b;
   }
 };
 
@@ -198,7 +198,7 @@ const cleanupIntersections = (
     pointCount
   );
   const { direction } = indexDistance;
-
+  console.log("Direction", direction);
   const middlePoint = middlePointOf(intersection, direction);
   const index =
     direction == Direction.FORWARD
