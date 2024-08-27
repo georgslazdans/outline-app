@@ -11,7 +11,9 @@ type Props = {
 
 const ActionButtons = ({ dictionary, children, className }: Props) => {
   return (
-    <div className={"mb-2 flex flex-row gap-4 " + className}>{children}</div>
+    <div className={"mb-2 flex flex-row gap-4 flex-wrap " + className}>
+      {children}
+    </div>
   );
 };
 

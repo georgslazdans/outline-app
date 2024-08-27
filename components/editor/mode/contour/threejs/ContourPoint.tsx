@@ -1,12 +1,10 @@
-import React, {
-  memo,
-  useRef,
-} from "react";
+import React, { memo, useRef } from "react";
 import { Vector3 } from "three";
 import ContourIndex from "../../../../../lib/point/ContourIndex";
 import { POINT_SCALE_THREEJS, scaleVectorOf } from "@/lib/point/Point";
 import pointShaderMaterialOf from "./PointShader";
 import { useThree } from "@react-three/fiber";
+import { Text } from "@react-three/drei";
 
 type Props = {
   transparent: boolean;
@@ -50,6 +48,13 @@ const ContourPoint = memo(function PointMesh({
           {...pointShaderMaterialOf(size, color, alpha)}
         />
       </mesh>
+      <Text
+        position={new Vector3(0, -0.01 * size * 1.4 , 0)}
+        scale={scaleVectorOf(POINT_SCALE_THREEJS * size)}
+        color="#000000"
+      >
+        {index}
+      </Text>
     </group>
   );
 });

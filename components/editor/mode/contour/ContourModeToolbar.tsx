@@ -10,10 +10,10 @@ import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
 import ContourPoints from "@/lib/point/ContourPoints";
 import ScaleAlongNormal from "./ui/ScaleAlongNormal";
-import DeletePoint from "./ui/DeletePoint";
 import AddButtonGroup from "./ui/add";
 import ActionButtons from "../../ui/action/ActionButtons";
 import DoneButton from "./ui/DoneButton";
+import DeleteButtonGroup from "./ui/delete";
 
 type Props = {
   dictionary: Dictionary;
@@ -77,17 +77,17 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
               selectedContour={selectedContourPoints}
               onContourChanged={onContourChanged}
             ></AddButtonGroup>
+            <DeleteButtonGroup
+              dictionary={dictionary}
+              selectedContour={selectedContourPoints}
+              onContourChanged={onContourChanged}
+            ></DeleteButtonGroup>
           </>
         )}
       </ActionButtons>
 
       {selectedContourPoints && selectedPoint && (
         <>
-          <DeletePoint
-            dictionary={dictionary}
-            selectedContour={selectedContourPoints}
-            onContourChanged={onContourChanged}
-          ></DeletePoint>
           <SelectedPointEdit
             dictionary={dictionary}
             contourPoints={selectedContourPoints}

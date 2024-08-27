@@ -3,8 +3,10 @@
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import { useEditorContext } from "@/components/editor/EditorContext";
+import ActionButton from "@/components/editor/ui/action/ActionButton";
 import ContourPoints, { modifyContourList } from "@/lib/point/ContourPoints";
 import React from "react";
+import { TRASH_CAN_SVG } from "../../../edit/ui/icon/GlobalIcons";
 
 type Props = {
   dictionary: Dictionary;
@@ -29,9 +31,16 @@ const DeletePoint = ({
 
   return (
     <>
-      <Button onClick={onDeletePoint} {...useHotkey("Delete")}>
-        <label>Delete Point</label>
-      </Button>
+      <ActionButton
+        dictionary={dictionary}
+        id={"delete-selected-point"}
+        onClick={onDeletePoint}
+        {...useHotkey("Delete")}
+        icon={TRASH_CAN_SVG}
+        label="Delete"
+        tooltip="Delete selected point (Delete)"
+        className="text-red"
+      ></ActionButton>
     </>
   );
 };

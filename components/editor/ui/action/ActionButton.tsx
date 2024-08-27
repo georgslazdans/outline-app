@@ -12,6 +12,7 @@ type Props = {
   icon?: ReactNode;
   label?: string;
   tooltip?: string;
+  className?: string;
 };
 
 const ActionButton = ({
@@ -20,6 +21,7 @@ const ActionButton = ({
   icon,
   label,
   tooltip,
+  className,
   dictionary,
 }: Props) => {
   return (
@@ -29,7 +31,7 @@ const ActionButton = ({
         onClick={onClick}
         style="secondary"
         size="medium"
-        className="w-24 hover:bg-gray"
+        className={"w-24 hover:bg-gray " + className}
       >
         <div className="size-12 mx-auto">{icon}</div>
         <span>{label}</span>

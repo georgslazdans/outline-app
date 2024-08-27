@@ -1,6 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
+import { wrap } from "module";
 import React, { ReactNode } from "react";
 
 type Props = {
