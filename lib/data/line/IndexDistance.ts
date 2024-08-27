@@ -1,0 +1,79 @@
+import LineIntersection from "./LineIntersection";
+
+export enum Direction {
+  FORWARD,
+  BACKWARD,
+}
+export type IndexDistance = {
+  distance: number;
+  direction: Direction;
+};
+
+const forwardIndexDistance = (from: number, to: number, pointCount: number) => {
+  if (to > from) {
+    return to - from - 1;
+  } else {
+    return pointCount - from + to - 1;
+  }
+};
+
+const backwardIndexDistance = (
+  from: number,
+  to: number,
+  pointCount: number
+) => {
+  if (from > to) {
+    return from - to - 1;
+  } else {
+    return from + (pointCount - to) - 1;
+  }
+};
+
+export const indexDistance = (from: number, to: number, pointCount: number) => {
+  return {
+    forward: () => forwardIndexDistance(from, to, pointCount),
+    backward: () => backwardIndexDistance(from, to, pointCount),
+  };
+};
+
+export const indexesOf = (
+  intersection: LineIntersection,
+  direction: Direction
+) => {
+  const startIndex =
+    direction === Direction.FORWARD
+      ? intersection.a.indexB
+      : intersection.b.indexA;
+  const endIndex =
+    direction === Direction.FORWARD
+      ? intersection.b.indexA
+      : intersection.a.indexB;
+  return { startIndex, endIndex };
+};
+
+export const indexesBetween = (
+  startIndex: number,
+  endIndex: number,
+  pointCount: number
+): number[] => {
+  const addIndexes = (start: number, end: number) => {
+    const indexes: number[] = [];
+
+    if (end > start) {
+      for (let i = start; i != end; i = i + 1) {
+        indexes.push(i);
+      }
+    } else {
+      for (let i = start; i != pointCount; i = i + 1) {
+        indexes.push(i);
+      }
+      for (let i = 0; i != end; i = i + 1) {
+        indexes.push(i);
+      }
+    }
+    indexes.push(end);
+    return indexes;
+  };
+
+  return addIndexes(startIndex, endIndex);
+};

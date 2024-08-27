@@ -4,6 +4,8 @@ import LineSegment, { toLineSegments } from "../../line/LineSegment";
 import LineIntersection, {
   findIntersectingSegments,
 } from "../../line/LineIntersection";
+import findLongestIntersection from "../../line/findLongestIntersection";
+import { Direction, indexesBetween, indexesOf } from "../../line/IndexDistance";
 
 const calculatePointsNormal = (
   prevPoint: Point,
@@ -50,64 +52,6 @@ const scalePoints = (points: Point[], scale: number): Point[] => {
   return scaledPoints;
 };
 
-const indexDistance = (a: number, b: number, pointCount: number) => {
-  if (b > a) {
-    return b - a;
-  } else {
-    return pointCount - a + b;
-  }
-};
-
-enum Direction {
-  FORWARD,
-  BACKWARD,
-}
-type IndexDistance = {
-  distance: number;
-  direction: Direction;
-};
-
-const shortestIndexDistance = (
-  intersection: LineIntersection,
-  pointCount: number
-): IndexDistance => {
-  const { a, b } = intersection;
-  const forwardDistance = indexDistance(a.indexB, b.indexA, pointCount);
-  const backwardsDistance = indexDistance(b.indexB, a.indexA, pointCount);
-  if (forwardDistance <= backwardsDistance) {
-    return {
-      distance: forwardDistance,
-      direction: Direction.FORWARD,
-    };
-  } else {
-    return {
-      distance: backwardsDistance,
-      direction: Direction.BACKWARD,
-    };
-  }
-};
-
-const findLongestIntersection = (
-  intersections: LineIntersection[],
-  pointCount: number
-): {
-  intersection: LineIntersection;
-  indexDistance: IndexDistance;
-} => {
-  return intersections
-    .map((it) => {
-      return {
-        intersection: it,
-        indexDistance: shortestIndexDistance(it, pointCount),
-      };
-    })
-    .reduce((maxItem, currentItem) => {
-      return currentItem.indexDistance.distance > maxItem.indexDistance.distance
-        ? currentItem
-        : maxItem;
-    });
-};
-
 const middlePointOf = (
   intersection: LineIntersection,
   direction: Direction
@@ -117,41 +61,6 @@ const middlePointOf = (
   } else {
     return centerPointOf(intersection.b.a, intersection.a.b);
   }
-};
-
-const indexesBetween = (
-  intersection: LineIntersection,
-  direction: Direction,
-  pointCount: number
-): number[] => {
-  const addIndexes = (start: number, end: number) => {
-    const indexes: number[] = [];
-
-    if (end > start) {
-      for (let i = start; i != end; i = i + 1) {
-        indexes.push(i);
-      }
-    } else {
-      for (let i = start; i != pointCount; i = i + 1) {
-        indexes.push(i);
-      }
-      for (let i = 0; i != end; i = i + 1) {
-        indexes.push(i);
-      }
-    }
-    indexes.push(end);
-    return indexes;
-  };
-  const startIndex =
-    direction === Direction.FORWARD
-      ? intersection.a.indexB
-      : intersection.b.indexA;
-  const endIndex =
-    direction === Direction.FORWARD
-      ? intersection.b.indexA
-      : intersection.a.indexB;
-
-  return addIndexes(startIndex, endIndex);
 };
 
 const remainingIntersectionsOf = (
@@ -198,15 +107,17 @@ const cleanupIntersections = (
     pointCount
   );
   const { direction } = indexDistance;
-  console.log("Direction", direction);
-  const middlePoint = middlePointOf(intersection, direction);
   const index =
     direction == Direction.FORWARD
       ? intersection.b.indexA
       : intersection.a.indexB;
-  let updatedContour = modifyContour(contour).addPoint(middlePoint, index);
+  let updatedContour = modifyContour(contour).addPoint(
+    intersection.point,
+    index
+  );
 
-  const indexesToDelete = indexesBetween(intersection, direction, pointCount);
+  const { startIndex, endIndex } = indexesOf(intersection, direction);
+  const indexesToDelete = indexesBetween(startIndex, endIndex, pointCount);
   updatedContour = deleteContainingIndexes(updatedContour, indexesToDelete);
 
   const remainingIntersections = remainingIntersectionsOf(
