@@ -6,8 +6,16 @@ const shortestIndexDistance = (
   pointCount: number
 ): IndexDistance => {
   const { a, b } = intersection;
-  const forwardDistance = indexDistance(a.indexB, b.indexA, pointCount).forward();
-  const backwardsDistance = indexDistance(b.indexB, a.indexA, pointCount).backward();
+  const forwardDistance = indexDistance(
+    a.indexB,
+    b.indexA,
+    pointCount
+  ).forward();
+  const backwardsDistance = indexDistance(
+    a.indexA,
+    b.indexB,
+    pointCount
+  ).backward();
   if (forwardDistance <= backwardsDistance) {
     return {
       distance: forwardDistance,

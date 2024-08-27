@@ -44,6 +44,14 @@ describe("indexDistance forward", () => {
       expect(indexDistance(indexA, indexB, totalCount).forward()).toBe(8);
     });
   });
+
+  test("test large values", () => {
+    const totalCount = 100;
+    const indexA = 10;
+    const indexB = 39;
+
+    expect(indexDistance(indexA, indexB, totalCount).forward()).toBe(28);
+  });
 });
 
 describe("indexDistance backward", () => {
