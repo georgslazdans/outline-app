@@ -1,7 +1,6 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import Button from "@/components/Button";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
 import ContourPoints, { modifyContourList } from "@/lib/point/ContourPoints";

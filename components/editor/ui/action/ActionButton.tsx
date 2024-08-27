@@ -13,6 +13,8 @@ type Props = {
   label?: string;
   tooltip?: string;
   className?: string;
+  hotkey?: string;
+  hotkeyCtrl?: boolean;
 };
 
 const ActionButton = ({
@@ -23,6 +25,8 @@ const ActionButton = ({
   tooltip,
   className,
   dictionary,
+  hotkey,
+  hotkeyCtrl,
 }: Props) => {
   return (
     <>
@@ -32,6 +36,8 @@ const ActionButton = ({
         style="secondary"
         size="medium"
         className={"w-24 hover:bg-gray " + className}
+        hotkey={hotkey}
+        hotkeyCtrl={hotkeyCtrl}
       >
         <div className="size-12 mx-auto">{icon}</div>
         <span>{label}</span>
