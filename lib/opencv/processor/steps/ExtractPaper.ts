@@ -67,7 +67,7 @@ const stepNameOfReuseStep = (reuseStep: ReuseStep) => {
     case ReuseStep.BLUR:
       return StepName.BLUR;
     case ReuseStep.NONE:
-      return StepName.BILETERAL_FILTER;
+      return StepName.BILATERAL_FILTER;
   }
 };
 

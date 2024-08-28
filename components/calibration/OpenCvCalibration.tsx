@@ -132,7 +132,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
       let stepName = firstChangedStep(previousSettings, currentSettings);
       if (
         stepName &&
-        ![StepName.INPUT, StepName.BILETERAL_FILTER].includes(stepName)
+        ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
       ) {
         updateCurrentStepData(stepName);
       } else {

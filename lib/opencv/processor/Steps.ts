@@ -77,7 +77,7 @@ const forSettings = (settings: Settings) => {
 
 const bilateralFilterDisabled = (settings: Settings) => {
   return (step: ProcessingStep<any>): boolean => {
-    if (step.name != StepName.BILETERAL_FILTER) {
+    if (step.name != StepName.BILATERAL_FILTER) {
       return true;
     } else {
       return !inSettings(settings).isBilateralFiterDisabled();
@@ -111,7 +111,7 @@ const extractPaperReuseStep = (settings: Settings): StepName => {
   if (inSettings(settings).isBlurReused()) {
     return StepName.BLUR;
   } else {
-    return StepName.BILETERAL_FILTER;
+    return StepName.BILATERAL_FILTER;
   }
 };
 

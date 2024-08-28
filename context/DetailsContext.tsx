@@ -30,6 +30,7 @@ export type Context = {
   contours: ContourPoints[];
   settings: Settings;
   addDate: Date;
+  paperImage?: ImageData
 };
 
 const DetailsProvider = ({ children }: Props) => {

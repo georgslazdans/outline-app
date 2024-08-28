@@ -1,6 +1,6 @@
 enum StepName {
     INPUT = "input",
-    BILETERAL_FILTER = "bilateralFilter",
+    BILATERAL_FILTER = "bilateralFilter",
     BLUR = "blur",
     BLUR_OBJECT = "blurObject",
     CANNY_PAPER = "cannyPaper",
