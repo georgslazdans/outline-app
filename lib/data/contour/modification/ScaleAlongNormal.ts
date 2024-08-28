@@ -3,7 +3,6 @@ import ContourPoints, { modifyContour } from "../ContourPoints";
 import { toLineSegments } from "../../line/LineSegment";
 import LineIntersection, {
   findIntersectingSegments,
-  findLowestPointIndexOf,
   indexesToDelete,
   remainingIntersectionsOf,
 } from "../../line/LineIntersection";
@@ -101,15 +100,19 @@ const cleanupIntersections = (
 const scaleAlongNormal = (contour: ContourPoints) => {
   return (scale: number): ContourPoints => {
     const scaledPoints = scalePoints(contour.points, scale);
-    const intersections = findIntersectingSegments(
-      toLineSegments(scaledPoints)
-    );
-    if (intersections.length > 0) {
-      console.log("Cleaning up intersections!");
-      return cleanupIntersections({ points: scaledPoints }, intersections);
-    } else {
-      return { points: scaledPoints };
-    }
+
+    const cleanIfHasIntersections = (points: Point[]) => {
+      const intersections = findIntersectingSegments(toLineSegments(points));
+      if (intersections.length > 0) {
+        const result = cleanupIntersections({ points: points }, intersections);
+        // Run it twice, with large values, the deletion of points can introduce new lines. 
+        // Might be wise to cover with more tests for bugs and maybe add more points inbetween.
+        return cleanIfHasIntersections(result.points);
+      } else {
+        return { points: points };
+      }
+    };
+    return cleanIfHasIntersections(scaledPoints);
   };
 };
 
