@@ -11,6 +11,7 @@ import Draggable from "./Draggable";
 import Point from "@/lib/data/Point";
 import { useFrame, useThree } from "@react-three/fiber";
 import useDebounced from "@/lib/utils/Debounced";
+import { movePointToLineSegment } from "@/lib/data/line/LineSegment";
 
 type Props = {
   contourIndex: number;
@@ -81,8 +82,9 @@ const ContourMesh = memo(function ContourMeshFun({
 
   const addPointToContour = (point: Point) => {
     const segment = queryContour(contour).findLineSegmentClosestToPoint(point);
+    const newPoint = movePointToLineSegment(point, segment);
     const { addPoint } = modifyContour(contour);
-    onContourChange(addPoint(point, segment.indexB));
+    onContourChange(addPoint(newPoint, segment.indexB));
   };
 
   return (

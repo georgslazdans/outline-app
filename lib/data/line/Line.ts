@@ -27,10 +27,17 @@ export const linesCrossPointOf = (a: Line, b: Line): Point | undefined => {
   }
 };
 
-export const getPointOnLine = (y: number, line: Line): Point => {
+export const getPointOnLineFromY = (y: number, line: Line): Point => {
   return {
     x: (y - line.b) / line.slope,
     y,
+  };
+};
+
+export const getPointOnLineFromX = (x: number, line: Line): Point => {
+  return {
+    x:x,
+    y: line.slope * x + line.b,
   };
 };
 

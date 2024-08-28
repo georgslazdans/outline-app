@@ -1,4 +1,4 @@
-import Point, { calculateNormal } from "../../Point";
+import Point, { normalOf } from "../../Point";
 import ContourPoints from "../ContourPoints";
 import cleanIfHasIntersections from "./CleanIfHasIntersections";
 
@@ -7,8 +7,8 @@ const calculatePointsNormal = (
   currentPoint: Point,
   nextPoint: Point
 ): Point => {
-  const normal1 = calculateNormal(prevPoint, currentPoint);
-  const normal2 = calculateNormal(currentPoint, nextPoint);
+  const normal1 = normalOf(prevPoint, currentPoint);
+  const normal2 = normalOf(currentPoint, nextPoint);
 
   const averagedNormal: Point = {
     x: (normal1.x + normal2.x) / 2,

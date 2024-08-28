@@ -1,9 +1,11 @@
-import Point, { add, calculateNormal, lengthOf } from "../Point";
+import Point, { add, normalOf, lengthOf } from "../Point";
 import {
   lineOfSegment,
   lineOf,
   linesCrossPointOf,
   isLineVertical,
+  getPointOnLineFromX,
+  getPointOnLineFromY,
 } from "./Line";
 import { nextIndex } from "./PointIndex";
 
@@ -57,7 +59,7 @@ export const doLineSegmentsIntersect = (
 export const normalDistanceToSegment = (segment: LineSegment) => {
   return {
     of: (point: Point): number => {
-      const normal = calculateNormal(segment.a, segment.b);
+      const normal = normalOf(segment.a, segment.b);
       const segmentLine = lineOfSegment(segment);
       const normalLine = lineOf(point, add(point, normal));
       if (!isLineVertical(normalLine) && !isLineVertical(segmentLine)) {
@@ -74,6 +76,28 @@ export const normalDistanceToSegment = (segment: LineSegment) => {
       }
     },
   };
+};
+
+export const movePointToLineSegment = (
+  point: Point,
+  segment: LineSegment
+): Point => {
+  const normal = normalOf(segment.a, segment.b);
+  const segmentLine = lineOfSegment(segment);
+  const normalLine = lineOf(point, add(point, normal));
+  if (!isLineVertical(normalLine) && !isLineVertical(segmentLine)) {
+    const crossPoint = linesCrossPointOf(segmentLine, normalLine)!;
+    return crossPoint;
+  } else if (!isLineVertical(normalLine) && isLineVertical(segmentLine)) {
+    return {
+      x: segment.a.x,
+      y: point.y
+    }
+  } else if (isLineVertical(normalLine) && !isLineVertical(segmentLine)) {
+    return getPointOnLineFromX(point.x, segmentLine);
+  } else {
+    throw new Error("Somehow segment line and it's normal are both vertical");
+  }
 };
 
 export default LineSegment;
