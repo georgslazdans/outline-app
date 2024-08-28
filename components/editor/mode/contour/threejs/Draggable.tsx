@@ -20,7 +20,7 @@ const Draggable = ({
   onPointDrag,
   onPointDragEnd,
 }: Props) => {
-  const { setDisableCamera } = useEditorContext();
+  const { setDisableCamera, setInputFieldFocused } = useEditorContext();
   const [matrix, setMatrix] = useState(new Matrix4());
 
   useEffect(() => {
@@ -33,9 +33,11 @@ const Draggable = ({
 
   const onDragStart = () => {
     setDisableCamera(true);
+    setInputFieldFocused(true);
   };
   const onDragEnd = () => {
     setDisableCamera(false);
+    setInputFieldFocused(false);
     if (onPointDragEnd) {
       onPointDragEnd();
     }

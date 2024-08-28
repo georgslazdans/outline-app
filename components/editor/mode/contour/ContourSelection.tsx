@@ -16,7 +16,6 @@ const ContourSelection = ({ children }: Props) => {
     if (obj.length > 0) {
       const point = obj[0];
       const pointIndex = point.userData?.contourIndex as ContourIndex;
-      console.log("Selected", pointIndex, obj);
 
       if (pointIndex) {
         setSelectedPoint(pointIndex);
