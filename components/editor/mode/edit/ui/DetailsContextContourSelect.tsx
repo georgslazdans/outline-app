@@ -18,7 +18,10 @@ type Props = {
 const centeredPointsOf = (context: Context): ContourPoints[] => {
   const paperDimensions = paperDimensionsOfDetailsContext(context);
   if (context.contours && context.contours.length > 0) {
-    return modifyContourList(context.contours).centerPoints(paperDimensions);
+    const contours = modifyContourList(context.contours).centerPoints(
+      paperDimensions
+    );
+    return modifyContourList(contours).mirrorPointsOnXAxis();
   }
   return [];
 };

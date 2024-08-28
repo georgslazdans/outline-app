@@ -1,6 +1,7 @@
 import ContourPoints from "../ContourPoints";
 import centerPoints from "./CenterPoints";
 import { crudListOnlyApi, crudSingleOnlyApi } from "./crud";
+import mirrorPointsOnXAxis from "./MirrorPointsOnXAxis";
 import scaleAlongNormal from "./ScaleAlongNormal";
 import scalePoints from "./ScalePoints";
 
@@ -11,6 +12,7 @@ type ModificationFunction = (
 const modificationApi = () => {
   return {
     centerPoints: centerPoints,
+    mirrorPointsOnXAxis: mirrorPointsOnXAxis,
     scaleAlongNormal: scaleAlongNormal,
     scalePoints: scalePoints,
   };
