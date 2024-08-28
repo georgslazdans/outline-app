@@ -1,11 +1,11 @@
-import Point, { calculateNormal, centerPointOf } from "../../Point";
+import Point, { calculateNormal } from "../../Point";
 import ContourPoints, { modifyContour } from "../ContourPoints";
 import LineSegment, { toLineSegments } from "../../line/LineSegment";
 import LineIntersection, {
   findIntersectingSegments,
+  indexesToDelete,
 } from "../../line/LineIntersection";
 import findLongestIntersection from "../../line/findLongestIntersection";
-import { Direction, indexesBetween, indexesOf } from "../../line/IndexDistance";
 
 const calculatePointsNormal = (
   prevPoint: Point,
@@ -52,20 +52,10 @@ const scalePoints = (points: Point[], scale: number): Point[] => {
   return scaledPoints;
 };
 
-const middlePointOf = (
-  intersection: LineIntersection,
-  direction: Direction
-) => {
-  if (direction == Direction.FORWARD) {
-    return centerPointOf(intersection.a.b, intersection.b.a);
-  } else {
-    return centerPointOf(intersection.b.a, intersection.a.b);
-  }
-};
-
 const remainingIntersectionsOf = (
   intersections: LineIntersection[],
-  indexesToDelete: number[]
+  indexesToDelete: number[],
+  pointCount: number
 ): LineIntersection[] => {
   const deleteContainsSegment = (segment: LineSegment): boolean => {
     return (
@@ -81,7 +71,34 @@ const remainingIntersectionsOf = (
       deleteContainsSegment(intersection.b)
     );
   };
-  return intersections.filter((it) => !deleteContainsIntersection(it));
+
+  const updateIndex = (i: number) => {
+    const result = i - indexesToDelete.length;
+    if (result >= 0) {
+      return result;
+    } else {
+      return pointCount - result;
+    }
+  };
+
+  const updateSegment = (segment: LineSegment): LineSegment => {
+    return {
+      ...segment,
+      indexA: updateIndex(segment.indexA),
+      indexB: updateIndex(segment.indexB),
+    };
+  };
+
+  const updateLineIndex = (line: LineIntersection): LineIntersection => {
+    let updatedLine = { ...line };
+    updatedLine.a = updateSegment(line.a);
+    updatedLine.b = updateSegment(line.b);
+    return updatedLine;
+  };
+
+  return intersections
+    .filter((it) => !deleteContainsIntersection(it))
+    .map(updateLineIndex);
 };
 
 const deleteContainingIndexes = (
@@ -102,27 +119,22 @@ const cleanupIntersections = (
   intersections: LineIntersection[]
 ) => {
   const pointCount = contour.points.length;
-  const { intersection, indexDistance } = findLongestIntersection(
-    intersections,
-    pointCount
-  );
-  const { direction } = indexDistance;
-  const index =
-    direction == Direction.FORWARD
-      ? intersection.b.indexA
-      : intersection.a.indexB;
+  const intersection = findLongestIntersection(intersections, pointCount);
+  
+  // Add point before deletion, so we don't mess up delete index counting
+  const index = intersection.b.indexA + 1;
   let updatedContour = modifyContour(contour).addPoint(
     intersection.point,
     index
   );
 
-  const { startIndex, endIndex } = indexesOf(intersection, direction);
-  const indexesToDelete = indexesBetween(startIndex, endIndex, pointCount);
-  updatedContour = deleteContainingIndexes(updatedContour, indexesToDelete);
+  const toDelete = indexesToDelete(intersection, pointCount);
+  updatedContour = deleteContainingIndexes(updatedContour, toDelete);
 
   const remainingIntersections = remainingIntersectionsOf(
     intersections,
-    indexesToDelete
+    toDelete,
+    updatedContour.points.length
   );
   if (remainingIntersections.length > 0) {
     return cleanupIntersections(updatedContour, remainingIntersections);
@@ -138,6 +150,7 @@ const scaleAlongNormal = (contour: ContourPoints) => {
       toLineSegments(scaledPoints)
     );
     if (intersections.length > 0) {
+      console.log("Cleaning up intersections!");
       return cleanupIntersections({ points: scaledPoints }, intersections);
     } else {
       return { points: scaledPoints };

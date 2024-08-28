@@ -1,14 +1,3 @@
-import LineIntersection from "./LineIntersection";
-
-export enum Direction {
-  FORWARD,
-  BACKWARD,
-}
-export type IndexDistance = {
-  distance: number;
-  direction: Direction;
-};
-
 const forwardIndexDistance = (from: number, to: number, pointCount: number) => {
   if (to > from) {
     return to - from - 1;
@@ -34,21 +23,6 @@ export const indexDistance = (from: number, to: number, pointCount: number) => {
     forward: () => forwardIndexDistance(from, to, pointCount),
     backward: () => backwardIndexDistance(from, to, pointCount),
   };
-};
-
-export const indexesOf = (
-  intersection: LineIntersection,
-  direction: Direction
-) => {
-  const startIndex =
-    direction === Direction.FORWARD
-      ? intersection.a.indexB
-      : intersection.b.indexA;
-  const endIndex =
-    direction === Direction.FORWARD
-      ? intersection.b.indexA
-      : intersection.a.indexB;
-  return { startIndex, endIndex };
 };
 
 export const indexesBetween = (

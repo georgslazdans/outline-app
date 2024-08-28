@@ -1,5 +1,15 @@
-import { Direction, IndexDistance, indexDistance } from "./IndexDistance";
+import { indexDistance } from "./IndexDistance";
 import LineIntersection from "./LineIntersection";
+
+export enum Direction {
+  FORWARD,
+  BACKWARD,
+}
+
+export type IndexDistance = {
+  distance: number;
+  direction: Direction;
+};
 
 const shortestIndexDistance = (
   intersection: LineIntersection,
@@ -32,11 +42,8 @@ const shortestIndexDistance = (
 const findLongestIntersection = (
   intersections: LineIntersection[],
   pointCount: number
-): {
-  intersection: LineIntersection;
-  indexDistance: IndexDistance;
-} => {
-  return intersections
+): LineIntersection => {
+  const largestDistance = intersections
     .map((it) => {
       return {
         intersection: it,
@@ -48,6 +55,15 @@ const findLongestIntersection = (
         ? currentItem
         : maxItem;
     });
+  if (largestDistance.indexDistance.direction == Direction.BACKWARD) {
+    const { a, b } = largestDistance.intersection;
+    return {
+      ...largestDistance.intersection,
+      a: b,
+      b: a,
+    };
+  }
+  return largestDistance.intersection;
 };
 
 export default findLongestIntersection;

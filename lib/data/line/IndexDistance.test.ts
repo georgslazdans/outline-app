@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { indexDistance } from "./IndexDistance";
+import { indexDistance, indexesBetween } from "./IndexDistance";
 
 describe("indexDistance forward", () => {
   describe("from < to", () => {
@@ -96,5 +96,24 @@ describe("indexDistance backward", () => {
 
       expect(indexDistance(indexA, indexB, totalCount).backward()).toBe(0);
     });
+  });
+});
+
+describe("indexesBetween", () => {
+  test("when single point between - returns 3 points", () => {
+    const pointCount = 10;
+    expect(indexesBetween(1, 3, pointCount)).toStrictEqual([1, 2, 3]);
+  });
+
+  test("when all points between - returns all points", () => {
+    const pointCount = 10;
+    expect(indexesBetween(0, 9, pointCount)).toStrictEqual([
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+    ]);
+  });
+
+  test("when points loop around", () => {
+    const pointCount = 10;
+    expect(indexesBetween(8, 0, pointCount)).toStrictEqual([8, 9, 0]);
   });
 });

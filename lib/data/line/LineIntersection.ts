@@ -1,5 +1,6 @@
 import Point from "../Point";
-import Line, { lineOf, lineOfSegment, linesCrossPointOf } from "./Line";
+import { indexesBetween } from "./IndexDistance";
+import { lineOfSegment, linesCrossPointOf } from "./Line";
 import LineSegment, { doLineSegmentsIntersect } from "./LineSegment";
 
 type LineIntersection = {
@@ -31,8 +32,20 @@ export const findIntersectingSegments = (
   if (segments.length <= 2) {
     return intersectingLines;
   } else {
-    return [...intersectingLines, ...findIntersectingSegments(segments.slice(1))];
+    return [
+      ...intersectingLines,
+      ...findIntersectingSegments(segments.slice(1)),
+    ];
   }
+};
+
+export const indexesToDelete = (
+  intersection: LineIntersection,
+  pointCount: number
+): number[] => {
+  const startIndex = intersection.a.indexB;
+  const endIndex = intersection.b.indexA;
+  return indexesBetween(startIndex, endIndex, pointCount);
 };
 
 export default LineIntersection;

@@ -12,11 +12,12 @@ const nextIndex = (i: number, length: number) => (i === length - 1 ? 0 : i + 1);
 export const toLineSegments = (points: Point[]): LineSegment[] => {
   const segments: LineSegment[] = [];
   for (let i = 0; i < points.length; i++) {
+    const bIndex = nextIndex(i, points.length);
     segments.push({
       a: points[i],
       indexA: i,
-      b: points[nextIndex(i, points.length)],
-      indexB: nextIndex(i, points.length),
+      b: points[bIndex],
+      indexB: bIndex,
     });
   }
   return segments;
