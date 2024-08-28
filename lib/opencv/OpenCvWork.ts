@@ -2,7 +2,7 @@ import { Context } from "@/context/DetailsContext";
 import { ProcessingResult } from "./processor/ImageProcessor";
 import StepResult from "./StepResult";
 import Settings, { settingsOf } from "./Settings";
-import { ProccessStep } from "./processor/ProcessStep";
+import { ProcessStep } from "./processor/ProcessStep";
 import { ProcessAll } from "./processor/ProcessAll";
 import StepName from "./processor/steps/StepName";
 import Steps from "./processor/Steps";
@@ -14,7 +14,7 @@ export type OpenCvWork =
     }
   | {
       type: "step";
-      data: ProccessStep;
+      data: ProcessStep;
     };
 
 export type Status = "success" | "failed";

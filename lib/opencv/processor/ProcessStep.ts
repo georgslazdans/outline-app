@@ -7,7 +7,7 @@ import Steps from "./Steps";
 import ProcessingStep from "./steps/ProcessingFunction";
 import StepName from "./steps/StepName";
 
-export type ProccessStep = {
+export type ProcessStep = {
   stepName: StepName;
   imageData: ImageData;
   imageColorSpace: ColorSpace;
@@ -16,7 +16,7 @@ export type ProccessStep = {
 };
 
 const processStep = async (
-  command: ProccessStep
+  command: ProcessStep
 ): Promise<ProcessingResult> => {
   const image = imageOf(command.imageData, command.imageColorSpace);
   const previousSteps = stepResultsBefore(

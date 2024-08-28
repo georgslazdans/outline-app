@@ -4,7 +4,7 @@ import { OpenCvWork, OpenCvResult } from "./OpenCvWork";
 import outlineCheckImageOf from "./processor/OutlineCheckImage";
 import objectThresholdCheckOf from "./processor/ObjectThresholdCheck";
 import handleOpenCvError from "./OpenCvError";
-import processStep, { ProccessStep } from "./processor/ProcessStep";
+import processStep, { ProcessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
 import StepResult, { stepResultsBefore } from "./StepResult";
 
@@ -16,7 +16,7 @@ const processWork = async (work: OpenCvWork) => {
       result = await processImage(work.data as ProcessAll);
       break;
     case "step":
-      result = await processStep(work.data as ProccessStep);
+      result = await processStep(work.data as ProcessStep);
       break;
   }
   return result;

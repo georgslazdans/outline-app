@@ -10,7 +10,6 @@ import imageDataOf, { imageOf } from "../util/ImageData";
 import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
 import StepName from "./steps/StepName";
-import { ReuseStep } from "./steps/ExtractPaper";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
