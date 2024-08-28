@@ -10,9 +10,16 @@ type Props = {
   children: ReactNode;
   position: Vector3;
   onPointDrag: (l: Matrix4, _dl: Matrix4, w: Matrix4, dw: Matrix4) => void;
+  onPointDragEnd?: () => void;
 };
 
-const Draggable = ({ enabled, children, position, onPointDrag }: Props) => {
+const Draggable = ({
+  enabled,
+  children,
+  position,
+  onPointDrag,
+  onPointDragEnd,
+}: Props) => {
   const { setDisableCamera } = useEditorContext();
   const [matrix, setMatrix] = useState(new Matrix4());
 
@@ -29,6 +36,9 @@ const Draggable = ({ enabled, children, position, onPointDrag }: Props) => {
   };
   const onDragEnd = () => {
     setDisableCamera(false);
+    if (onPointDragEnd) {
+      onPointDragEnd();
+    }
   };
 
   const onDrag = (l: Matrix4, _dl: Matrix4, w: Matrix4, dw: Matrix4) => {

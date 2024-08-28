@@ -58,7 +58,8 @@ const ContourModeEdit = ({ dictionary }: Props) => {
     }
   };
 
-  const { onChange: debouncedUpdate } = useDebounced(updateModelData);
+  const { onChange: debouncedUpdate, flush: flushPendingDataChanges } =
+    useDebounced(updateModelData);
 
   const onContourChanged = (contourIndex: number) => {
     return (contour: ContourPoints) => {
@@ -92,6 +93,7 @@ const ContourModeEdit = ({ dictionary }: Props) => {
                 onContourChange={onContourChanged(index)}
                 selectedPoint={selectedPoint}
                 transparent={wireframe}
+                onModelEditEnd={flushPendingDataChanges}
               ></ContourMesh>
             );
           })}

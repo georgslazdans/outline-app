@@ -18,6 +18,7 @@ type Props = {
   onContourChange: (contour: ContourPoints) => void;
   selectedPoint?: ContourIndex;
   transparent: boolean;
+  onModelEditEnd?: () => void;
 };
 
 const ContourMesh = memo(function ContourMeshFun({
@@ -26,6 +27,7 @@ const ContourMesh = memo(function ContourMeshFun({
   onContourChange,
   selectedPoint,
   transparent,
+  onModelEditEnd,
 }: Props) {
   const { camera } = useThree();
   const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
@@ -94,6 +96,7 @@ const ContourMesh = memo(function ContourMeshFun({
                 enabled={isPointSelected(index)}
                 position={new Vector3(point.x, point.y, 0)}
                 onPointDrag={onPointDrag(index)}
+                onPointDragEnd={onModelEditEnd}
               >
                 <ContourPoint
                   contourIndex={contourIndex}
