@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { indexDistance, indexesBetween } from "./IndexDistance";
+import { indexDistance, indexesBetween } from "./PointIndex";
 
 describe("indexDistance forward", () => {
   describe("from < to", () => {

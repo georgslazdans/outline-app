@@ -51,3 +51,19 @@ export const indexesBetween = (
 
   return addIndexes(startIndex, endIndex);
 };
+
+export const updateIndexAfterDelete = (i: number, indexesToDelete: number[], pointCount: number) => {
+  let result = i;
+  
+  for (let index of indexesToDelete) {
+    if (index < i) {
+      result--;
+    }
+  }
+
+  if (result >= 0) {
+    return result;
+  } else {
+    return pointCount + result;
+  }
+};

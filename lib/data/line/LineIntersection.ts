@@ -1,5 +1,5 @@
 import Point from "../Point";
-import { indexesBetween } from "./IndexDistance";
+import { indexesBetween, updateIndexAfterDelete } from "./PointIndex";
 import { lineOfSegment, linesCrossPointOf } from "./Line";
 import LineSegment, { doLineSegmentsIntersect } from "./LineSegment";
 
@@ -11,6 +11,12 @@ type LineIntersection = {
 
 const getCrossPointOf = (a: LineSegment, b: LineSegment): Point => {
   return linesCrossPointOf(lineOfSegment(a), lineOfSegment(b))!;
+};
+
+export const findLowestPointIndexOf = (line: LineIntersection) => {
+  const lowestIndex = (segment: LineSegment) =>
+    Math.min(segment.indexA, segment.indexB);
+  return Math.min(lowestIndex(line.a), lowestIndex(line.b));
 };
 
 export const findIntersectingSegments = (
@@ -45,7 +51,48 @@ export const indexesToDelete = (
 ): number[] => {
   const startIndex = intersection.a.indexB;
   const endIndex = intersection.b.indexA;
-  return indexesBetween(startIndex, endIndex, pointCount);
+  const indexes = indexesBetween(startIndex, endIndex, pointCount);
+  return indexes.sort((a,b) => a < b ? -1 : 1);
+};
+
+export const remainingIntersectionsOf = (
+  intersections: LineIntersection[],
+  indexesToDelete: number[],
+  pointCount: number
+): LineIntersection[] => {
+  const deleteContainsSegment = (segment: LineSegment): boolean => {
+    return (
+      indexesToDelete.includes(segment.indexA) ||
+      indexesToDelete.includes(segment.indexB)
+    );
+  };
+  const deleteContainsIntersection = (
+    intersection: LineIntersection
+  ): boolean => {
+    return (
+      deleteContainsSegment(intersection.a) ||
+      deleteContainsSegment(intersection.b)
+    );
+  };
+
+  const updateSegment = (segment: LineSegment): LineSegment => {
+    return {
+      ...segment,
+      indexA: updateIndexAfterDelete(segment.indexA, indexesToDelete, pointCount),
+      indexB: updateIndexAfterDelete(segment.indexB, indexesToDelete, pointCount),
+    };
+  };
+
+  const updateLineIndex = (line: LineIntersection): LineIntersection => {
+    let updatedLine = { ...line };
+    updatedLine.a = updateSegment(line.a);
+    updatedLine.b = updateSegment(line.b);
+    return updatedLine;
+  };
+
+  return intersections
+    .filter((it) => !deleteContainsIntersection(it))
+    .map(updateLineIndex);
 };
 
 export default LineIntersection;

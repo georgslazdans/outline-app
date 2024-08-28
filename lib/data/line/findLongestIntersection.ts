@@ -1,4 +1,4 @@
-import { indexDistance } from "./IndexDistance";
+import { indexDistance } from "./PointIndex";
 import LineIntersection from "./LineIntersection";
 
 export enum Direction {
