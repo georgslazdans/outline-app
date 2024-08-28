@@ -1,3 +1,9 @@
+export const nextIndex = (i: number, length: number) =>
+  i === length - 1 ? 0 : i + 1;
+
+export const previousIndex = (i: number, length: number) =>
+  i === 0 ? length - 1 : i - 1;
+
 const forwardIndexDistance = (from: number, to: number, pointCount: number) => {
   if (to > from) {
     return to - from - 1;
@@ -52,9 +58,13 @@ export const indexesBetween = (
   return addIndexes(startIndex, endIndex);
 };
 
-export const updateIndexAfterDelete = (i: number, indexesToDelete: number[], pointCount: number) => {
+export const updateIndexAfterDelete = (
+  i: number,
+  indexesToDelete: number[],
+  pointCount: number
+) => {
   let result = i;
-  
+
   for (let index of indexesToDelete) {
     if (index < i) {
       result--;

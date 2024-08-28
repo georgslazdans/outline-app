@@ -27,7 +27,6 @@ describe("getMagnitudeDistanceTo", () => {
     expect(result).toBe(2);
   });
 
-
   test("when comparing to a negative point ", () => {
     const a = p(0, 0);
     const b = p(-10, 0);
@@ -35,5 +34,14 @@ describe("getMagnitudeDistanceTo", () => {
 
     const result = forPoints(a, b).getMagnitudeDistanceTo(point);
     expect(result).toBe(20);
+  });
+
+  test("test negative values ", () => {
+    const a = p(-2, -20);
+    const b = p(0, 0);
+    const point = p(0, 2);
+
+    const result = forPoints(a, b).getMagnitudeDistanceTo(point);
+    expect(result).toBe(24.08318915758459);
   });
 });

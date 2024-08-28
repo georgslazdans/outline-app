@@ -38,7 +38,7 @@ export const centerPointOf = (pointA: Point, pointB: Point) => {
 };
 
 export const magnitudeOf = (p: Point) => {
-  return Math.sqrt(p.x * p.x + p.y + p.y);
+  return Math.sqrt(p.x * p.x + p.y * p.y);
 };
 
 export const forPoints = (a: Point, b: Point) => {

@@ -5,6 +5,7 @@ import {
   linesCrossPointOf,
   isLineVertical,
 } from "./Line";
+import { nextIndex } from "./PointIndex";
 
 type LineSegment = {
   a: Point;
@@ -12,8 +13,6 @@ type LineSegment = {
   b: Point;
   indexB: number;
 };
-
-const nextIndex = (i: number, length: number) => (i === length - 1 ? 0 : i + 1);
 
 export const toLineSegments = (points: Point[]): LineSegment[] => {
   const segments: LineSegment[] = [];

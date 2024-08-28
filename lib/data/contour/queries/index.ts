@@ -1,5 +1,5 @@
 import ContourPoints from "../ContourPoints";
-import findLineSegmentClosestToPoint from "./FindIndexClosestToPoint";
+import findLineSegmentClosestToPoint from "./FindLineSegmentClosestToPoint";
 import findLargestContourOf from "./FindLargestContourOf";
 import findMiddleBetweenPoints from "./FindMiddleBetweenPoints";
 
