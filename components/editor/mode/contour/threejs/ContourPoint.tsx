@@ -49,9 +49,9 @@ const ContourPoint = memo(function PointMesh({
         />
       </mesh>
       <Text
-        position={new Vector3(0, -0.01 * size * 1.4 , 0)}
+        position={new Vector3(0, -0.01 * size * 1.4, 0)}
         scale={scaleVectorOf(POINT_SCALE_THREEJS * size)}
-        color="#000000"
+        color={color}
       >
         {index}
       </Text>

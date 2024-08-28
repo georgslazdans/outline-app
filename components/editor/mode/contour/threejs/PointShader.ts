@@ -1,13 +1,10 @@
 import { ShaderMaterialProps } from "@react-three/fiber";
-import {
-  Color,
-  NormalBlending,
-} from "three";
+import { Color, NormalBlending } from "three";
 
 const pointShaderMaterialOf = (
   radius: number,
   color: string,
-  alpha: number = 0.3,
+  alpha: number = 0.3
 ): ShaderMaterialProps => {
   return {
     uniforms: {
@@ -29,9 +26,9 @@ const pointShaderMaterialOf = (
         varying vec2 vUv;
   
         void main() {
-          float dist = length(vUv - vec2(0.5, 0.5)); // Distance from center
-          float edgeDist = 0.6; // Thickness of the outline
-          float centerDist = 0.1; // Center point size
+          float dist = length(vUv - vec2(0.5, 0.5)) * uRadius; // Distance from center
+          float edgeDist = 0.6 * uRadius; // Thickness of the outline
+          float centerDist = 0.1 * uRadius; // Center point size
 
           if (dist < centerDist) {
             gl_FragColor = vec4(uColor, 1.0);
@@ -46,7 +43,7 @@ const pointShaderMaterialOf = (
       `,
     transparent: true,
     depthWrite: false, // Prevents the material from writing to the depth buffer
-    blending: NormalBlending
+    blending: NormalBlending,
   };
 };
 
