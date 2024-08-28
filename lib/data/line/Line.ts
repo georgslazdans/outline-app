@@ -34,4 +34,8 @@ export const getPointOnLine = (y: number, line: Line): Point => {
   };
 };
 
+export const isLineVertical = (line: Line) => {
+  return line.slope == Infinity || line.slope == -Infinity;
+};
+
 export default Line;

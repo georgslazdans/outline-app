@@ -30,7 +30,7 @@ const icon = (
 );
 
 const ScaleAlongNormal = ({ dictionary, contour, onContourChanged }: Props) => {
-  const [scale, setScale] = useState(0.1);
+  const [scale, setScale] = useState(0.5);
 
   const handleScaleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number.parseFloat(event.target.value);

@@ -35,12 +35,31 @@ export const scalar = (a: Point, scalar: number) => {
 export const centerPointOf = (pointA: Point, pointB: Point) => {
   const distance = subtract(pointB, pointA);
   return add(pointA, scalar(distance, 1 / 2));
-}
+};
+
+export const magnitudeOf = (p: Point) => {
+  return Math.sqrt(p.x * p.x + p.y + p.y);
+};
+
+export const forPoints = (a: Point, b: Point) => {
+  return {
+    getMagnitudeDistanceTo: (point: Point): number => {
+      const distance = add(subtract(a, point), subtract(b, point));
+      return magnitudeOf(distance);
+    },
+  };
+};
+
+export const lengthOf = (p1: Point, p2: Point): number => {
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  return Math.sqrt(dx * dx + dy * dy);
+};
 
 export const calculateNormal = (p1: Point, p2: Point): Point => {
   const dx = p2.x - p1.x;
   const dy = p2.y - p1.y;
-  const length = Math.sqrt(dx * dx + dy * dy);
+  const length = lengthOf(p1, p2);
   return { x: -dy / length, y: dx / length };
 };
 

@@ -3,7 +3,10 @@ import ContourPoint from "./ContourPoint";
 import { Matrix4, Vector3 } from "three";
 import ContourLines from "./ContourLines";
 import ContourIndex from "../../../../../lib/data/contour/ContourIndex";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
+import ContourPoints, {
+  modifyContour,
+  queryContour,
+} from "@/lib/data/contour/ContourPoints";
 import Draggable from "./Draggable";
 import Point from "@/lib/data/Point";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -35,9 +38,10 @@ const ContourMesh = memo(function ContourMeshFun({
   const { onChange: setPointSizeDebounced } = useDebounced(setPointSize, 200);
 
   const cameraScaleFunction = (x: number) => {
-    const maxValue = 5;
-    const minValue = 0.1;
-    const result = 4.4 - (1.1 * Math.log10(x)) + 0.1;
+    const maxValue = 10;
+    const minValue = 0.4;
+    // const result = 4.4 - 0.9 * Math.log(x) + 0.1;
+    const result = 9.5 - 1.2 * Math.log(x);
     return Math.max(Math.min(result, maxValue), minValue);
   };
 
@@ -73,6 +77,12 @@ const ContourMesh = memo(function ContourMeshFun({
     [contourIndex, selectedPoint]
   );
 
+  const addPointToContour = (point: Point) => {
+    const segment = queryContour(contour).findLineSegmentClosestToPoint(point);
+    const { addPoint } = modifyContour(contour);
+    onContourChange(addPoint(point, segment.indexB));
+  };
+
   return (
     <group>
       {currentPoints?.length > 0 && (
@@ -88,14 +98,17 @@ const ContourMesh = memo(function ContourMeshFun({
                 <ContourPoint
                   contourIndex={contourIndex}
                   index={index}
-                  color={isPointSelected(index) ? "red" : "black"}
+                  color={isPointSelected(index) ? "#DA4167" : "#2c7d94"} //"#0D0D0E"}
                   transparent={transparent}
                   size={pointSize}
                 />
               </Draggable>
             );
           })}
-          <ContourLines points={currentPoints}></ContourLines>
+          <ContourLines
+            points={currentPoints}
+            onLineDoubleClick={addPointToContour}
+          ></ContourLines>
         </>
       )}
     </group>

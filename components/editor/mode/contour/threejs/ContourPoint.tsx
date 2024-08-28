@@ -10,7 +10,7 @@ type Props = {
   transparent: boolean;
   index: number;
   contourIndex: number;
-  color: "red" | "black";
+  color: string;
   size: number;
 };
 
