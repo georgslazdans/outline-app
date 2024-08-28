@@ -1,13 +1,6 @@
 import Point, { calculateNormal } from "../../Point";
-import ContourPoints, { modifyContour } from "../ContourPoints";
-import { toLineSegments } from "../../line/LineSegment";
-import LineIntersection, {
-  findIntersectingSegments,
-  indexesToDelete,
-  remainingIntersectionsOf,
-} from "../../line/LineIntersection";
-import findLongestIntersection from "../../line/findLongestIntersection";
-import { updateIndexAfterDelete } from "../../line/PointIndex";
+import ContourPoints from "../ContourPoints";
+import cleanIfHasIntersections from "./CleanIfHasIntersections";
 
 const calculatePointsNormal = (
   prevPoint: Point,
@@ -54,64 +47,9 @@ const scalePoints = (points: Point[], scale: number): Point[] => {
   return scaledPoints;
 };
 
-const deleteContainingIndexes = (
-  contour: ContourPoints,
-  indexesToDelete: number[]
-) => {
-  let updatedContour = contour;
-  for (let i = indexesToDelete.length - 1; i >= 0; i--) {
-    updatedContour = modifyContour(updatedContour).deletePoint(
-      indexesToDelete[i]
-    );
-  }
-  return updatedContour;
-};
-
-const cleanupIntersections = (
-  contour: ContourPoints,
-  intersections: LineIntersection[]
-) => {
-  const pointCount = contour.points.length;
-  const intersection = findLongestIntersection(intersections, pointCount);
-
-  const toDelete = indexesToDelete(intersection, pointCount);
-  let updatedContour = deleteContainingIndexes(contour, toDelete);
-
-  const updatedIndexOf = (i: number) => {
-    return updateIndexAfterDelete(i, toDelete, pointCount);
-  };
-  updatedContour = modifyContour(updatedContour).addPoint(
-    intersection.point,
-    updatedIndexOf(intersection.a.indexB)
-  );
-
-  const remainingIntersections = remainingIntersectionsOf(
-    intersections,
-    toDelete,
-    updatedContour.points.length
-  );
-  if (remainingIntersections.length > 0) {
-    return cleanupIntersections(updatedContour, remainingIntersections);
-  } else {
-    return updatedContour;
-  }
-};
-
 const scaleAlongNormal = (contour: ContourPoints) => {
   return (scale: number): ContourPoints => {
     const scaledPoints = scalePoints(contour.points, scale);
-
-    const cleanIfHasIntersections = (points: Point[]) => {
-      const intersections = findIntersectingSegments(toLineSegments(points));
-      if (intersections.length > 0) {
-        const result = cleanupIntersections({ points: points }, intersections);
-        // Run it twice, with large values, the deletion of points can introduce new lines. 
-        // Might be wise to cover with more tests for bugs and maybe add more points inbetween.
-        return cleanIfHasIntersections(result.points);
-      } else {
-        return { points: points };
-      }
-    };
     return cleanIfHasIntersections(scaledPoints);
   };
 };
