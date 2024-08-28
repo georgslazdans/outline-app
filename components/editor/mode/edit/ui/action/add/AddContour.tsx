@@ -34,13 +34,14 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
   const onContourSelect = (
     points: ContourPoints[],
     height: number,
-    name: string
+    name: string,
+    detailsContextId: number
   ) => {
     const { addItem, getParentIdForObjectCreation: parentIdForObjectCreation } =
       forModelData(modelData);
 
     const parentId = parentIdForObjectCreation(selectedItem);
-    let item = contourItemOf(points, height, name);
+    let item = contourItemOf(points, height, name, detailsContextId);
     if (!parentId) {
       const gridfinityHeight = gridfinityHeightOf(modelData);
       item = {
@@ -49,11 +50,7 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
       };
     }
 
-    setModelData(
-      addItem(item, parentId),
-      EditorHistoryType.OBJ_ADDED,
-      item.id
-    );
+    setModelData(addItem(item, parentId), EditorHistoryType.OBJ_ADDED, item.id);
     setSelectedId(item.id);
   };
 

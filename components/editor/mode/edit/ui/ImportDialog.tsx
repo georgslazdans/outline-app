@@ -2,12 +2,13 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useCallback, useState } from "react";
-import SvgSelect from "./SvgSelect";
+import DetailsContextContourSelect from "./DetailsContextContourSelect";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import { useEditorContext } from "../../../EditorContext";
 import NumberField from "@/components/fields/NumberField";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
+import { Context } from "@/context/DetailsContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -16,7 +17,8 @@ type Props = {
   onContourSelect: (
     contours: ContourPoints[],
     height: number,
-    name: string
+    name: string,
+    detailsContextId: number
   ) => void;
 };
 
@@ -29,40 +31,51 @@ const ImportDialog = ({
   const { setInputFieldFocused } = useEditorContext();
   const [selectedContour, setSelectedContour] = useState<ContourPoints[]>();
   const [shadowHeight, setShadowHeight] = useState(10);
-  const [name, setName] = useState("");
+  const [detailsContext, setDetailsContext] = useState<Context>();
 
-  const onImport = useCallback(() => {
-    if (selectedContour) {
-      onContourSelect(selectedContour, shadowHeight, name);
-      onModalClose();
-    }
-  }, [selectedContour, shadowHeight, name]);
-
-  const onModalClose = () => {
+  const onModalClose = useCallback(() => {
     setSelectedContour(undefined);
     setInputFieldFocused(false);
     onClose();
-  };
+  }, [onClose, setInputFieldFocused]);
+
+  const onImport = useCallback(() => {
+    if (selectedContour && detailsContext) {
+      onContourSelect(
+        selectedContour,
+        shadowHeight,
+        detailsContext.details.name,
+        detailsContext.id!
+      );
+      onModalClose();
+    }
+  }, [
+    selectedContour,
+    detailsContext,
+    onContourSelect,
+    shadowHeight,
+    onModalClose,
+  ]);
 
   const onHeightChange = (event: ChangeEvent<HTMLInputElement>) => {
     setShadowHeight(parseFloat(event.target.value));
   };
 
-  const onContourNameSelect = useCallback(
-    (contourPoints: ContourPoints[], name: string) => {
+  const onDetailsContextSelect = useCallback(
+    (contourPoints: ContourPoints[], context: Context) => {
       setSelectedContour(contourPoints);
-      setName(name);
+      setDetailsContext(context);
     },
-    [setSelectedContour, setName]
+    [setSelectedContour]
   );
 
   return (
     <>
       <Modal isOpen={isOpen} onClose={onModalClose}>
-        <SvgSelect
+        <DetailsContextContourSelect
           dictionary={dictionary}
-          onSelect={onContourNameSelect}
-        ></SvgSelect>
+          onSelect={onDetailsContextSelect}
+        ></DetailsContextContourSelect>
         <NumberField
           label={"Shadow Height"}
           name={"shadow-height"}

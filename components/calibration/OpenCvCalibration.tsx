@@ -156,7 +156,14 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   const saveAndClose = () => {
     setLoading(true);
     const contours = stepResults.pop()!.contours;
-    const context = { ...detailsContext, contours: contours };
+    const paperImage = stepResults.find(
+      (it) => it.stepName == StepName.EXTRACT_PAPER
+    )?.imageData;
+    const context = {
+      ...detailsContext,
+      contours: contours,
+      paperImage: paperImage,
+    };
     update(context).then(() => {
       setLoading(false);
       const lastRoute = getHistory().pop();

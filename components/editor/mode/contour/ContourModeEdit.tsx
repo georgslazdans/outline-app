@@ -8,10 +8,13 @@ import { useEditorContext } from "../../EditorContext";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "../../ModelDataContext";
-import ContourPoints, { modifyContourList } from "@/lib/data/contour/ContourPoints";
+import ContourPoints, {
+  modifyContourList,
+} from "@/lib/data/contour/ContourPoints";
 import ContourSelection from "./ContourSelection";
 import useDebounced from "@/lib/utils/Debounced";
 import { POINT_SCALE_THREEJS } from "@/lib/data/Point";
+import BackgroundImage from "./threejs/BackgroundImage";
 
 type Props = {
   dictionary: Dictionary;
@@ -65,8 +68,19 @@ const ContourModeEdit = ({ dictionary }: Props) => {
     };
   };
 
+  const getDetailsContext = () => {
+    if (selectedItem?.type == ItemType.Contour) {
+      return selectedItem.detailsContextId;
+    }
+  };
+
   return (
     <>
+      {getDetailsContext() && (
+        <BackgroundImage
+          detailsContextId={getDetailsContext()!}
+        ></BackgroundImage>
+      )}
       <ContourSelection>
         {scaledContours &&
           scaledContours.map((contour, index) => {
