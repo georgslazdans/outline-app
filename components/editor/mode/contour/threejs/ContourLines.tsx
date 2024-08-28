@@ -22,12 +22,21 @@ const ContourLines = memo(function SvgLineMesh({
     }
   };
   return (
-    <Line
-      points={[...vertices, vertices[0]]}
-      color="#1296b6"
-      lineWidth={3.5}
-      onDoubleClick={onDoubleClick}
-    ></Line>
+    <>
+      <Line
+        points={[...vertices, vertices[0]]}
+        color="#1296b6"
+        lineWidth={3.5}
+        onDoubleClick={onDoubleClick}
+      ></Line>
+      <Line
+        points={[...vertices, vertices[0]]}
+        color="#1296b6"
+        visible={false}
+        lineWidth={12}
+        onDoubleClick={onDoubleClick}
+      ></Line>
+    </>
   );
 });
 
