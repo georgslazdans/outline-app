@@ -20,7 +20,7 @@ const Draggable = ({
   onPointDrag,
   onPointDragEnd,
 }: Props) => {
-  const { setDisableCamera, setInputFieldFocused } = useEditorContext();
+  const { setDisableCamera, setTransformEditFocused } = useEditorContext();
   const [matrix, setMatrix] = useState(new Matrix4());
 
   useEffect(() => {
@@ -33,23 +33,27 @@ const Draggable = ({
 
   const onDragStart = () => {
     setDisableCamera(true);
-    setInputFieldFocused(true);
+    setTransformEditFocused(true);
   };
   const onDragEnd = () => {
     setDisableCamera(false);
-    setInputFieldFocused(false);
+    setTransformEditFocused(false);
     if (onPointDragEnd) {
       onPointDragEnd();
     }
   };
 
   const onDrag = (l: Matrix4, _dl: Matrix4, w: Matrix4, dw: Matrix4) => {
-    onPointDrag(l, _dl, w, dw);
+    if (enabled) {
+      onPointDrag(l, _dl, w, dw);
+    }
   };
 
+  // TODO disable component dynamically and so there is
   return (
     <>
-      {enabled ? (
+      {/* {enabled ? ( */}
+      {true ? (
         <DragControls
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}

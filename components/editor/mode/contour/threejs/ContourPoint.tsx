@@ -5,6 +5,7 @@ import { POINT_SCALE_THREEJS, scaleVectorOf } from "@/lib/data/Point";
 import pointShaderMaterialOf from "./PointShader";
 import { useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
+import { useEditorContext } from "@/components/editor/EditorContext";
 
 type Props = {
   transparent: boolean;
@@ -21,6 +22,7 @@ const ContourPoint = memo(function PointMesh({
   transparent,
   size = 1,
 }: Props) {
+  const { setSelectedPoint } = useEditorContext();
   const { invalidate } = useThree();
   const circleRef = useRef<any>();
   const materialRef = useRef<any>();
@@ -31,6 +33,13 @@ const ContourPoint = memo(function PointMesh({
 
   const alpha = transparent ? 0 : 0.3;
 
+  const onClick = () => {
+    setSelectedPoint({
+      contour: contourIndex,
+      point: index,
+    });
+  };
+
   return (
     <group
       position={new Vector3(0, 0, 0.0001)}
@@ -40,6 +49,7 @@ const ContourPoint = memo(function PointMesh({
         ref={circleRef}
         scale={scaleVectorOf(POINT_SCALE_THREEJS)}
         userData={{ contourIndex: asContourIndex() }}
+        onPointerDown={onClick}
       >
         <circleGeometry args={[size]}></circleGeometry>
         <shaderMaterial

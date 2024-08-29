@@ -18,7 +18,8 @@ const ContourSelection = ({ children }: Props) => {
       const pointIndex = point.userData?.contourIndex as ContourIndex;
 
       if (pointIndex) {
-        setSelectedPoint(pointIndex);
+        // Point selected at ContourPoint component
+      //  setSelectedPoint(pointIndex);
       }
     }
   };

@@ -47,12 +47,19 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
 
   const useHotkey = useCallback(
     (key: string, hotkeyCtrl?: boolean) => {
-      return {
-        hotkey: !inputFieldFocused ? key : "",
-        hotkeyCtrl: hotkeyCtrl && !inputFieldFocused ? true : undefined,
-      };
+      if (inputFieldFocused || transformEditFocused) {
+        return {
+          hotkey: "",
+          hotkeyCtrl: undefined,
+        };
+      } else {
+        return {
+          hotkey: key,
+          hotkeyCtrl: hotkeyCtrl ? true : undefined,
+        };
+      }
     },
-    [inputFieldFocused]
+    [inputFieldFocused, transformEditFocused]
   );
 
   return (

@@ -5,6 +5,8 @@ import { useEditorContext } from "@/components/editor/EditorContext";
 import React from "react";
 import EditorMode from "../../../../EditorMode";
 import ActionButton from "../../../../../ui/action/ActionButton";
+import { useEditorHistoryContext } from "@/components/editor/history/EditorHistoryContext";
+import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 
 type Props = {
   dictionary: Dictionary;
@@ -30,14 +32,22 @@ const icon = (
 );
 
 const EditContour = ({ dictionary }: Props) => {
-  const { setEditorMode } = useEditorContext();
+  const { selectedId, setEditorMode } = useEditorContext();
+  const { ensureLastEventHas } = useEditorHistoryContext();
+
+  const openContourEditMode = () => {
+    if (selectedId) {
+      setEditorMode(EditorMode.CONTOUR_EDIT);
+      ensureLastEventHas(selectedId, EditorHistoryType.CONTOUR_UPDATED);
+    }
+  };
 
   return (
     <>
       <ActionButton
         dictionary={dictionary}
         id={"edit-contour-button"}
-        onClick={() => setEditorMode(EditorMode.CONTOUR_EDIT)}
+        onClick={openContourEditMode}
         icon={icon}
         label="Edit"
         tooltip="Edit Contour"

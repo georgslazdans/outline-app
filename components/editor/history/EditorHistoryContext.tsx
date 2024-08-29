@@ -20,6 +20,7 @@ interface EditHistoryType {
   redo(): void;
   addHistoryEvent(data: ModelData, options: EditHistoryOptions): void;
   compressHistoryEvents(type: EditorHistoryType): void;
+  ensureLastEventHas(selectedId: string, type: EditorHistoryType): void;
 }
 
 const EditorHistoryContext = createContext<EditHistoryType | undefined>(
@@ -100,14 +101,44 @@ export const EditorHistoryProvider = ({
     if (supportsHistoryCompression(newHistoryData, currentItem)) {
       sliceIndex = currentIndex;
     }
-    const newItems = [...items.slice(0, sliceIndex), newHistoryData];
+    const newItems = ensureMaxSize(
+      [...items.slice(0, sliceIndex), newHistoryData],
+      MAX_ITEMS
+    );
 
-    setItems(ensureMaxSize(newItems, MAX_ITEMS));
+    setItems(newItems);
     setCurrentIndex(newItems.length - 1);
   };
 
+  const ensureLastEventHas = (selectedId: string, type: EditorHistoryType) => {
+    const currentItem = items[currentIndex];
+    if (currentItem.options.selectedId == selectedId) {
+      return;
+    } else {
+      const newItems = [
+        ...items,
+        {
+          ...currentItem,
+          options: {
+            ...currentItem.options,
+            selectedId: selectedId,
+            addDate: new Date(),
+            type: type,
+          },
+        },
+      ];
+      setItems(ensureMaxSize(newItems, MAX_ITEMS));
+      setCurrentIndex(newItems.length - 1);
+    }
+  };
+
   const compressHistoryEvents = (type: EditorHistoryType) => {
-    const hasTheSameType = (data: HistoryData) => data.options.type == type;
+    const hasTheSameType = (data: HistoryData) => {
+      if (!data) {
+        debugger;
+      }
+      return data.options.type == type;
+    };
 
     const currentItem = items[currentIndex];
     if (hasTheSameType(currentItem)) {
@@ -141,6 +172,7 @@ export const EditorHistoryProvider = ({
         canUndo,
         canRedo,
         compressHistoryEvents,
+        ensureLastEventHas,
       }}
     >
       {children}
