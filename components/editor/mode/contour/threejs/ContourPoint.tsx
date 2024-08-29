@@ -1,11 +1,11 @@
-import React, { memo, useRef } from "react";
+import React, { memo, useRef, useState } from "react";
 import { Vector3 } from "three";
 import ContourIndex from "../../../../../lib/data/contour/ContourIndex";
 import { POINT_SCALE_THREEJS, scaleVectorOf } from "@/lib/data/Point";
 import pointShaderMaterialOf from "./PointShader";
-import { useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
-import { useEditorContext } from "@/components/editor/EditorContext";
+import { ThreeEvent } from "@react-three/fiber";
+import { usePointClickContext } from "../PointSelection";
 
 type Props = {
   transparent: boolean;
@@ -22,10 +22,11 @@ const ContourPoint = memo(function PointMesh({
   transparent,
   size = 1,
 }: Props) {
-  const { setSelectedPoint } = useEditorContext();
-  const { invalidate } = useThree();
+  const { onPointerDown, onPointerUp } = usePointClickContext();
+
   const circleRef = useRef<any>();
   const materialRef = useRef<any>();
+  const [previousLocation, setPreviousLocation] = useState<Vector3>();
 
   const asContourIndex = (): ContourIndex => {
     return { contour: contourIndex, point: index };
@@ -33,13 +34,21 @@ const ContourPoint = memo(function PointMesh({
 
   const alpha = transparent ? 0 : 0.3;
 
-  const onClick = () => {
-    setSelectedPoint({
-      contour: contourIndex,
-      point: index,
-    });
+  const onClickDown = (event: ThreeEvent<PointerEvent>) => {
+    setPreviousLocation(event.point);
+    onPointerDown(event);
   };
 
+  const onClickUp = (event: ThreeEvent<PointerEvent>) => {
+    if (
+      previousLocation &&
+      previousLocation.distanceTo(event.point) > 0.00001
+    ) {
+      return;
+    }
+    onPointerUp(event);
+  };
+  
   return (
     <group
       position={new Vector3(0, 0, 0.0001)}
@@ -49,7 +58,8 @@ const ContourPoint = memo(function PointMesh({
         ref={circleRef}
         scale={scaleVectorOf(POINT_SCALE_THREEJS)}
         userData={{ contourIndex: asContourIndex() }}
-        onPointerDown={onClick}
+        onPointerDown={onClickDown}
+        onPointerUp={onClickUp}
       >
         <circleGeometry args={[size]}></circleGeometry>
         <shaderMaterial

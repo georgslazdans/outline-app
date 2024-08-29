@@ -11,7 +11,7 @@ import { useModelDataContext } from "../../ModelDataContext";
 import ContourPoints, {
   modifyContourList,
 } from "@/lib/data/contour/ContourPoints";
-import ContourSelection from "./ContourSelection";
+import PointSelection from "./PointSelection";
 import useDebounced from "@/lib/utils/Debounced";
 import { POINT_SCALE_THREEJS } from "@/lib/data/Point";
 import BackgroundImage from "./threejs/BackgroundImage";
@@ -82,7 +82,7 @@ const ContourModeEdit = ({ dictionary }: Props) => {
           detailsContextId={getDetailsContext()!}
         ></BackgroundImage>
       )}
-      <ContourSelection>
+      <PointSelection>
         {scaledContours &&
           scaledContours.map((contour, index) => {
             return (
@@ -97,7 +97,7 @@ const ContourModeEdit = ({ dictionary }: Props) => {
               ></ContourMesh>
             );
           })}
-      </ContourSelection>
+      </PointSelection>
     </>
   );
 };
