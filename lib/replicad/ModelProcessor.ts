@@ -8,9 +8,17 @@ import rotateModel from "./transform/RotateModel";
 import translateModel from "./transform/TranslateModel";
 import processBooleanOperation from "./transform/BooleanOperation";
 
-const modelOf = (item: Item): ReplicadModelData => {
-  let model =
-    item.type == ItemType.Group ? processItems(item.items) : drawItem(item);
+const modelOf = (item: Item): ReplicadModelData | undefined => {
+  let model;
+  if (item.type == ItemType.Group) {
+    if (item.items.length > 0) {
+      model = processItems(item.items)!;
+    } else {
+      return;
+    }
+  } else {
+    model = drawItem(item);
+  }
   model = rotateModel(model, item);
   model = translateModel(model, item);
   return model;
@@ -21,18 +29,25 @@ const processItems = (items: Item[]) => {
   for (let i = 1; i < items.length; i++) {
     const item = items[i];
     const model = modelOf(item);
-    base = processBooleanOperation(
-      base as Shape3D,
-      model as Shape3D,
-      item.booleanOperation
-    );
+    if (model) {
+      base = processBooleanOperation(
+        base as Shape3D,
+        model as Shape3D,
+        item.booleanOperation
+      );
+    } else {
+      console.warn("Item doesn't have an model!", item);
+    }
   }
   return base;
 };
 
 export const processModelData = (data: ModelData): ReplicadModelData => {
+  if (!data.items || data.items.length <= 0) {
+    throw new Error("No items passed");
+  }
   if (data.items[0].type != ItemType.Gridfinity) {
     console.warn("First item is not a gridfinity box!");
   }
-  return processItems(data.items);
+  return processItems(data.items)!;
 };
