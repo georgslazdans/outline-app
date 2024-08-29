@@ -21,7 +21,7 @@ const SelectedPointEdit = ({
 }: Props) => {
   const getSelectedPoint = useCallback(() => {
     const { contour, point } = selectedPoint;
-    return contourPoints[contour].points[point];
+    return contourPoints[contour]?.points[point];
   }, [selectedPoint, contourPoints]);
 
   const currentPoint = useMemo(getSelectedPoint, [getSelectedPoint]);

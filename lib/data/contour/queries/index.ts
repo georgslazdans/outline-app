@@ -2,11 +2,13 @@ import ContourPoints from "../ContourPoints";
 import findLineSegmentClosestToPoint from "./FindLineSegmentClosestToPoint";
 import findLargestContourOf from "./FindLargestContourOf";
 import findMiddleBetweenPoints from "./FindMiddleBetweenPoints";
+import arePointsClockwise from "./ArePointsClockwise";
 
 const singleOnlyQuery = () => {
   return {
     findMiddleBetweenPoints: findMiddleBetweenPoints,
     findLineSegmentClosestToPoint: findLineSegmentClosestToPoint,
+    arePointsClockwise: arePointsClockwise,
   };
 };
 
