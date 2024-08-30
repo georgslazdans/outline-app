@@ -102,7 +102,9 @@ const TransformControls = memo(function TransformControls({
   };
 
   const onDragEnd = () => {
-    setTransformEditFocused(false);
+    setTimeout(() => {
+      setTransformEditFocused(false);
+    });
     flushChanges();
   };
   return (

@@ -37,7 +37,9 @@ const Draggable = ({
   };
   const onDragEnd = () => {
     setDisableCamera(false);
-    setTransformEditFocused(false);
+    setTimeout(() => {
+      setTransformEditFocused(false);
+    });
     if (onPointDragEnd) {
       onPointDragEnd();
     }

@@ -15,7 +15,12 @@ type Transform = {
 
 const CameraControls = ({}: Props) => {
   const controlRef = useRef<OrbitControlsImpl>(null);
-  const { editorMode, disableCamera } = useEditorContext();
+  const {
+    editorMode,
+    disableCamera,
+    transformEditFocused,
+    setTransformEditFocused,
+  } = useEditorContext();
   const { camera } = useThree();
 
   const [canRotate, setCanRotate] = useState<boolean>(true);
@@ -60,14 +65,30 @@ const CameraControls = ({}: Props) => {
     }
   }, [editorMode]);
 
+  const onDrag = () => {
+    if (!transformEditFocused) {
+      setTransformEditFocused(true);
+    }
+  };
+
+  const onDragEnd = () => {
+    setTimeout(() => {
+      setTransformEditFocused(false);
+    });
+  };
+
   return (
     <>
       <OrbitControls
         ref={controlRef}
         makeDefault
+        rotateSpeed={0.5}
+        panSpeed={0.75}
         enableDamping={false}
         enableRotate={canRotate}
         enabled={!disableCamera}
+        onChange={onDrag}
+        onEnd={onDragEnd}
       />
     </>
   );
