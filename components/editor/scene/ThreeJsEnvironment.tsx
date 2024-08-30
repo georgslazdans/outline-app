@@ -4,13 +4,10 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
 
-import {
-  ContactShadows,
-  OrbitControls,
-  Sky,
-} from "@react-three/drei";
+import { ContactShadows, OrbitControls, Sky } from "@react-three/drei";
 import { Object3D, Vector3 } from "three";
-import { useEditorContext } from "./EditorContext";
+import { useEditorContext } from "../EditorContext";
+import CameraControls from "./CameraControls";
 
 type Props = {
   dictionary: Dictionary;
@@ -20,8 +17,6 @@ type Props = {
 const ThreeJsEnvironment = ({ dictionary, children }: Props) => {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
-  const {disableCamera} = useEditorContext();
-
   const dpr = Math.min(window.devicePixelRatio, 2);
   return (
     <>
@@ -29,8 +24,8 @@ const ThreeJsEnvironment = ({ dictionary, children }: Props) => {
         dpr={dpr}
         orthographic
         camera={{ position: [0, 0, 2], zoom: 100, near: 0.00001, fov: 90 }}
-        gl={{ precision: "highp", logarithmicDepthBuffer: true }}
       >
+        <CameraControls></CameraControls>
         <directionalLight position={[10, 10, 10]} />
         <directionalLight position={[-10, -10, 5]} args={[0xffffff, 0.3]} />
         {children}
@@ -42,13 +37,7 @@ const ThreeJsEnvironment = ({ dictionary, children }: Props) => {
           far={1}
           blur={2}
         />
-        <OrbitControls
-          makeDefault
-          //   rotateSpeed={2}
-          //   minPolarAngle={0}
-          //   maxPolarAngle={Math.PI / 2.5}
-          enabled={!disableCamera}
-        />
+
         <Sky />
         <gridHelper
           args={[100, 200]}

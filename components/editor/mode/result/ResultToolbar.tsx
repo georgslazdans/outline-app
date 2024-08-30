@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import React, { useCallback } from "react";
 import { downloadFile } from "@/lib/utils/Download";
-import newWorkerInstance from "../../replicad/ReplicadWorker";
+import newWorkerInstance from "../../ReplicadWorker";
 import { useModelDataContext } from "../../ModelDataContext";
 import { Tooltip } from "react-tooltip";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";

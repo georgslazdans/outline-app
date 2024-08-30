@@ -1,10 +1,9 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import ModelData from "@/lib/replicad/model/ModelData";
-import React, { useEffect, useMemo, useState } from "react";
-import ReplicadMesh from "../../replicad/ReplicadMesh";
-import newWorkerInstance from "../../replicad/ReplicadWorker";
+import React, { useEffect, useState } from "react";
+import ReplicadMesh from "../../scene/ReplicadMesh";
+import newWorkerInstance from "../../ReplicadWorker";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import { useEditorContext } from "../../EditorContext";
 import { useModelDataContext } from "../../ModelDataContext";

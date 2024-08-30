@@ -8,6 +8,7 @@ import EditorHistoryType from "../../history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 import { useModelDataContext } from "../../ModelDataContext";
 import CanvasSelection from "./CanvasSelection";
+import { useEditorContext } from "../../EditorContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -16,12 +17,15 @@ type Props = {
 const EditCanvas = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
-  const onItemChange = useCallback((item: Item) => {
-    setModelData(
-      forModelData(modelData).updateItem(item),
-      EditorHistoryType.OBJ_UPDATED
-    );
-  }, [modelData, setModelData]);
+  const onItemChange = useCallback(
+    (item: Item) => {
+      setModelData(
+        forModelData(modelData).updateItem(item),
+        EditorHistoryType.OBJ_UPDATED
+      );
+    },
+    [modelData, setModelData]
+  );
 
   return (
     <>

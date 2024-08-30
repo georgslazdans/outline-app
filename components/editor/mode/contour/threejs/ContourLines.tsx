@@ -4,10 +4,19 @@ import React, { memo } from "react";
 import { Intersection, Vector3 } from "three";
 import { Line } from "@react-three/drei";
 import Point from "@/lib/data/Point";
+import { ThreeEvent } from "@react-three/fiber";
 
 type Props = {
   points: Point[];
   onLineDoubleClick: (point: Point) => void;
+};
+
+const hasContourPointClicked = (intersections: Intersection[]) => {
+  if (!intersections || intersections.length <= 0) return false;
+  const contourPointIntersection = intersections.find(
+    (it) => !!it.object.userData.contourIndex
+  );
+  return !!contourPointIntersection;
 };
 
 const ContourLines = memo(function SvgLineMesh({
@@ -15,17 +24,15 @@ const ContourLines = memo(function SvgLineMesh({
   onLineDoubleClick,
 }: Props) {
   const vertices = points.map((it) => new Vector3(it.x, it.y, 0));
-  const onDoubleClick = (event: any) => {
-    const hasContourPointClicked = (intersections: Intersection[]) => {
-      if (!intersections || intersections.length <= 0) return false;
-      const contourPointIntersection = intersections.find(
-        (it) => !!it.object.userData.contourIndex
-      );
-      return !!contourPointIntersection;
-    };
-    if (event.point && !hasContourPointClicked(event.intersections)) {
-      const { x, y } = event.point;
-      onLineDoubleClick({ x, y });
+  const onDoubleClick = (event: ThreeEvent<MouseEvent>) => {
+    if (!hasContourPointClicked(event.intersections)) {
+      if(event.pointOnLine) {
+        const { x, y } = event.pointOnLine;
+        onLineDoubleClick({ x, y });
+      } else {
+        const { x, y } = event.point;
+        onLineDoubleClick({ x, y });
+      }
     }
   };
   return (

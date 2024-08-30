@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import React from "react";
 import { Object3D, Vector3 } from "three";
-import ThreeJsEnvironment from "./ThreeJsEnvironment";
+import ThreeJsEnvironment from "./scene/ThreeJsEnvironment";
 import EditorMode from "./mode/EditorMode";
 import ResultMode from "./mode/result/ResultMode";
 import EditMode from "./mode/edit/EditMode";

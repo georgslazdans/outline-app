@@ -22,8 +22,8 @@ type Props = {
 
 const ContourModeEdit = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
-
-  const { selectedId, selectedPoint, wireframe } = useEditorContext();
+  const { selectedId, selectedPoint, wireframe } =
+    useEditorContext();
 
   const selectedItem = useMemo(() => {
     if (selectedId) {

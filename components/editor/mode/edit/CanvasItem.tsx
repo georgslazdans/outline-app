@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { memo, useEffect, useState } from "react";
-import ReplicadMesh from "../../replicad/ReplicadMesh";
+import ReplicadMesh from "../../scene/ReplicadMesh";
 import { useEditorContext } from "../../EditorContext";
 import Item, { modelKeyOf } from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";

@@ -1,6 +1,6 @@
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
-import newWorkerInstance from "../replicad/ReplicadWorker";
+import newWorkerInstance from "../ReplicadWorker";
 import Item, { modelKeyOf, withoutItemData } from "@/lib/replicad/model/Item";
 import { useModelLoadingIndicatorContext } from "./ModelLoadingIndicatorContext";
 
