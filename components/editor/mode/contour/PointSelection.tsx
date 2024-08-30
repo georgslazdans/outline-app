@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useRef,
-} from "react";
+import React, { createContext, ReactNode, useContext, useRef } from "react";
 import ContourIndex from "../../../../lib/data/contour/ContourIndex";
 import { useEditorContext } from "../../EditorContext";
 import deepEqual from "@/lib/utils/Objects";
@@ -27,6 +22,7 @@ const PointClickContext = createContext<PointClickContextProps | undefined>(
 const PointSelection = ({ children }: Props) => {
   const { selectedPoint, setSelectedPoint } = useEditorContext();
   const lastTimestamp = useRef<number>();
+  const pointChangedOnDownEvent = useRef<boolean>(false);
 
   const uniqueContourIndexesOf = (
     intersections: Intersection[]
@@ -49,27 +45,42 @@ const PointSelection = ({ children }: Props) => {
     return false;
   };
 
-  const onPointerDown = (event: ThreeEvent<PointerEvent>) => {
+  const isEventProcessed = (event: ThreeEvent<PointerEvent>): boolean => {
     if (lastTimestamp.current && lastTimestamp.current == event.timeStamp) {
+      return true;
+    }
+    lastTimestamp.current = event.timeStamp;
+    return false;
+  };
+
+  const onPointerDown = (event: ThreeEvent<PointerEvent>) => {
+    if (isEventProcessed(event)) {
       return;
     }
+    pointChangedOnDownEvent.current = false;
     const intersectingPoints: ContourIndex[] = uniqueContourIndexesOf(
       event.intersections
     );
     if (selectedPoint) {
       if (!hasSelectedPointIn(intersectingPoints)) {
+        pointChangedOnDownEvent.current = true;
         setSelectedPoint(intersectingPoints[0]);
       }
     } else {
+      pointChangedOnDownEvent.current = true;
       setSelectedPoint(intersectingPoints[0]);
     }
-    lastTimestamp.current = event.timeStamp;
   };
 
   const onPointerUp = (event: ThreeEvent<PointerEvent>) => {
-    if (lastTimestamp.current && lastTimestamp.current == event.timeStamp) {
+    if (isEventProcessed(event)) {
       return;
     }
+    if (pointChangedOnDownEvent.current) {
+      pointChangedOnDownEvent.current = false;
+      return;
+    }
+
     const intersectingPoints = uniqueContourIndexesOf(event.intersections);
     if (selectedPoint) {
       const otherPoint = intersectingPoints.find(
@@ -81,7 +92,6 @@ const PointSelection = ({ children }: Props) => {
     } else {
       setSelectedPoint(intersectingPoints[0]);
     }
-    lastTimestamp.current = event.timeStamp;
   };
 
   return (
