@@ -1,38 +1,41 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const useDebounced = (
   changeHandler: (value: any) => void,
   timer: number = 500
 ) => {
   const handler = useRef<NodeJS.Timeout>();
-  const [pendingEvent, setPendingEvent] = useState<any>();
+  const pendingEvent = useRef<any>(null);
 
   useEffect(() => {
     handler.current = setTimeout(() => {
-      if (pendingEvent) {
-        changeHandler(pendingEvent);
-        setPendingEvent(undefined);
+      if (pendingEvent.current) {
+        changeHandler(pendingEvent.current);
+        pendingEvent.current = null;
       }
     }, timer);
 
     return () => {
       clearTimeout(handler.current);
     };
-  }, [changeHandler, pendingEvent, timer]);
+  }, [changeHandler, timer]);
 
   const flush = () => {
     if (handler.current) {
       clearTimeout(handler.current);
     }
-    if (pendingEvent) {
-      changeHandler(pendingEvent);
-      setPendingEvent(undefined);
+    if (pendingEvent.current) {
+      changeHandler(pendingEvent.current);
+      pendingEvent.current = null;
     }
   };
+
   return {
-    onChange: setPendingEvent,
+    onChange: (event: any) => {
+      pendingEvent.current = event;
+    },
     flush: flush,
   };
 };
