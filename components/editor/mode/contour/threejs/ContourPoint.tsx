@@ -3,7 +3,7 @@ import { Vector3 } from "three";
 import ContourIndex from "../../../../../lib/data/contour/ContourIndex";
 import { POINT_SCALE_THREEJS, scaleVectorOf } from "@/lib/data/Point";
 import pointShaderMaterialOf from "./PointShader";
-import { Text } from "@react-three/drei";
+import { Point, Text } from "@react-three/drei";
 import { ThreeEvent } from "@react-three/fiber";
 import { usePointClickContext } from "../PointSelection";
 
@@ -48,7 +48,7 @@ const ContourPoint = memo(function PointMesh({
     }
     onPointerUp(event);
   };
-  
+
   return (
     <group
       position={new Vector3(0, 0, 0.0001)}

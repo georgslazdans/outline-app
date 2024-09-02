@@ -12,6 +12,7 @@ import {
 import Item from "@/lib/replicad/model/Item";
 import useDebounced from "@/lib/utils/Debounced";
 import { PivotControls } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import React, {
   memo,
   ReactNode,
@@ -34,6 +35,7 @@ const TransformControls = memo(function TransformControls({
   enableGizmo,
   onItemChange: _onItemChanged,
 }: Props) {
+  const { invalidate } = useThree();
   const { setTransformEditFocused } = useEditorContext();
   const [matrix, setMatrix] = useState(new Matrix4());
   const { onChange: onItemChange, flush: flushChanges } =
@@ -90,7 +92,8 @@ const TransformControls = memo(function TransformControls({
 
   const handleDragging = (local: Matrix4) => {
     setMatrix(local); // Since onItemChanged is debounced, update matrix immediately
-
+    invalidate();
+    
     const pos = new Vector3();
     pos.setFromMatrixPosition(local);
     pos.multiplyScalar(1 / POINT_SCALE_THREEJS);

@@ -12,6 +12,7 @@ import Point from "@/lib/data/Point";
 import { useFrame, useThree } from "@react-three/fiber";
 import useDebounced from "@/lib/utils/Debounced";
 import { movePointToLineSegment } from "@/lib/data/line/LineSegment";
+import { nextIndex } from "@/lib/data/line/PointIndex";
 
 type Props = {
   contourIndex: number;
@@ -43,7 +44,6 @@ const ContourMesh = memo(function ContourMeshFun({
   const cameraScaleFunction = (x: number) => {
     const maxValue = 10;
     const minValue = 0.4;
-    // const result = 4.4 - 0.9 * Math.log(x) + 0.1;
     const result = 9.5 - 1.2 * Math.log(x);
     return Math.max(Math.min(result, maxValue), minValue);
   };
@@ -56,15 +56,9 @@ const ContourMesh = memo(function ContourMeshFun({
   });
 
   const onPointDrag = (pointIndex: number) => {
-    return (l: Matrix4, _dl: Matrix4, w: Matrix4, dw: Matrix4) => {
-      const pos = new Vector3();
-      pos.setFromMatrixPosition(w);
-
-      const delta = new Vector3();
-      delta.setFromMatrixPosition(dw);
-
+    return (point: Point) => {
       const updatedPoints = [...currentPoints];
-      updatedPoints[pointIndex] = { x: pos.x + delta.x, y: pos.y + delta.y };
+      updatedPoints[pointIndex] = point;
       setCurrentPoints(updatedPoints);
       onContourChange({ points: updatedPoints });
     };
@@ -80,11 +74,9 @@ const ContourMesh = memo(function ContourMeshFun({
     [contourIndex, selectedPoint]
   );
 
-  const addPointToContour = (point: Point) => {
-    const segment = queryContour(contour).findLineSegmentClosestToPoint(point);
-    const newPoint = movePointToLineSegment(point, segment);
+  const addPointToContour = (point: Point, index: number) => {
     const { addPoint } = modifyContour(contour);
-    onContourChange(addPoint(newPoint, segment.indexB));
+    onContourChange(addPoint(point, nextIndex(index, currentPoints.length)));
   };
 
   return (

@@ -8,7 +8,7 @@ import Item, { modelKeyOf } from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelCache } from "../../cache/ModelCacheContext";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
-import TransformControls from "./ui/three/TransformControls";
+import TransformControls from "./three/TransformControls";
 import { useModelDataContext } from "../../ModelDataContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 

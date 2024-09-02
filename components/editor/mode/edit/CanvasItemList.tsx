@@ -5,7 +5,7 @@ import React, { useCallback } from "react";
 import CanvasItem from "./CanvasItem";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
-import GroupTransform from "./ui/three/GroupTransform";
+import GroupTransform from "./three/GroupTransform";
 
 type Props = {
   dictionary: Dictionary;

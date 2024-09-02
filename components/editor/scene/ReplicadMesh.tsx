@@ -37,15 +37,11 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
   const lines = useRef(new BufferGeometry());
 
   useLayoutEffect(() => {
-    // We use the three helpers to synchronise the buffer geometry with the
-    // new data from the parameters
     if (faces) syncFaces(body.current, faces);
 
     if (edges) syncLines(lines.current, edges);
     else if (faces) syncLinesFromFaces(lines.current, body.current);
 
-    // We have configured the canvas to only refresh when there is a change,
-    // the invalidate function is here to tell it to recompute
     invalidate();
   }, [faces, edges, invalidate]);
 

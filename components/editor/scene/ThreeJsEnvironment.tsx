@@ -23,6 +23,7 @@ const ThreeJsEnvironment = ({ dictionary, children }: Props) => {
       <Canvas
         dpr={dpr}
         orthographic
+        frameloop="demand"
         camera={{ position: [0, 0, 2], zoom: 100, near: 0.00001, fov: 90 }}
       >
         <CameraControls></CameraControls>
