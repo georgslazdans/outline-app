@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 
 const useDebounced = (
   changeHandler: (value: any) => void,
@@ -9,17 +9,16 @@ const useDebounced = (
   const handler = useRef<NodeJS.Timeout>();
   const pendingEvent = useRef<any>(null);
 
-  useEffect(() => {
+  const createHandler = useCallback(() => {
+    if (handler.current) {
+      clearTimeout(handler.current);
+    }
     handler.current = setTimeout(() => {
       if (pendingEvent.current) {
         changeHandler(pendingEvent.current);
         pendingEvent.current = null;
       }
     }, timer);
-
-    return () => {
-      clearTimeout(handler.current);
-    };
   }, [changeHandler, timer]);
 
   const flush = () => {
@@ -35,6 +34,7 @@ const useDebounced = (
   return {
     onChange: (event: any) => {
       pendingEvent.current = event;
+      createHandler();
     },
     flush: flush,
   };
