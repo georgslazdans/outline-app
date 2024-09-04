@@ -4,9 +4,8 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
 
-import { ContactShadows, OrbitControls, Sky } from "@react-three/drei";
+import { Sky } from "@react-three/drei";
 import { Object3D, Vector3 } from "three";
-import { useEditorContext } from "../EditorContext";
 import CameraControls from "./CameraControls";
 
 type Props = {
@@ -30,14 +29,6 @@ const ThreeJsEnvironment = ({ dictionary, children }: Props) => {
         <directionalLight position={[10, 10, 10]} />
         <directionalLight position={[-10, -10, 5]} args={[0xffffff, 0.3]} />
         {children}
-        <ContactShadows
-          frames={1}
-          position={[0, -0.5, 0]}
-          scale={10}
-          opacity={0.4}
-          far={1}
-          blur={2}
-        />
 
         <Sky />
         <gridHelper

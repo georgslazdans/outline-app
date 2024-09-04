@@ -1,24 +1,16 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import ContourPoint from "./ContourPoint";
-import { Matrix4, Vector3 } from "three";
+import React, { memo, useEffect, useState } from "react";
 import ContourLines from "./ContourLines";
-import ContourIndex from "../../../../../lib/data/contour/ContourIndex";
-import ContourPoints, {
-  modifyContour,
-  queryContour,
-} from "@/lib/data/contour/ContourPoints";
-import Draggable from "./Draggable";
 import Point from "@/lib/data/Point";
 import { useFrame, useThree } from "@react-three/fiber";
 import useDebounced from "@/lib/utils/Debounced";
-import { movePointToLineSegment } from "@/lib/data/line/LineSegment";
 import { nextIndex } from "@/lib/data/line/PointIndex";
+import ContourPoints, { modifyContour } from "@/lib/data/contour/ContourPoints";
+import ContourPointsInstances from "./ContourPointsInstances";
 
 type Props = {
   contourIndex: number;
   contour: ContourPoints;
   onContourChange: (contour: ContourPoints) => void;
-  selectedPoint?: ContourIndex;
   transparent: boolean;
   onModelEditEnd?: () => void;
 };
@@ -27,11 +19,8 @@ const ContourMesh = memo(function ContourMeshFun({
   contourIndex,
   contour,
   onContourChange,
-  selectedPoint,
-  transparent,
-  onModelEditEnd,
 }: Props) {
-  const { camera } = useThree();
+  const { camera, invalidate } = useThree();
   const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
   const [pointSize, setPointSize] = useState(1);
 
@@ -55,24 +44,12 @@ const ContourMesh = memo(function ContourMeshFun({
     }
   });
 
-  const onPointDrag = (pointIndex: number) => {
-    return (point: Point) => {
-      const updatedPoints = [...currentPoints];
-      updatedPoints[pointIndex] = point;
-      setCurrentPoints(updatedPoints);
-      onContourChange({ points: updatedPoints });
-    };
+  const onPointDrag = (point: Point, pointIndex: number) => {
+    const updatedPoints = [...currentPoints];
+    updatedPoints[pointIndex] = point;
+    setCurrentPoints(updatedPoints);
+    onContourChange({ points: updatedPoints });
   };
-
-  const isPointSelected = useCallback(
-    (pointIndex: number) => {
-      return (
-        selectedPoint?.contour == contourIndex &&
-        selectedPoint?.point == pointIndex
-      );
-    },
-    [contourIndex, selectedPoint]
-  );
 
   const addPointToContour = (point: Point, index: number) => {
     const { addPoint } = modifyContour(contour);
@@ -83,25 +60,12 @@ const ContourMesh = memo(function ContourMeshFun({
     <group>
       {currentPoints?.length > 0 && (
         <>
-          {currentPoints.map((point, index) => {
-            return (
-              <Draggable
-                key={index}
-                enabled={isPointSelected(index)}
-                position={new Vector3(point.x, point.y, 0)}
-                onPointDrag={onPointDrag(index)}
-                onPointDragEnd={onModelEditEnd}
-              >
-                <ContourPoint
-                  contourIndex={contourIndex}
-                  index={index}
-                  color={isPointSelected(index) ? "#DA4167" : "#2c7d94"} //"#0D0D0E"}
-                  transparent={transparent}
-                  size={pointSize}
-                />
-              </Draggable>
-            );
-          })}
+          <ContourPointsInstances
+            points={currentPoints}
+            contourIndex={contourIndex}
+            onPointDrag={onPointDrag}
+            pointSize={pointSize}
+          ></ContourPointsInstances>
           <ContourLines
             points={currentPoints}
             onLineDoubleClick={addPointToContour}

@@ -1,5 +1,5 @@
 import { OrbitControls } from "@react-three/drei";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useEditorContext } from "../EditorContext";
 import EditorMode from "../mode/EditorMode";
 import { Euler, Vector3 } from "three";
@@ -30,22 +30,25 @@ const CameraControls = ({}: Props) => {
     rotation: new Euler(),
   });
 
-  const setDefaultContourModeCamera = (): void => {
+  const setDefaultContourModeCamera = useCallback(() => {
     if (controlRef.current) {
       controlRef.current.reset();
     }
     camera.position.set(0, 0, 1);
     camera.rotation.set(0, 0, 0);
-  };
+  }, [camera]);
 
-  const setCameraFromTransform = (transform: Transform) => {
-    if (controlRef.current) {
-      controlRef.current.reset();
-    }
-    const { position, rotation } = transform;
-    camera.position.set(position.x, position.y, position.z);
-    camera.rotation.set(rotation.x, rotation.y, rotation.z);
-  };
+  const setCameraFromTransform = useCallback(
+    (transform: Transform) => {
+      if (controlRef.current) {
+        controlRef.current.reset();
+      }
+      const { position, rotation } = transform;
+      camera.position.set(position.x, position.y, position.z);
+      camera.rotation.set(rotation.x, rotation.y, rotation.z);
+    },
+    [camera]
+  );
 
   useEffect(() => {
     if (editorMode != previousMode) {
@@ -63,7 +66,14 @@ const CameraControls = ({}: Props) => {
       }
       setPreviousMode(editorMode);
     }
-  }, [editorMode]);
+  }, [
+    camera,
+    editorMode,
+    previousMode,
+    previousTransform,
+    setCameraFromTransform,
+    setDefaultContourModeCamera,
+  ]);
 
   const onDrag = () => {
     if (!transformEditFocused) {

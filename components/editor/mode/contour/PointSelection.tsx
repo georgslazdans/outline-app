@@ -4,7 +4,7 @@ import React, { createContext, ReactNode, useContext, useRef } from "react";
 import ContourIndex from "../../../../lib/data/contour/ContourIndex";
 import { useEditorContext } from "../../EditorContext";
 import deepEqual from "@/lib/utils/Objects";
-import { Intersection, ThreeEvent } from "@react-three/fiber";
+import { Intersection, ThreeEvent, useThree } from "@react-three/fiber";
 
 type Props = {
   children: ReactNode;
@@ -20,6 +20,7 @@ const PointClickContext = createContext<PointClickContextProps | undefined>(
 );
 
 const PointSelection = ({ children }: Props) => {
+  const { invalidate } = useThree();
   const { selectedPoint, setSelectedPoint } = useEditorContext();
   const lastTimestamp = useRef<number>();
   const pointChangedOnDownEvent = useRef<boolean>(false);
@@ -65,10 +66,12 @@ const PointSelection = ({ children }: Props) => {
       if (!hasSelectedPointIn(intersectingPoints)) {
         pointChangedOnDownEvent.current = true;
         setSelectedPoint(intersectingPoints[0]);
+        invalidate();
       }
     } else {
       pointChangedOnDownEvent.current = true;
       setSelectedPoint(intersectingPoints[0]);
+      invalidate();
     }
   };
 
@@ -88,9 +91,11 @@ const PointSelection = ({ children }: Props) => {
       );
       if (otherPoint) {
         setSelectedPoint(otherPoint);
+        invalidate();
       }
     } else {
       setSelectedPoint(intersectingPoints[0]);
+      invalidate();
     }
   };
 

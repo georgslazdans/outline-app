@@ -10,10 +10,13 @@ import { Matrix4, Vector3 } from "three";
 type Props = {
   enabled: boolean;
   children: ReactNode;
-  position: Vector3;
+  position: Point;
   onPointDrag: (point: Point) => void;
   onPointDragEnd?: () => void;
 };
+
+const pos = new Vector3();
+const delta = new Vector3();
 
 const Draggable = ({
   enabled,
@@ -27,9 +30,10 @@ const Draggable = ({
   const [matrix, setMatrix] = useState(new Matrix4());
 
   useEffect(() => {
-    const translationMatrix = new Matrix4();
     if (position) {
-      translationMatrix.makeTranslation(position);
+      const translationMatrix = new Matrix4();
+      pos.set(position.x, position.y, 0);
+      translationMatrix.setPosition(pos);
       setMatrix(translationMatrix);
     }
   }, [position]);
@@ -38,6 +42,7 @@ const Draggable = ({
     setDisableCamera(true);
     setTransformEditFocused(true);
   };
+
   const onDragEnd = () => {
     setDisableCamera(false);
     setTimeout(() => {
@@ -50,10 +55,7 @@ const Draggable = ({
 
   const onDrag = (l: Matrix4, _dl: Matrix4, w: Matrix4, dw: Matrix4) => {
     if (enabled) {
-      const pos = new Vector3();
       pos.setFromMatrixPosition(w);
-
-      const delta = new Vector3();
       delta.setFromMatrixPosition(dw);
 
       onPointDrag({ x: pos.x + delta.x, y: pos.y + delta.y });
@@ -61,26 +63,18 @@ const Draggable = ({
     }
   };
 
-  // TODO disable component dynamically and so there is
   return (
     <>
-      {/* {enabled ? ( */}
-      {true ? (
-        <DragControls
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-          axisLock="z"
-          onDrag={onDrag}
-          autoTransform={false}
-          matrix={matrix}
-        >
-          {children}
-        </DragControls>
-      ) : (
-        <>
-          <group position={position}>{children}</group>
-        </>
-      )}
+      <DragControls
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        axisLock="z"
+        onDrag={onDrag}
+        autoTransform={false}
+        matrix={matrix}
+      >
+        {children}
+      </DragControls>
     </>
   );
 };

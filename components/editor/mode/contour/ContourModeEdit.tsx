@@ -22,7 +22,7 @@ type Props = {
 
 const ContourModeEdit = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
-  const { selectedId, selectedPoint, wireframe } =
+  const { selectedId, wireframe } =
     useEditorContext();
 
   const selectedItem = useMemo(() => {
@@ -91,7 +91,6 @@ const ContourModeEdit = ({ dictionary }: Props) => {
                 contourIndex={index}
                 contour={contour}
                 onContourChange={onContourChanged(index)}
-                selectedPoint={selectedPoint}
                 transparent={wireframe}
                 onModelEditEnd={flushPendingDataChanges}
               ></ContourMesh>

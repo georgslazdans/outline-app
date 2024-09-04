@@ -1,38 +1,40 @@
-import React, { memo, useRef, useState } from "react";
-import { Vector3 } from "three";
+import React, { memo, useMemo, useRef, useState } from "react";
+import { Color, Vector3 } from "three";
 import ContourIndex from "../../../../../lib/data/contour/ContourIndex";
 import { POINT_SCALE_THREEJS, scaleVectorOf } from "@/lib/data/Point";
-import pointShaderMaterialOf from "./PointShader";
-import { Point, Text } from "@react-three/drei";
+import { Instance, Text } from "@react-three/drei";
 import { ThreeEvent } from "@react-three/fiber";
 import { usePointClickContext } from "../PointSelection";
 
 type Props = {
-  transparent: boolean;
   index: number;
   contourIndex: number;
   color: string;
   size: number;
 };
 
+const pointOffset = new Vector3(0, 0, 0.0001);
+const scaleVector = scaleVectorOf(POINT_SCALE_THREEJS);
+
 const ContourPoint = memo(function PointMesh({
   contourIndex,
   index,
   color,
-  transparent,
-  size = 1,
+  size,
 }: Props) {
   const { onPointerDown, onPointerUp } = usePointClickContext();
 
   const circleRef = useRef<any>();
-  const materialRef = useRef<any>();
   const [previousLocation, setPreviousLocation] = useState<Vector3>();
 
   const asContourIndex = (): ContourIndex => {
     return { contour: contourIndex, point: index };
   };
 
-  const alpha = transparent ? 0 : 0.3;
+  const textPosition = useMemo(
+    () => new Vector3(0, -0.01 * size * 1.4, 0),
+    [size]
+  );
 
   const onClickDown = (event: ThreeEvent<PointerEvent>) => {
     setPreviousLocation(event.point);
@@ -49,32 +51,28 @@ const ContourPoint = memo(function PointMesh({
     onPointerUp(event);
   };
 
+  const resultColor = useMemo(() => {
+    return new Color(color);
+  }, [color]);
+
   return (
-    <group
-      position={new Vector3(0, 0, 0.0001)}
-      userData={{ contourIndex: asContourIndex() }}
-    >
-      <mesh
+    <group position={pointOffset} userData={{ contourIndex: asContourIndex() }}>
+      <Instance
         ref={circleRef}
-        scale={scaleVectorOf(POINT_SCALE_THREEJS)}
+        scale={scaleVector.clone().multiplyScalar(size)}
         userData={{ contourIndex: asContourIndex() }}
         onPointerDown={onClickDown}
         onPointerUp={onClickUp}
-      >
-        <circleGeometry args={[size]}></circleGeometry>
-        <shaderMaterial
-          ref={materialRef}
-          attach="material"
-          {...pointShaderMaterialOf(size, color, alpha)}
-        />
-      </mesh>
-      <Text
-        position={new Vector3(0, -0.01 * size * 1.4, 0)}
+        color={resultColor}
+      ></Instance>
+      {/* <Text
+        position={textPosition}
+        // scale={scaleVector}
         scale={scaleVectorOf(POINT_SCALE_THREEJS * size)}
         color={color}
       >
         {index}
-      </Text>
+      </Text> */}
     </group>
   );
 });

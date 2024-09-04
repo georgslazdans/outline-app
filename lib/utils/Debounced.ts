@@ -14,10 +14,8 @@ const useDebounced = (
       clearTimeout(handler.current);
     }
     handler.current = setTimeout(() => {
-      if (pendingEvent.current) {
-        changeHandler(pendingEvent.current);
-        pendingEvent.current = null;
-      }
+      changeHandler(pendingEvent.current);
+      pendingEvent.current = null;
     }, timer);
   }, [changeHandler, timer]);
 
