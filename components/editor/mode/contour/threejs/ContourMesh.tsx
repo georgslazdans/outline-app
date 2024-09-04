@@ -10,7 +10,7 @@ import ContourPointsInstances from "./ContourPointsInstances";
 type Props = {
   contourIndex: number;
   contour: ContourPoints;
-  onContourChange: (contour: ContourPoints) => void;
+  onContourChange: (contour: ContourPoints, flush?: boolean) => void;
   transparent: boolean;
   onModelEditEnd?: () => void;
 };
@@ -50,7 +50,10 @@ const ContourMesh = memo(function ContourMeshFun({
 
   const addPointToContour = (point: Point, index: number) => {
     const { addPoint } = modifyContour(contour);
-    onContourChange(addPoint(point, nextIndex(index, currentPoints.length)));
+    onContourChange(
+      addPoint(point, nextIndex(index, currentPoints.length)),
+      true
+    );
   };
 
   return (

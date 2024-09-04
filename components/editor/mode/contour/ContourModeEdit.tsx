@@ -22,8 +22,7 @@ type Props = {
 
 const ContourModeEdit = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
-  const { selectedId, wireframe } =
-    useEditorContext();
+  const { selectedId, wireframe } = useEditorContext();
 
   const selectedItem = useMemo(() => {
     if (selectedId) {
@@ -61,11 +60,15 @@ const ContourModeEdit = ({ dictionary }: Props) => {
   const { onChange: debouncedUpdate, flush: flushPendingDataChanges } =
     useDebounced(updateModelData);
 
-  const onContourChanged = (contourIndex: number) => {
+  const onContourChanged = (contourIndex: number, flush?: boolean) => {
     return (contour: ContourPoints) => {
       const updatedContours = [...scaledContours];
       updatedContours[contourIndex] = contour;
-      debouncedUpdate(updatedContours);
+      if (!flush) {
+        debouncedUpdate(updatedContours);
+      } else {
+        updateModelData(updatedContours);
+      }
     };
   };
 
