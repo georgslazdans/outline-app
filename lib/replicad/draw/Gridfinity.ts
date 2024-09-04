@@ -1,3 +1,5 @@
+// @ts-nocheck
+// Copied from https://replicad.xyz/docs/examples/gridfinity
 import {
   draw,
   drawRoundedRectangle,
@@ -37,7 +39,7 @@ const SOCKET_VERTICAL_PART =
   SOCKET_HEIGHT - SOCKET_SMALL_TAPER - SOCKET_BIG_TAPER;
 const SOCKET_TAPER_WIDTH = SOCKET_SMALL_TAPER + SOCKET_BIG_TAPER;
 
-const socketProfile = (_, startPoint) => {
+const socketProfile = (_: any, startPoint) => {
   const full = draw([-CLEARANCE / 2, 0])
     .vLine(-CLEARANCE / 2)
     .lineTo([-SOCKET_BIG_TAPER, -SOCKET_BIG_TAPER])
@@ -185,7 +187,7 @@ function gridfinityBox({
   magnetRadius = 3.25,
   magnetHeight = 2,
   screwRadius = 1.5,
-} = {}):ReplicadModelData {
+} = {}): ReplicadModelData {
   const stdHeight = height * SIZE;
 
   let box = drawRoundedRectangle(

@@ -11,7 +11,7 @@ const doesItemFor = (data: ModelData) => {
         if (otherId) {
           const parentId = forModelData(data).findParentId(itemId);
           const previousParentId = forModelData(data).findParentId(otherId);
-          if(!parentId && !previousParentId) {
+          if (!parentId && !previousParentId) {
             return true; // Root elements
           }
           return parentId == previousParentId;
@@ -41,7 +41,9 @@ const doesItemFor = (data: ModelData) => {
           if (items.some((it) => it.id == otherId)) {
             return true;
           } else {
-            const subGroups = items.filter((it) => it.type == ItemType.Group);
+            const subGroups = items.filter(
+              (it) => it.type == ItemType.Group
+            ) as (Item & ItemGroup)[];
             for (const group of subGroups) {
               const result = checkItems(group.items);
               if (result) return true;

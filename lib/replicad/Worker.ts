@@ -1,4 +1,5 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
+// @ts-ignore
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC } from "replicad";
 import ModelData from "./model/ModelData";
@@ -16,6 +17,7 @@ const initializedPromise = new Promise<void>(async (resolve) => {
   if (initialized) {
     resolve();
   } else {
+    // @ts-ignore
     const OC = await opencascade({
       locateFile: () => opencascadeWasm,
     });
