@@ -9,14 +9,13 @@ import ContourPoints, {
   queryContour,
 } from "@/lib/data/contour/ContourPoints";
 import React from "react";
+import { POINT_ICON } from "./Icons";
 
 type Props = {
   dictionary: Dictionary;
   selectedContour: ContourPoints[];
   onContourChanged: (contour: ContourPoints[]) => void;
 };
-
-const icon = "";
 
 const AddPoint = ({ dictionary, selectedContour, onContourChanged }: Props) => {
   const { selectedPoint } = useEditorContext();
@@ -59,7 +58,7 @@ const AddPoint = ({ dictionary, selectedContour, onContourChanged }: Props) => {
       id="add-point"
       onClick={onAddPoint}
       dictionary={dictionary}
-      icon={icon}
+      icon={POINT_ICON}
       label="Point"
       tooltip="Add Point"
     ></ActionButton>

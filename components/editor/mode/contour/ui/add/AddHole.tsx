@@ -4,14 +4,13 @@ import { Dictionary } from "@/app/dictionaries";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
 import React from "react";
+import { HOLE_ICON } from "./Icons";
 
 type Props = {
   dictionary: Dictionary;
   selectedContour: ContourPoints[];
   onContourChanged: (contour: ContourPoints[]) => void;
 };
-
-const icon = "";
 
 const AddHole = ({ dictionary, selectedContour, onContourChanged }: Props) => {
   const onAddHole = () => {
@@ -30,7 +29,7 @@ const AddHole = ({ dictionary, selectedContour, onContourChanged }: Props) => {
       id="add-hole"
       onClick={onAddHole}
       dictionary={dictionary}
-      icon={icon}
+      icon={HOLE_ICON}
       label="Hole"
       tooltip="Add Hole"
     ></ActionButton>
