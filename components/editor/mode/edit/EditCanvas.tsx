@@ -8,7 +8,6 @@ import EditorHistoryType from "../../history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 import { useModelDataContext } from "../../ModelDataContext";
 import CanvasSelection from "./CanvasSelection";
-import { useEditorContext } from "../../EditorContext";
 
 type Props = {
   dictionary: Dictionary;

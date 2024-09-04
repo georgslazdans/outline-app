@@ -31,10 +31,7 @@ const ContourMesh = memo(function ContourMeshFun({
   const { onChange: setPointSizeDebounced } = useDebounced(setPointSize, 200);
 
   const cameraScaleFunction = (x: number) => {
-    const maxValue = 10;
-    const minValue = 0.4;
-    const result = 9.5 - 1.2 * Math.log(x);
-    return Math.max(Math.min(result, maxValue), minValue);
+    return Math.min(1600 / x, 5);
   };
 
   useFrame((state, delta, xrFrame) => {

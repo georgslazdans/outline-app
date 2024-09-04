@@ -12,7 +12,7 @@ import {
 import Item from "@/lib/replicad/model/Item";
 import useDebounced from "@/lib/utils/Debounced";
 import { PivotControls } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import React, {
   memo,
   ReactNode,
@@ -35,11 +35,20 @@ const TransformControls = memo(function TransformControls({
   enableGizmo,
   onItemChange: _onItemChanged,
 }: Props) {
-  const { invalidate } = useThree();
+  const { invalidate, camera } = useThree();
   const { setTransformEditFocused } = useEditorContext();
   const [matrix, setMatrix] = useState(new Matrix4());
   const { onChange: onItemChange, flush: flushChanges } =
     useDebounced(_onItemChanged);
+
+  const [controlSize, setControlSize] = useState(0.7);
+
+  useFrame(() => {
+    const desiredSize = 100 / camera.zoom;
+    if (Math.abs(controlSize - desiredSize) > 0.0001) {
+      setControlSize(desiredSize);
+    }
+  });
 
   const getPosition = useCallback(() => {
     let translation = zeroPoint();
@@ -93,7 +102,7 @@ const TransformControls = memo(function TransformControls({
   const handleDragging = (local: Matrix4) => {
     setMatrix(local); // Since onItemChanged is debounced, update matrix immediately
     invalidate();
-    
+
     const pos = new Vector3();
     pos.setFromMatrixPosition(local);
     pos.multiplyScalar(1 / POINT_SCALE_THREEJS);
@@ -121,7 +130,7 @@ const TransformControls = memo(function TransformControls({
         onDragStart={() => setTransformEditFocused(true)}
         onDragEnd={onDragEnd}
         depthTest={false}
-        scale={0.7}
+        scale={controlSize}
         userData={{ itemId: item.id }}
       >
         {children}

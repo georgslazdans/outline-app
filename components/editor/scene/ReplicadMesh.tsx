@@ -35,12 +35,18 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
 
   const body = useRef(new BufferGeometry());
   const lines = useRef(new BufferGeometry());
+  const outlineRef = useRef(null);
 
   useLayoutEffect(() => {
     if (faces) syncFaces(body.current, faces);
 
     if (edges) syncLines(lines.current, edges);
     else if (faces) syncLinesFromFaces(lines.current, body.current);
+
+    if(outlineRef.current) {
+      console.log("Outline ref", outlineRef.current);
+      
+    }
 
     invalidate();
   }, [faces, edges, invalidate]);
@@ -71,9 +77,6 @@ const ReplicadMesh = React.memo(function ShapeMeshes({
             transparent={opacity >= 1 ? false : true}
             opacity={opacity}
           />
-          {body.current && body.current.index && (
-            <Outlines thickness={selected ? 4 : 2} color={outlineColor} />
-          )}
         </mesh>
       )}
       <lineSegments geometry={lines.current} userData={{ id: id }}>
