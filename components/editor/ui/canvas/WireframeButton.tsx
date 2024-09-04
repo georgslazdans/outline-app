@@ -10,7 +10,7 @@ type Props = {
 };
 
 const WireframeButton = ({ className }: Props) => {
-  const { wireframe, setWireframe, useHotkey } = useEditorContext();
+  const { wireframe, setWireframe, withHotkey } = useEditorContext();
   const icon = wireframe ? "eye-slash" : "eye";
   const onClick = () => setWireframe(!wireframe);
   const eye = (
@@ -59,7 +59,7 @@ const WireframeButton = ({ className }: Props) => {
         id={id}
         className="px-3 py-3 mr-auto mt-2 ml-2"
         onClick={onClick}
-        {...useHotkey("h")}
+        {...withHotkey("h")}
       >
         {icon == "eye" ? eye : eyeSlash}
         <Tooltip anchorSelect={"#" + id} place="top">

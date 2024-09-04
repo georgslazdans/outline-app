@@ -12,7 +12,7 @@ type Props = {
 };
 
 const RenderButton = ({ dictionary }: Props) => {
-  const { editorMode, setEditorMode, setWireframe, useHotkey } =
+  const { editorMode, setEditorMode, setWireframe, withHotkey } =
     useEditorContext();
 
   const onFullRenderButton = () => {
@@ -30,7 +30,7 @@ const RenderButton = ({ dictionary }: Props) => {
         id={id}
         className="mt-2"
         onClick={onFullRenderButton}
-        {...useHotkey("r", true)}
+        {...withHotkey("r", true)}
       >
         <label>{editorMode == EditorMode.RESULT ? "Edit" : "Render"}</label>
         <Tooltip anchorSelect={"#" + id} place="top">

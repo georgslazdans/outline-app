@@ -19,7 +19,7 @@ type Props = {
 
 const DeleteSelected = ({ dictionary, item }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
-  const { setSelectedId, useHotkey } = useEditorContext();
+  const { setSelectedId, withHotkey } = useEditorContext();
 
   const isGridfinity = () => {
     return item?.type == ItemType.Gridfinity;
@@ -40,7 +40,7 @@ const DeleteSelected = ({ dictionary, item }: Props) => {
           id={id}
           className="!w-8 !p-1 !text-red"
           onClick={onRemoveItem}
-          {...useHotkey("Delete")}
+          {...withHotkey("Delete")}
         >
           {TRASH_CAN_SVG}
           <Tooltip anchorSelect={"#" + id} place="top">

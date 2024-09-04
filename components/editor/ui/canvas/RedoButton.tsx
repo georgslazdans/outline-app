@@ -9,7 +9,7 @@ import { Tooltip } from "react-tooltip";
 type Props = {};
 
 const RedoButton = ({}: Props) => {
-  const { useHotkey } = useEditorContext();
+  const { withHotkey } = useEditorContext();
   const { canRedo, redo } = useEditorHistoryContext();
 
   const icon = (
@@ -36,7 +36,7 @@ const RedoButton = ({}: Props) => {
           id={id}
           className="px-3 py-3 mr-auto mt-2 ml-2"
           onClick={redo}
-          {...useHotkey("y", true)}
+          {...withHotkey("y", true)}
         >
           {icon}
           <Tooltip anchorSelect={"#" + id} place="top">

@@ -24,7 +24,7 @@ type EditorContextType = {
   setInputFieldFocused: React.Dispatch<React.SetStateAction<boolean>>;
   transformEditFocused: boolean;
   setTransformEditFocused: React.Dispatch<React.SetStateAction<boolean>>;
-  useHotkey: (
+  withHotkey: (
     key: string,
     hotkeyCtrl?: boolean
   ) => {
@@ -45,7 +45,7 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
 
   const [transformEditFocused, setTransformEditFocused] = useState(false);
 
-  const useHotkey = useCallback(
+  const withHotkey = useCallback(
     (key: string, hotkeyCtrl?: boolean) => {
       if (inputFieldFocused || transformEditFocused) {
         return {
@@ -78,7 +78,7 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
         setInputFieldFocused,
         transformEditFocused,
         setTransformEditFocused,
-        useHotkey,
+        withHotkey,
       }}
     >
       {children}

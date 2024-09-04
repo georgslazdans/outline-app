@@ -37,7 +37,7 @@ const ModelsList = ({ dictionary }: Props) => {
 
   useEffect(() => {
     refreshData();
-  }, []);
+  }, [refreshData]);
 
   return (
     <>

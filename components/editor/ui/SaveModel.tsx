@@ -16,7 +16,7 @@ type Props = {
 const SaveModel = ({ dictionary }: Props) => {
   const { add, update } = useIndexedDB("models");
 
-  const { useHotkey } = useEditorContext();
+  const { withHotkey } = useEditorContext();
   const { model, setModel } = useModelContext();
   const { setLoading } = useLoading();
 
@@ -55,7 +55,7 @@ const SaveModel = ({ dictionary }: Props) => {
         id={id}
         className="mt-2"
         onClick={onSaveModel}
-        {...useHotkey("s", true)}
+        {...withHotkey("s", true)}
       >
         <label>Save Model</label>
         <Tooltip anchorSelect={"#" + id} place="top">

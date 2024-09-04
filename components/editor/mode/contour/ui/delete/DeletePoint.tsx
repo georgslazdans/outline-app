@@ -18,7 +18,7 @@ const DeletePoint = ({
   selectedContour,
   onContourChanged,
 }: Props) => {
-  const { selectedPoint, setSelectedPoint, useHotkey } = useEditorContext();
+  const { selectedPoint, setSelectedPoint, withHotkey } = useEditorContext();
 
   const onDeletePoint = () => {
     if (selectedContour && selectedPoint) {
@@ -38,7 +38,7 @@ const DeletePoint = ({
         label="Delete"
         tooltip="Delete selected point (Delete)"
         className="text-red"
-        {...useHotkey("Delete")}
+        {...withHotkey("Delete")}
       ></ActionButton>
     </>
   );

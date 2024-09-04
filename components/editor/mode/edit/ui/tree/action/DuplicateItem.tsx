@@ -36,7 +36,7 @@ const duplicateDocumentSvg = (
 const SUPPORTED_TYPES = [ItemType.Group, ItemType.Primitive, ItemType.Contour];
 const DuplicateItem = ({ selectedItem }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
-  const { useHotkey } = useEditorContext();
+  const { withHotkey } = useEditorContext();
   const { setSelectedId } = useEditorContext();
 
   const canDuplicate = () => {
@@ -65,7 +65,7 @@ const DuplicateItem = ({ selectedItem }: Props) => {
           id={id}
           className="!w-8 !p-1"
           onClick={() => onItemDuplicate()}
-          {...useHotkey("d", true)}
+          {...withHotkey("d", true)}
         >
           {duplicateDocumentSvg}
           <Tooltip anchorSelect={"#" + id} place="top">

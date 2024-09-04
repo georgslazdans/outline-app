@@ -28,7 +28,7 @@ const ItemName = ({ dictionary, item, onChanged }: Props) => {
       setIsEditing(false);
       setInputFieldFocused(false);
     }
-  }, [isEditing, selectedId]);
+  }, [isEditing, item, selectedId, setInputFieldFocused]);
 
   const handleEditClick = () => {
     if (item.id == selectedId) {

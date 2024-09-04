@@ -36,7 +36,7 @@ const IconButton = ({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [hotkey, onClick]);
+  }, [hotkey, hotkeyCtrl, onClick]);
 
   return (
     <button

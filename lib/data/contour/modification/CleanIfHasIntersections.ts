@@ -1,5 +1,9 @@
 import findLongestIntersection from "../../line/findLongestIntersection";
-import LineIntersection, { indexesToDelete, remainingIntersectionsOf, findIntersectingSegments } from "../../line/LineIntersection";
+import LineIntersection, {
+  indexesToDelete,
+  remainingIntersectionsOf,
+  findIntersectingSegments,
+} from "../../line/LineIntersection";
 import { toLineSegments } from "../../line/LineSegment";
 import { updateIndexAfterDelete } from "../../line/PointIndex";
 import Point from "../../Point";
@@ -8,7 +12,7 @@ import ContourPoints, { modifyContour } from "../ContourPoints";
 const cleanupIntersections = (
   contour: ContourPoints,
   intersections: LineIntersection[]
-) => {
+): ContourPoints => {
   const pointCount = contour.points.length;
   const intersection = findLongestIntersection(intersections, pointCount);
 
@@ -35,7 +39,7 @@ const cleanupIntersections = (
   }
 };
 
-const cleanIfHasIntersections = (points: Point[]) => {
+const cleanIfHasIntersections = (points: Point[]): ContourPoints => {
   const intersections = findIntersectingSegments(toLineSegments(points));
   if (intersections.length > 0) {
     const result = cleanupIntersections({ points: points }, intersections);

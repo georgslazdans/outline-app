@@ -37,7 +37,7 @@ const ContoursList = ({ dictionary }: Props) => {
 
   useEffect(() => {
     refreshData();
-  }, []);
+  }, [refreshData]);
 
   return (
     <>
