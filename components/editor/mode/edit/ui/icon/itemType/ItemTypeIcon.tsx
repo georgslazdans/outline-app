@@ -18,7 +18,9 @@ const ItemTypeIcon = ({ itemType, className }: Props) => {
   };
   return (
     <a
-      className={iconClassOf(itemType) + className}
+      className={
+        iconClassOf(itemType) + " text-black dark:text-white " + className
+      }
       style={{ color: getColorFor(itemType) }}
     >
       <div className="size-6">{getItemTypeIconFor(itemType)}</div>
