@@ -40,7 +40,7 @@ const ModelName = ({ dictionary }: Props) => {
 
   return (
     <>
-      <h1 className="text-center p-2 flex flex-row">
+      <h1 className="text-center p-2 flex flex-row mb-2 mt-2">
         <span className="ml-auto">{"Editing - "}</span>
         {isEditing ? (
           <InputField

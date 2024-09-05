@@ -137,5 +137,10 @@
     "union": "Union",
     "cut": "Cut",
     "intersection": "Intersection"
+  },
+  "editActionMenu": {
+    "items": "Items",
+    "actions": "Actions",
+    "properties": "Properties"
   }
 }

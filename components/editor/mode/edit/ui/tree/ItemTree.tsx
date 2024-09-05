@@ -85,19 +85,21 @@ const ItemTree = ({ dictionary }: Props) => {
         parentId
       );
     } else {
-      if(parentId) {
+      if (parentId) {
         const group = getById(parentId) as Item & ItemGroup;
         const lastElementIndex = group.items.length;
-        updatedData = forModelData(modelData).useChaining()
-        .moveToGroup(sourceItem, group)
-        .reorderItems(lastElementIndex, target.localIndex, group.id )
-        .getData();
+        updatedData = forModelData(modelData)
+          .useChaining()
+          .moveToGroup(sourceItem, group)
+          .reorderItems(lastElementIndex, target.localIndex, group.id)
+          .getData();
       } else {
         const lastElementIndex = modelData.items.length;
-        updatedData = forModelData(modelData).useChaining()
-        .moveToRoot(sourceItem)
-        .reorderItems(lastElementIndex, target.localIndex)
-        .getData();
+        updatedData = forModelData(modelData)
+          .useChaining()
+          .moveToRoot(sourceItem)
+          .reorderItems(lastElementIndex, target.localIndex)
+          .getData();
       }
     }
     setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
@@ -115,7 +117,10 @@ const ItemTree = ({ dictionary }: Props) => {
       return;
     }
 
-    if (!result.destination || result.destination.index === result.source.index) {
+    if (
+      !result.destination ||
+      result.destination.index === result.source.index
+    ) {
       return;
     }
 

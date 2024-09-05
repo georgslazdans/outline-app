@@ -42,34 +42,37 @@ const EditorComponent = ({ dictionary }: Props) => {
 
   return (
     <>
-      <ModelName dictionary={dictionary}></ModelName>
-      <div className="flex flex-col xl:flex-row gap-2">
-        <div className="w-full xl:w-1/2">
-          <div className="w-full h-[60vh]">
-            <div className="z-10 relative">
-              <div className="absolute flex flex-col">
-                <div className="flex flex-row">
-                  <UndoButton></UndoButton>
-                  <RedoButton></RedoButton>
+      <div className="flex flex-col h-[95vh] xl:h-full">
+        <ModelName dictionary={dictionary}></ModelName>
+       
+        <div className="flex flex-col xl:flex-row gap-2 flex-grow">
+          <div className="w-full xl:w-1/2">
+            <div className="w-full h-[52vh] xl:h-[60vh]">
+              <div className="z-10 relative">
+                <div className="absolute flex flex-col">
+                  <div className="flex flex-row">
+                    <UndoButton></UndoButton>
+                    <RedoButton></RedoButton>
+                  </div>
+                  <WireframeButton></WireframeButton>
+                  <LoadingIndicator></LoadingIndicator>
                 </div>
-                <WireframeButton></WireframeButton>
-                <LoadingIndicator></LoadingIndicator>
               </div>
+              <ThreeJsEnvironment dictionary={dictionary}>
+                {currentEditorMode ? currentEditorMode.view() : null}
+              </ThreeJsEnvironment>
             </div>
-            <ThreeJsEnvironment dictionary={dictionary}>
-              {currentEditorMode ? currentEditorMode.view() : null}
-            </ThreeJsEnvironment>
           </div>
-          <div className="flex flex-row gap-2">
-            {editorMode != EditorMode.CONTOUR_EDIT && (
-              <RenderButton dictionary={dictionary}></RenderButton>
-            )}
-            <SaveModel dictionary={dictionary}></SaveModel>
+
+          <div className="w-full xl:w-1/2 h-[29vh] xl:h-[calc(100vh-15rem)] overflow-auto">
+            {currentEditorMode ? currentEditorMode.toolbar() : null}
           </div>
         </div>
-
-        <div className="w-full xl:w-1/2">
-          {currentEditorMode ? currentEditorMode.toolbar() : null}
+        <div className="flex flex-row gap-2 mt-auto">
+          {editorMode != EditorMode.CONTOUR_EDIT && (
+            <RenderButton dictionary={dictionary}></RenderButton>
+          )}
+          <SaveModel dictionary={dictionary}></SaveModel>
         </div>
       </div>
     </>

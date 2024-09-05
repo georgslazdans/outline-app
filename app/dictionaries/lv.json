@@ -137,5 +137,10 @@
     "union": "Apvienojums",
     "cut": "Griezums",
     "intersection": "Sķērzgriezums"
+  },
+  "editActionMenu": {
+    "items": "Elementi",
+    "actions": "Darbības",
+    "properties": "Rekvizīti"
   }
 }
