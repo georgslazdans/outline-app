@@ -1,7 +1,8 @@
 {
-  "description": "Make an SVG path for any tool using only a picture!",
+  "description": "Make an SVG path and Gridfinity box for any tool using only a picture!",
   "capturePhoto": "Use camera",
   "uploadPicture": "From images",
+  "createModel": "Create model",
   "learnMore": "Learn more about this application",
   "pictureAlt": "Picture of a wrench",
   "processing": "Processing...",

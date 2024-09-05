@@ -7,10 +7,6 @@ const navbarPaths = (dictionary: Dictionary): NavbarPath[] => {
       name: dictionary.homepage,
     },
     {
-      path: "/editor",
-      name: dictionary.editor.title,
-    },
-    {
       path: "/contours",
       name: dictionary.contours.title,
     },
