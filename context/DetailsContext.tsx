@@ -14,7 +14,7 @@ import {
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
-import { ContourPoints } from "@/lib/Point";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 
 const DetailsContext = createContext<any>(null);
 
@@ -30,6 +30,7 @@ export type Context = {
   contours: ContourPoints[];
   settings: Settings;
   addDate: Date;
+  paperImage?: ImageData
 };
 
 const DetailsProvider = ({ children }: Props) => {

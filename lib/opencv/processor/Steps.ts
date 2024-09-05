@@ -7,7 +7,7 @@ import blurStep from "./steps/Blur";
 import cannyStep from "./steps/Canny";
 import closeContoursStep from "./steps/CloseContours";
 import extractObjectStep from "./steps/ExtractObject";
-import extractPaperStep, { ReuseStep } from "./steps/ExtractPaper";
+import extractPaperStep from "./steps/ExtractPaper";
 import grayScaleStep from "./steps/GrayScale";
 import ProcessingStep, { SettingsConfig } from "./steps/ProcessingFunction";
 import StepName from "./steps/StepName";
@@ -77,7 +77,7 @@ const forSettings = (settings: Settings) => {
 
 const bilateralFilterDisabled = (settings: Settings) => {
   return (step: ProcessingStep<any>): boolean => {
-    if (step.name != StepName.BILETERAL_FILTER) {
+    if (step.name != StepName.BILATERAL_FILTER) {
       return true;
     } else {
       return !inSettings(settings).isBilateralFiterDisabled();
@@ -111,7 +111,7 @@ const extractPaperReuseStep = (settings: Settings): StepName => {
   if (inSettings(settings).isBlurReused()) {
     return StepName.BLUR;
   } else {
-    return StepName.BILETERAL_FILTER;
+    return StepName.BILATERAL_FILTER;
   }
 };
 

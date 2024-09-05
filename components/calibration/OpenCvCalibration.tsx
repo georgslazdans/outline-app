@@ -132,7 +132,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
       let stepName = firstChangedStep(previousSettings, currentSettings);
       if (
         stepName &&
-        ![StepName.INPUT, StepName.BILETERAL_FILTER].includes(stepName)
+        ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
       ) {
         updateCurrentStepData(stepName);
       } else {
@@ -156,7 +156,14 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   const saveAndClose = () => {
     setLoading(true);
     const contours = stepResults.pop()!.contours;
-    const context = { ...detailsContext, contours: contours };
+    const paperImage = stepResults.find(
+      (it) => it.stepName == StepName.EXTRACT_PAPER
+    )?.imageData;
+    const context = {
+      ...detailsContext,
+      contours: contours,
+      paperImage: paperImage,
+    };
     update(context).then(() => {
       setLoading(false);
       const lastRoute = getHistory().pop();

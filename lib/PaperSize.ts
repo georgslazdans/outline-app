@@ -26,9 +26,9 @@ export const PaperDimensions = {
   },
 };
 
-export const paperSizeOfDimensions = (width: number, heihgt: number) => {
+export const paperSizeOfDimensions = (width: number, height: number) => {
   const size = Object.entries(PaperDimensions).find(
-    (it) => it[1].width == width && it[1].height == heihgt
+    (it) => it[1].width == width && it[1].height == height
   );
   return size ? size[0] : "custom";
 };

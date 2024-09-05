@@ -1,7 +1,8 @@
 {
-  "description": "Izveido SVG līniju no jebkura instrumenta, izmantojot tikai bildi!",
+  "description": "Izveido SVG līniju un Gridfinity kasti no jebkura instrumenta, izmantojot tikai bildi!",
   "capturePhoto": "Uzņemt jaunu bildi",
   "uploadPicture": "No esošām",
+  "createModel": "Izveidot modeli",
   "learnMore": "Uzzināt vairāk par aplikāciju",
   "pictureAlt": "Bilde ar uzgriežņu atslēgu",
   "processing": "Apstrādā...",
@@ -99,14 +100,22 @@
     "done": "Pabeigt",
     "save": "Saglabāt"
   },
-  "history": {
-    "title": "Vēsture",
+  "contours": {
+    "title": "Kontūras",
     "image": "Bilde",
     "name": "Nosaukums",
     "date": "Datums",
-    "searchByName": "Search by Name",
+    "searchByName": "Meklēt pēc nosaukuma",
     "settings": "Iestatījumi",
     "svg": "SVG",
+    "delete": "Izdzēst"
+  },
+  "models": {
+    "title": "Models",
+    "name": "Nosaukums",
+    "date": "Datums",
+    "searchByName": "Meklēt pēc nosaukuma",
+    "editor": "Redaktors",
     "delete": "Izdzēst"
   },
   "instructions": {
@@ -116,5 +125,23 @@
     "title": "Par Applikāciju"
   },
   "homepage": "Sākums",
-  "menu": "Izvēlne"
+  "menu": "Izvēlne",
+  "editor": {
+    "title": "Editor"
+  },
+  "primitive": {
+    "box": "Kubs",
+    "sphere": "Lode",
+    "cylinder": "Cilindrs"
+  },
+  "booleanOperation": {
+    "union": "Apvienojums",
+    "cut": "Griezums",
+    "intersection": "Sķērzgriezums"
+  },
+  "editActionMenu": {
+    "items": "Elementi",
+    "actions": "Darbības",
+    "properties": "Rekvizīti"
+  }
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import InputField from "../fiields/InputField";
+import InputField from "../fields/InputField";
 import Button from "../Button";
-import SelectField from "../fiields/SelectField";
+import SelectField from "../fields/SelectField";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSize, {
   PaperDimensions,
@@ -15,8 +15,8 @@ import { useRouter } from "next/navigation";
 import { useLoading } from "@/context/LoadingContext";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { defaultSettings } from "@/lib/opencv/Settings";
-import ImageField from "../fiields/ImageField";
-import NumberField from "../fiields/NumberField";
+import ImageField from "../fields/ImageField";
+import NumberField from "../fields/NumberField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import useNavigationHistory from "@/context/NavigationHistory";
 import PaperSettings from "@/lib/opencv/PaperSettings";
@@ -79,11 +79,11 @@ const DetailsForm = ({ dictionary }: Props) => {
     setLoading(false);
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handlePaperChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePaperChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const size = event.target.value;
     setPaperSize(size);
     if (size != "custom") {

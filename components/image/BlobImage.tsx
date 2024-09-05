@@ -11,6 +11,7 @@ const BlobImage = ({ image, className = "" }: Props) => {
   if (image) {
     const imageUrl = URL.createObjectURL(image);
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         className={`${className}`}
         src={imageUrl}

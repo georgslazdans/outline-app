@@ -32,7 +32,7 @@ export const AdvancedSettingsEditor = ({
 
   const handleOnChange = (key: string, config: StepSettingConfig) => {
     const fieldConverter = eventFieldConverterFor(config);
-    return (event: ChangeEvent<HTMLInputElement>) => {
+    return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const updatedSetting = {
         ...currentSetting,
         [key]: fieldConverter(event),

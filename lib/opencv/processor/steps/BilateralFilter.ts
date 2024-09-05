@@ -48,7 +48,7 @@ const displaySettings = (settings: Settings, currentStepName: StepName) => {
 };
 
 const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
-  name: StepName.BILETERAL_FILTER,
+  name: StepName.BILATERAL_FILTER,
   settings: {
     disabled: false,
     pixelDiameter: 5,

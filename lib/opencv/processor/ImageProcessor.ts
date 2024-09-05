@@ -10,7 +10,6 @@ import imageDataOf, { imageOf } from "../util/ImageData";
 import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
 import StepName from "./steps/StepName";
-import { ReuseStep } from "./steps/ExtractPaper";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
@@ -138,7 +137,7 @@ const previousDataOf = (
       stepName = StepName.EXTRACT_PAPER;
     }
     if (
-      stepName == StepName.BILETERAL_FILTER &&
+      stepName == StepName.BILATERAL_FILTER &&
       inSettings(settings).isBilateralFiterDisabled()
     ) {
       stepName = StepName.INPUT;

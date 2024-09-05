@@ -1,7 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
-import Point from "@/lib/Point";
+import Point from "@/lib/data/Point";
 import StepSetting, { StepSettingConfig } from "./StepSettings";
 import Settings from "../../Settings";
 

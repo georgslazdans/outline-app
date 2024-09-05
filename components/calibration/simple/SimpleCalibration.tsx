@@ -6,14 +6,14 @@ import Settings from "@/lib/opencv/Settings";
 import { useDetails } from "@/context/DetailsContext";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useCallback, useEffect, useState } from "react";
-import Svg from "@/lib/Svg";
+import Svg from "@/lib/svg/Svg";
 import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
 import { OutlineImageViewer } from "./OutlineImageViewer";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
-import { centerPoints } from "@/lib/Point";
-import SelectField from "@/components/fiields/SelectField";
+import SelectField from "@/components/fields/SelectField";
 import SimpleSettingsButtons from "./SimpleSettingsButtons";
+import { modifyContourList } from "@/lib/data/contour/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;
@@ -44,8 +44,8 @@ const SimpleCalibration = ({
   const exportSvg = useCallback(() => {
     const lastStep = stepResults[stepResults.length - 1];
     const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
-    const contours = lastStep.contours!.map((it) =>
-      centerPoints(it, paperDimensions)
+    const contours = modifyContourList(lastStep.contours!).centerPoints(
+      paperDimensions
     );
     const svg = Svg.from(contours, paperDimensions);
     const blob = new Blob([svg], {
@@ -99,12 +99,12 @@ const SimpleCalibration = ({
         <div className="xl:w-1/2">
           <div className="mb-2">
             <SelectField
-              label={"Bakcground Image"}
+              label={"Background Image"}
               name={"background-image"}
               value={backgroundImageStepName}
               options={backgroundImageOptions()}
               onChange={(event) =>
-                setBackgroundImageStepName(event.target.value)
+                setBackgroundImageStepName(event.target.value as StepName)
               }
             ></SelectField>
           </div>

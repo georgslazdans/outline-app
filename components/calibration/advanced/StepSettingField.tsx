@@ -1,15 +1,21 @@
-import NumberField from "../../fiields/NumberField";
+import NumberField from "../../fields/NumberField";
 import { ChangeEvent } from "react";
 import { Dictionary } from "@/app/dictionaries";
-import CheckboxField from "../../fiields/CheckboxField";
-import SelectField from "@/components/fiields/SelectField";
-import { StepSettingConfig, NumberConfig, SelectConfig } from "@/lib/opencv/processor/steps/StepSettings";
+import CheckboxField from "../../fields/CheckboxField";
+import SelectField from "@/components/fields/SelectField";
+import {
+  StepSettingConfig,
+  NumberConfig,
+  SelectConfig,
+} from "@/lib/opencv/processor/steps/StepSettings";
 
 type Props = {
   value: string | number | boolean | undefined;
   name: string;
   config: StepSettingConfig;
-  handleOnChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleOnChange: (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
   dictionary: Dictionary;
 };
 
@@ -50,7 +56,7 @@ const StepSettingField = ({
         numberRange={{
           min: numberConfig.min,
           max: numberConfig.max,
-          step: numberConfig.step
+          step: numberConfig.step,
         }}
         slider
       />

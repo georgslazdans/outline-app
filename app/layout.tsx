@@ -4,6 +4,7 @@ import { LoadingProvider } from "@/context/LoadingContext";
 import { getDictionary } from "./dictionaries";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/navbar/Navbar";
+import { ModelProvider } from "@/context/ModelContext";
 
 const IndexedDbContext = dynamic(() => import("@/context/IndexedDbContext"), {
   ssr: false,
@@ -33,7 +34,9 @@ export default async function RootLayout({
           <div className="z-10 w-full max-w-5xl items-center justify-between">
             <IndexedDbContext></IndexedDbContext>
             <LoadingProvider dictionary={dictionary}>
-              <DetailsProvider>{children}</DetailsProvider>
+              <DetailsProvider>
+                <ModelProvider>{children}</ModelProvider>
+              </DetailsProvider>
             </LoadingProvider>
           </div>
         </main>

@@ -7,8 +7,12 @@ const navbarPaths = (dictionary: Dictionary): NavbarPath[] => {
       name: dictionary.homepage,
     },
     {
-      path: "/history",
-      name: dictionary.history.title,
+      path: "/contours",
+      name: dictionary.contours.title,
+    },
+    {
+      path: "/models",
+      name: dictionary.models.title,
     },
     {
       path: "/instructions",

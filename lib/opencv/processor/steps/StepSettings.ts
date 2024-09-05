@@ -39,17 +39,24 @@ export type StepSettingConfig =
   | GroupConfig
   | SelectConfig;
 
-export const eventFieldConverterFor = (config: StepSettingConfig) => {
+export const eventFieldConverterFor = (
+  config: StepSettingConfig
+): ((event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
   switch (config.type) {
     case "number":
-      return (event: ChangeEvent<HTMLInputElement>) =>
+      return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
         Number.parseFloat(event.target.value);
     case "group":
-      return (event: ChangeEvent<HTMLInputElement>) => event.target.value;
+      return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+        event.target.value;
     case "checkbox":
-      return (event: ChangeEvent<HTMLInputElement>) => event.target.checked;
+      return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const e = event as ChangeEvent<HTMLInputElement>;
+        return e.target.checked;
+      };
     case "select":
-      return (event: ChangeEvent<HTMLInputElement>) => event.target.value;
+      return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+        event.target.value;
   }
 };
 

@@ -16,4 +16,18 @@ const getImageData = async (blob: Blob, canvas: HTMLCanvasElement | null) => {
   return imageData;
 };
 
+export const imageDataToBlob = (imageData: ImageData): Promise<Blob | null> => {
+  let w = imageData.width;
+  let h = imageData.height;
+  let canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  let ctx = canvas.getContext("2d", { willReadFrequently: true });
+  ctx!.putImageData(imageData, 0, 0);
+
+  return new Promise((resolve) => {
+    canvas.toBlob(resolve);
+  });
+};
+
 export default getImageData;

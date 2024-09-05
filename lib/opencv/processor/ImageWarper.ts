@@ -1,5 +1,5 @@
 import * as cv from "@techstark/opencv-js";
-import Point from "../../Point";
+import Point from "../../data/Point";
 import { PaperDimensions } from "../PaperSettings";
 
 export const scaleFactorOf = (

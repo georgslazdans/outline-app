@@ -34,7 +34,7 @@ const StepSettingGroup = ({
 
   const handleOnChange = (key: string, config: StepSettingConfig) => {
     const fieldConverter = eventFieldConverterFor(config);
-    return (event: ChangeEvent<HTMLInputElement>) => {
+    return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const updatedSetting = {
         ...settings,
         [key]: fieldConverter(event),

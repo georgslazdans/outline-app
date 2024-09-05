@@ -1,7 +1,8 @@
 {
-  "description": "Make an SVG path for any tool using only a picture!",
+  "description": "Make an SVG path and Gridfinity box for any tool using only a picture!",
   "capturePhoto": "Use camera",
   "uploadPicture": "From images",
+  "createModel": "Create model",
   "learnMore": "Learn more about this application",
   "pictureAlt": "Picture of a wrench",
   "processing": "Processing...",
@@ -99,14 +100,22 @@
     "done": "Done",
     "save": "Save"
   },
-  "history": {
-    "title": "History",
+  "contours": {
+    "title": "Contours",
     "image": "Image",
     "name": "Name",
     "date": "Date",
     "searchByName": "Search by Name",
     "settings": "Settings",
     "svg": "SVG",
+    "delete": "Delete"
+  },
+  "models": {
+    "title": "Models",
+    "name": "Name",
+    "date": "Date",
+    "searchByName": "Search by Name",
+    "editor": "Editor",
     "delete": "Delete"
   },
   "instructions": {
@@ -116,5 +125,23 @@
     "title": "About"
   },
   "homepage": "Home",
-  "menu": "Menu"
+  "menu": "Menu",
+  "editor": {
+    "title": "Editor"
+  },
+  "primitive": {
+    "box": "Box",
+    "sphere": "Sphere",
+    "cylinder": "Cylinder"
+  },
+  "booleanOperation": {
+    "union": "Union",
+    "cut": "Cut",
+    "intersection": "Intersection"
+  },
+  "editActionMenu": {
+    "items": "Items",
+    "actions": "Actions",
+    "properties": "Properties"
+  }
 }

@@ -20,7 +20,7 @@ type Props = {
 
 const HoleSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
   const onChange = (field: string) => {
-    return (event: React.ChangeEvent<HTMLInputElement>) => {
+    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const value = Number.parseFloat(event.target.value);
       const stepSettings = {
         ...settings[StepName.EXTRACT_OBJECT],

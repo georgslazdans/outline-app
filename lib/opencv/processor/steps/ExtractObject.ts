@@ -11,7 +11,6 @@ import {
   largestContourOf,
   smoothOf,
 } from "../../util/contours/Contours";
-import { pointsFrom, scalePoints } from "../../../Point";
 import StepName from "./StepName";
 import { scaleFactorOf } from "../ImageWarper";
 import { paperDimensionsOf } from "../../PaperSettings";
@@ -23,6 +22,7 @@ import holeFinder, {
   HoleSettings,
   contourPointsOf,
 } from "../../util/contours/Holes";
+import { modifyContour, modifyContourList, pointsFrom } from "@/lib/data/contour/ContourPoints";
 
 type SnoothSettings = {
   smoothOutline: boolean;
@@ -114,8 +114,8 @@ const scaledResultOf = (
   previous: PreviousData
 ) => {
   const scaleFactor = scaleFactorFrom(previous);
-  const scaledHoles = holes.map((it) => scalePoints(it, 1 / scaleFactor));
-  const scaledOutline = scalePoints(outline, 1 / scaleFactor);
+  const scaledHoles = modifyContourList(holes).scalePoints(1 / scaleFactor);
+  const scaledOutline = modifyContour(outline).scalePoints(1 / scaleFactor);
   return [...scaledHoles, scaledOutline];
 };
 

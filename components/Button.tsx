@@ -1,13 +1,17 @@
 "use client";
 
-import React, { FormEventHandler, ReactNode } from "react";
+import React, { FormEventHandler, ReactNode, useEffect } from "react";
 
 type Props = {
+  id?: string;
   className?: string;
   children?: ReactNode;
   onClick?: FormEventHandler<HTMLButtonElement>;
   type?: "submit" | "reset" | "button";
   style?: "primary" | "secondary" | "red" | "disabled";
+  size?: "big" | "medium";
+  hotkey?: string;
+  hotkeyCtrl?: boolean;
 };
 
 const STYLES = {
@@ -18,12 +22,50 @@ const STYLES = {
   disabled: "bg-white dark:bg-black text-gray border-4 border-gray",
 };
 
-const Button = ({ className, children, onClick, type, style }: Props) => {
+const SIZES = {
+  big: "w-full rounded-[64px] p-4 ",
+  medium: "rounded-[32px] p-2",
+};
+
+const Button = ({
+  id,
+  className,
+  children,
+  onClick,
+  type,
+  style,
+  hotkey,
+  hotkeyCtrl,
+  size = "big",
+}: Props) => {
   const buttonStyle = style ? STYLES[style] : STYLES["primary"];
+
+  useEffect(() => {
+    const handleControlKey = (event: KeyboardEvent) =>
+      hotkeyCtrl ? event.ctrlKey : true;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (hotkey && event.key === hotkey && handleControlKey(event)) {
+        if (onClick) {
+          event.preventDefault();
+          onClick(event as any); // Trigger the onClick function
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [hotkey, hotkeyCtrl, onClick]);
+
+  const sizeStyle = SIZES[size];
+
   return (
     <button
+      id={id}
       type={type ? type : "submit"}
-      className={"rounded-[64px] p-4 w-full " + buttonStyle + " " + className}
+      className={" " + buttonStyle + " " + sizeStyle + " " + className}
       onClick={(event) => onClick && onClick(event)}
     >
       {children}
