@@ -2,6 +2,7 @@
 
 import { useEditorContext } from "@/components/editor/EditorContext";
 import Point from "@/lib/data/Point";
+import { truncateNumber } from "@/lib/utils/Math";
 import { DragControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { ReactNode, useEffect, useState } from "react";
@@ -58,7 +59,10 @@ const Draggable = ({
       pos.setFromMatrixPosition(w);
       delta.setFromMatrixPosition(dw);
 
-      onPointDrag({ x: pos.x + delta.x, y: pos.y + delta.y });
+      onPointDrag({
+        x: truncateNumber(pos.x + delta.x, 5),
+        y: truncateNumber(pos.y + delta.y, 5),
+      });
       invalidate();
     }
   };

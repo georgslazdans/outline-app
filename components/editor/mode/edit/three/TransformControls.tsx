@@ -92,8 +92,8 @@ const TransformControls = memo(function TransformControls({
     (translation: Vector3, rotation: Euler) => {
       onItemChange({
         ...item,
-        translation: fromVector3(translation),
-        rotation: fromEuler(rotation),
+        translation: fromVector3(translation, true),
+        rotation: fromEuler(rotation, true),
       });
     },
     [item, onItemChange]

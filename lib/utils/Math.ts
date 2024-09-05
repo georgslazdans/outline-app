@@ -29,3 +29,17 @@ export const eulerToAxisAngle = (
   const resultingAxis = { x: axis.x, y: axis.y, z: axis.z };
   return { axis: resultingAxis, angle };
 };
+
+export const truncateNumber = (value: number, decimalPlaces: number = 3) => {
+  if (decimalPlaces < 0 || decimalPlaces >= 20) {
+    throw new Error("Invalid argument decimalPlaces, value: " + decimalPlaces);
+  }
+  console.log(
+    "Truncating number",
+    value,
+    decimalPlaces,
+    "Result",
+    parseFloat(value.toFixed(decimalPlaces))
+  );
+  return parseFloat(value.toFixed(decimalPlaces));
+};

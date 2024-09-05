@@ -1,5 +1,5 @@
 import { Euler, Quaternion, Vector3 } from "three";
-import { toDegrees, toRadians } from "./utils/Math";
+import { toDegrees, toRadians, truncateNumber } from "./utils/Math";
 
 type Point3D = {
   x: number;
@@ -15,9 +15,16 @@ export const toVector3 = (point: Point3D): Vector3 => {
   return new Vector3(point.x, point.y, point.z);
 };
 
-export const fromVector3 = (point: Vector3): Point3D => {
+export const fromVector3 = (
+  point: Vector3,
+  truncate: boolean = false
+): Point3D => {
   const { x, y, z } = point;
-  return { x, y, z };
+  if (truncate) {
+    return { x: truncateNumber(x), y: truncateNumber(y), z: truncateNumber(z) };
+  } else {
+    return { x, y, z };
+  }
 };
 
 export const toEuler = (rotation: Point3D): Euler => {
@@ -25,12 +32,20 @@ export const toEuler = (rotation: Point3D): Euler => {
   return new Euler(toRadians(x), toRadians(y), toRadians(z));
 };
 
-export const fromEuler = (euler: Euler): Point3D => {
-  return {
-    x: toDegrees(euler.x),
-    y: toDegrees(euler.y),
-    z: toDegrees(euler.z),
-  };
+export const fromEuler = (euler: Euler, truncate: boolean = false): Point3D => {
+  if (truncate) {
+    return {
+      x: truncateNumber(toDegrees(euler.x)),
+      y: truncateNumber(toDegrees(euler.y)),
+      z: truncateNumber(toDegrees(euler.z)),
+    };
+  } else {
+    return {
+      x: toDegrees(euler.x),
+      y: toDegrees(euler.y),
+      z: toDegrees(euler.z),
+    };
+  }
 };
 
 export const add = (a: Point3D, b: Point3D) => {
