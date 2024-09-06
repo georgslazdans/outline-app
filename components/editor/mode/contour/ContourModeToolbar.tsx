@@ -14,6 +14,8 @@ import AddButtonGroup from "./ui/add";
 import ActionButtons from "../../ui/action/ActionButtons";
 import DoneButton from "./ui/DoneButton";
 import DeleteButtonGroup from "./ui/delete";
+import PointClickMode from "./selection/PointClickMode";
+import { usePointClickContext } from "./selection/PointClickContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -21,6 +23,7 @@ type Props = {
 
 const ContourModeToolbar = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
+  const { clickMode } = usePointClickContext();
 
   const { selectedId, selectedPoint } = useEditorContext();
 
@@ -65,7 +68,7 @@ const ContourModeToolbar = ({ dictionary }: Props) => {
     <>
       <DoneButton dictionary={dictionary}></DoneButton>
       <ActionButtons dictionary={dictionary}>
-        {selectedContourPoints && (
+        {selectedContourPoints && clickMode == PointClickMode.SELECTION && (
           <>
             <ScaleAlongNormal
               dictionary={dictionary}

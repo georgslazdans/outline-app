@@ -6,6 +6,7 @@ import EditContour from "./EditContour";
 import ActionGroup from "../../../../../ui/action/ActionGroup";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
+import SplitContour from "./SplitContour";
 
 type Props = {
   dictionary: Dictionary;
@@ -21,6 +22,7 @@ const EditContourGroup = ({ dictionary, selectedItem }: Props) => {
       {selectedItem && isContour() && (
         <ActionGroup dictionary={dictionary} name={"Contour"}>
           <EditContour dictionary={dictionary}></EditContour>
+          <SplitContour dictionary={dictionary}></SplitContour>
         </ActionGroup>
       )}
     </>

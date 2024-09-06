@@ -11,10 +11,11 @@ import { useModelDataContext } from "../../ModelDataContext";
 import ContourPoints, {
   modifyContourList,
 } from "@/lib/data/contour/ContourPoints";
-import PointSelection from "./PointSelection";
 import useDebounced from "@/lib/utils/Debounced";
 import { POINT_SCALE_THREEJS } from "@/lib/data/Point";
 import BackgroundImage from "./threejs/BackgroundImage";
+import SplitPointsLine from "./threejs/SplitPointsLine";
+import { usePointClickContext } from "./selection/PointClickContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -23,6 +24,7 @@ type Props = {
 const ContourModeEdit = ({ dictionary }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
   const { selectedId, wireframe } = useEditorContext();
+  const { splitPoints } = usePointClickContext();
 
   const selectedItem = useMemo(() => {
     if (selectedId) {
@@ -85,21 +87,27 @@ const ContourModeEdit = ({ dictionary }: Props) => {
           detailsContextId={getDetailsContext()!}
         ></BackgroundImage>
       )}
-      <PointSelection>
-        {scaledContours &&
-          scaledContours.map((contour, index) => {
-            return (
-              <ContourMesh
-                key={"ContourMesh" + index}
-                contourIndex={index}
-                contour={contour}
-                onContourChange={onContourChanged(index)}
-                transparent={wireframe}
-                onModelEditEnd={flushPendingDataChanges}
-              ></ContourMesh>
-            );
-          })}
-      </PointSelection>
+
+      {scaledContours &&
+        scaledContours.map((contour, index) => {
+          return (
+            <ContourMesh
+              key={"ContourMesh" + index}
+              contourIndex={index}
+              contour={contour}
+              onContourChange={onContourChanged(index)}
+              transparent={wireframe}
+              onModelEditEnd={flushPendingDataChanges}
+            ></ContourMesh>
+          );
+        })}
+
+      {scaledContours && (
+        <SplitPointsLine
+          contour={scaledContours}
+          splitPoints={splitPoints}
+        ></SplitPointsLine>
+      )}
     </>
   );
 };

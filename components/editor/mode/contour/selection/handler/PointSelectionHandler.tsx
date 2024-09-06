@@ -1,26 +1,13 @@
 "use client";
 
-import React, { createContext, ReactNode, useContext, useRef } from "react";
-import ContourIndex from "../../../../lib/data/contour/ContourIndex";
-import { useEditorContext } from "../../EditorContext";
+import { useRef } from "react";
+import ContourIndex from "../../../../../../lib/data/contour/ContourIndex";
+import { useEditorContext } from "../../../../EditorContext";
 import deepEqual from "@/lib/utils/Objects";
-import { Intersection, ThreeEvent, useThree } from "@react-three/fiber";
+import { Intersection, ThreeEvent } from "@react-three/fiber";
+import { PointClickHandler } from "../PointClickContext";
 
-type Props = {
-  children: ReactNode;
-};
-
-type PointClickContextProps = {
-  onPointerDown: (event: ThreeEvent<PointerEvent>) => void;
-  onPointerUp: (event: ThreeEvent<PointerEvent>) => void;
-};
-
-const PointClickContext = createContext<PointClickContextProps | undefined>(
-  undefined
-);
-
-const PointSelection = ({ children }: Props) => {
-  const { invalidate } = useThree();
+const usePointSelection = (): PointClickHandler => {
   const { selectedPoint, setSelectedPoint } = useEditorContext();
   const lastTimestamp = useRef<number>();
   const pointChangedOnDownEvent = useRef<boolean>(false);
@@ -66,12 +53,10 @@ const PointSelection = ({ children }: Props) => {
       if (!hasSelectedPointIn(intersectingPoints)) {
         pointChangedOnDownEvent.current = true;
         setSelectedPoint(intersectingPoints[0]);
-        invalidate();
       }
     } else {
       pointChangedOnDownEvent.current = true;
       setSelectedPoint(intersectingPoints[0]);
-      invalidate();
     }
   };
 
@@ -91,27 +76,16 @@ const PointSelection = ({ children }: Props) => {
       );
       if (otherPoint) {
         setSelectedPoint(otherPoint);
-        invalidate();
       }
     } else {
       setSelectedPoint(intersectingPoints[0]);
-      invalidate();
     }
   };
 
-  return (
-    <PointClickContext.Provider value={{ onPointerDown, onPointerUp }}>
-      {children}
-    </PointClickContext.Provider>
-  );
+  return {
+    onPointerDown,
+    onPointerUp,
+  };
 };
 
-export const usePointClickContext = (): PointClickContextProps => {
-  const context = useContext(PointClickContext);
-  if (!context) {
-    throw new Error("useClickContext must be used within a ClickProvider");
-  }
-  return context;
-};
-
-export default PointSelection;
+export default usePointSelection;

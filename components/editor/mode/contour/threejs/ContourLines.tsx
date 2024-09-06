@@ -1,10 +1,12 @@
 "use client";
 
-import React, { memo, } from "react";
+import React, { memo } from "react";
 import { Intersection, Vector3 } from "three";
 import { Line } from "@react-three/drei";
 import Point from "@/lib/data/Point";
 import { ThreeEvent } from "@react-three/fiber";
+import { usePointClickContext } from "../selection/PointClickContext";
+import PointClickMode from "../selection/PointClickMode";
 
 type Props = {
   points: Point[];
@@ -23,9 +25,12 @@ const ContourLines = memo(function SvgLineMesh({
   points,
   onLineDoubleClick,
 }: Props) {
+  const { clickMode } = usePointClickContext();
   const vertices = points.map((it) => new Vector3(it.x, it.y, 0));
 
   const onDoubleClick = (event: ThreeEvent<MouseEvent>) => {
+    if (clickMode != PointClickMode.SELECTION) return;
+    
     if (!hasContourPointClicked(event.intersections)) {
       if (event.pointOnLine) {
         const { x, y } = event.pointOnLine;

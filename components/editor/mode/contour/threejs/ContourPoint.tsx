@@ -3,8 +3,8 @@ import { Color, Vector3 } from "three";
 import ContourIndex from "../../../../../lib/data/contour/ContourIndex";
 import { POINT_SCALE_THREEJS, scaleVectorOf } from "@/lib/data/Point";
 import { Instance, Text } from "@react-three/drei";
-import { ThreeEvent } from "@react-three/fiber";
-import { usePointClickContext } from "../PointSelection";
+import { ThreeEvent, useThree } from "@react-three/fiber";
+import { usePointClickContext } from "../selection/PointClickContext";
 
 type Props = {
   index: number;
@@ -22,6 +22,7 @@ const ContourPoint = memo(function PointMesh({
   color,
   size,
 }: Props) {
+  const { invalidate } = useThree();
   const { onPointerDown, onPointerUp } = usePointClickContext();
 
   const circleRef = useRef<any>();
@@ -39,6 +40,7 @@ const ContourPoint = memo(function PointMesh({
   const onClickDown = (event: ThreeEvent<PointerEvent>) => {
     setPreviousLocation(event.point);
     onPointerDown(event);
+    invalidate();
   };
 
   const onClickUp = (event: ThreeEvent<PointerEvent>) => {
@@ -49,6 +51,7 @@ const ContourPoint = memo(function PointMesh({
       return;
     }
     onPointerUp(event);
+    invalidate();
   };
 
   const resultColor = useMemo(() => {

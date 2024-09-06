@@ -7,6 +7,8 @@ import EditorMode from "../../../../EditorMode";
 import ActionButton from "../../../../../ui/action/ActionButton";
 import { useEditorHistoryContext } from "@/components/editor/history/EditorHistoryContext";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
+import { usePointClickContext } from "@/components/editor/mode/contour/selection/PointClickContext";
+import PointClickMode from "@/components/editor/mode/contour/selection/PointClickMode";
 
 type Props = {
   dictionary: Dictionary;
@@ -34,10 +36,12 @@ const icon = (
 const EditContour = ({ dictionary }: Props) => {
   const { selectedId, setEditorMode } = useEditorContext();
   const { ensureLastEventHas } = useEditorHistoryContext();
+  const { setClickMode } = usePointClickContext();
 
   const openContourEditMode = () => {
     if (selectedId) {
       setEditorMode(EditorMode.CONTOUR_EDIT);
+      setClickMode(PointClickMode.SPLIT);
       ensureLastEventHas(selectedId, EditorHistoryType.CONTOUR_UPDATED);
     }
   };

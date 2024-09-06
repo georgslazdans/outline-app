@@ -7,6 +7,8 @@ import { DragControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { ReactNode, useEffect, useState } from "react";
 import { Matrix4, Vector3 } from "three";
+import { usePointClickContext } from "../selection/PointClickContext";
+import PointClickMode from "../selection/PointClickMode";
 
 type Props = {
   enabled: boolean;
@@ -26,6 +28,7 @@ const Draggable = ({
   onPointDrag,
   onPointDragEnd,
 }: Props) => {
+  const { clickMode } = usePointClickContext();
   const { invalidate } = useThree();
   const { setDisableCamera, setTransformEditFocused } = useEditorContext();
   const [matrix, setMatrix] = useState(new Matrix4());
@@ -55,7 +58,7 @@ const Draggable = ({
   };
 
   const onDrag = (l: Matrix4, _dl: Matrix4, w: Matrix4, dw: Matrix4) => {
-    if (enabled) {
+    if (enabled && clickMode == PointClickMode.SELECTION) {
       pos.setFromMatrixPosition(w);
       delta.setFromMatrixPosition(dw);
 
