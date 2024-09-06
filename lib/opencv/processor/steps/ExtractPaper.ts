@@ -100,7 +100,7 @@ const imageColorSpace = (settings: Settings): ColorSpace => {
 const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
   name: StepName.EXTRACT_PAPER,
   settings: {
-    reuseStep: ReuseStep.BLUR,
+    reuseStep: ReuseStep.NONE,
     paperSettings: {
       width: 210,
       height: 297,

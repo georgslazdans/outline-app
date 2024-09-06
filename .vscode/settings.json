@@ -5,6 +5,7 @@
         "gridfinity",
         "replicad",
         "threejs",
-        "wireframe"
+        "wireframe",
+        "Wireframe",
     ]
 }
