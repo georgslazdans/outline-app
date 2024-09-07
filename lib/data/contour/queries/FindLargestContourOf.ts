@@ -1,33 +1,5 @@
-import Point from "../../Point";
+import { minMaxValues } from "../../Point";
 import ContourPoints from "../ContourPoints";
-
-const minMaxValues = (points: Point[]) => {
-  let minX = 0,
-    minY = 0,
-    maxX = 0,
-    maxY = 0;
-
-  points.forEach((point) => {
-    if (minX > point.x) {
-      minX = point.x;
-    }
-    if (maxX < point.x) {
-      maxX = point.x;
-    }
-    if (minY > point.y) {
-      minY = point.y;
-    }
-    if (maxY < point.y) {
-      maxY = point.y;
-    }
-  });
-  return {
-    minX,
-    minY,
-    maxX,
-    maxY,
-  };
-};
 
 const findLargestContourOf = (contourPoints: ContourPoints[]) => {
   return (): ContourPoints => {

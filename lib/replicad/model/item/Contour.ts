@@ -16,7 +16,7 @@ export const contourItemOf = (
   contourPoints: ContourPoints[],
   height: number,
   name?: string,
-  detailsContextId?: number
+  detailsContextId?: number,
 ): Item => {
   return {
     id: randomUUID(),

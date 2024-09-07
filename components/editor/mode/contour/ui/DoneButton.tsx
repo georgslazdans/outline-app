@@ -10,51 +10,14 @@ import EditorMode from "../../EditorMode";
 import { usePointClickContext } from "../selection/PointClickContext";
 import PointClickMode from "../selection/PointClickMode";
 import { useModelContext } from "@/context/ModelContext";
-import Contour from "@/lib/replicad/model/item/Contour";
+import Contour, { contourItemOf } from "@/lib/replicad/model/item/Contour";
 import Item from "@/lib/replicad/model/Item";
-import ContourPoints, {
-  queryContourList,
-} from "@/lib/data/contour/ContourPoints";
-import SplitPoints from "../selection/SplitPoints";
-import Point from "@/lib/data/Point";
+import { queryContourList } from "@/lib/data/contour/ContourPoints";
+import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
+import BooleanOperation from "@/lib/replicad/model/BooleanOperation";
 
 type Props = {
   dictionary: Dictionary;
-};
-
-const divideContour = (
-  contour: ContourPoints[],
-  splitPoints: SplitPoints[]
-): ContourPoints[][] => {
-  const getSegment = (
-    startIndex: number,
-    endIndex: number,
-    points: Point[]
-  ): Point[] => {
-    if (startIndex <= endIndex) {
-      return points.slice(startIndex, endIndex + 1);
-    } else {
-      return [...points.slice(startIndex), ...points.slice(0, endIndex + 1)];
-    }
-  };
-
-  const result: ContourPoints[] = [];
-  const processedIndexes: number[] = [];
-  const outline = queryContourList(contour).findLargestContourOf();
-
-  const addSegment = (startIndex: number, endIndex: number) => {
-    const segment = getSegment(startIndex, endIndex, outline.points);
-    result.push({ points: segment });
-    segment.forEach((_, index) => processedIndexes.push(index));
-  };
-
-  splitPoints.forEach((it) => {
-    const { a, b } = it;
-    addSegment(a.point, b.point);
-    addSegment(b.point, a.point);
-  });
-
-  return [];
 };
 
 const DoneButton = ({ dictionary }: Props) => {
@@ -62,7 +25,7 @@ const DoneButton = ({ dictionary }: Props) => {
   const { selectedId, setEditorMode } = useEditorContext();
   const { compressHistoryEvents } = useEditorHistoryContext();
 
-  const { model } = useModelContext();
+  const { model, setModel } = useModelContext();
 
   const selectedContour = () => {
     return model.modelData.items.find((it) => it.id == selectedId) as Item &
@@ -72,12 +35,39 @@ const DoneButton = ({ dictionary }: Props) => {
   const onDone = () => {
     if (clickMode == PointClickMode.SELECTION) {
       compressHistoryEvents(EditorHistoryType.CONTOUR_UPDATED);
-    } else if (clickMode == PointClickMode.SPLIT) {
+    } else if (clickMode == PointClickMode.SPLIT && splitPoints.length > 0) {
       const contour = selectedContour();
-      // Create a group
-      // Add separate items
+      const newContours = queryContourList(contour.points).divideContour(
+        splitPoints
+      );
+      const contourItems = newContours.map((it, index) => {
+        const newName = contour.name + " " + (index + 1);
+        const item = contourItemOf(
+          it,
+          contour.height,
+          newName,
+          contour.detailsContextId
+        );
+        item.booleanOperation = BooleanOperation.UNION;
+        return item;
+      });
+      const group = itemGroupOf(contourItems, contour.name);
+      group.translation = contour.translation;
+      group.rotation = contour.rotation;
+      const newItems = model.modelData.items.map((it) => {
+        if (it.id == contour.id) {
+          return group;
+        }
+        return it;
+      });
+      setModel({
+        ...model,
+        modelData: {
+          ...model.modelData,
+          items: newItems,
+        },
+      });
       setSplitPoints([]);
-      // TODO split contour
     }
     setEditorMode(EditorMode.EDIT);
   };

@@ -63,4 +63,33 @@ export const normalOf = (p1: Point, p2: Point): Point => {
   return { x: -dy / length, y: dx / length };
 };
 
+export const minMaxValues = (points: Point[]) => {
+  let minX = points[0].x,
+    minY = points[0].y,
+    maxX = points[0].x,
+    maxY = points[0].y;
+
+  points.forEach((point, index) => {
+    if (index == 0) return;
+    if (minX > point.x) {
+      minX = point.x;
+    }
+    if (maxX < point.x) {
+      maxX = point.x;
+    }
+    if (minY > point.y) {
+      minY = point.y;
+    }
+    if (maxY < point.y) {
+      maxY = point.y;
+    }
+  });
+  return {
+    minX,
+    minY,
+    maxX,
+    maxY,
+  };
+};
+
 export default Point;

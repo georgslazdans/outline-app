@@ -3,6 +3,7 @@ import findLineSegmentClosestToPoint from "./FindLineSegmentClosestToPoint";
 import findLargestContourOf from "./FindLargestContourOf";
 import findMiddleBetweenPoints from "./FindMiddleBetweenPoints";
 import arePointsClockwise from "./ArePointsClockwise";
+import divideContour from "./DivideContour";
 
 const singleOnlyQuery = () => {
   return {
@@ -15,6 +16,7 @@ const singleOnlyQuery = () => {
 const listOnlyQuery = () => {
   return {
     findLargestContourOf: findLargestContourOf,
+    divideContour: divideContour,
   };
 };
 
