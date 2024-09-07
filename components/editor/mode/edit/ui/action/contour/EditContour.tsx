@@ -41,7 +41,7 @@ const EditContour = ({ dictionary }: Props) => {
   const openContourEditMode = () => {
     if (selectedId) {
       setEditorMode(EditorMode.CONTOUR_EDIT);
-      setClickMode(PointClickMode.SPLIT);
+      setClickMode(PointClickMode.SELECTION);
       ensureLastEventHas(selectedId, EditorHistoryType.CONTOUR_UPDATED);
     }
   };
