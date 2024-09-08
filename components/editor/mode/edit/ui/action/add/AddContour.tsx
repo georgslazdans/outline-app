@@ -46,7 +46,7 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
       const gridfinityHeight = gridfinityHeightOf(modelData);
       item = {
         ...item,
-        translation: { x: 0, y: 0, z: gridfinityHeight - height },
+        translation: { x: 0, y: 0, z: gridfinityHeight},
       };
     }
 

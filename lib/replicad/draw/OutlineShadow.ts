@@ -1,7 +1,9 @@
 import Point from "@/lib/data/Point";
 import { draw, Drawing } from "replicad";
 import ReplicadModelData from "./ReplicadModelData";
-import ContourPoints, { queryContourList } from "@/lib/data/contour/ContourPoints";
+import ContourPoints, {
+  queryContourList,
+} from "@/lib/data/contour/ContourPoints";
 
 const drawContour = (points: Point[]): Drawing => {
   const drawPen = draw();
@@ -20,7 +22,7 @@ const drawShadow = (
   height: number
 ): ReplicadModelData => {
   const { findLargestContourOf } = queryContourList(contourPoints);
-  let {contour: basePoints} = findLargestContourOf();
+  let { contour: basePoints } = findLargestContourOf();
   let base = drawContour(basePoints.points);
 
   for (let i = 0; i < contourPoints.length; i++) {
@@ -28,7 +30,7 @@ const drawShadow = (
     const hole = drawContour(contourPoints[i].points);
     base = base.cut(hole);
   }
-  return base.sketchOnPlane("XY").extrude(height);
+  return base.sketchOnPlane("XY").extrude(height).translateZ(-height);
 };
 
 export default drawShadow;
