@@ -6,6 +6,7 @@ import React, { ChangeEvent } from "react";
 import SphereEdit from "./SphereEdit";
 import PrimitiveParams, {
   BoxParams,
+  CapsuleParams,
   CylinderParams,
   defaultParamsFor,
   SphereParams,
@@ -19,6 +20,7 @@ import Primitive from "@/lib/replicad/model/item/Primitive";
 import PrimitiveType, {
   primitiveTypeOptionsFor,
 } from "@/lib/replicad/model/item/PrimitiveType";
+import CapsuleEdit from "./CapsuleEdit";
 
 type Props = {
   dictionary: Dictionary;
@@ -79,6 +81,13 @@ const PrimitiveEdit = ({ dictionary, item, onItemChange }: Props) => {
           cylinderParams={item.params as CylinderParams}
           onParamsChange={handleParamsChange}
         ></CylinderEdit>
+      )}
+      {isCurrentType(PrimitiveType.CAPSULE) && (
+        <CapsuleEdit
+          dictionary={dictionary}
+          capsuleParams={item.params as CapsuleParams}
+          onParamsChange={handleParamsChange}
+        ></CapsuleEdit>
       )}
 
       <TransformEdit

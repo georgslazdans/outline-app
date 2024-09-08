@@ -132,7 +132,8 @@
   "primitive": {
     "box": "Box",
     "sphere": "Sphere",
-    "cylinder": "Cylinder"
+    "cylinder": "Cylinder",
+    "capsule": "Capsule"
   },
   "booleanOperation": {
     "union": "Union",

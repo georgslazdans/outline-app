@@ -19,6 +19,12 @@ export type SphereParams = {
   radius: number;
 };
 
+export type CapsuleParams = {
+  type: PrimitiveType.CAPSULE;
+  radius: number;
+  middleHeight: number;
+};
+
 export const defaultParamsFor = (type: PrimitiveType): PrimitiveParams => {
   switch (type) {
     case PrimitiveType.BOX:
@@ -39,6 +45,13 @@ export const defaultParamsFor = (type: PrimitiveType): PrimitiveParams => {
         type: PrimitiveType.SPHERE,
         radius: 5,
       };
+    case PrimitiveType.CAPSULE: {
+      return {
+        type: PrimitiveType.CAPSULE,
+        radius: 5,
+        middleHeight: 10,
+      };
+    }
   }
 };
 
@@ -56,9 +69,17 @@ export const defaultTranslationOf = (
     case PrimitiveType.SPHERE:
       const sphereOffset = gridfinityHeight;
       return new Vector3(0, 0, sphereOffset);
+    case PrimitiveType.CAPSULE:
+      const capsuleOffset =
+        gridfinityHeight - params.middleHeight - params.radius * 2;
+      return new Vector3(0, 0, capsuleOffset);
   }
 };
 
-type PrimitiveParams = BoxParams | CylinderParams | SphereParams;
+type PrimitiveParams =
+  | BoxParams
+  | CylinderParams
+  | SphereParams
+  | CapsuleParams;
 
 export default PrimitiveParams;

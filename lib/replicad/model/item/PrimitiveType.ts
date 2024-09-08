@@ -4,6 +4,7 @@ enum PrimitiveType {
   BOX = "box",
   CYLINDER = "cylinder",
   SPHERE = "sphere",
+  CAPSULE = "capsule",
 }
 
 const dictionaryPath = "primitive";

@@ -132,7 +132,8 @@
   "primitive": {
     "box": "Kubs",
     "sphere": "Lode",
-    "cylinder": "Cilindrs"
+    "cylinder": "Cilindrs",
+    "capsule": "Kapsula"
   },
   "booleanOperation": {
     "union": "Apvienojums",

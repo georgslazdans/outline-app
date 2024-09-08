@@ -1,6 +1,7 @@
 import { makeSphere, sketchCircle, sketchRectangle } from "replicad";
 import PrimitiveParams, {
   BoxParams,
+  CapsuleParams,
   CylinderParams,
   SphereParams,
 } from "../model/item/PrimitiveParams";
@@ -19,9 +20,14 @@ const drawSphere = (params: SphereParams): ReplicadModelData => {
   return makeSphere(params.radius);
 };
 
-export const drawPrimitive = (
-  params: PrimitiveParams
-): ReplicadModelData => {
+const drawCapsule = (params: CapsuleParams): ReplicadModelData => {
+  const cylinder = sketchCircle(params.radius).extrude(params.middleHeight);
+  return cylinder
+    .fuse(makeSphere(params.radius))
+    .fuse(makeSphere(params.radius).translateZ(params.middleHeight));
+};
+
+export const drawPrimitive = (params: PrimitiveParams): ReplicadModelData => {
   switch (params.type) {
     case PrimitiveType.BOX:
       return drawBox(params);
@@ -29,5 +35,7 @@ export const drawPrimitive = (
       return drawCylinder(params);
     case PrimitiveType.SPHERE:
       return drawSphere(params);
+    case PrimitiveType.CAPSULE:
+      return drawCapsule(params);
   }
 };
