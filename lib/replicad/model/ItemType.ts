@@ -3,6 +3,7 @@ enum ItemType {
   Contour = "contour",
   Gridfinity = "gridfinity",
   Group = "group",
+  Text = "text",
 }
 
 export const nameItemTypeOf = (item: ItemType): string => {

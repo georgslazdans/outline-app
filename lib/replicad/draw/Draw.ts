@@ -6,8 +6,10 @@ import gridfinityBox from "./Gridfinity";
 import drawShadow from "./OutlineShadow";
 import { drawPrimitive } from "./Primitives";
 import ReplicadModelData from "./ReplicadModelData";
+import { drawText } from "replicad";
+import TextItem from "../model/item/TextItem";
 
-type DrawableItem = Gridfinity | Contour | Primitive;
+type DrawableItem = Gridfinity | Contour | Primitive | TextItem;
 
 export const drawItem = (item: DrawableItem): ReplicadModelData => {
   switch (item.type) {
@@ -18,5 +20,12 @@ export const drawItem = (item: DrawableItem): ReplicadModelData => {
       return drawShadow(points, height);
     case ItemType.Primitive:
       return drawPrimitive(item.params);
+    case ItemType.Text:
+      return drawText(item.text, {
+        fontSize: item.fontSize,
+      })
+        .sketchOnPlane("XY")
+        .extrude(item.height)
+        .translateZ(-item.height);
   }
 };

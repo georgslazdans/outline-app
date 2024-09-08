@@ -19,7 +19,7 @@ const ItemTypeIcon = ({ itemType, className }: Props) => {
   return (
     <a
       className={
-        iconClassOf(itemType) + " text-black dark:text-white " + className
+        iconClassOf(itemType) + "" + className
       }
       style={{ color: getColorFor(itemType) }}
     >

@@ -7,6 +7,7 @@ import AddContour from "./AddContour";
 import AddGroup from "./AddGroup";
 import AddPrimitive from "./AddPrimitive";
 import Item from "@/lib/replicad/model/Item";
+import AddText from "./AddText";
 
 type Props = {
   dictionary: Dictionary;
@@ -25,6 +26,7 @@ const AddButtonGroup = ({ dictionary, selectedItem }: Props) => {
         selectedItem={selectedItem}
       ></AddContour>
       <AddGroup dictionary={dictionary} selectedItem={selectedItem}></AddGroup>
+      <AddText dictionary={dictionary} selectedItem={selectedItem}></AddText>
     </ActionGroup>
   );
 };

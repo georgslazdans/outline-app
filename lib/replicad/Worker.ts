@@ -1,7 +1,7 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 // @ts-ignore
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC } from "replicad";
+import { loadFont, setOC } from "replicad";
 import ModelData from "./model/ModelData";
 import * as Comlink from "comlink";
 import { processModelData as processData } from "./ModelProcessor";
@@ -23,6 +23,8 @@ const initializedPromise = new Promise<void>(async (resolve) => {
     });
 
     setOC(OC);
+    console.log("Loading font!");
+    await loadFont("/fonts/Roboto-Regular.ttf");
     resolve();
   }
 });

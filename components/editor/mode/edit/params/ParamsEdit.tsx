@@ -10,6 +10,7 @@ import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
+import TextItemEdit from "./TextItemEdit";
 
 type Props = {
   dictionary: Dictionary;
@@ -84,6 +85,16 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
               item={item}
               onItemChange={(params) => onItemChanged(item.id, params)}
             ></GroupEdit>
+          </>
+        );
+      case ItemType.Text:
+        return (
+          <>
+            <TextItemEdit
+              dictionary={dictionary}
+              item={item}
+              onItemChange={(params) => onItemChanged(item.id, params)}
+            ></TextItemEdit>
           </>
         );
     }

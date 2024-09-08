@@ -77,7 +77,12 @@ const TreeElement = ({
         {!showBooleanIcon() && <div className="size-6 mr-2"></div>}
 
         <ItemTypeIcon
-          className="my-auto mr-2"
+          className={
+            "my-auto mr-2 " +
+            (item.id == selectedId
+              ? "dark:text-black "
+              : "text-black dark:text-white")
+          }
           itemType={item.type}
         ></ItemTypeIcon>
 
