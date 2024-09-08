@@ -1,11 +1,17 @@
 import { minMaxValues } from "../../Point";
 import ContourPoints from "../ContourPoints";
 
+type Result = {
+  contour: ContourPoints;
+  index: number;
+};
+
 const findLargestContourOf = (contourPoints: ContourPoints[]) => {
-  return (): ContourPoints => {
+  return (): Result => {
     let result = {
       value: contourPoints[0],
       minMax: minMaxValues(contourPoints[0].points),
+      index: 0,
     };
     for (let i = 1; i < contourPoints.length; i++) {
       const minMax = minMaxValues(contourPoints[i].points);
@@ -18,10 +24,11 @@ const findLargestContourOf = (contourPoints: ContourPoints[]) => {
         result = {
           value: contourPoints[i],
           minMax: minMax,
+          index: i,
         };
       }
     }
-    return result.value;
+    return { contour: result.value, index: result.index };
   };
 };
 

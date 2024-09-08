@@ -31,7 +31,6 @@ const PointClickProvider = ({ children }: Props) => {
   );
 
   const pointSelection: PointClickHandler = usePointSelection();
-
   const [splitPoints, setSplitPoints] = useState<SplitPoints[]>([]);
   const contourSplit: PointClickHandler = useContourSplitting({
     splitPoints,

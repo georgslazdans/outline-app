@@ -20,4 +20,27 @@ export const ungroupedItemsOf = (groupedItems: Item[]): Item[] => {
   return ungroupedItems;
 };
 
+export const findById = (
+  modelData: ModelData,
+  id?: string
+): Item | undefined => {
+  if (!id) return;
+  
+  const find = (items: Item[]): Item | undefined => {
+    const result = items.find((it) => it.id == id);
+    if (result) {
+      return result;
+    } else {
+      const groups = items.filter((it) => it.type == ItemType.Group);
+      const groupItems = groups
+        .map((it) => find(it.items))
+        .filter((it) => !!it);
+      if (groupItems.length > 0) {
+        return groupItems[0];
+      }
+    }
+  };
+  return find(modelData.items);
+};
+
 export default ModelData;

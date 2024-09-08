@@ -30,6 +30,7 @@ export const ModelDataProvider = ({ children }: { children: ReactNode }) => {
       type: EditorHistoryType.INITIAL,
       addDate: new Date(),
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setModelData: SetModelDataType = (
@@ -64,7 +65,7 @@ export const ModelDataProvider = ({ children }: { children: ReactNode }) => {
 export const useModelDataContext = (): ModelDataContextType => {
   const context = useContext(ModelDataContext);
   if (context === undefined) {
-    throw new Error("useEditorContext must be used within an EditorProvider");
+    throw new Error("useModelDataContext must be used within an ModelDataProvider");
   }
   return context;
 };

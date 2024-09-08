@@ -1,21 +1,17 @@
 "use client";
 
-import { useRef } from "react";
-import ContourIndex, {
-  pointByIndex,
-} from "../../../../../../lib/data/contour/ContourIndex";
+import { useMemo, useRef } from "react";
+import ContourIndex from "../../../../../../lib/data/contour/ContourIndex";
 import { useEditorContext } from "../../../../EditorContext";
 import deepEqual from "@/lib/utils/Objects";
 import { Intersection, ThreeEvent } from "@react-three/fiber";
 import { PointClickHandler } from "../PointClickContext";
 import SplitPoints from "../SplitPoints";
 import Contour from "@/lib/replicad/model/item/Contour";
-import { useModelContext } from "@/context/ModelContext";
-import ItemType from "@/lib/replicad/model/ItemType";
 import Item from "@/lib/replicad/model/Item";
-import { toLineSegments } from "@/lib/data/line/LineSegment";
-import { findIntersectingSegments } from "@/lib/data/line/LineIntersection";
 import { queryContourList } from "@/lib/data/contour/ContourPoints";
+import { useModelDataContext } from "@/components/editor/ModelDataContext";
+import { findById } from "@/lib/replicad/model/ModelData";
 
 type Props = {
   splitPoints: SplitPoints[];
@@ -30,7 +26,7 @@ const useContourSplitting = ({
   setSplitPoints,
 }: Props): PointClickHandler => {
   const { selectedPoint, setSelectedPoint, selectedId } = useEditorContext();
-  const { model } = useModelContext();
+  const { modelData } = useModelDataContext();
   const lastTimestamp = useRef<number>();
   const pointChangedOnDownEvent = useRef<boolean>(false);
 
@@ -63,52 +59,9 @@ const useContourSplitting = ({
     return false;
   };
 
-  const selectedContour = () => {
-    return model.modelData.items.find(
-      (it) => it.id == selectedId && it.type == ItemType.Contour
-    ) as Item & Contour;
-  };
-
-  const intersectsWithExistingLines = (
-    a: ContourIndex,
-    b: ContourIndex
-  ): boolean => {
-    const contour = selectedContour();
-
-    const pointA = pointByIndex(contour.points, a);
-    const pointB = pointByIndex(contour.points, b);
-    const segments = toLineSegments([pointA, pointB]);
-    const existingSegments = splitPoints.map((it) => {
-      return toLineSegments([
-        pointByIndex(contour.points, it.a),
-        pointByIndex(contour.points, it.b),
-      ]);
-    });
-
-    const intersecting = existingSegments.find(
-      (it) => findIntersectingSegments([...segments, ...it]).length > 0
-    );
-    const result = !!intersecting && intersecting.length > 0;
-    return result;
-  };
-
-  const intersectsWithHoles = (a: ContourIndex, b: ContourIndex): boolean => {
-    const contour = selectedContour();
-    const largestContour = queryContourList(
-      contour.points
-    ).findLargestContourOf();
-    const holes = contour.points.filter((it) => it != largestContour);
-
-    const pointA = pointByIndex(contour.points, a);
-    const pointB = pointByIndex(contour.points, b);
-    const segments = toLineSegments([pointA, pointB]);
-
-    const intersecting = holes
-      .map((it) => toLineSegments(it.points))
-      .find((it) => findIntersectingSegments([...segments, ...it]).length > 0);
-    const result = !!intersecting && intersecting.length > 0;
-    return result;
-  };
+  const selectedContour = useMemo(() => {
+    return findById(modelData, selectedId) as Item & Contour;
+  }, [modelData, selectedId]);
 
   const onPointerDown = (event: ThreeEvent<PointerEvent>) => {
     if (isEventProcessed(event)) {
@@ -123,21 +76,29 @@ const useContourSplitting = ({
 
     if (selectedPoint) {
       if (!hasSelectedPointIn(intersectingPoints)) {
-        // TODO don't allow splitting in hole
-        // TODO don't allow splitting on the contour line!
-        if (
-          !intersectsWithExistingLines(selectedPoint, newPoint) &&
-          !intersectsWithHoles(selectedPoint, newPoint)
-        ) {
-          setSplitPoints((prev: SplitPoints[]) => {
-            return [
-              ...prev,
-              {
-                a: selectedPoint,
-                b: newPoint,
-              },
-            ];
-          });
+        const { isValidSplitPoint } = queryContourList(selectedContour.points);
+        if (isValidSplitPoint(selectedPoint, newPoint, splitPoints)) {
+          if (selectedPoint.point < newPoint.point) {
+            setSplitPoints((prev: SplitPoints[]) => {
+              return [
+                ...prev,
+                {
+                  a: selectedPoint,
+                  b: newPoint,
+                },
+              ];
+            });
+          } else {
+            setSplitPoints((prev: SplitPoints[]) => {
+              return [
+                ...prev,
+                {
+                  a: newPoint,
+                  b: selectedPoint,
+                },
+              ];
+            });
+          }
         }
       }
       setSelectedPoint(undefined);

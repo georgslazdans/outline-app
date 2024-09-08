@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import ContourPoints from "../ContourPoints";
+import ContourPoints from "../../ContourPoints";
 import divideContour from "./DivideContour";
 import SplitPoints from "@/components/editor/mode/contour/selection/SplitPoints";
 

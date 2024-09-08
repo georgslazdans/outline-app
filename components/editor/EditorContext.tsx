@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import EditorMode from "./mode/EditorMode";
 import ContourIndex from "../../lib/data/contour/ContourIndex";
-import PointClickProvider from "./mode/contour/selection/PointClickContext";
 
 type EditorContextType = {
   editorMode: EditorMode;
@@ -82,7 +81,7 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
         withHotkey,
       }}
     >
-      <PointClickProvider>{children}</PointClickProvider>
+      {children}
     </EditorContext.Provider>
   );
 };

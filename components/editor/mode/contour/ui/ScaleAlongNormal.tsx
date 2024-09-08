@@ -43,7 +43,7 @@ const ScaleAlongNormal = ({ dictionary, contour, onContourChanged }: Props) => {
 
   const scaleContour = () => {
     const { findLargestContourOf } = queryContourList(contour);
-    const base = findLargestContourOf();
+    const {contour: base} = findLargestContourOf();
     const scaledContours = contour.map((it) => {
       const isClockwise = queryContour(it).arePointsClockwise();
       const scaleOfContour = () => {

@@ -18,17 +18,15 @@ type Props = {
   dictionary: Dictionary;
 };
 
-const SplitContour = ({
-  dictionary,
-}: Props) => {
-
-  const { selectedId, setEditorMode } = useEditorContext();
+const SplitContour = ({ dictionary }: Props) => {
+  const { selectedId, setEditorMode, setSelectedPoint } = useEditorContext();
   const { ensureLastEventHas } = useEditorHistoryContext();
 
   const { setClickMode } = usePointClickContext();
 
   const onSplitContour = () => {
     if (selectedId) {
+      setSelectedPoint(undefined);
       setEditorMode(EditorMode.CONTOUR_EDIT);
       setClickMode(PointClickMode.SPLIT);
       ensureLastEventHas(selectedId, EditorHistoryType.CONTOUR_UPDATED);

@@ -10,6 +10,7 @@ import { ContourCacheProvider } from "./cache/ContourCacheContext";
 import { EditorHistoryProvider } from "./history/EditorHistoryContext";
 import { ModelDataProvider } from "./ModelDataContext";
 import { ModelLoadingIndicatorProvider } from "./cache/ModelLoadingIndicatorContext";
+import PointClickProvider from "./mode/contour/selection/PointClickContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,7 +25,9 @@ const Editor = ({ dictionary }: Props) => {
             <ModelCacheProvider>
               <EditorHistoryProvider>
                 <ModelDataProvider>
-                  <EditorComponent dictionary={dictionary}></EditorComponent>
+                  <PointClickProvider>
+                    <EditorComponent dictionary={dictionary}></EditorComponent>
+                  </PointClickProvider>
                 </ModelDataProvider>
               </EditorHistoryProvider>
             </ModelCacheProvider>

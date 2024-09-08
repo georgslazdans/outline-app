@@ -1,6 +1,6 @@
 import SplitPoints from "@/components/editor/mode/contour/selection/SplitPoints";
-import ContourPoints, { queryContourList } from "../ContourPoints";
-import Point, { minMaxValues } from "../../Point";
+import ContourPoints, { queryContourList } from "../../ContourPoints";
+import Point, { minMaxValues } from "../../../Point";
 import deepEqual from "@/lib/utils/Objects";
 
 const findNextSplitPoint = (
@@ -113,7 +113,8 @@ const divideContour = (contour: ContourPoints[]) => {
     };
 
     const splitContours: ContourPoints[] = [];
-    const outline = queryContourList(contour).findLargestContourOf();
+    const { contour: outline } =
+      queryContourList(contour).findLargestContourOf();
     const holes = contour.filter((it) => it != outline);
 
     const containsResult = (points: ContourPoints) => {

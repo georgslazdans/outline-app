@@ -20,7 +20,7 @@ const drawShadow = (
   height: number
 ): ReplicadModelData => {
   const { findLargestContourOf } = queryContourList(contourPoints);
-  let basePoints = findLargestContourOf();
+  let {contour: basePoints} = findLargestContourOf();
   let base = drawContour(basePoints.points);
 
   for (let i = 0; i < contourPoints.length; i++) {
