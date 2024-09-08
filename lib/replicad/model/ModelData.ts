@@ -1,4 +1,5 @@
 import Item from "./Item";
+import ItemGroup from "./item/ItemGroup";
 import ItemType from "./ItemType";
 
 type ModelData = {
@@ -25,13 +26,15 @@ export const findById = (
   id?: string
 ): Item | undefined => {
   if (!id) return;
-  
+
   const find = (items: Item[]): Item | undefined => {
     const result = items.find((it) => it.id == id);
     if (result) {
       return result;
     } else {
-      const groups = items.filter((it) => it.type == ItemType.Group);
+      const groups: (Item & ItemGroup)[] = items
+        .filter((it) => it.type == ItemType.Group)
+        .map((it) => it as Item & ItemGroup);
       const groupItems = groups
         .map((it) => find(it.items))
         .filter((it) => !!it);
