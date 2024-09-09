@@ -51,6 +51,9 @@ const nextConfig = {
 const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
+  reloadOnOnline: false,
+  maximumFileSizeToCacheInBytes: 15000000,
+  include: [/^(?!.*\/icons\/(android|ios)\/).*/],
 });
 
 export default withSerwist(withMDX(nextConfig));
