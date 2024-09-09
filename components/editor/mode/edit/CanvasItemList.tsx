@@ -57,7 +57,6 @@ const CanvasItemList = ({
               dictionary={dictionary}
               item={item}
               onItemChange={onItemChange}
-              parents={parents}
             ></CanvasItem>
           );
         }

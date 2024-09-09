@@ -11,18 +11,17 @@ import ReplicadResult from "@/lib/replicad/WorkerResult";
 import TransformControls from "./three/TransformControls";
 import { useModelDataContext } from "../../ModelDataContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
+import ThreejsPrimitive from "./three/ThreejsPrimitive";
 
 type Props = {
   dictionary: Dictionary;
   item: Item;
   onItemChange: (item: Item) => void;
-  parents?: Item[];
 };
 
 const CanvasItem = memo(function CanvasItem({
   dictionary,
   item,
-  parents,
   onItemChange,
 }: Props) {
   const { modelData } = useModelDataContext();
@@ -34,6 +33,9 @@ const CanvasItem = memo(function CanvasItem({
   useEffect(() => {
     const key = modelKeyOf(item);
     if (modelKey != key) {
+      if (item.type == ItemType.Primitive) {
+        setModel(undefined);
+      }
       const work = getModel(item);
       work.promise.then((result) => {
         setModel(result);
@@ -99,6 +101,16 @@ const CanvasItem = memo(function CanvasItem({
             selected={isSelected()}
             color={colorOf()}
           ></ReplicadMesh>
+        )}
+
+        {!model && item.type == ItemType.Primitive && (
+          <ThreejsPrimitive
+            item={item}
+            wireframe={showWireframe()}
+            opacity={opacityOf()}
+            selected={isSelected()}
+            color={colorOf()}
+          ></ThreejsPrimitive>
         )}
       </TransformControls>
     </>

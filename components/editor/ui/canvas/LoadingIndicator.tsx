@@ -2,7 +2,6 @@
 
 import React from "react";
 import { TailSpin } from "react-loader-spinner";
-import { useModelCache } from "../../cache/ModelCacheContext";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
 
 type Props = {};
