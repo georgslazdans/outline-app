@@ -54,7 +54,7 @@ const capsuleOf = (params: CapsuleParams) => {
 
 const threeJsGeometryOf = (
   item: Item & Primitive
-): BufferGeometry | undefined => {
+): BufferGeometry => {
   switch (item.params.type) {
     case PrimitiveType.BOX:
       return boxOf(item.params);
@@ -87,8 +87,7 @@ const ThreejsPrimitive = function ThreejsPrimitive({
   const lines = useRef<BufferGeometry>();
 
   useLayoutEffect(() => {
-    const faces = threeJsGeometryOf(item)!;
-    console.log(body.current);
+    const faces = threeJsGeometryOf(item);
     body.current = faces;
     lines.current = new EdgesGeometry(faces);
 
