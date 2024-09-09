@@ -23,7 +23,6 @@ const initializedPromise = new Promise<void>(async (resolve) => {
     });
 
     setOC(OC);
-    console.log("Loading font!");
     await loadFont("/fonts/Roboto-Regular.ttf");
     resolve();
   }
