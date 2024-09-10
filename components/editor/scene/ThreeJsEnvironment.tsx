@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React, { ReactNode } from "react";
+import React, { ForwardedRef, forwardRef, ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
 
 import { Sky } from "@react-three/drei";
@@ -13,17 +13,22 @@ type Props = {
   children: ReactNode;
 };
 
-const ThreeJsEnvironment = ({ dictionary, children }: Props) => {
+const ThreeJsEnvironment = forwardRef(function ThreeJsEnvironment(
+  { dictionary, children }: Props,
+  ref: ForwardedRef<HTMLCanvasElement>
+) {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
   const dpr = Math.min(window.devicePixelRatio, 2);
   return (
     <>
       <Canvas
+        ref={ref}
         dpr={dpr}
         orthographic
         frameloop="demand"
         camera={{ position: [0, 0, 2], zoom: 100, near: 0.00001, fov: 90 }}
+        gl={{ preserveDrawingBuffer: true }} // Fix for saving blob from canvas
       >
         <CameraControls></CameraControls>
         <directionalLight position={[10, 10, 10]} />
@@ -39,6 +44,6 @@ const ThreeJsEnvironment = ({ dictionary, children }: Props) => {
       </Canvas>
     </>
   );
-};
+});
 
 export default ThreeJsEnvironment;

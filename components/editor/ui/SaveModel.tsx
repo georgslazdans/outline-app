@@ -1,51 +1,66 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React from "react";
+import React, { Ref, RefObject } from "react";
 import Button from "../../Button";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useModelContext } from "../../../context/ModelContext";
 import { useLoading } from "@/context/LoadingContext";
 import { useEditorContext } from "../EditorContext";
 import { Tooltip } from "react-tooltip";
+import Model from "@/lib/Model";
 
 type Props = {
   dictionary: Dictionary;
+  canvasRef: RefObject<HTMLCanvasElement>;
 };
 
-const SaveModel = ({ dictionary }: Props) => {
+const SaveModel = ({ dictionary, canvasRef }: Props) => {
   const { add, update } = useIndexedDB("models");
 
   const { withHotkey } = useEditorContext();
   const { model, setModel } = useModelContext();
   const { setLoading } = useLoading();
 
-  const onSaveModel = () => {
-    setLoading(true);
-    if (model.id) {
-      update(model).then(
+  const saveModel = (newModel: Model) => {
+    if (newModel.id) {
+      update(newModel).then(
         () => {
-          console.log("Model saved!", model.id);
-          setLoading(false);
+          console.log("Model saved!", newModel.id);
         },
         (error) => {
           console.error(error);
-          setLoading(false);
         }
       );
     } else {
       add(model).then(
         (dbId) => {
-          setModel({ ...model, id: dbId });
-          console.log("Model saved!", model.id);
-          setLoading(false);
+          setModel({ ...newModel, id: dbId });
+          console.log("Model saved!", newModel.id);
         },
         (error) => {
           console.error(error);
-          setLoading(false);
         }
       );
     }
+  };
+
+  const onSaveModel = () => {
+    setLoading(true);
+
+    canvasRef.current!.toBlob((blob) => {
+      if (blob) {
+        console.log(blob.size);
+        const newModel = {
+          ...model,
+          imageFile: blob,
+        };
+        saveModel(newModel);
+      } else {
+        saveModel(model);
+      }
+      setLoading(false);
+    }, "image/png");
   };
 
   const id = "save-model-button";

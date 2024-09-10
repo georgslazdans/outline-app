@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React from "react";
+import React, { useRef } from "react";
 import { Object3D, Vector3 } from "three";
 import ThreeJsEnvironment from "./scene/ThreeJsEnvironment";
 import EditorMode from "./mode/EditorMode";
@@ -23,6 +23,8 @@ type Props = {
 
 const EditorComponent = ({ dictionary }: Props) => {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { editorMode } = useEditorContext();
 
@@ -58,7 +60,7 @@ const EditorComponent = ({ dictionary }: Props) => {
                   <LoadingIndicator></LoadingIndicator>
                 </div>
               </div>
-              <ThreeJsEnvironment dictionary={dictionary}>
+              <ThreeJsEnvironment dictionary={dictionary} ref={canvasRef}>
                 {currentEditorMode ? currentEditorMode.view() : null}
               </ThreeJsEnvironment>
             </div>
@@ -72,7 +74,7 @@ const EditorComponent = ({ dictionary }: Props) => {
           {editorMode != EditorMode.CONTOUR_EDIT && (
             <RenderButton dictionary={dictionary}></RenderButton>
           )}
-          <SaveModel dictionary={dictionary}></SaveModel>
+          <SaveModel dictionary={dictionary} canvasRef={canvasRef}></SaveModel>
         </div>
       </div>
     </>

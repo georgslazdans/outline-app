@@ -9,6 +9,7 @@ import useNavigationHistory from "@/context/NavigationHistory";
 import Model from "@/lib/Model";
 import { useModelContext } from "../../context/ModelContext";
 import EntryField from "../contours/EntryField";
+import BlobImage from "../image/BlobImage";
 
 type Props = {
   dictionary: Dictionary;
@@ -38,6 +39,11 @@ const Entry = ({ dictionary, model, onDelete }: Props) => {
   return (
     <div className="flex flex-col border border-black dark:border-white rounded-[16px] p-3 w-full h-full">
       <div className="flex flex-row grow">
+        {model.imageFile && (
+          <div className="w-[16rem]">
+            <BlobImage image={model.imageFile}></BlobImage>
+          </div>
+        )}
         <div className="ml-4 w-full">
           <h2>{model.name}</h2>
           <EntryField label={dictionary.models.date} value={dateString} />
