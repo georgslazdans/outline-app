@@ -51,7 +51,7 @@ const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
   name: StepName.BILATERAL_FILTER,
   settings: {
     disabled: false,
-    pixelDiameter: 5,
+    pixelDiameter: 9,
     sigmaColor: 75,
     sigmaSpace: 75,
   },
