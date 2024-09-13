@@ -63,7 +63,7 @@ const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
       type: "number",
       display: displaySettings,
       min: 3,
-      max: 10,
+      max: 50,
     },
     sigmaColor: {
       type: "number",
