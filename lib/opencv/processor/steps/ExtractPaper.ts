@@ -47,6 +47,13 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
   const smoothedContour = smoothContour(contours.get(contourIndex!));
   const cornerPoints = pointsFrom(smoothedContour);
 
+  if(cornerPoints.points.length < 4) {
+    console.log("Paper contours not found!", this);
+    const result = new cv.Mat();
+    image.copyTo(result);
+    return { image: result };
+  }
+
   const previousStep = stepNameOfReuseStep(settings.reuseStep);
   const previousImage = previous.intermediateImageOf(previousStep);
   const result = warpedImageOf(
