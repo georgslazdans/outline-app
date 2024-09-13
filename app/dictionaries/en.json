@@ -72,7 +72,7 @@
       "width": "Width",
       "height": "Height",
       "smoothOutline": "Smooth Outline",
-      "smoothAccuracy": "Smooth Max Deviation",
+      "smoothAccuracy": "Smooth Strength",
       "kernelSize": "Kernel Size (px)",
       "meanThreshold": "Max Background Difference",
       "thresholdType": "Threshold Type",
