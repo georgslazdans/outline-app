@@ -9,6 +9,7 @@ type StepSetting = {
 };
 
 export type DisplaySettings = {
+  tooltip?: string;
   display?: (settings: Settings, currentStepName: StepName) => boolean;
 };
 

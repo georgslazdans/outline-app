@@ -54,6 +54,7 @@
       "closeCorners": "Close Corners"
     },
     "stepSettings": {
+      "bilateralFilterPixelDiameter": "Bilateral Filter Pixel Diameter",
       "pixelDiameter": "Pixel Diameter",
       "sigmaColor": "Sigma Color",
       "sigmaSpace": "Sigma Space",
