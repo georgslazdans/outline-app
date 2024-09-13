@@ -89,13 +89,14 @@ export const useOpenCvWorker = (
 
   const updateAllWorkData = useCallback(() => {
     if (detailsContext) {
+      setLoading(true);
       const workData = allWorkOf(detailsContext);
       setPreviousSettings(workData.settings);
       openCvApi.processOutlineImage(workData).then((data: WorkerResult) => {
         handleWorkerResult(data);
       });
     }
-  }, [detailsContext, handleWorkerResult, openCvApi]);
+  }, [detailsContext, handleWorkerResult, openCvApi, setLoading]);
 
   const rerunOpenCv = useCallback(() => {
     setLoading(true);
@@ -123,6 +124,7 @@ export const useOpenCvWorker = (
 
   return {
     rerunOpenCv,
+    updateAllWorkData,
     settingsChanged,
   };
 };
