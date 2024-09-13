@@ -34,10 +34,9 @@ const waitForInitialization = async () => {
 
 const successMessageOf = (
   stepResults: ProcessingResult,
-  settings: Settings
+  outlineCheckImage: ImageData,
+  thresholdCheck?: ImageData
 ): SuccessResult => {
-  const outlineCheckImage = outlineCheckImageOf(stepResults.data!, settings);
-  const thresholdCheck = objectThresholdCheckOf(stepResults.data!, settings);
   return {
     status: "success",
     result: stepResults,
@@ -66,7 +65,15 @@ const processOutlineImage = async (data: ProcessAll): Promise<WorkerResult> => {
   try {
     const result = await processImage(data);
     if (!result.error) {
-      return successMessageOf(result, data.settings);
+      const outlineCheckImage = outlineCheckImageOf(
+        result.data!,
+        data.settings
+      );
+      const thresholdCheck = objectThresholdCheckOf(
+        result.data!,
+        data.settings
+      );
+      return successMessageOf(result, outlineCheckImage, thresholdCheck);
     } else {
       return failedMessageOf(result);
     }
@@ -103,7 +110,19 @@ const processOutlineStep = async (data: ProcessStep): Promise<WorkerResult> => {
     const result = await processStep(data);
     if (!result.error) {
       const processedResult = postProcessResult(result, data);
-      return successMessageOf(processedResult, data.settings);
+      const outlineCheckImage = outlineCheckImageOf(
+        result.data!,
+        data.settings
+      );
+      const thresholdCheck = objectThresholdCheckOf(
+        result.data!,
+        data.settings
+      );
+      return successMessageOf(
+        processedResult,
+        outlineCheckImage,
+        thresholdCheck
+      );
     } else {
       return failedMessageOf(result);
     }
