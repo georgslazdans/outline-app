@@ -1,5 +1,4 @@
 import { Context } from "@/context/DetailsContext";
-import { ProcessingResult } from "./processor/ImageProcessor";
 import StepResult from "./StepResult";
 import Settings, { settingsOf } from "./Settings";
 import { ProcessStep } from "./processor/ProcessStep";
@@ -7,43 +6,14 @@ import { ProcessAll } from "./processor/ProcessAll";
 import StepName from "./processor/steps/StepName";
 import Steps from "./processor/Steps";
 
-export type OpenCvWork =
-  | {
-      type: "all";
-      data: ProcessAll;
-    }
-  | {
-      type: "step";
-      data: ProcessStep;
-    };
-
-export type Status = "success" | "failed";
-
-export type SuccessResult = {
-  status: "success";
-  result: ProcessingResult;
-  outlineCheckImage: ImageData;
-  thresholdCheck?: ImageData;
-};
-
-export type FailedResult = {
-  status: "failed";
-  result: ProcessingResult;
-};
-
-export type OpenCvResult = SuccessResult | FailedResult;
-
-export const allWorkOf = (context: Context): OpenCvWork => {
+export const allWorkOf = (context: Context): ProcessAll => {
   const imageData =
     context.imageData ||
     (typeof window !== "undefined" ? new ImageData(1, 1) : null);
 
   return {
-    type: "all",
-    data: {
-      imageData: imageData,
-      settings: settingsOf(context),
-    },
+    imageData: imageData,
+    settings: settingsOf(context),
   };
 };
 
@@ -51,17 +21,14 @@ export const stepWorkOf = (
   stepResults: StepResult[],
   stepName: string,
   settings: Settings
-): OpenCvWork => {
+): ProcessStep => {
   const step = previousStepWithImageOf(stepResults, stepName);
   return {
-    type: "step",
-    data: {
-      stepName: stepName as StepName,
-      imageData: step.imageData,
-      imageColorSpace: step.imageColorSpace,
-      settings: settings,
-      previousData: filterMandatorySteps(stepResults, stepName, settings),
-    },
+    stepName: stepName as StepName,
+    imageData: step.imageData,
+    imageColorSpace: step.imageColorSpace,
+    settings: settings,
+    previousData: filterMandatorySteps(stepResults, stepName, settings),
   };
 };
 

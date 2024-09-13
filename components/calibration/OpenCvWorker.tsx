@@ -1,78 +1,136 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
-
+import { ProcessAll } from "@/lib/opencv/processor/ProcessAll";
+import WorkerResult from "@/lib/opencv/WorkerResult";
+import { ProcessStep } from "@/lib/opencv/processor/ProcessStep";
+import * as Comlink from "comlink";
+import { useCallback, useMemo, useState } from "react";
 import StepResult from "@/lib/opencv/StepResult";
-import { OpenCvWork, OpenCvResult } from "@/lib/opencv/OpenCvWork";
+import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
+import { useLoading } from "@/context/LoadingContext";
+import { allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
+import deepEqual from "@/lib/utils/Objects";
+import StepName from "@/lib/opencv/processor/steps/StepName";
+import { useDetails } from "@/context/DetailsContext";
 
-type Props = {
-  message?: OpenCvWork;
-  onWorkerMessage: (
-    stepResult: StepResult[],
-    outlineCheckImage: ImageData,
-    thresholdCheck?: ImageData
-  ) => void;
-  onStepError: (stepResult: StepResult[], message: string) => void;
-  onError: (message: string) => void;
-};
+export interface WorkerApi {
+  processOutlineImage: (data: ProcessAll) => Promise<WorkerResult>;
+  processOutlineStep: (data: ProcessStep) => Promise<WorkerResult>;
+  [Comlink.releaseProxy]: () => void;
+}
 
-const hasImageData = (message?: OpenCvWork) => {
-  const isImageEmpty = (image: ImageData) =>
-    image.height === 1 && image.width === 1;
-  return message?.data?.imageData && !isImageEmpty(message.data.imageData);
-};
+export const useOpenCvWorker = (
+  stepResults: StepResult[],
+  setStepResults: React.Dispatch<React.SetStateAction<StepResult[]>>,
+  setCheckImages: (outline: ImageData, threshold?: ImageData) => void,
+  setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
+) => {
+  const { detailsContext } = useDetails();
+  const { setLoading } = useLoading();
+  const [previousSettings, setPreviousSettings] = useState<Settings>();
+  const { api: openCvApi } = useMemo(() => newWorkerInstance(), []);
 
-export const OpenCvWorker = ({
-  message,
-  onWorkerMessage,
-  onStepError,
-  onError,
-}: Props) => {
-  const workerRef = useRef<Worker>();
-
-  const handleMessage = useCallback(
-    (event: MessageEvent<OpenCvResult>) => {
-      const result = event.data;
-
-      if (result.status == "success") {
-        onWorkerMessage(result.result.data!, result.outlineCheckImage, result.thresholdCheck);
-      } else {
-        if (result.result.data) {
-          onStepError(result.result.data, result.result.error!);
-        } else {
-          onError(result.result.error!);
-        }
-      }
-    },
-    [onWorkerMessage, onStepError, onError]
+  const settingsChanged = useMemo(
+    () => !deepEqual(previousSettings, settingsOf(detailsContext)),
+    [previousSettings, detailsContext]
   );
 
-  const addMessageHandler = useCallback(() => {
-    if (workerRef.current) {
-      workerRef.current.onmessage = handleMessage;
+  const updateStepResults = useCallback(
+    (newResult: StepResult[]) => {
+      setStepResults((previousResult) => {
+        const updatedResult = [...previousResult];
+        newResult.forEach((newStep) => {
+          const index = updatedResult.findIndex(
+            (step) => step.stepName === newStep.stepName
+          );
+          if (index !== -1) {
+            updatedResult[index] = newStep;
+          } else {
+            updatedResult.push(newStep);
+          }
+        });
+        return updatedResult;
+      });
+    },
+    [setStepResults]
+  );
+
+  const handleWorkerResult = useCallback(
+    (data: WorkerResult) => {
+      setLoading(false);
+      if (data.status === "success") {
+        updateStepResults(data.result.data!);
+        setCheckImages(data.outlineCheckImage, data.thresholdCheck);
+        setErrorMessage(undefined);
+      } else if (data.status === "failed") {
+        updateStepResults(data.result.data!);
+        setErrorMessage(data.result.error);
+      } else {
+        setErrorMessage(data.error);
+      }
+    },
+    [setLoading, updateStepResults, setCheckImages, setErrorMessage]
+  );
+
+  const updateCurrentStepData = useCallback(
+    (stepName: string) => {
+      const workData = stepWorkOf(
+        stepResults,
+        stepName,
+        detailsContext?.settings
+      );
+      setPreviousSettings(workData.settings);
+      openCvApi.processOutlineStep(workData).then((data: WorkerResult) => {
+        handleWorkerResult(data);
+      });
+    },
+    [detailsContext?.settings, handleWorkerResult, openCvApi, stepResults]
+  );
+
+  const updateAllWorkData = useCallback(() => {
+    if (detailsContext) {
+      const workData = allWorkOf(detailsContext);
+      setPreviousSettings(workData.settings);
+      openCvApi.processOutlineImage(workData).then((data: WorkerResult) => {
+        handleWorkerResult(data);
+      });
     }
-  }, [handleMessage]);
+  }, [detailsContext, handleWorkerResult, openCvApi]);
 
-  const postWork = useCallback(() => {
-    if (workerRef.current && hasImageData(message)) {
-      workerRef.current?.postMessage(message);
+  const rerunOpenCv = useCallback(() => {
+    setLoading(true);
+    const currentSettings = settingsOf(detailsContext);
+    if (!previousSettings) {
+      updateAllWorkData();
+    } else if (!deepEqual(previousSettings, currentSettings)) {
+      let stepName = firstChangedStep(previousSettings, currentSettings);
+      if (
+        stepName &&
+        ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
+      ) {
+        updateCurrentStepData(stepName);
+      } else {
+        updateAllWorkData();
+      }
     }
-  }, [message]);
+  }, [
+    detailsContext,
+    previousSettings,
+    setLoading,
+    updateAllWorkData,
+    updateCurrentStepData,
+  ]);
 
-  useEffect(() => {
-    workerRef.current = new Worker(
-      new URL("@/lib/opencv/Worker.ts", import.meta.url)
-    );
-    addMessageHandler();
-    postWork();
-    return () => {
-      workerRef.current?.terminate();
-    };
-  }, []);
+  return {
+    rerunOpenCv,
+    settingsChanged,
+  };
+};
 
-  useEffect(() => {
-    postWork();
-  }, [postWork]);
-
-  return <></>;
+export const newWorkerInstance = (): { api: WorkerApi; worker: Worker } => {
+  const workerInstance = new Worker(
+    new URL("@/lib/opencv/Worker.ts", import.meta.url)
+  );
+  const api = Comlink.wrap<WorkerApi>(workerInstance);
+  return { api, worker: workerInstance };
 };

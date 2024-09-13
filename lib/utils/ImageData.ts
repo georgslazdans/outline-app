@@ -30,4 +30,7 @@ export const imageDataToBlob = (imageData: ImageData): Promise<Blob | null> => {
   });
 };
 
+export const isImageDataEmpty = (image: ImageData) =>
+  image.height === 1 && image.width === 1;
+
 export default getImageData;

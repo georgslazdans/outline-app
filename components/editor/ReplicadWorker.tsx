@@ -12,10 +12,6 @@ export interface WorkerApi {
   [Comlink.releaseProxy]: () => void;
 }
 
-type Props = {
-  setWorkerApiRef: (api: WorkerApi) => void;
-};
-
 export const newWorkerInstance = () => {
   const workerInstance = new Worker(
     new URL("@/lib/replicad/Worker.ts", import.meta.url)
