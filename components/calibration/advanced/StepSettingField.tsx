@@ -8,6 +8,7 @@ import {
   NumberConfig,
   SelectConfig,
 } from "@/lib/opencv/processor/steps/StepSettings";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   value: string | number | boolean | undefined;
@@ -92,7 +93,29 @@ const StepSettingField = ({
     }
   };
 
-  return fieldFor(name);
+  const tooltipFor = (name: string, tooltip?: string) => {
+    if (tooltip) {
+      return (
+        <>
+          <Tooltip anchorSelect={"#" + name} place="top">
+            {tooltip}
+          </Tooltip>
+          <Tooltip anchorSelect={"#" + name + "-slider"} place="top">
+            {tooltip}
+          </Tooltip>
+        </>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
+  return (
+    <>
+      {fieldFor(name)}
+      {tooltipFor(name, config.tooltip)}
+    </>
+  );
 };
 
 export default StepSettingField;

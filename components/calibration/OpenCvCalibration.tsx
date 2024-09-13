@@ -1,20 +1,14 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import SimpleCalibration from "./simple/SimpleCalibration";
 import { AdvancedCalibration } from "./advanced/AdvancedCalibration";
-import { OpenCvWorker } from "./OpenCvWorker";
+import { useOpenCvWorker } from "./OpenCvWorker";
 import { useLoading } from "@/context/LoadingContext";
 import StepResult from "@/lib/opencv/StepResult";
 import { useDetails } from "@/context/DetailsContext";
-import { OpenCvWork, allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
-import Settings, {
-  defaultSettings,
-  firstChangedStep,
-  settingsOf,
-} from "@/lib/opencv/Settings";
-import deepEqual from "@/lib/utils/Objects";
+import { applyDefaults, defaultSettings } from "@/lib/opencv/Settings";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
@@ -37,121 +31,29 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const [simpleMode, setSimpleMode] = useState(true);
 
-  const [openCvWork, setOpenCvWork] = useState<OpenCvWork>();
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
   const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
   const [thresholdCheckImage, setThresholdCheckImage] = useState<ImageData>();
-  const [previousSettings, setPreviousSettings] = useState<Settings>();
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const settingsChanged = useMemo(
-    () => !deepEqual(previousSettings, settingsOf(detailsContext)),
-    [previousSettings, detailsContext]
-  );
-  const updateStepResults = useCallback((newResult: StepResult[]) => {
-    setStepResults((previousResult) => {
-      const updatedResult = [...previousResult];
-      newResult.forEach((newStep) => {
-        const index = updatedResult.findIndex(
-          (step) => step.stepName === newStep.stepName
-        );
-        if (index !== -1) {
-          updatedResult[index] = newStep;
-        } else {
-          updatedResult.push(newStep);
-        }
-      });
-      return updatedResult;
-    });
-  }, []);
-
-  const handleOpenCvWork = useCallback(
-    (
-      newResult: StepResult[],
-      outlineCheckImage: ImageData,
-      thresholdCheck?: ImageData
-    ) => {
-      setLoading(false);
-      updateStepResults(newResult);
-      setOutlineCheckImage(outlineCheckImage);
-      setThresholdCheckImage(thresholdCheck);
-      setErrorMessage(undefined);
-    },
-    [setLoading, updateStepResults]
-  );
-
-  const handleStepError = useCallback(
-    (newResult: StepResult[], error: string) => {
-      setLoading(false);
-      updateStepResults(newResult);
-      setErrorMessage(error);
-    },
-    [setLoading, updateStepResults]
-  );
-
-  const handleWorkerError = useCallback(
-    (error: string) => {
-      setLoading(false);
-      setErrorMessage(error);
-    },
-    [setLoading]
-  );
-
-  const setWorkData = (workData: OpenCvWork) => {
-    setPreviousSettings(workData.data.settings);
-    setOpenCvWork(workData);
+  const updateCheckImages = (outline: ImageData, threshold?: ImageData) => {
+    setOutlineCheckImage(outline);
+    setThresholdCheckImage(threshold);
   };
 
-  const updateCurrentStepData = useCallback(
-    (stepName: string) => {
-      setLoading(true);
-      const workData = stepWorkOf(
-        stepResults,
-        stepName,
-        detailsContext?.settings
-      );
-      setWorkData(workData);
-    },
-    [detailsContext?.settings, setLoading, stepResults]
+  const { rerunOpenCv, settingsChanged } = useOpenCvWorker(
+    stepResults,
+    setStepResults,
+    updateCheckImages,
+    setErrorMessage
   );
 
-  const updateAllWorkData = useCallback(() => {
-    if (detailsContext) {
-      setLoading(true);
-      const workData = allWorkOf(detailsContext);
-      setWorkData(workData);
-    }
-  }, [detailsContext, setLoading]);
-
-  const rerunOpenCv = useCallback(() => {
-    const currentSettings = settingsOf(detailsContext);
-    if (!previousSettings) {
-      updateAllWorkData();
-    } else if (settingsChanged) {
-      let stepName = firstChangedStep(previousSettings, currentSettings);
-      if (
-        stepName &&
-        ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
-      ) {
-        updateCurrentStepData(stepName);
-      } else {
-        updateAllWorkData();
-      }
-    }
-  }, [
-    detailsContext,
-    previousSettings,
-    settingsChanged,
-    updateAllWorkData,
-    updateCurrentStepData,
-  ]);
-
   useEffect(() => {
-    if (!openCvWork && detailsContext) {
-      updateAllWorkData();
+    if (detailsContext && stepResults.length == 0) {
+      rerunOpenCv();
     }
-  }, [detailsContext, openCvWork, updateAllWorkData]);
+  }, [detailsContext, rerunOpenCv, stepResults]);
 
   const saveAndClose = () => {
     setLoading(true);
@@ -177,23 +79,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   };
 
   useEffect(() => {
-    const applyDefaults = (
-      defaultSettings: Settings,
-      currentSettings: Settings
-    ): Settings => {
-      const mergedSettings = { ...defaultSettings };
-
-      for (const key in currentSettings) {
-        if (currentSettings.hasOwnProperty(key)) {
-          mergedSettings[key] = {
-            ...defaultSettings[key],
-            ...currentSettings[key],
-          };
-        }
-      }
-
-      return mergedSettings;
-    };
+    // Fix for previous data param changes
     if (detailsContext?.settings) {
       detailsContext.settings = applyDefaults(
         defaultSettings(),
@@ -204,12 +90,6 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   return (
     <>
-      <OpenCvWorker
-        message={openCvWork}
-        onWorkerMessage={handleOpenCvWork}
-        onStepError={handleStepError}
-        onError={handleWorkerError}
-      ></OpenCvWorker>
       <div className="flex flex-col h-[calc(100vh-5.9rem)] xl:h-[calc(100vh-9.9rem)]">
         <div className="flex-grow overflow-auto mb-auto">
           {errorMessage && (

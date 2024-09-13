@@ -50,7 +50,6 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
 
     canvasRef.current!.toBlob((blob) => {
       if (blob) {
-        console.log(blob.size);
         const newModel = {
           ...model,
           imageFile: blob,

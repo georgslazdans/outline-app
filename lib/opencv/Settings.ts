@@ -44,10 +44,29 @@ export const inSettings = (settings: Settings) => {
     },
     isObjectThresholdAdaptive: () => {
       return (
-        settings[StepName.OBJECT_THRESHOLD].thresholdType == ThresholdType.ADAPTIVE
+        settings[StepName.OBJECT_THRESHOLD].thresholdType ==
+        ThresholdType.ADAPTIVE
       );
     },
   };
+};
+
+export const applyDefaults = (
+  defaultSettings: Settings,
+  currentSettings: Settings
+): Settings => {
+  const mergedSettings = { ...defaultSettings };
+
+  for (const key in currentSettings) {
+    if (currentSettings.hasOwnProperty(key)) {
+      mergedSettings[key] = {
+        ...defaultSettings[key],
+        ...currentSettings[key],
+      };
+    }
+  }
+
+  return mergedSettings;
 };
 
 export default Settings;

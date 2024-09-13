@@ -8,7 +8,9 @@ import StepSettingField from "../advanced/StepSettingField";
 import blurStep from "@/lib/opencv/processor/steps/Blur";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshold";
+import bilateralFilterStep from "@/lib/opencv/processor/steps/BilateralFilter";
 
+const PIXEL_DIAMETER = "pixelDiameter";
 const BLUR_WIDTH = "blurWidth";
 const BLOCK_SIZE = "blockSize";
 
@@ -36,6 +38,13 @@ const FindPaperSettings = ({
   return (
     <>
       <SettingGroup dictionary={dictionary} name="findPaper">
+        <StepSettingField
+          value={settings[StepName.BILATERAL_FILTER][PIXEL_DIAMETER]}
+          name={"bilateralFilterPixelDiameter"}
+          config={bilateralFilterStep.config![PIXEL_DIAMETER]}
+          handleOnChange={onChange(StepName.BILATERAL_FILTER, PIXEL_DIAMETER)}
+          dictionary={dictionary}
+        ></StepSettingField>
         <StepSettingField
           value={settings[StepName.BLUR][BLUR_WIDTH]}
           name={BLUR_WIDTH}

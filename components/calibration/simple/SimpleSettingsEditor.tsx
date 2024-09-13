@@ -4,6 +4,7 @@ import FindPaperSettings from "./FindPaperSettings";
 import CloseCornerSettings from "./CloseCornersSettings";
 import HoleSettings from "./HoleSettings";
 import FindObjectSettings from "./FindObjectSettings";
+import SmoothContourSettings from "./SmoothContourSettings";
 
 type Props = {
   dictionary: Dictionary;
@@ -42,6 +43,11 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
           settings={settings}
           onSettingsChange={onChange}
         />
+        <SmoothContourSettings
+          dictionary={dictionary}
+          settings={settings}
+          onSettingsChange={onChange}
+        ></SmoothContourSettings>
       </div>
     </div>
   );

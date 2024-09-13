@@ -153,6 +153,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
           step: 0.1,
           display: (settings, currentStep) =>
             settings[currentStep]?.smoothSettings.smoothOutline,
+          tooltip: "Maximum deviation from original line as percentage"
         },
       },
     },

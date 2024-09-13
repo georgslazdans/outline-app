@@ -13,7 +13,11 @@ import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
 import PaperSettings, { paperDimensionsOf } from "../../PaperSettings";
 import Options from "@/lib/utils/Options";
 import Settings, { inSettings } from "../../Settings";
-import { pointsFrom } from "@/lib/data/contour/ContourPoints";
+import ContourPoints, {
+  modifyContour,
+  pointsFrom,
+  queryContour,
+} from "@/lib/data/contour/ContourPoints";
 
 export enum ReuseStep {
   BLUR = StepName.BLUR,
@@ -27,6 +31,7 @@ export const reuseStepOptionsFor = (dictionary: any) =>
 type ExtractPaperSettings = {
   reuseStep: ReuseStep;
   paperSettings: PaperSettings;
+  shrinkPaper: number;
 };
 
 const extractPaperFrom: Process<ExtractPaperSettings> = (
@@ -47,10 +52,19 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
   const smoothedContour = smoothContour(contours.get(contourIndex!));
   const cornerPoints = pointsFrom(smoothedContour);
 
+  if (cornerPoints.points.length < 4) {
+    console.log("Paper contours not found!", this);
+    const result = new cv.Mat();
+    image.copyTo(result);
+    return { image: result };
+  }
+
+  const scaledPoints = handlePaperShrinking(cornerPoints, settings.shrinkPaper);
+
   const previousStep = stepNameOfReuseStep(settings.reuseStep);
   const previousImage = previous.intermediateImageOf(previousStep);
   const result = warpedImageOf(
-    cornerPoints.points,
+    scaledPoints.points,
     previousImage,
     settings.paperSettings
   );
@@ -59,7 +73,7 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
   hierarchy.delete();
   smoothedContour.delete();
 
-  return { image: result, contours: [cornerPoints] };
+  return { image: result, contours: [scaledPoints] };
 };
 
 const stepNameOfReuseStep = (reuseStep: ReuseStep) => {
@@ -97,6 +111,17 @@ const imageColorSpace = (settings: Settings): ColorSpace => {
   }
 };
 
+const handlePaperShrinking = (points: ContourPoints, shrinkPaper: number) => {
+  if (shrinkPaper > 0) {
+    const isClockwise = queryContour(points).arePointsClockwise();
+    return modifyContour(points).scaleAlongNormal(
+      isClockwise ? shrinkPaper : -shrinkPaper
+    );
+  } else {
+    return points;
+  }
+};
+
 const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
   name: StepName.EXTRACT_PAPER,
   settings: {
@@ -106,6 +131,7 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
       height: 297,
       orientation: Orientation.LANDSCAPE,
     },
+    shrinkPaper: 0,
   },
   config: {
     reuseStep: {
@@ -130,6 +156,13 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
           optionsFunction: orientationOptionsFor,
         },
       },
+    },
+    shrinkPaper: {
+      type: "number",
+      min: 0,
+      max: 200,
+      step: 0.01,
+      tooltip: "Shrinks paper outline by given value in pixels",
     },
   },
   imageColorSpace: imageColorSpace,

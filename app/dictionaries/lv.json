@@ -54,6 +54,7 @@
       "closeCorners": "Close Corners"
     },
     "stepSettings": {
+      "bilateralFilterPixelDiameter": "Bilateral Filter Pixel Diameter",
       "pixelDiameter": "Pixel Diameter",
       "sigmaColor": "Sigma Color",
       "sigmaSpace": "Sigma Space",
@@ -67,11 +68,12 @@
       "firstThreshold": "First Threshold",
       "secondThreshold": "Second Threshold",
       "paperSettings": "Paper Settings",
+      "shrinkPaper": "Shrink paper",
       "orientation": "Orientation",
       "width": "Width",
       "height": "Height",
       "smoothOutline": "Smooth Outline",
-      "smoothAccuracy": "Smooth Max Deviation",
+      "smoothAccuracy": "Smooth Strength",
       "kernelSize": "Kernel Size (px)",
       "meanThreshold": "Max Background Difference",
       "thresholdType": "Threshold Type",

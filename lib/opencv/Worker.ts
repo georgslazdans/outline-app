@@ -1,90 +1,18 @@
 import { ProcessingResult } from "./processor/ImageProcessor";
 import * as cv from "@techstark/opencv-js";
-import { OpenCvWork, OpenCvResult } from "./OpenCvWork";
 import outlineCheckImageOf from "./processor/OutlineCheckImage";
 import objectThresholdCheckOf from "./processor/ObjectThresholdCheck";
 import handleOpenCvError from "./OpenCvError";
 import processStep, { ProcessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
 import StepResult, { stepResultsBefore } from "./StepResult";
-
-const processWork = async (work: OpenCvWork) => {
-  console.log("Processing work", work.type, work.data.settings);
-  let result: ProcessingResult;
-  switch (work.type) {
-    case "all":
-      result = await processImage(work.data as ProcessAll);
-      break;
-    case "step":
-      result = await processStep(work.data as ProcessStep);
-      break;
-  }
-  return result;
-};
-
-const settingsOf = (message: OpenCvWork) => {
-  return message.data.settings;
-};
-
-const processMessage = async (message: OpenCvWork): Promise<OpenCvResult> => {
-  try {
-    const stepResults = await processWork(message);
-    if (!stepResults.error) {
-      const outlineCheckImage = outlineCheckImageOf(
-        stepResults.data!,
-        settingsOf(message)
-      );
-      const thresholdCheck = objectThresholdCheckOf(
-        stepResults.data!,
-        settingsOf(message)
-      );
-      return {
-        status: "success",
-        result: postProcessResult(stepResults, message),
-        outlineCheckImage: outlineCheckImage,
-        thresholdCheck: thresholdCheck
-      };
-    } else {
-      return {
-        status: "failed",
-        result: stepResults,
-      };
-    }
-  } catch (e: any) {
-    const errorMessage =
-      "Error while executing OpenCv! " + handleOpenCvError(e);
-    return {
-      status: "failed",
-      result: { error: errorMessage },
-    };
-  }
-};
-
-const postProcessResult = (
-  result: ProcessingResult,
-  message: OpenCvWork
-): ProcessingResult => {
-  const filterPreviousSteps = (
-    list: StepResult[],
-    previosSteps: StepResult[]
-  ): StepResult[] => {
-    const previousStepNames = previosSteps.map((it) => it.stepName);
-    return list.filter((it) => !previousStepNames.includes(it.stepName));
-  };
-
-  if (message.type == "step") {
-    const { previousData, stepName } = message.data;
-    return {
-      ...result,
-      data: filterPreviousSteps(
-        result.data!,
-        stepResultsBefore(stepName, previousData)
-      ),
-    };
-  } else {
-    return result;
-  }
-};
+import Settings from "./Settings";
+import * as Comlink from "comlink";
+import WorkerResult, {
+  ErrorResult,
+  FailedResult,
+  SuccessResult,
+} from "./WorkerResult";
 
 let initialized = false;
 
@@ -104,9 +32,103 @@ const waitForInitialization = async () => {
   await initializedPromise;
 };
 
-addEventListener("message", async (event: MessageEvent<OpenCvWork>) => {
+const successMessageOf = (
+  stepResults: ProcessingResult,
+  outlineCheckImage: ImageData,
+  thresholdCheck?: ImageData
+): SuccessResult => {
+  return {
+    status: "success",
+    result: stepResults,
+    outlineCheckImage: outlineCheckImage,
+    thresholdCheck: thresholdCheck,
+  };
+};
+
+const errorMessageOf = (e: any): ErrorResult => {
+  const errorMessage = "Error while executing OpenCv! " + handleOpenCvError(e);
+  return {
+    status: "error",
+    error: errorMessage,
+  };
+};
+
+const failedMessageOf = (stepResults: ProcessingResult): FailedResult => {
+  return {
+    status: "failed",
+    result: stepResults,
+  };
+};
+
+const processOutlineImage = async (data: ProcessAll): Promise<WorkerResult> => {
   await waitForInitialization();
-  const work = event.data;
-  const message = await processMessage(work);
-  postMessage(message);
-});
+  try {
+    const result = await processImage(data);
+    if (!result.error) {
+      const outlineCheckImage = outlineCheckImageOf(
+        result.data!,
+        data.settings
+      );
+      const thresholdCheck = objectThresholdCheckOf(
+        result.data!,
+        data.settings
+      );
+      return successMessageOf(result, outlineCheckImage, thresholdCheck);
+    } else {
+      return failedMessageOf(result);
+    }
+  } catch (e) {
+    return errorMessageOf(e);
+  }
+};
+
+const filterPreviousSteps = (
+  list: StepResult[],
+  previousSteps: StepResult[]
+): StepResult[] => {
+  const previousStepNames = previousSteps.map((it) => it.stepName);
+  return list.filter((it) => !previousStepNames.includes(it.stepName));
+};
+
+const postProcessResult = (
+  result: ProcessingResult,
+  data: ProcessStep
+): ProcessingResult => {
+  const { previousData, stepName } = data;
+  return {
+    ...result,
+    data: filterPreviousSteps(
+      result.data!,
+      stepResultsBefore(stepName, previousData)
+    ),
+  };
+};
+
+const processOutlineStep = async (data: ProcessStep): Promise<WorkerResult> => {
+  await waitForInitialization();
+  try {
+    const result = await processStep(data);
+    if (!result.error) {
+      const processedResult = postProcessResult(result, data);
+      const outlineCheckImage = outlineCheckImageOf(
+        result.data!,
+        data.settings
+      );
+      const thresholdCheck = objectThresholdCheckOf(
+        result.data!,
+        data.settings
+      );
+      return successMessageOf(
+        processedResult,
+        outlineCheckImage,
+        thresholdCheck
+      );
+    } else {
+      return failedMessageOf(result);
+    }
+  } catch (e) {
+    return errorMessageOf(e);
+  }
+};
+
+Comlink.expose({ processOutlineImage, processOutlineStep });
