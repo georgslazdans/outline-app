@@ -68,6 +68,7 @@
       "firstThreshold": "First Threshold",
       "secondThreshold": "Second Threshold",
       "paperSettings": "Paper Settings",
+      "shrinkPaper": "Shrink paper",
       "orientation": "Orientation",
       "width": "Width",
       "height": "Height",
