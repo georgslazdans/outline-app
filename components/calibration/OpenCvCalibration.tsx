@@ -42,7 +42,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     setThresholdCheckImage(threshold);
   };
 
-  const { rerunOpenCv, settingsChanged } = useOpenCvWorker(
+  const { rerunOpenCv, settingsChanged, updateAllWorkData } = useOpenCvWorker(
     stepResults,
     setStepResults,
     updateCheckImages,
@@ -50,10 +50,11 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   );
 
   useEffect(() => {
+    // TODO better initialization
     if (detailsContext && stepResults.length == 0) {
-      rerunOpenCv();
+      updateAllWorkData();
     }
-  }, [detailsContext, rerunOpenCv, stepResults]);
+  }, [detailsContext, stepResults]);
 
   const saveAndClose = () => {
     setLoading(true);
