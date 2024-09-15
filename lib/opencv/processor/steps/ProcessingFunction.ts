@@ -5,11 +5,18 @@ import StepSetting, { StepSettingConfig } from "./StepSettings";
 import Settings from "../../Settings";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
 
-export type ProcessResult = {
+export type ProcessFunctionSuccess = {
   image: cv.Mat;
   contours?: ContourPoints[];
 };
 
+type ProcessFunctionFailed = {
+  errorMessage: string;
+};
+
+export type ProcessFunctionResult =
+  | ProcessFunctionSuccess
+  | ProcessFunctionFailed;
 
 export type PreviousData = {
   intermediateImageOf: (stepName: StepName) => cv.Mat;
@@ -20,7 +27,7 @@ export type Process<T extends StepSetting> = (
   image: cv.Mat,
   settings: T,
   previous: PreviousData
-) => ProcessResult; // TODO should be process step result
+) => ProcessFunctionResult;
 
 interface ProcessingStep<T extends StepSetting> {
   name: StepName;

@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
   PreviousData,
   Process,
-  ProcessResult,
+  ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
@@ -15,7 +15,7 @@ const blurOf: Process<BlurSettings> = (
   image: cv.Mat,
   settings: BlurSettings,
   previous: PreviousData
-): ProcessResult => {
+): ProcessFunctionResult => {
   const blurWidth = settings.blurWidth;
   let blurred = new cv.Mat();
   cv.GaussianBlur(

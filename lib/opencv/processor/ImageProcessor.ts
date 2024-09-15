@@ -1,29 +1,24 @@
 import * as cv from "@techstark/opencv-js";
 import Settings, { inSettings } from "../Settings";
-
 import { StepResult } from "../StepResult";
 import ProcessingStep, {
   PreviousData,
-  ProcessResult,
+  ProcessFunctionSuccess,
 } from "./steps/ProcessingFunction";
 import imageDataOf, { imageOf } from "../util/ImageData";
 import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
 import StepName from "./steps/StepName";
+import ProcessingResult from "../ProcessingResult";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
 };
 
-export type ProcessingResult = {
-  data?: StepResult[];
-  error?: string;
-};
-
 type ProcessStepResult =
   | {
       type: "success";
-      stepResult: ProcessResult;
+      functionResult: ProcessFunctionSuccess;
     }
   | {
       type: "error";
@@ -45,14 +40,22 @@ const processorOf = (
   ): ProcessStepResult => {
     try {
       const stepSettings = settingsFor(step);
-      return {
-        type: "success",
-        stepResult: step.process(
-          image,
-          stepSettings,
-          previousDataOf(intermediateImages, settings)
-        ),
-      };
+      const result = step.process(
+        image,
+        stepSettings,
+        previousDataOf(intermediateImages, settings)
+      );
+      if ("errorMessage" in result) {
+        return {
+          type: "error",
+          error: result.errorMessage,
+        };
+      } else {
+        return {
+          type: "success",
+          functionResult: result,
+        };
+      }
     } catch (e) {
       const errorMessage =
         "Failed to execute step: " + step.name + ", " + handleOpenCvError(e);
@@ -92,7 +95,7 @@ const processorOf = (
     for (const step of processingSteps) {
       const result = processStep(currentImage, step, intermediateImages);
       if (result.type == "success") {
-        const stepResult = result.stepResult;
+        const stepResult = result.functionResult;
         currentImage = stepResult.image;
         stepData.push({
           stepName: step.name,
@@ -138,7 +141,7 @@ const previousDataOf = (
     }
     if (
       stepName == StepName.BILATERAL_FILTER &&
-      inSettings(settings).isBilateralFiterDisabled()
+      inSettings(settings).isBilateralFilterDisabled()
     ) {
       stepName = StepName.INPUT;
     }

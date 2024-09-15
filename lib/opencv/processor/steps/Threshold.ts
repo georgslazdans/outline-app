@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
   PreviousData,
   Process,
-  ProcessResult,
+  ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
@@ -24,7 +24,7 @@ const thresholdOf: Process<ThresholdSettings> = (
   image: cv.Mat,
   settings: ThresholdSettings,
   previous: PreviousData
-): ProcessResult => {
+): ProcessFunctionResult => {
   if (settings.thresholdType == ThresholdType.ADAPTIVE) {
     return adaptiveThresholdStep.process(
       image,

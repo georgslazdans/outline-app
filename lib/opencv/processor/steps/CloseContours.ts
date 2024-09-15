@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
   PreviousData,
   Process,
-  ProcessResult,
+  ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
@@ -16,7 +16,7 @@ const closeContours: Process<CloseContoursSettings> = (
   image: cv.Mat,
   settings: CloseContoursSettings,
   previous: PreviousData
-): ProcessResult => {
+): ProcessFunctionResult => {
   const closed = new cv.Mat();
 
   const kernel = cv.getStructuringElement(

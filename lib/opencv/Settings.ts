@@ -36,7 +36,7 @@ export const firstChangedStep = (
 
 export const inSettings = (settings: Settings) => {
   return {
-    isBilateralFiterDisabled: () => {
+    isBilateralFilterDisabled: () => {
       return settings[StepName.BILATERAL_FILTER].disabled;
     },
     isBlurReused: () => {

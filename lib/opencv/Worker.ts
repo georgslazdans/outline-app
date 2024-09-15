@@ -1,4 +1,3 @@
-import { ProcessingResult } from "./processor/ImageProcessor";
 import * as cv from "@techstark/opencv-js";
 import outlineCheckImageOf from "./processor/OutlineCheckImage";
 import objectThresholdCheckOf from "./processor/ObjectThresholdCheck";
@@ -13,6 +12,7 @@ import WorkerResult, {
   FailedResult,
   SuccessResult,
 } from "./WorkerResult";
+import ProcessingResult from "./ProcessingResult";
 
 let initialized = false;
 
