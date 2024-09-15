@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import Settings from "@/lib/opencv/Settings";
 import React from "react";
 import SettingGroup from "./SettingGroup";
-import StepSettingField from "../advanced/StepSettingField";
+import StepSettingField from "../../advanced/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import extractObjectStep from "@/lib/opencv/processor/steps/ExtractObject";
 import { GroupConfig } from "@/lib/opencv/processor/steps/StepSettings";

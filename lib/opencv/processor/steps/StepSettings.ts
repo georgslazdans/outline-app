@@ -3,6 +3,7 @@ import SelectOption from "@/lib/utils/SelectOption";
 import { ChangeEvent } from "react";
 import Settings from "../../Settings";
 import StepName from "./StepName";
+import Steps from "../Steps";
 
 type StepSetting = {
   [key: string]: any;
@@ -60,5 +61,14 @@ export const eventFieldConverterFor = (
         event.target.value;
   }
 };
+
+export const configOf = (stepName: StepName, key: string): StepSettingConfig => {
+  const config = Steps.getAll().find((it) => it.name == stepName)?.config;
+  if (!config) {
+    throw new Error(`Config not found for key: ${key} with step: ${stepName}}`);
+  }
+  return config[key];
+};
+
 
 export default StepSetting;

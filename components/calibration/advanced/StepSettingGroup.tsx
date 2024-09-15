@@ -12,20 +12,20 @@ type Props = {
   name: string;
   dictionary: Dictionary;
   settings: StepSetting;
-  config: { [key: string]: StepSettingConfig };
+  settingsConfig: { [key: string]: StepSettingConfig };
   onChange: (stepSettings: StepSetting) => void;
-  stepName: string
-  allSettings: Settings
+  stepName: string;
+  allSettings: Settings;
 };
 
 const StepSettingGroup = ({
   onChange,
   name,
   settings,
-  config,
+  settingsConfig,
   dictionary,
   stepName,
-  allSettings
+  allSettings,
 }: Props) => {
   const settingLabel = (name: string) => {
     //@ts-ignore
@@ -47,8 +47,12 @@ const StepSettingGroup = ({
     <>
       <h3 className="ml-2">{settingLabel(name)}</h3>
       {Object.keys(settings).map((key) => {
-        const fieldConfig = config[key];
-        if (fieldConfig.display && !fieldConfig.display(allSettings, stepName as StepName)) {
+        const fieldConfig = settingsConfig[key];
+        if (
+          !fieldConfig ||
+          (fieldConfig.display &&
+            !fieldConfig.display(allSettings, stepName as StepName))
+        ) {
           return <></>;
         }
         return (
@@ -56,8 +60,8 @@ const StepSettingGroup = ({
             key={key}
             name={key}
             value={settings[key]}
-            config={config[key]}
-            handleOnChange={handleOnChange(key, config[key])}
+            config={fieldConfig}
+            handleOnChange={handleOnChange(key, fieldConfig)}
             dictionary={dictionary}
           ></StepSettingField>
         );
