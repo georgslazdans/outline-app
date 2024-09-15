@@ -1,10 +1,10 @@
 import Settings from "@/lib/opencv/Settings";
 import { Dictionary } from "@/app/dictionaries";
-import FindPaperSettings from "./FindPaperSettings";
-import CloseCornerSettings from "./CloseCornersSettings";
-import HoleSettings from "./HoleSettings";
-import FindObjectSettings from "./FindObjectSettings";
-import SmoothContourSettings from "./SmoothContourSettings";
+import FindPaperSettings from "./settings/FindPaperSettings";
+import CloseCornerSettings from "./settings/CloseCornersSettings";
+import HoleSettings from "./settings/HoleSettings";
+import FindObjectSettings from "./settings/FindObjectSettings";
+import SmoothContourSettings from "./settings/SmoothContourSettings";
 
 type Props = {
   dictionary: Dictionary;

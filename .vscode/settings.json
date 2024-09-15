@@ -4,8 +4,9 @@
         "frameloop",
         "gridfinity",
         "replicad",
+        "skippable",
         "threejs",
         "wireframe",
-        "Wireframe",
+        "Wireframe"
     ]
 }

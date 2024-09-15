@@ -1,9 +1,11 @@
+import ProcessingResult from "../ProcessingResult";
 import Settings from "../Settings";
 import StepResult from "../StepResult";
 import ColorSpace from "../util/ColorSpace";
 import { imageOf } from "../util/ImageData";
-import processorOf, { ProcessingResult } from "./ImageProcessor";
+import processorOf from "./ImageProcessor";
 import Steps from "./Steps";
+import ProcessingStep from "./steps/ProcessingFunction";
 import StepName from "./steps/StepName";
 
 export type ProcessAll = {
@@ -46,16 +48,20 @@ const ensureAllSteps = (
   for (let i = 0; i < allSteps.length; i++) {
     const step = allSteps[i];
     if (!stepNames.includes(step.name)) {
-      result.push({
-        stepName: step.name,
-        imageData: new ImageData(1, 1),
-        imageColorSpace: step.imageColorSpace(settings),
-      });
+      result.push(emptyStepResultFor(step, settings));
     } else {
       result.push(steps.find((it) => it.stepName == step.name)!);
     }
   }
   return result;
+};
+
+const emptyStepResultFor = (step: ProcessingStep<any>, settings: Settings) => {
+  return {
+    stepName: step.name,
+    imageData: new ImageData(1, 1),
+    imageColorSpace: step.imageColorSpace(settings),
+  };
 };
 
 export default processImage;

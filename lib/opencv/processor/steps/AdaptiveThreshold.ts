@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
   PreviousData,
   Process,
-  ProcessResult,
+  ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
@@ -17,7 +17,7 @@ const thresholdOf: Process<AdaptiveThresholdSettings> = (
   image: cv.Mat,
   settings: AdaptiveThresholdSettings,
   previous: PreviousData
-): ProcessResult => {
+): ProcessFunctionResult => {
   let threshold = new cv.Mat();
   cv.adaptiveThreshold(
     image,

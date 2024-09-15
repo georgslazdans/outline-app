@@ -5,7 +5,7 @@ import ContourPoints, { pointsFrom } from "@/lib/data/contour/ContourPoints";
 
 export type HoleSettings = {
   meanThreshold: number;
-  holeAreaTreshold: number;
+  holeAreaThreshold: number;
 };
 
 const holeFinder = () => {
@@ -21,7 +21,7 @@ const holeFinder = () => {
     },
     withSettings: (holeSettings: HoleSettings) => {
       _meanThreshold = holeSettings.meanThreshold;
-      _holeAreaThreshold = holeSettings.holeAreaTreshold;
+      _holeAreaThreshold = holeSettings.holeAreaThreshold;
       return result;
     },
     findHolesInContour: (

@@ -50,8 +50,8 @@ export const OutlineImageViewer = ({
 
   const drawImage = useCallback(() => {
     const ctx = getContext();
-    if (ctx && baseImage && outlineImage) {
-      if (drawOutline) {
+    if (ctx && baseImage) {
+      if (drawOutline && outlineImage) {
         const blendedImage = blendImageData(ctx, baseImage, outlineImage);
         ctx.putImageData(blendedImage, 0, 0);
       } else {

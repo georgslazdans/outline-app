@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
   PreviousData,
   Process,
-  ProcessResult,
+  ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
@@ -17,7 +17,7 @@ const binaryThresholdOf: Process<BinaryThresholdSettings> = (
   image: cv.Mat,
   settings: BinaryThresholdSettings,
   previous: PreviousData
-): ProcessResult => {
+): ProcessFunctionResult => {
   const threshold = new cv.Mat();
   const inverseThreshold = new cv.Mat();
 

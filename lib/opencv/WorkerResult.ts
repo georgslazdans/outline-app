@@ -1,4 +1,4 @@
-import { ProcessingResult } from "./processor/ImageProcessor";
+import ProcessingResult from "./ProcessingResult";
 
 export type SuccessResult = {
   status: "success";

@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import Settings, { inSettings } from "@/lib/opencv/Settings";
 import React from "react";
 import SettingGroup from "./SettingGroup";
-import StepSettingField from "../advanced/StepSettingField";
+import StepSettingField from "../../advanced/StepSettingField";
 import blurStep from "@/lib/opencv/processor/steps/Blur";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshold";
@@ -12,7 +12,7 @@ import binaryThresholdStep from "@/lib/opencv/processor/steps/BinaryThreshold";
 
 const BLUR_WIDTH = "blurWidth";
 const BLOCK_SIZE = "blockSize";
-const THREHSOLD = "threshold";
+const THRESHOLD = "threshold";
 const INVERSE_THRESHOLD = "inverseThreshold";
 
 type Props = {
@@ -88,12 +88,12 @@ const FindObjectSettings = ({
           <>
             <StepSettingField
               value={
-                settings[StepName.OBJECT_THRESHOLD].binarySettings[THREHSOLD]
+                settings[StepName.OBJECT_THRESHOLD].binarySettings[THRESHOLD]
               }
-              name={THREHSOLD}
-              config={binaryThresholdStep.config![THREHSOLD]}
+              name={THRESHOLD}
+              config={binaryThresholdStep.config![THRESHOLD]}
               handleOnChange={onObjectThresholdChange(
-                THREHSOLD,
+                THRESHOLD,
                 "binarySettings"
               )}
               dictionary={dictionary}

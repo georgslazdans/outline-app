@@ -1,9 +1,8 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
-  ContourPoints,
   PreviousData,
   Process,
-  ProcessResult,
+  ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import {
@@ -22,23 +21,25 @@ import holeFinder, {
   HoleSettings,
   contourPointsOf,
 } from "../../util/contours/Holes";
-import { modifyContour, modifyContourList, pointsFrom } from "@/lib/data/contour/ContourPoints";
+import ContourPoints, { modifyContour, modifyContourList, pointsFrom } from "@/lib/data/contour/ContourPoints";
 
-type SnoothSettings = {
+type SmoothSettings = {
   smoothOutline: boolean;
   smoothAccuracy: number;
 };
 
 type ExtractObjectSettings = {
-  smoothSettings: SnoothSettings;
+  smoothSettings: SmoothSettings;
   holeSettings: HoleSettings;
 };
+
+const OBJECT_NOT_FOUND_MESSAGE = "Object contour not found!";
 
 const extractObjectFrom: Process<ExtractObjectSettings> = (
   image: cv.Mat,
   settings: ExtractObjectSettings,
   previous: PreviousData
-): ProcessResult => {
+): ProcessFunctionResult => {
   const copyOf = (image: cv.Mat) => {
     const result = new cv.Mat();
     image.copyTo(result);
@@ -56,8 +57,7 @@ const extractObjectFrom: Process<ExtractObjectSettings> = (
     imageAreaThresholdSizeOf(image)
   );
   if (outlineContourIndex == null) {
-    console.log("Object contour not found!", this);
-    return { image: copyOf(image) };
+    return { errorMessage: OBJECT_NOT_FOUND_MESSAGE };
   }
 
   const holeIndexes = holeFinder()
@@ -136,7 +136,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     },
     holeSettings: {
       meanThreshold: 10,
-      holeAreaTreshold: 1.0,
+      holeAreaThreshold: 1.0,
     },
   },
   config: {
@@ -165,7 +165,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
           min: 0,
           max: 30,
         },
-        holeAreaTreshold: {
+        holeAreaThreshold: {
           type: "number",
           min: 0,
           max: 20,

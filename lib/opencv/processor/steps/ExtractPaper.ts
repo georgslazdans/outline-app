@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
   PreviousData,
   Process,
-  ProcessResult,
+  ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import Point from "../../../data/Point";
@@ -34,29 +34,25 @@ type ExtractPaperSettings = {
   shrinkPaper: number;
 };
 
+const PAPER_NOT_FOUND_MESSAGE = "Paper contours not found! Ensure that the paper outline is fully visible and uninterrupted in \"Adaptive Threshold\" step!";
+
 const extractPaperFrom: Process<ExtractPaperSettings> = (
   image: cv.Mat,
   settings: ExtractPaperSettings,
   previous: PreviousData
-): ProcessResult => {
+): ProcessFunctionResult => {
   const { contours, hierarchy } = contoursOf(image);
 
   const contourIndex = largestContourOf(contours);
   if (contourIndex == null) {
-    console.log("Paper contours not found!", this);
-    const result = new cv.Mat();
-    image.copyTo(result);
-    return { image: result };
+    return { errorMessage: PAPER_NOT_FOUND_MESSAGE };
   }
 
   const smoothedContour = smoothContour(contours.get(contourIndex!));
   const cornerPoints = pointsFrom(smoothedContour);
 
   if (cornerPoints.points.length < 4) {
-    console.log("Paper contours not found!", this);
-    const result = new cv.Mat();
-    image.copyTo(result);
-    return { image: result };
+    return { errorMessage: PAPER_NOT_FOUND_MESSAGE };
   }
 
   const scaledPoints = handlePaperShrinking(cornerPoints, settings.shrinkPaper);

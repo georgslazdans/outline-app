@@ -80,15 +80,15 @@ const bilateralFilterDisabled = (settings: Settings) => {
     if (step.name != StepName.BILATERAL_FILTER) {
       return true;
     } else {
-      return !inSettings(settings).isBilateralFiterDisabled();
+      return !inSettings(settings).isBilateralFilterDisabled();
     }
   };
 };
 
 const blurImageReused = (settings: Settings) => {
   return (step: ProcessingStep<any>): boolean => {
-    const skipableSteps = [StepName.GRAY_SCALE_OBJECT, StepName.BLUR_OBJECT];
-    if (!skipableSteps.includes(step.name)) {
+    const skippableSteps = [StepName.GRAY_SCALE_OBJECT, StepName.BLUR_OBJECT];
+    if (!skippableSteps.includes(step.name)) {
       return true;
     } else {
       return !inSettings(settings).isBlurReused();

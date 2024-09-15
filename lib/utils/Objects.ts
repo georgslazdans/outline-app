@@ -31,4 +31,24 @@ function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
+export const deepMerge = (defaultObject: any, currentObject: any): any => {
+  const result = { ...defaultObject }; // Start with the default object
+
+  for (const key in currentObject) {
+    if (currentObject.hasOwnProperty(key)) {
+      if (
+        typeof currentObject[key] === 'object' &&
+        currentObject[key] !== null &&
+        !Array.isArray(currentObject[key])
+      ) {
+        result[key] = deepMerge(defaultObject[key], currentObject[key]);
+      } else {
+        result[key] = currentObject[key];
+      }
+    }
+  }
+
+  return result;
+};
+
 export default deepEqual;

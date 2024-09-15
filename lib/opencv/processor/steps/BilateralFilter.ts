@@ -2,7 +2,7 @@ import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
   PreviousData,
   Process,
-  ProcessResult,
+  ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
@@ -19,7 +19,7 @@ const bilateralFilter: Process<BilateralFilterSettings> = (
   image: cv.Mat,
   settings: BilateralFilterSettings,
   previous: PreviousData
-): ProcessResult => {
+): ProcessFunctionResult => {
   if (settings.disabled) {
     const result = new cv.Mat();
     image.copyTo(result);

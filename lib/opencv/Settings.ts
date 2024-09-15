@@ -1,7 +1,7 @@
 import { Context } from "@/context/DetailsContext";
 import StepName from "./processor/steps/StepName";
-import deepEqual from "../utils/Objects";
-import StepSetting from "./processor/steps/StepSettings";
+import deepEqual, { deepMerge } from "../utils/Objects";
+import StepSetting, { StepSettingConfig } from "./processor/steps/StepSettings";
 import Steps from "./processor/Steps";
 import ThresholdType from "./processor/steps/ThresholdType";
 
@@ -36,7 +36,7 @@ export const firstChangedStep = (
 
 export const inSettings = (settings: Settings) => {
   return {
-    isBilateralFiterDisabled: () => {
+    isBilateralFilterDisabled: () => {
       return settings[StepName.BILATERAL_FILTER].disabled;
     },
     isBlurReused: () => {
@@ -55,15 +55,14 @@ export const applyDefaults = (
   defaultSettings: Settings,
   currentSettings: Settings
 ): Settings => {
-  const mergedSettings = { ...defaultSettings };
+  const mergedSettings: Settings = {};
 
-  for (const key in currentSettings) {
-    if (currentSettings.hasOwnProperty(key)) {
-      mergedSettings[key] = {
-        ...defaultSettings[key],
-        ...currentSettings[key],
-      };
-    }
+  for (const step of Steps.getAll()) {
+    const stepName = step.name;
+    mergedSettings[stepName] = deepMerge(
+      defaultSettings[stepName],
+      currentSettings[stepName]
+    );
   }
 
   return mergedSettings;

@@ -6,10 +6,10 @@ import StepSettingGroup from "./StepSettingGroup";
 import StepSetting, {
   GroupConfig,
   StepSettingConfig,
+  configOf,
   eventFieldConverterFor,
 } from "@/lib/opencv/processor/steps/StepSettings";
 import Settings from "@/lib/opencv/Settings";
-import Steps from "@/lib/opencv/processor/Steps";
 
 type Props = {
   dictionary: Dictionary;
@@ -51,14 +51,6 @@ export const AdvancedSettingsEditor = ({
     };
   };
 
-  const configOf = (key: string): StepSettingConfig => {
-    const config = Steps.getAll().find((it) => it.name == step)?.config;
-    if (!config) {
-      throw new Error(`Config not found for key: ${key} with step: ${step}}`);
-    }
-    return config[key];
-  };
-
   return (
     <div className="xl:w-1/2">
       <h2 className="text-center p-2 w-full">
@@ -67,9 +59,8 @@ export const AdvancedSettingsEditor = ({
       <div className="flex flex-col gap-1">
         {currentSetting &&
           Object.keys(currentSetting).map((key) => {
-            const config = configOf(key);
+            const config = configOf(step, key);
             if (!config) {
-              console.info("No config found for setting: ", key);
               return;
             }
             if (config.display && !config.display(settings, step)) {
@@ -82,7 +73,7 @@ export const AdvancedSettingsEditor = ({
                   key={key}
                   name={key}
                   settings={currentSetting[key]}
-                  config={groupConfig.config}
+                  settingsConfig={groupConfig.config}
                   onChange={handleOnGroupChange(key)}
                   dictionary={dictionary}
                   stepName={step}
@@ -90,16 +81,19 @@ export const AdvancedSettingsEditor = ({
                 ></StepSettingGroup>
               );
             } else {
-              return (
-                <StepSettingField
-                  key={key}
-                  name={key}
-                  value={currentSetting[key]}
-                  config={configOf(key)}
-                  handleOnChange={handleOnChange(key, configOf(key))}
-                  dictionary={dictionary}
-                ></StepSettingField>
-              );
+              const config = configOf(step, key);
+              if (config) {
+                return (
+                  <StepSettingField
+                    key={key}
+                    name={key}
+                    value={currentSetting[key]}
+                    config={config}
+                    handleOnChange={handleOnChange(key, config)}
+                    dictionary={dictionary}
+                  ></StepSettingField>
+                );
+              }
             }
           })}
       </div>

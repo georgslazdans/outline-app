@@ -51,10 +51,10 @@ export const largestContourOf = (
   let result = null;
   for (let i = 0; i < contours.size(); ++i) {
     const contour = contours.get(i);
-    const caluclatedArea = cv.contourArea(contour);
-    if (caluclatedArea > area) {
-      if (!maxAreaSize || caluclatedArea < maxAreaSize) {
-        area = caluclatedArea;
+    const calculatedArea = cv.contourArea(contour);
+    if (calculatedArea > area) {
+      if (!maxAreaSize || calculatedArea < maxAreaSize) {
+        area = calculatedArea;
         result = i;
       }
     }
@@ -65,10 +65,10 @@ export const largestContourOf = (
 
 export const smoothOf = (
   contour: cv.Mat,
-  maxDeviationPrecent = 0.002
+  maxDeviationPercent = 0.002
 ): cv.Mat => {
   let smooth = new cv.Mat();
-  const accuracy = maxDeviationPrecent * cv.arcLength(contour, true);
+  const accuracy = maxDeviationPercent * cv.arcLength(contour, true);
   cv.approxPolyDP(contour, smooth, accuracy, true);
   return smooth;
 };

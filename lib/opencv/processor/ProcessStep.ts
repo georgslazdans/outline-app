@@ -1,8 +1,9 @@
+import ProcessingResult from "../ProcessingResult";
 import Settings from "../Settings";
 import StepResult, { stepResultsBefore } from "../StepResult";
 import ColorSpace from "../util/ColorSpace";
 import { imageOf } from "../util/ImageData";
-import processorOf, { ProcessingResult } from "./ImageProcessor";
+import processorOf from "./ImageProcessor";
 import Steps from "./Steps";
 import ProcessingStep from "./steps/ProcessingFunction";
 import StepName from "./steps/StepName";
