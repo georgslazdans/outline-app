@@ -80,7 +80,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   };
 
   useEffect(() => {
-    // Fix for previous data param changes
+    // Fix for settings and their config changes between versions
     if (detailsContext?.settings) {
       detailsContext.settings = applyDefaults(
         defaultSettings(),

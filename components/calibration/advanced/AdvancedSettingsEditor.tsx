@@ -61,7 +61,6 @@ export const AdvancedSettingsEditor = ({
           Object.keys(currentSetting).map((key) => {
             const config = configOf(step, key);
             if (!config) {
-              console.info("No config found for setting: ", key);
               return;
             }
             if (config.display && !config.display(settings, step)) {
