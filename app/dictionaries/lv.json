@@ -79,7 +79,7 @@
       "thresholdType": "Threshold Type",
       "adaptiveSettings": "Adaptive Settings",
       "binarySettings": "Binary Settings",
-      "holeAreaTreshold": "Area Size Threshold (%)",
+      "holeAreaThreshold": "Area Size Threshold (%)",
       "smoothSettings": "Smooth Settings",
       "holeSettings": "Hole Settings",
       "iterations": "Iterations",

@@ -1,6 +1,5 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
-  ContourPoints,
   PreviousData,
   Process,
   ProcessResult,
@@ -22,15 +21,15 @@ import holeFinder, {
   HoleSettings,
   contourPointsOf,
 } from "../../util/contours/Holes";
-import { modifyContour, modifyContourList, pointsFrom } from "@/lib/data/contour/ContourPoints";
+import ContourPoints, { modifyContour, modifyContourList, pointsFrom } from "@/lib/data/contour/ContourPoints";
 
-type SnoothSettings = {
+type SmoothSettings = {
   smoothOutline: boolean;
   smoothAccuracy: number;
 };
 
 type ExtractObjectSettings = {
-  smoothSettings: SnoothSettings;
+  smoothSettings: SmoothSettings;
   holeSettings: HoleSettings;
 };
 
@@ -136,7 +135,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
     },
     holeSettings: {
       meanThreshold: 10,
-      holeAreaTreshold: 1.0,
+      holeAreaThreshold: 1.0,
     },
   },
   config: {
@@ -165,7 +164,7 @@ const extractObjectStep: ProcessingStep<ExtractObjectSettings> = {
           min: 0,
           max: 30,
         },
-        holeAreaTreshold: {
+        holeAreaThreshold: {
           type: "number",
           min: 0,
           max: 20,
