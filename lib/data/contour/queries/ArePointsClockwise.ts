@@ -2,7 +2,7 @@ import ContourPoints from "../ContourPoints";
 import { nextIndex } from "../../line/PointIndex";
 
 
-const arePointsClockwise = (contour: ContourPoints) => {
+const _arePointsClockwise = (contour: ContourPoints) => {
   return (): boolean => {
     const { points } = contour;
     let sum = 0;
@@ -19,4 +19,4 @@ const arePointsClockwise = (contour: ContourPoints) => {
   };
 };
 
-export default arePointsClockwise;
+export default _arePointsClockwise;

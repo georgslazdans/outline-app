@@ -1,9 +1,9 @@
-import divideContour from "./DivideContour";
-import isValidSplitPoint from "./IsValidSplitPoint";
+import _divideContour from "./DivideContour";
+import _isValidSplitPoint from "./IsValidSplitPoint";
 
-export const listOnlySplitQuery = () => {
+export const _listOnlySplitQuery = () => {
   return {
-    divideContour: divideContour,
-    isValidSplitPoint: isValidSplitPoint,
+    divideContour: _divideContour,
+    isValidSplitPoint: _isValidSplitPoint,
   };
 };

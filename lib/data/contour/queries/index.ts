@@ -1,22 +1,22 @@
 import ContourPoints from "../ContourPoints";
-import findLineSegmentClosestToPoint from "./FindLineSegmentClosestToPoint";
-import findLargestContourOf from "./FindLargestContourOf";
-import findMiddleBetweenPoints from "./FindMiddleBetweenPoints";
-import arePointsClockwise from "./ArePointsClockwise";
-import { listOnlySplitQuery } from "./split";
+import _findLineSegmentClosestToPoint from "./FindLineSegmentClosestToPoint";
+import _findLargestContourOf from "./FindLargestContourOf";
+import _findMiddleBetweenPoints from "./FindMiddleBetweenPoints";
+import _arePointsClockwise from "./ArePointsClockwise";
+import { _listOnlySplitQuery } from "./split";
 
 const singleOnlyQuery = () => {
   return {
-    findMiddleBetweenPoints: findMiddleBetweenPoints,
-    findLineSegmentClosestToPoint: findLineSegmentClosestToPoint,
-    arePointsClockwise: arePointsClockwise,
+    findMiddleBetweenPoints: _findMiddleBetweenPoints,
+    findLineSegmentClosestToPoint: _findLineSegmentClosestToPoint,
+    arePointsClockwise: _arePointsClockwise,
   };
 };
 
 const listOnlyQuery = () => {
   return {
-    findLargestContourOf: findLargestContourOf,
-    ...listOnlySplitQuery()
+    findLargestContourOf: _findLargestContourOf,
+    ..._listOnlySplitQuery()
   };
 };
 

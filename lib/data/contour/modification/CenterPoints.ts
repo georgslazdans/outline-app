@@ -1,7 +1,7 @@
 import { PaperDimensions } from "@/lib/opencv/PaperSettings";
 import ContourPoints from "../ContourPoints";
 
-const centerPoints = (contour: ContourPoints) => {
+const _centerPoints = (contour: ContourPoints) => {
   return (paperDimensions: PaperDimensions): ContourPoints => {
     const translateX = paperDimensions.width / 2;
     const translateY = paperDimensions.height / 2;
@@ -13,4 +13,4 @@ const centerPoints = (contour: ContourPoints) => {
   };
 };
 
-export default centerPoints;
+export default _centerPoints;

@@ -22,10 +22,10 @@ const defaultParams = {
   screwRadius: 1.5,
   keepFull: false,
   wallThickness: 1.2,
+  gridSize: 42.0
 };
 
 // Gridfinity magic numbers
-const SIZE = 42.0;
 const CLEARANCE = 0.5;
 const AXIS_CLEARANCE = (CLEARANCE * Math.sqrt(2)) / 4;
 
@@ -57,10 +57,11 @@ const buildSocket = ({
   screwRadius = 1.5,
   withScrew = true,
   withMagnet = true,
+  gridSize
 } = {}) => {
   const baseSocket = drawRoundedRectangle(
-    SIZE - CLEARANCE,
-    SIZE - CLEARANCE,
+    gridSize - CLEARANCE,
+    gridSize - CLEARANCE,
     CORNER_RADIUS
   ).sketchOnPlane();
 
@@ -104,13 +105,14 @@ const buildSocket = ({
 const range = (i) => [...Array(i).keys()];
 const cloneOnGrid = (
   shape,
-  { xSteps = 1, ySteps = 1, span = 10, xSpan = null, ySpan = null }
+  { xSteps = 1, ySteps = 1, span = 10, xSpan = null, ySpan = null },
+  gridSize
 ) => {
   const xCorr = ((xSteps - 1) * (xSpan || span)) / 2;
   const yCorr = ((ySteps - 1) * (ySpan || xSpan || span)) / 2;
 
   const translations = range(xSteps).flatMap((i) => {
-    return range(ySteps).map((j) => [i * SIZE - xCorr, j * SIZE - yCorr, 0]);
+    return range(ySteps).map((j) => [i * gridSize - xCorr, j * gridSize - yCorr, 0]);
   });
   return translations.map((translation) =>
     shape.clone().translate(translation)
@@ -122,6 +124,7 @@ const buildTopShape = ({
   ySize,
   includeLip = true,
   wallThickness = 1.2,
+  gridSize
 }) => {
   const topShape = (basePlane, startPosition) => {
     const sketcher = draw([-SOCKET_TAPER_WIDTH, 0])
@@ -161,8 +164,8 @@ const buildTopShape = ({
   };
 
   const boxSketch = drawRoundedRectangle(
-    xSize * SIZE - CLEARANCE,
-    ySize * SIZE - CLEARANCE,
+    xSize * gridSize - CLEARANCE,
+    ySize * gridSize - CLEARANCE,
     CORNER_RADIUS
   ).sketchOnPlane();
 
@@ -170,8 +173,8 @@ const buildTopShape = ({
     .sweepSketch(topShape, { withContact: true })
     .fillet(TOP_FILLET, (e) =>
       e.inBox(
-        [-xSize * SIZE, -ySize * SIZE, SOCKET_HEIGHT],
-        [xSize * SIZE, ySize * SIZE, SOCKET_HEIGHT - 1]
+        [-xSize * gridSize, -ySize * gridSize, SOCKET_HEIGHT],
+        [xSize * gridSize, ySize * gridSize, SOCKET_HEIGHT - 1]
       )
     );
 };
@@ -187,12 +190,13 @@ function gridfinityBox({
   magnetRadius = 3.25,
   magnetHeight = 2,
   screwRadius = 1.5,
+  gridSize = 42.0
 } = {}): ReplicadModelData {
-  const stdHeight = height * SIZE;
+  const stdHeight = height * 42;
 
   let box = drawRoundedRectangle(
-    xSize * SIZE - CLEARANCE,
-    ySize * SIZE - CLEARANCE,
+    xSize * gridSize - CLEARANCE,
+    ySize * gridSize - CLEARANCE,
     CORNER_RADIUS
   )
     .sketchOnPlane()
@@ -206,6 +210,7 @@ function gridfinityBox({
     xSize,
     ySize,
     includeLip: !keepFull,
+    gridSize
   }).translateZ(stdHeight);
 
   const socket = buildSocket({
@@ -214,10 +219,11 @@ function gridfinityBox({
     magnetRadius,
     magnetHeight,
     screwRadius,
+    gridSize
   });
 
   let base = null;
-  cloneOnGrid(socket, { xSteps: xSize, ySteps: ySize, span: SIZE }).forEach(
+  cloneOnGrid(socket, { xSteps: xSize, ySteps: ySize, span: gridSize }, gridSize).forEach(
     (movedSocket) => {
       if (base) base = base.fuse(movedSocket, { optimisation: "commonFace" });
       else base = movedSocket;

@@ -1,7 +1,7 @@
 import ContourIndex from "../../ContourIndex";
 import ContourPoints, { modifyContour } from "../../ContourPoints";
 
-const deleteContourPoint = (contour: ContourPoints[]) => {
+const _deleteContourPoint = (contour: ContourPoints[]) => {
   return (index: ContourIndex): ContourPoints[] => {
     return contour
       .map((it, contourIndex) => {
@@ -14,4 +14,4 @@ const deleteContourPoint = (contour: ContourPoints[]) => {
   };
 };
 
-export default deleteContourPoint;
+export default _deleteContourPoint;

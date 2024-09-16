@@ -1,20 +1,20 @@
-import addPointContourIndex from "./AddPointContourIndex";
-import addPoint from "./AddPoint";
-import deleteContourPoint from "./DeleteContourIndex";
-import deletePoint from "./DeletePoint";
-import deleteByPointIndexes from "./DeleteByPointIndexes";
+import _addPointContourIndex from "./AddPointContourIndex";
+import _addPoint from "./AddPoint";
+import _deleteContourPoint from "./DeleteContourIndex";
+import _deletePoint from "./DeletePoint";
+import _deleteByPointIndexes from "./DeleteByPointIndexes";
 
-export const crudSingleOnlyApi = () => {
+export const _crudSingleOnlyApi = () => {
   return {
-    addPoint: addPoint,
-    deletePoint: deletePoint,
-    deleteByPointIndexes: deleteByPointIndexes,
+    addPoint: _addPoint,
+    deletePoint: _deletePoint,
+    deleteByPointIndexes: _deleteByPointIndexes,
   };
 };
 
-export const crudListOnlyApi = () => {
+export const _crudListOnlyApi = () => {
   return {
-    deleteContourPoint: deleteContourPoint,
-    addPoint: addPointContourIndex
+    deleteContourPoint: _deleteContourPoint,
+    addPoint: _addPointContourIndex
   };
 };

@@ -1,6 +1,6 @@
 import ContourPoints from "../../ContourPoints";
 
-const deletePoint = (contour: ContourPoints) => {
+const _deletePoint = (contour: ContourPoints) => {
   return (index: number): ContourPoints | undefined => {
     const points = contour.points.filter(
       (_, pointIndex) => pointIndex !== index
@@ -13,4 +13,4 @@ const deletePoint = (contour: ContourPoints) => {
   };
 };
 
-export default deletePoint;
+export default _deletePoint;

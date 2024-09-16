@@ -1,6 +1,6 @@
 import Point, { normalOf } from "../../Point";
 import ContourPoints from "../ContourPoints";
-import cleanIfHasIntersections from "./CleanIfHasIntersections";
+import _cleanIfHasIntersections from "./CleanIfHasIntersections";
 
 const calculatePointsNormal = (
   prevPoint: Point,
@@ -50,7 +50,7 @@ const scalePoints = (points: Point[], scale: number): Point[] => {
 const scaleAlongNormal = (contour: ContourPoints) => {
   return (scale: number): ContourPoints => {
     const scaledPoints = scalePoints(contour.points, scale);
-    return cleanIfHasIntersections(scaledPoints);
+    return _cleanIfHasIntersections(scaledPoints);
   };
 };
 

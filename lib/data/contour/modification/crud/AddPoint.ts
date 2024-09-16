@@ -1,7 +1,7 @@
 import ContourPoints from "../../ContourPoints";
 import Point from "../../../Point";
 
-const addPoint = (contour: ContourPoints) => {
+const _addPoint = (contour: ContourPoints) => {
   return (point: Point, index?: number): ContourPoints => {
 
     let updatedPoints;
@@ -22,4 +22,4 @@ const addPoint = (contour: ContourPoints) => {
   };
 };
 
-export default addPoint;
+export default _addPoint;

@@ -1,7 +1,7 @@
 import ContourPoints from "../ContourPoints";
 import Point, { centerPointOf } from "../../Point";
 
-const findMiddleBetweenPoints = (contour: ContourPoints) => {
+const _findMiddleBetweenPoints = (contour: ContourPoints) => {
   return (indexA: number, indexB: number): Point => {
     const pointA = contour.points[indexA];
     const pointB = contour.points[indexB];
@@ -9,4 +9,4 @@ const findMiddleBetweenPoints = (contour: ContourPoints) => {
   };
 };
 
-export default findMiddleBetweenPoints;
+export default _findMiddleBetweenPoints;

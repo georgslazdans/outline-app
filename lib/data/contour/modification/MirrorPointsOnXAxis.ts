@@ -1,6 +1,6 @@
 import ContourPoints from "../ContourPoints";
 
-const mirrorPointsOnXAxis = (contour: ContourPoints) => {
+const _mirrorPointsOnXAxis = (contour: ContourPoints) => {
   return (): ContourPoints => {
     return {
       points: contour.points.map((point) => {
@@ -10,4 +10,4 @@ const mirrorPointsOnXAxis = (contour: ContourPoints) => {
   };
 };
 
-export default mirrorPointsOnXAxis;
+export default _mirrorPointsOnXAxis;

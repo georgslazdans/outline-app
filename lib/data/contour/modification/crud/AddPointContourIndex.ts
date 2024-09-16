@@ -2,7 +2,7 @@ import ContourIndex from "../../ContourIndex";
 import ContourPoints, { modifyContour } from "../../ContourPoints";
 import Point from "../../../Point";
 
-const addPointContourIndex = (contour: ContourPoints[]) => {
+const _addPointContourIndex = (contour: ContourPoints[]) => {
   return (index: ContourIndex, point: Point): ContourPoints[] => {
     return contour.map((it, contourIndex) => {
       if (contourIndex == index.contour) {
@@ -13,4 +13,4 @@ const addPointContourIndex = (contour: ContourPoints[]) => {
   };
 };
 
-export default addPointContourIndex;
+export default _addPointContourIndex;

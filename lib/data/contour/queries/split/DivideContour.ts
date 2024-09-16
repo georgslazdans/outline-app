@@ -79,7 +79,7 @@ const findHolesFor = (
   });
 };
 
-const divideContour = (contour: ContourPoints[]) => {
+const _divideContour = (contour: ContourPoints[]) => {
   return (splitPoints: SplitPoints[]): ContourPoints[][] => {
     const getSegment = (
       startIndex: number,
@@ -143,4 +143,4 @@ const divideContour = (contour: ContourPoints[]) => {
   };
 };
 
-export default divideContour;
+export default _divideContour;

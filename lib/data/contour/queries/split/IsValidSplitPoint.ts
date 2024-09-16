@@ -15,7 +15,7 @@ const asSegments = (
   return segments;
 };
 
-const isValidSplitPoint = (contourPoints: ContourPoints[]) => {
+const _isValidSplitPoint = (contourPoints: ContourPoints[]) => {
   return (a: ContourIndex, b: ContourIndex, splitPoints: SplitPoints[]): boolean => {
     const { contour: outline, index: outlineIndex } =
       queryContourList(contourPoints).findLargestContourOf();
@@ -60,4 +60,4 @@ const isValidSplitPoint = (contourPoints: ContourPoints[]) => {
   };
 };
 
-export default isValidSplitPoint;
+export default _isValidSplitPoint;
