@@ -3,6 +3,7 @@
 import React, { ChangeEvent } from "react";
 import { useEditorContext } from "../EditorContext";
 import NumberField, { NumberRange } from "@/components/fields/NumberField";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
   value?: string | number;
@@ -11,6 +12,7 @@ type Props = {
   className?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   numberRange?: NumberRange;
+  tooltip?: string;
 };
 
 const EditField = ({
@@ -20,6 +22,7 @@ const EditField = ({
   onChange,
   className,
   numberRange,
+  tooltip,
 }: Props) => {
   const { setInputFieldFocused } = useEditorContext();
 
@@ -43,6 +46,11 @@ const EditField = ({
         onBlur={onBlur}
         onFocus={onFocus}
       ></NumberField>
+      {tooltip && (
+        <Tooltip anchorSelect={"#" + name} place="top">
+          {tooltip}
+        </Tooltip>
+      )}
     </>
   );
 };

@@ -35,23 +35,24 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
           className="w-full"
           value={params.xSize}
           onChange={handleNumberChange("xSize")}
-          label={"x Size"}
+          label={"X Size"}
           name={"xSize"}
         ></EditField>
         <EditField
           className="w-full"
           value={params.ySize}
           onChange={handleNumberChange("ySize")}
-          label={"y Size"}
+          label={"Y Size"}
           name={"ySize"}
         ></EditField>
       </div>
       <EditField
         value={params.height}
         onChange={handleNumberChange("height")}
-        label={"height"}
+        label={"Height"}
         name={"height"}
         numberRange={{ min: 0, max: 99999, step: 0.01 }}
+        tooltip="Resulting height is 42 multiplied by height value"
       ></EditField>
       <CheckboxField
         value={params.keepFull}
@@ -107,6 +108,13 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
           numberRange={{ min: 0, max: 99999, step: 0.01 }}
         ></EditField>
       )}
+      <EditField
+        value={params.gridSize}
+        onChange={handleNumberChange("gridSize")}
+        label={"Grid Size"}
+        name={"gridSize"}
+        numberRange={{ min: 0, max: 99999, step: 0.01 }}
+      ></EditField>
     </>
   );
 };
