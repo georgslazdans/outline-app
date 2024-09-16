@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import findLineSegmentClosestToPoint from "./FindLineSegmentClosestToPoint";
+import _findLineSegmentClosestToPoint from "./FindLineSegmentClosestToPoint";
 import ContourPoints from "../ContourPoints";
 import LineSegment from "../../line/LineSegment";
 
@@ -17,7 +17,7 @@ describe("findLineSegmentClosestToPoint", () => {
     };
     const point = p(1, 1);
 
-    const contourFunction = findLineSegmentClosestToPoint(contour);
+    const contourFunction = _findLineSegmentClosestToPoint(contour);
     expect(contourFunction(point)).toStrictEqual({
       a: p(0, 0),
       b: p(2, 2),
@@ -32,7 +32,7 @@ describe("findLineSegmentClosestToPoint", () => {
     };
     const point = p(0, 2);
 
-    const contourFunction = findLineSegmentClosestToPoint(contour);
+    const contourFunction = _findLineSegmentClosestToPoint(contour);
     expect(contourFunction(point)).toStrictEqual({
       a: p(0, 0),
       b: p(2, 2),
@@ -47,7 +47,7 @@ describe("findLineSegmentClosestToPoint", () => {
     };
     const point = p(4, 0);
 
-    const contourFunction = findLineSegmentClosestToPoint(contour);
+    const contourFunction = _findLineSegmentClosestToPoint(contour);
     expect(contourFunction(point)).toStrictEqual({
       a: p(3, 0),
       b: p(13, 0),

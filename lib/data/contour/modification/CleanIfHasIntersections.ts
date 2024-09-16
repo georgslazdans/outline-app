@@ -39,16 +39,16 @@ const cleanupIntersections = (
   }
 };
 
-const cleanIfHasIntersections = (points: Point[]): ContourPoints => {
+const _cleanIfHasIntersections = (points: Point[]): ContourPoints => {
   const intersections = findIntersectingSegments(toLineSegments(points));
   if (intersections.length > 0) {
     const result = cleanupIntersections({ points: points }, intersections);
     // Run it twice, with large values, the deletion of points can introduce new lines.
     // Might be wise to cover with more tests for bugs and maybe add more points inbetween.
-    return cleanIfHasIntersections(result.points);
+    return _cleanIfHasIntersections(result.points);
   } else {
     return { points: points };
   }
 };
 
-export default cleanIfHasIntersections;
+export default _cleanIfHasIntersections;

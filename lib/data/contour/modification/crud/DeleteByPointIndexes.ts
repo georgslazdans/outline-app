@@ -1,6 +1,6 @@
 import ContourPoints, { modifyContour } from "../../ContourPoints";
 
-const deleteByPointIndexes = (contour: ContourPoints) => {
+const _deleteByPointIndexes = (contour: ContourPoints) => {
   return (indexesToDelete: number[]) => {
     let updatedContour = contour;
     for (let i = indexesToDelete.length - 1; i >= 0; i--) {
@@ -12,4 +12,4 @@ const deleteByPointIndexes = (contour: ContourPoints) => {
   };
 };
 
-export default deleteByPointIndexes;
+export default _deleteByPointIndexes;

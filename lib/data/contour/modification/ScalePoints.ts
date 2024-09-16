@@ -1,7 +1,7 @@
 import Point from "../../Point";
 import ContourPoints from "../ContourPoints";
 
-const scalePoints = (contour: ContourPoints) => {
+const _scalePoints = (contour: ContourPoints) => {
   return (scaleFactor: number): ContourPoints => {
     return { points: scaleArray(contour.points, scaleFactor) };
   };
@@ -18,4 +18,4 @@ const scaleArray = (points: Point[], scaleFactor: number): Point[] => {
   return result;
 };
 
-export default scalePoints;
+export default _scalePoints;

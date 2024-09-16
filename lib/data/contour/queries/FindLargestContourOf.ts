@@ -6,7 +6,7 @@ type Result = {
   index: number;
 };
 
-const findLargestContourOf = (contourPoints: ContourPoints[]) => {
+const _findLargestContourOf = (contourPoints: ContourPoints[]) => {
   return (): Result => {
     let result = {
       value: contourPoints[0],
@@ -32,4 +32,4 @@ const findLargestContourOf = (contourPoints: ContourPoints[]) => {
   };
 };
 
-export default findLargestContourOf;
+export default _findLargestContourOf;

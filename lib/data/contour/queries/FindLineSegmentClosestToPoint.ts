@@ -7,7 +7,7 @@ const dotProduct = (v1: Point, v2: Point): number => {
   return v1.x * v2.x + v1.y * v2.y;
 };
 
-const findLineSegmentClosestToPoint = (contour: ContourPoints) => {
+const _findLineSegmentClosestToPoint = (contour: ContourPoints) => {
   return (point: Point): LineSegment => {
     const { point: closestPoint, index: closestIndex } = contour.points
       .map((it, index) => {
@@ -52,4 +52,4 @@ const findLineSegmentClosestToPoint = (contour: ContourPoints) => {
   };
 };
 
-export default findLineSegmentClosestToPoint;
+export default _findLineSegmentClosestToPoint;

@@ -1,9 +1,9 @@
 import ContourPoints from "../ContourPoints";
-import centerPoints from "./CenterPoints";
-import { crudListOnlyApi, crudSingleOnlyApi } from "./crud";
-import mirrorPointsOnXAxis from "./MirrorPointsOnXAxis";
-import scaleAlongNormal from "./ScaleAlongNormal";
-import scalePoints from "./ScalePoints";
+import _centerPoints from "./CenterPoints";
+import { _crudListOnlyApi, _crudSingleOnlyApi } from "./crud";
+import _mirrorPointsOnXAxis from "./MirrorPointsOnXAxis";
+import _scaleAlongNormal from "./ScaleAlongNormal";
+import _scalePoints from "./ScalePoints";
 
 type ModificationFunction = (
   contour: ContourPoints
@@ -11,22 +11,22 @@ type ModificationFunction = (
 
 const modificationApi = () => {
   return {
-    centerPoints: centerPoints,
-    mirrorPointsOnXAxis: mirrorPointsOnXAxis,
-    scaleAlongNormal: scaleAlongNormal,
-    scalePoints: scalePoints,
+    centerPoints: _centerPoints,
+    mirrorPointsOnXAxis: _mirrorPointsOnXAxis,
+    scaleAlongNormal: _scaleAlongNormal,
+    scalePoints: _scalePoints,
   };
 };
 
 const singleOnlyApi = () => {
   return {
-    ...crudSingleOnlyApi(),
+    ..._crudSingleOnlyApi(),
   };
 };
 
 const listOnlyApi = () => {
   return {
-    ...crudListOnlyApi(),
+    ..._crudListOnlyApi(),
   };
 };
 

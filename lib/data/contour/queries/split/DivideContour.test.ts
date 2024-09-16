@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import ContourPoints from "../../ContourPoints";
-import divideContour from "./DivideContour";
+import _divideContour from "./DivideContour";
 import SplitPoints from "@/components/editor/mode/contour/selection/SplitPoints";
 
 const p = (x: number, y: number) => {
@@ -39,7 +39,7 @@ describe("divideContour", () => {
 
     const expectedA = [p(1, 0), p(0, 0), p(0, 1), p(1, 1)];
     const expectedB = [p(1, 1), p(2, 1), p(2, 0), p(1, 0)];
-    const contourFunction = divideContour([contour]);
+    const contourFunction = _divideContour([contour]);
     const result = contourFunction(splitPoints);
     expect(result[1][0].points).toStrictEqual(expectedA);
     expect(result[0][0].points).toStrictEqual(expectedB);
@@ -63,7 +63,7 @@ describe("divideContour", () => {
     const expectedA = [p(1, 0), p(0, 0), p(0, 1), p(1, 1)];
     const expectedB = [p(1, 1), p(2, 1), p(2, 0), p(1, 0)];
     const expectedC = [p(2, 1), p(3, 1), p(3, 0), p(2, 0)];
-    const contourFunction = divideContour([contour]);
+    const contourFunction = _divideContour([contour]);
     const result = contourFunction(splitPoints);
     expect(result.length).toStrictEqual(3);
     expect(result[1][0].points).toStrictEqual(expectedA);
@@ -94,7 +94,7 @@ describe("divideContour", () => {
 
     const expectedA = [p(1, -1), p(0, -1), p(0, 1), p(1, 1)];
     const expectedB = [p(1, 1), p(2, 1), p(2, -1), p(1, -1)];
-    const contourFunction = divideContour([contour, hole]);
+    const contourFunction = _divideContour([contour, hole]);
     const result = contourFunction(splitPoints);
     expect(result[1][0].points).toStrictEqual(expectedA);
     expect(result[1][1].points).toStrictEqual(hole.points);
@@ -137,7 +137,7 @@ describe("divideContour", () => {
       sp(11, 14),
     ];
 
-    const contourFunction = divideContour([contour]);
+    const contourFunction = _divideContour([contour]);
     expect(contourFunction(splitPoints).length).toStrictEqual(6);
   });
 });
