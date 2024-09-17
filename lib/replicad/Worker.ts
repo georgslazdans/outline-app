@@ -59,6 +59,7 @@ const processItem = async (item: Item) => {
 
 const downloadBlob = async (modelData: ModelData) => {
   await waitForInitialization();
+  throw new Error("Oppsie!");
   return processData(modelData).blobSTL();
 };
 

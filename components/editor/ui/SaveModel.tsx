@@ -9,6 +9,7 @@ import { useLoading } from "@/context/LoadingContext";
 import { useEditorContext } from "../EditorContext";
 import { Tooltip } from "react-tooltip";
 import Model from "@/lib/Model";
+import { useErrorModal } from "@/components/error/ErrorContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -21,6 +22,8 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
   const { withHotkey } = useEditorContext();
   const { model, setModel } = useModelContext();
   const { setLoading } = useLoading();
+  const { showError } = useErrorModal();
+
 
   const saveModel = (newModel: Model) => {
     if (newModel.id) {
@@ -29,7 +32,7 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
           console.log("Model saved!", newModel.id);
         },
         (error) => {
-          console.error(error);
+          showError(error);
         }
       );
     } else {
@@ -39,7 +42,7 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
           console.log("Model saved!", newModel.id);
         },
         (error) => {
-          console.error(error);
+          showError(error);
         }
       );
     }

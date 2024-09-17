@@ -12,6 +12,8 @@ import Model from "@/lib/Model";
 import { defaultGridfinityParams } from "@/lib/replicad/model/item/GridfinityParams";
 import { gridfinityItemOf } from "@/lib/replicad/model/item/Gridfinity";
 import { useIndexedDB } from "react-indexed-db-hook";
+import { useErrorModal } from "@/components/error/ErrorContext";
+
 type ModelContextType = {
   model: Model;
   setModel: React.Dispatch<React.SetStateAction<Model>>;
@@ -21,6 +23,7 @@ const ModelContext = createContext<ModelContextType | undefined>(undefined);
 
 export const ModelProvider = ({ children }: { children: ReactNode }) => {
   const { update } = useIndexedDB("models");
+  const { showError } = useErrorModal();
 
   const defaultModel = {
     name: "Untitled",
@@ -37,11 +40,11 @@ export const ModelProvider = ({ children }: { children: ReactNode }) => {
           console.log("Model saved!", modelRef.current.id);
         },
         (error) => {
-          console.error(error);
+          showError(error);
         }
       );
     }
-  }, [update]);
+  }, [showError, update]);
 
   const createAutosaveTimeout = useCallback(() => {
     setTimeout(() => {

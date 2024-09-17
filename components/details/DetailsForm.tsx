@@ -19,7 +19,7 @@ import ImageField from "../fields/ImageField";
 import NumberField from "../fields/NumberField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import useNavigationHistory from "@/context/NavigationHistory";
-import PaperSettings from "@/lib/opencv/PaperSettings";
+import { useErrorModal } from "../error/ErrorContext";
 
 type Props = {
   dictionary: any;
@@ -64,6 +64,7 @@ const DetailsForm = ({ dictionary }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { detailsContext, setDetailsContext } = useDetails();
+  const { showError } = useErrorModal();
   const { setLoading } = useLoading();
   const { add } = useIndexedDB("details");
 
@@ -129,7 +130,7 @@ const DetailsForm = ({ dictionary }: Props) => {
         addHistory("/details");
         router.push("/calibration");
       },
-      (error) => console.error(error)
+      (error) => showError(error)
     );
   };
 

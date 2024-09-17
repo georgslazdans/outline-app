@@ -6,7 +6,7 @@ const findById = (data: ModelData, id?: string) => {
   const findInList = (items: Item[]): Item | undefined => {
     for (const item of items) {
       if (!item) {
-        console.warn("What is whit item?", item, items);
+        console.warn("What is this item?", item, items);
       }
       if (item.id == id) {
         return item;
