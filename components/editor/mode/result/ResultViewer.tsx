@@ -8,6 +8,7 @@ import ReplicadResult from "@/lib/replicad/WorkerResult";
 import { useEditorContext } from "../../EditorContext";
 import { useModelDataContext } from "../../ModelDataContext";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
+import { useErrorModal } from "@/components/error/ErrorContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -16,6 +17,7 @@ type Props = {
 const ResultViewer = ({ dictionary }: Props) => {
   const { modelData } = useModelDataContext();
   const { setIsLoading } = useModelLoadingIndicatorContext();
+  const { showError } = useErrorModal();
 
   const [modelResult, setModelResult] = useState<ReplicadResult>();
   const { wireframe } = useEditorContext();
@@ -30,11 +32,11 @@ const ResultViewer = ({ dictionary }: Props) => {
         worker.terminate();
       },
       (error) => {
-        console.error(error);
+        showError(error);
         setIsLoading(false);
       }
     );
-  }, [modelData, setIsLoading]);
+  }, [modelData, setIsLoading, showError]);
 
   return (
     <>

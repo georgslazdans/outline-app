@@ -11,7 +11,7 @@ import { useDetails } from "@/context/DetailsContext";
 import { applyDefaults, defaultSettings } from "@/lib/opencv/Settings";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../error/ErrorMessage";
 import BottomButtons from "./BottomButtons";
 import useNavigationHistory from "@/context/NavigationHistory";
 import StepName from "@/lib/opencv/processor/steps/StepName";

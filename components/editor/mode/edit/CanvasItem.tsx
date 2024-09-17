@@ -12,6 +12,7 @@ import TransformControls from "./three/TransformControls";
 import { useModelDataContext } from "../../ModelDataContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import ThreejsPrimitive from "./three/ThreejsPrimitive";
+import { useErrorModal } from "@/components/error/ErrorContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -29,6 +30,7 @@ const CanvasItem = memo(function CanvasItem({
   const { getModel } = useModelCache();
   const [model, setModel] = useState<ReplicadResult>();
   const [modelKey, setModelKey] = useState<string>();
+  const { showError } = useErrorModal();
 
   useEffect(() => {
     const key = modelKeyOf(item);
@@ -37,15 +39,17 @@ const CanvasItem = memo(function CanvasItem({
         setModel(undefined);
       }
       const work = getModel(item);
-      work.promise.then((result) => {
-        setModel(result);
-        setModelKey(key);
-      });
+      work.promise
+        .then((result) => {
+          setModel(result);
+          setModelKey(key);
+        })
+        .catch(showError);
       return () => {
         work.cancel();
       };
     }
-  }, [getModel, item, modelKey]);
+  }, [getModel, item, modelKey, showError]);
 
   const isSelected = () => {
     if (selectedId) {

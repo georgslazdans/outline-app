@@ -3,6 +3,7 @@ import React, { createContext, ReactNode, useContext, useRef } from "react";
 import newWorkerInstance from "../ReplicadWorker";
 import Item, { modelKeyOf, withoutItemData } from "@/lib/replicad/model/Item";
 import { useModelLoadingIndicatorContext } from "./ModelLoadingIndicatorContext";
+import { useErrorModal } from "@/components/error/ErrorContext";
 
 const ModelCacheContext = createContext<any>(null);
 
@@ -19,6 +20,7 @@ export const ModelCacheProvider = ({ children }: Props) => {
   const cacheRef = useRef(new Map<string, ReplicadResult>());
   const workInstancesRef = useRef<Map<string, WorkInstance>>(new Map());
   const { isLoading, setIsLoading } = useModelLoadingIndicatorContext();
+  const { showError } = useErrorModal();
 
   const addToCache = (key: string, result: ReplicadResult) => {
     cacheRef.current.set(key, result);
@@ -60,11 +62,13 @@ export const ModelCacheProvider = ({ children }: Props) => {
       worker.terminate();
     };
 
-    const promise = api.processItem(item).then((result) => {
-      addToCache(key, result);
-      cancel();
-      return result;
-    });
+    const promise = api
+      .processItem(item)
+      .then((result) => {
+        addToCache(key, result);
+        cancel();
+        return result;
+      });
 
     const instance = { promise, cancel };
     addWorkInstance(key, instance);

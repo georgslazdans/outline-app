@@ -8,6 +8,7 @@ import newWorkerInstance from "../../ReplicadWorker";
 import { useModelDataContext } from "../../ModelDataContext";
 import { Tooltip } from "react-tooltip";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
+import { useErrorModal } from "@/components/error/ErrorContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -16,6 +17,7 @@ type Props = {
 const ResultToolbar = ({ dictionary }: Props) => {
   const { modelData } = useModelDataContext();
   const { setIsLoading } = useModelLoadingIndicatorContext();
+  const { showError } = useErrorModal();
 
   const onDownload = useCallback(() => {
     const { api, worker } = newWorkerInstance();
@@ -27,11 +29,11 @@ const ResultToolbar = ({ dictionary }: Props) => {
         worker.terminate();
       },
       (error) => {
-        console.error(error);
+        showError(error);
         setIsLoading(false);
       }
     );
-  }, [modelData, setIsLoading]);
+  }, [modelData, setIsLoading, showError]);
 
   return (
     <>
