@@ -8,7 +8,8 @@ import * as Comlink from "comlink";
 export interface WorkerApi {
   processModelData: (modelData: ModelData) => Promise<ReplicadResult>;
   processItem: (item: Item) => Promise<ReplicadResult>;
-  downloadBlob: (modelData: ModelData) => Promise<Blob>;
+  downloadStl: (modelData: ModelData) => Promise<Blob>;
+  downloadStep: (modelData: ModelData) => Promise<Blob>;
   [Comlink.releaseProxy]: () => void;
 }
 
