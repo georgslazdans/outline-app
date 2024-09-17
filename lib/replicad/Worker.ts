@@ -57,9 +57,14 @@ const processItem = async (item: Item) => {
   return asMesh(drawItem(item));
 };
 
-const downloadBlob = async (modelData: ModelData) => {
+const downloadStl = async (modelData: ModelData) => {
   await waitForInitialization();
   return processData(modelData).blobSTL();
 };
 
-Comlink.expose({ processModelData, processItem, downloadBlob });
+const downloadStep = async (modelData: ModelData) => {
+  await waitForInitialization();
+  return processData(modelData).blobSTEP();
+};
+
+Comlink.expose({ processModelData, processItem, downloadStl, downloadStep });
