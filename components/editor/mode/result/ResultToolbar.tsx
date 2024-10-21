@@ -9,22 +9,28 @@ import { Tooltip } from "react-tooltip";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
 import { useErrorModal } from "@/components/error/ErrorContext";
 import { useResultContext } from "./ResultContext";
+import { useModelContext } from "@/context/ModelContext";
 
 type Props = {
   dictionary: Dictionary;
 };
 
 const ResultToolbar = ({ dictionary }: Props) => {
+  const { model } = useModelContext();
   const { modelData } = useModelDataContext();
   const { setIsLoading } = useModelLoadingIndicatorContext();
   const { showError } = useErrorModal();
   const { api } = useResultContext();
 
+  const getExportName = useCallback(() => {
+    return model.name.toLowerCase().replaceAll(" ", "_");
+  }, [model.name]);
+
   const onStlDownload = useCallback(() => {
     setIsLoading(true);
     api?.downloadStl(modelData).then(
       (blob) => {
-        downloadFile(blob as Blob, "export.stl");
+        downloadFile(blob as Blob, `${getExportName()}.stl`);
         setIsLoading(false);
       },
       (error) => {
@@ -32,13 +38,13 @@ const ResultToolbar = ({ dictionary }: Props) => {
         setIsLoading(false);
       }
     );
-  }, [api, modelData, setIsLoading, showError]);
+  }, [api, getExportName, modelData, setIsLoading, showError]);
 
   const onStepDownload = useCallback(() => {
     setIsLoading(true);
     api?.downloadStep(modelData).then(
       (blob) => {
-        downloadFile(blob as Blob, "export.step");
+        downloadFile(blob as Blob, `${getExportName()}.step`);
         setIsLoading(false);
       },
       (error) => {
@@ -46,7 +52,7 @@ const ResultToolbar = ({ dictionary }: Props) => {
         setIsLoading(false);
       }
     );
-  }, [api, modelData, setIsLoading, showError]);
+  }, [api, getExportName, modelData, setIsLoading, showError]);
 
   return (
     <>
