@@ -59,7 +59,7 @@ const processItem = async (item: Item) => {
 
 const downloadStl = async (modelData: ModelData) => {
   await waitForInitialization();
-  return processData(modelData).blobSTL();
+  return processData(modelData).blobSTL({binary: true});
 };
 
 const downloadStep = async (modelData: ModelData) => {
