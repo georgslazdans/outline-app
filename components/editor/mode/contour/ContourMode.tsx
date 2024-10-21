@@ -25,6 +25,9 @@ const ContourMode = ({
         ></ContourModeToolbar>
       );
     },
+    contextProvider: (children: JSX.Element) => {
+      return <>{children}</>;
+    }
   };
   return mode;
 };

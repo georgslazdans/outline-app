@@ -4,52 +4,55 @@ import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import React, { useCallback } from "react";
 import { downloadFile } from "@/lib/utils/Download";
-import newWorkerInstance from "../../ReplicadWorker";
 import { useModelDataContext } from "../../ModelDataContext";
 import { Tooltip } from "react-tooltip";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
 import { useErrorModal } from "@/components/error/ErrorContext";
+import { useResultContext } from "./ResultContext";
+import { useModelContext } from "@/context/ModelContext";
 
 type Props = {
   dictionary: Dictionary;
 };
 
 const ResultToolbar = ({ dictionary }: Props) => {
+  const { model } = useModelContext();
   const { modelData } = useModelDataContext();
   const { setIsLoading } = useModelLoadingIndicatorContext();
   const { showError } = useErrorModal();
+  const { api } = useResultContext();
+
+  const getExportName = useCallback(() => {
+    return model.name.toLowerCase().replaceAll(" ", "_");
+  }, [model.name]);
 
   const onStlDownload = useCallback(() => {
-    const { api, worker } = newWorkerInstance();
     setIsLoading(true);
-    api.downloadStl(modelData).then(
+    api?.downloadStl(modelData).then(
       (blob) => {
-        downloadFile(blob as Blob, "export.stl");
+        downloadFile(blob as Blob, `${getExportName()}.stl`);
         setIsLoading(false);
-        worker.terminate();
       },
       (error) => {
         showError(error);
         setIsLoading(false);
       }
     );
-  }, [modelData, setIsLoading, showError]);
+  }, [api, getExportName, modelData, setIsLoading, showError]);
 
   const onStepDownload = useCallback(() => {
-    const { api, worker } = newWorkerInstance();
     setIsLoading(true);
-    api.downloadStep(modelData).then(
+    api?.downloadStep(modelData).then(
       (blob) => {
-        downloadFile(blob as Blob, "export.step");
+        downloadFile(blob as Blob, `${getExportName()}.step`);
         setIsLoading(false);
-        worker.terminate();
       },
       (error) => {
         showError(error);
         setIsLoading(false);
       }
     );
-  }, [modelData, setIsLoading, showError]);
+  }, [api, getExportName, modelData, setIsLoading, showError]);
 
   return (
     <>

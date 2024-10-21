@@ -25,6 +25,9 @@ const EditMode = ({
         ></EditToolbar>
       );
     },
+    contextProvider: (children: JSX.Element) => {
+      return <>{children}</>;
+    }
   };
   return mode;
 };
