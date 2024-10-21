@@ -3,12 +3,12 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useEffect, useState } from "react";
 import ReplicadMesh from "../../scene/ReplicadMesh";
-import newWorkerInstance from "../../ReplicadWorker";
 import ReplicadResult from "@/lib/replicad/WorkerResult";
 import { useEditorContext } from "../../EditorContext";
 import { useModelDataContext } from "../../ModelDataContext";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
 import { useErrorModal } from "@/components/error/ErrorContext";
+import { useResultContext } from "./ResultContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -21,22 +21,21 @@ const ResultViewer = ({ dictionary }: Props) => {
 
   const [modelResult, setModelResult] = useState<ReplicadResult>();
   const { wireframe } = useEditorContext();
+  const { api } = useResultContext();
 
   useEffect(() => {
     setIsLoading(true);
-    const { api, worker } = newWorkerInstance();
-    api.processModelData(modelData).then(
+    api?.processModelData(modelData).then(
       (result) => {
         setIsLoading(false);
         setModelResult(result as ReplicadResult);
-        worker.terminate();
       },
       (error) => {
         showError(error);
         setIsLoading(false);
       }
     );
-  }, [modelData, setIsLoading, showError]);
+  }, [api, modelData, setIsLoading, showError]);
 
   return (
     <>

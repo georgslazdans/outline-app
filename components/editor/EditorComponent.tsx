@@ -42,7 +42,7 @@ const EditorComponent = ({ dictionary }: Props) => {
 
   const currentEditorMode = editorModes[editorMode];
 
-  return (
+  const content = (
     <>
       <div className="flex flex-col h-[95vh] xl:h-full">
         <ModelName dictionary={dictionary}></ModelName>
@@ -79,6 +79,8 @@ const EditorComponent = ({ dictionary }: Props) => {
       </div>
     </>
   );
+
+  return currentEditorMode.contextProvider(content)
 };
 
 export default EditorComponent;

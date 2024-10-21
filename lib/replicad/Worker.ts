@@ -1,7 +1,3 @@
-import opencascade from "replicad-opencascadejs/src/replicad_single.js";
-// @ts-ignore
-import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { loadFont, setOC } from "replicad";
 import ModelData from "./model/ModelData";
 import * as Comlink from "comlink";
 import { processModelData as processData } from "./ModelProcessor";
@@ -10,27 +6,7 @@ import ItemType from "./model/ItemType";
 import ReplicadModelData from "./draw/ReplicadModelData";
 import { drawItem } from "./draw/Draw";
 import { v4 as randomUUID } from "uuid";
-
-let initialized = false;
-
-const initializedPromise = new Promise<void>(async (resolve) => {
-  if (initialized) {
-    resolve();
-  } else {
-    // @ts-ignore
-    const OC = await opencascade({
-      locateFile: () => opencascadeWasm,
-    });
-
-    setOC(OC);
-    await loadFont("/fonts/Roboto-Regular.ttf");
-    resolve();
-  }
-});
-
-const waitForInitialization = async () => {
-  await initializedPromise;
-};
+import { waitForInitialization } from "./WorkerInitialization";
 
 const asMesh = (data: ReplicadModelData, messageId?: string) => {
   return {
@@ -38,13 +14,6 @@ const asMesh = (data: ReplicadModelData, messageId?: string) => {
     faces: data.mesh(),
     edges: data.meshEdges(),
   };
-};
-
-const processModelData = async (modelData: ModelData) => {
-  await waitForInitialization();
-  console.debug("Processing modelData", modelData);
-  const result = processData(modelData);
-  return asMesh(result);
 };
 
 const processItem = async (item: Item) => {
@@ -57,14 +26,50 @@ const processItem = async (item: Item) => {
   return asMesh(drawItem(item));
 };
 
+type ResultCache = {
+  key: string | undefined;
+  modelPromise: Promise<ReplicadModelData> | undefined;
+};
+
+const cachedResult: ResultCache = {
+  key: undefined,
+  modelPromise: undefined,
+};
+
+const replicadModelDataOf = (
+  modelData: ModelData
+): Promise<ReplicadModelData> => {
+  const key = JSON.stringify(modelData);
+  let result: Promise<ReplicadModelData>;
+  if (key == cachedResult.key && cachedResult.modelPromise) {
+    result = cachedResult.modelPromise;
+  } else {
+    result = new Promise<ReplicadModelData>(async (resolve) => {
+      resolve(processData(modelData));
+    });
+    cachedResult.key = key
+    cachedResult.modelPromise = result;
+  }
+  return result;
+};
+
+const processModelData = async (modelData: ModelData) => {
+  await waitForInitialization();
+  console.debug("Processing modelData", modelData);
+  const result = await replicadModelDataOf(modelData);
+  return asMesh(result);
+};
+
 const downloadStl = async (modelData: ModelData) => {
   await waitForInitialization();
-  return processData(modelData).blobSTL({binary: true});
+  const result = await replicadModelDataOf(modelData);
+  return result.blobSTL({ binary: true });
 };
 
 const downloadStep = async (modelData: ModelData) => {
   await waitForInitialization();
-  return processData(modelData).blobSTEP();
+  const result = await replicadModelDataOf(modelData);
+  return result.blobSTEP();
 };
 
 Comlink.expose({ processModelData, processItem, downloadStl, downloadStep });

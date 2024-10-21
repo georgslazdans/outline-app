@@ -4,11 +4,11 @@ import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import React, { useCallback } from "react";
 import { downloadFile } from "@/lib/utils/Download";
-import newWorkerInstance from "../../ReplicadWorker";
 import { useModelDataContext } from "../../ModelDataContext";
 import { Tooltip } from "react-tooltip";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
 import { useErrorModal } from "@/components/error/ErrorContext";
+import { useResultContext } from "./ResultContext";
 
 type Props = {
   dictionary: Dictionary;
@@ -18,38 +18,35 @@ const ResultToolbar = ({ dictionary }: Props) => {
   const { modelData } = useModelDataContext();
   const { setIsLoading } = useModelLoadingIndicatorContext();
   const { showError } = useErrorModal();
+  const { api } = useResultContext();
 
   const onStlDownload = useCallback(() => {
-    const { api, worker } = newWorkerInstance();
     setIsLoading(true);
-    api.downloadStl(modelData).then(
+    api?.downloadStl(modelData).then(
       (blob) => {
         downloadFile(blob as Blob, "export.stl");
         setIsLoading(false);
-        worker.terminate();
       },
       (error) => {
         showError(error);
         setIsLoading(false);
       }
     );
-  }, [modelData, setIsLoading, showError]);
+  }, [api, modelData, setIsLoading, showError]);
 
   const onStepDownload = useCallback(() => {
-    const { api, worker } = newWorkerInstance();
     setIsLoading(true);
-    api.downloadStep(modelData).then(
+    api?.downloadStep(modelData).then(
       (blob) => {
         downloadFile(blob as Blob, "export.step");
         setIsLoading(false);
-        worker.terminate();
       },
       (error) => {
         showError(error);
         setIsLoading(false);
       }
     );
-  }, [modelData, setIsLoading, showError]);
+  }, [api, modelData, setIsLoading, showError]);
 
   return (
     <>
