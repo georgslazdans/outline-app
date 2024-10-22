@@ -27,7 +27,7 @@ const ThreeJsEnvironment = forwardRef(function ThreeJsEnvironment(
         dpr={dpr}
         orthographic
         frameloop="demand"
-        camera={{ position: [0, 0, 2], zoom: 100, near: 0.00001, fov: 90 }}
+        camera={{ position: [0, 0, 20], zoom: 100, near: 0.00001, fov: 90 }}
         gl={{ preserveDrawingBuffer: true }} // Fix for saving blob from canvas
       >
         <CameraControls></CameraControls>
