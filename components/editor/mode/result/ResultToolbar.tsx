@@ -9,7 +9,7 @@ import { Tooltip } from "react-tooltip";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
 import { useErrorModal } from "@/components/error/ErrorContext";
 import { useResultContext } from "./ResultContext";
-import { useModelContext } from "@/context/ModelContext";
+import { useModelContext } from "@/components/editor/ModelContext";
 
 type Props = {
   dictionary: Dictionary;

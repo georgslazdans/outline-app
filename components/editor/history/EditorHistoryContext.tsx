@@ -1,6 +1,6 @@
 "use client";
 
-import { useModelContext } from "@/context/ModelContext";
+import { useModelContext } from "@/components/editor/ModelContext";
 import ModelData from "@/lib/replicad/model/ModelData";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import HistoryData, {

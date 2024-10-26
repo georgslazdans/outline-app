@@ -2,7 +2,7 @@ import React, { createContext, useContext, ReactNode, useEffect } from "react";
 import ModelData from "@/lib/replicad/model/ModelData";
 import EditorHistoryType from "./history/EditorHistoryType";
 import { useEditorHistoryContext } from "./history/EditorHistoryContext";
-import { useModelContext } from "@/context/ModelContext";
+import { useModelContext } from "@/components/editor/ModelContext";
 import { useEditorContext } from "./EditorContext";
 
 export type SetModelDataType = (
