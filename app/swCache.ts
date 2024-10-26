@@ -150,6 +150,19 @@ export const outlineAppCache: RuntimeCaching[] =
           }),
         },
         {
+          matcher: /\.(?:wasm)$/i,
+          handler: new CacheFirst({
+            cacheName: "static-wasm-assets",
+            plugins: [
+              new ExpirationPlugin({
+                maxEntries: 48,
+                maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+                maxAgeFrom: "last-used",
+              }),
+            ],
+          }),
+        },
+        {
           matcher: /\.(?:css|less)$/i,
           handler: new CacheFirst({
             cacheName: "static-style-assets",
@@ -226,7 +239,7 @@ export const outlineAppCache: RuntimeCaching[] =
             request.headers.get("Next-Router-Prefetch") === "1" &&
             sameOrigin &&
             !pathname.startsWith("/api/"),
-          handler: new CacheFirst({
+          handler: new NetworkFirst({
             cacheName: PAGES_CACHE_NAME.rscPrefetch,
             plugins: [
               new ExpirationPlugin({
@@ -241,7 +254,7 @@ export const outlineAppCache: RuntimeCaching[] =
             request.headers.get("RSC") === "1" &&
             sameOrigin &&
             !pathname.startsWith("/api/"),
-          handler: new CacheFirst({
+          handler: new NetworkFirst({
             cacheName: PAGES_CACHE_NAME.rsc,
             plugins: [
               new ExpirationPlugin({
@@ -256,7 +269,7 @@ export const outlineAppCache: RuntimeCaching[] =
             request.headers.get("Content-Type")?.includes("text/html") &&
             sameOrigin &&
             !pathname.startsWith("/api/"),
-          handler: new CacheFirst({
+          handler: new NetworkFirst({
             cacheName: PAGES_CACHE_NAME.html,
             plugins: [
               new ExpirationPlugin({
@@ -269,7 +282,7 @@ export const outlineAppCache: RuntimeCaching[] =
         {
           matcher: ({ url: { pathname }, sameOrigin }) =>
             sameOrigin && !pathname.startsWith("/api/"),
-          handler: new CacheFirst({
+          handler: new NetworkFirst({
             cacheName: "others",
             plugins: [
               new ExpirationPlugin({
