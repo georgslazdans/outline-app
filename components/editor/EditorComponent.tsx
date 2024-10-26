@@ -24,7 +24,7 @@ type Props = {
 const EditorComponent = ({ dictionary }: Props) => {
   Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
-  const canvasRef = useRef<HTMLCanvasElement>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { editorMode } = useEditorContext();
 
