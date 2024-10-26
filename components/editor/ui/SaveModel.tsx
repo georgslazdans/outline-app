@@ -1,10 +1,10 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React, { Ref, RefObject } from "react";
+import React, { RefObject } from "react";
 import Button from "../../Button";
 import { useIndexedDB } from "react-indexed-db-hook";
-import { useModelContext } from "../../../context/ModelContext";
+import { useModelContext } from "../ModelContext";
 import { useLoading } from "@/context/LoadingContext";
 import { useEditorContext } from "../EditorContext";
 import { Tooltip } from "react-tooltip";

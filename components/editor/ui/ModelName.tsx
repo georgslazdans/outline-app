@@ -3,7 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useState } from "react";
 import InputField from "../../fields/InputField";
-import { useModelContext } from "../../../context/ModelContext";
+import { useModelContext } from "../ModelContext";
 import { useEditorContext } from "../EditorContext";
 import { Tooltip } from "react-tooltip";
 
