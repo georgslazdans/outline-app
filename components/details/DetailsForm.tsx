@@ -20,6 +20,7 @@ import NumberField from "../fields/NumberField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { useErrorModal } from "../error/ErrorContext";
+import { idQuery } from "@/lib/utils/UrlParams";
 
 type Props = {
   dictionary: any;
@@ -128,7 +129,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       (dbId) => {
         setDetailsContext({ ...newContext, id: dbId });
         addHistory("/details");
-        router.push("/calibration");
+        router.push("/calibration" + "?" + idQuery(dbId.toString()));
       },
       (error) => showError(error)
     );

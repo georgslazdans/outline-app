@@ -15,6 +15,7 @@ import {
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
+import { useSearchParams } from "next/navigation";
 
 const DetailsContext = createContext<any>(null);
 
@@ -30,29 +31,47 @@ export type Context = {
   contours: ContourPoints[];
   settings: Settings;
   addDate: Date;
-  paperImage?: ImageData
+  paperImage?: ImageData;
 };
 
 const DetailsProvider = ({ children }: Props) => {
   const [detailsContext, setDetailsContext] = useState<Context>();
-  const { getAll } = useIndexedDB("details");
+  const { getAll, getByID } = useIndexedDB("details");
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!detailsContext) {
-      getAll().then((allContexts) => {
-        if (allContexts && allContexts.length > 0) {
-          const loadedContext = allContexts.pop();
-          getImageData(loadedContext.imageFile, canvasRef.current).then(
-            (data) => {
-              setDetailsContext({ ...loadedContext, imageData: data });
-            }
-          );
-        }
-      });
+    const urlId = searchParams.get("id");
+    if (urlId) {
+      const id = Number.parseInt(urlId);
+      if (detailsContext?.id != id) {
+        getByID(id).then((dbModel) => {
+          if (dbModel) {
+            getImageData(dbModel.imageFile, canvasRef.current).then(
+              (data) => {
+                setDetailsContext({ ...dbModel, imageData: data });
+              }
+            );
+          }
+        });
+      }
+    } else {
+      if (!detailsContext) {
+        getAll().then((allContexts) => {
+          if (allContexts && allContexts.length > 0) {
+            const loadedContext = allContexts.pop();
+            getImageData(loadedContext.imageFile, canvasRef.current).then(
+              (data) => {
+                setDetailsContext({ ...loadedContext, imageData: data });
+              }
+            );
+          }
+        });
+      }
     }
-  }, [detailsContext, getAll]);
+  }, [getAll, getByID, detailsContext, searchParams]);
+
 
   return (
     <DetailsContext.Provider value={{ detailsContext, setDetailsContext }}>

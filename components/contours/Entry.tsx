@@ -13,6 +13,7 @@ import { useIndexedDB } from "react-indexed-db-hook";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { modifyContourList } from "@/lib/data/contour/ContourPoints";
+import { idQuery } from "@/lib/utils/UrlParams";
 
 type Props = {
   context: Context;
@@ -21,16 +22,15 @@ type Props = {
 };
 
 const Entry = ({ context, dictionary, onDelete }: Props) => {
-  const { detailsContext, setDetailsContext } = useDetails();
+  const { setDetailsContext } = useDetails();
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("details");
 
   const openSettings = () => {
     setDetailsContext(context);
-
     addHistory("/contours");
-    router.push("/calibration");
+    router.push("/calibration" + "?" + idQuery(context.id!.toString()));
   };
 
   const hasSvg = !!context.contours;

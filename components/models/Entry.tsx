@@ -9,6 +9,7 @@ import useNavigationHistory from "@/context/NavigationHistory";
 import Model from "@/lib/Model";
 import EntryField from "../contours/EntryField";
 import BlobImage from "../image/BlobImage";
+import { idQuery } from "@/lib/utils/UrlParams";
 
 type Props = {
     dictionary: Dictionary;
@@ -20,12 +21,6 @@ const Entry = ({dictionary, model, onDelete}: Props) => {
     const router = useRouter();
     const {addHistory} = useNavigationHistory();
     const {deleteRecord} = useIndexedDB("models");
-
-    const idQuery = (value: string) => {
-        const params = new URLSearchParams()
-        params.set("id", value)
-        return params.toString()
-    };
 
     const openModelEditor = () => {
         addHistory("/models");
