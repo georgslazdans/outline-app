@@ -23,4 +23,13 @@ export const stepResultsBefore = (
   return result;
 };
 
+export const findStep = (stepName: StepName) => {
+  return {
+    in: (steps: StepResult[]) => {
+      console.log("Step results", steps);
+      return steps.find((it) => it.stepName == stepName)!;
+    },
+  };
+};
+
 export default StepResult;

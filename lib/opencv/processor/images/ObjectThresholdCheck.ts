@@ -1,15 +1,15 @@
 import * as cv from "@techstark/opencv-js";
-import Point from "../../data/Point";
-import StepResult from "../StepResult";
-import imageWarper from "./ImageWarper";
-import imageDataOf, { imageOf } from "../util/ImageData";
-import ColorSpace from "../util/ColorSpace";
+import Point from "../../../data/Point";
+import StepResult from "../../StepResult";
+import imageWarper from "../ImageWarper";
+import imageDataOf, { imageOf } from "../../util/ImageData";
+import ColorSpace from "../../util/ColorSpace";
 import PaperSettings, {
   paperDimensionsOf,
   paperSettingsOf,
-} from "../PaperSettings";
-import Settings from "../Settings";
-import StepName from "./steps/StepName";
+} from "../../PaperSettings";
+import Settings from "../../Settings";
+import StepName from "../steps/StepName";
 
 const objectThresholdCheckOf = (
   steps: StepResult[],

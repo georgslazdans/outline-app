@@ -12,6 +12,7 @@ import { allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
 import deepEqual from "@/lib/utils/Objects";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useDetails } from "@/context/DetailsContext";
+import { useResultContext } from "./ResultContext";
 
 export interface WorkerApi {
   processOutlineImage: (data: ProcessAll) => Promise<WorkerResult>;
@@ -20,12 +21,10 @@ export interface WorkerApi {
 }
 
 export const useOpenCvWorker = (
-  stepResults: StepResult[],
-  setStepResults: React.Dispatch<React.SetStateAction<StepResult[]>>,
-  setCheckImages: (outline: ImageData, threshold?: ImageData) => void,
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
   const { detailsContext } = useDetails();
+  const { stepResults, updateResult } = useResultContext();
   const { setLoading } = useLoading();
   const [previousSettings, setPreviousSettings] = useState<Settings>();
   const { api: openCvApi } = useMemo(() => newWorkerInstance(), []);
@@ -36,31 +35,34 @@ export const useOpenCvWorker = (
   );
 
   const updateStepResults = useCallback(
-    (newResult: StepResult[]) => {
-      setStepResults((previousResult) => {
-        const updatedResult = [...previousResult];
-        newResult.forEach((newStep) => {
-          const index = updatedResult.findIndex(
-            (step) => step.stepName === newStep.stepName
-          );
-          if (index !== -1) {
-            updatedResult[index] = newStep;
-          } else {
-            updatedResult.push(newStep);
-          }
-        });
-        return updatedResult;
+    (newResult: StepResult[]): StepResult[] => {
+      const updatedResult = [...stepResults];
+      newResult.forEach((newStep) => {
+        const index = updatedResult.findIndex(
+          (step) => step.stepName === newStep.stepName
+        );
+        if (index !== -1) {
+          updatedResult[index] = newStep;
+        } else {
+          updatedResult.push(newStep);
+        }
       });
+      return updatedResult;
     },
-    [setStepResults]
+    []
   );
 
   const handleWorkerResult = useCallback(
     (data: WorkerResult) => {
       setLoading(false);
       if (data.status === "success") {
-        updateStepResults(data.result.data!);
-        setCheckImages(data.outlineCheckImage, data.thresholdCheck);
+        const updatedStepResults = updateStepResults(data.result.data!);
+        updateResult(
+          updatedStepResults,
+          data.outlineCheckImage,
+          data.paperOutlineImages,
+          data.thresholdCheck
+        );
         setErrorMessage(undefined);
       } else if (data.status === "failed") {
         updateStepResults(data.result.data!);
@@ -69,7 +71,7 @@ export const useOpenCvWorker = (
         setErrorMessage(data.error);
       }
     },
-    [setLoading, updateStepResults, setCheckImages, setErrorMessage]
+    [setLoading, updateStepResults, updateResult, setErrorMessage]
   );
 
   const updateCurrentStepData = useCallback(

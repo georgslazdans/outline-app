@@ -9,6 +9,7 @@ import blurStep from "@/lib/opencv/processor/steps/Blur";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshold";
 import binaryThresholdStep from "@/lib/opencv/processor/steps/BinaryThreshold";
+import CalibrationSettingStep from "./CalibrationSettingStep";
 
 const BLUR_WIDTH = "blurWidth";
 const BLOCK_SIZE = "blockSize";
@@ -58,7 +59,11 @@ const FindObjectSettings = ({
   };
   return (
     <>
-      <SettingGroup dictionary={dictionary} name="findObject">
+      <SettingGroup
+        dictionary={dictionary}
+        name="findObject"
+        settingStep={CalibrationSettingStep.FIND_OBJECT}
+      >
         {!inSettings(settings).isBlurReused() && (
           <StepSettingField
             value={settings[StepName.BLUR_OBJECT][BLUR_WIDTH]}

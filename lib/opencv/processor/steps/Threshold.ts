@@ -34,7 +34,6 @@ const thresholdOf: Process<ThresholdSettings> = (
   } else {
     return binaryThresholdStep.process(
       image,
-
       settings.binarySettings,
       previous
     );

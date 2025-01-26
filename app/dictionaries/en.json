@@ -44,6 +44,7 @@
       "cannyPaper": "Canny Paper",
       "cannyObject": "Canny Object",
       "extractObject": "Extract Object",
+      "findPaperOutline": "Find Paper Outline",
       "extractPaper": "Extract Paper",
       "grayScale": "Gray Scale",
       "grayScaleObject": "Gray Scale Object",
@@ -85,7 +86,8 @@
       "iterations": "Iterations",
       "closeCornerSettings": "Close Corners",
       "disabled": "Disabled",
-      "reuseStep": "Reuse Step"
+      "reuseStep": "Reuse Step",
+      "paperIndex": "Paper Index"
     },
     "simpleSettings": {
       "title": "Settings",

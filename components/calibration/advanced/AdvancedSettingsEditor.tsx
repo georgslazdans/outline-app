@@ -10,6 +10,7 @@ import StepSetting, {
   eventFieldConverterFor,
 } from "@/lib/opencv/processor/steps/StepSettings";
 import Settings from "@/lib/opencv/Settings";
+import StepResult from "@/lib/opencv/StepResult";
 
 type Props = {
   dictionary: Dictionary;
@@ -24,7 +25,7 @@ export const AdvancedSettingsEditor = ({
   currentSetting,
   settings,
   step,
-  onChange,
+  onChange
 }: Props) => {
   if (!step || !currentSetting) {
     return null;

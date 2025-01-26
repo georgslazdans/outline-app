@@ -9,10 +9,13 @@ import blurStep from "@/lib/opencv/processor/steps/Blur";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshold";
 import bilateralFilterStep from "@/lib/opencv/processor/steps/BilateralFilter";
+import extractPaperStep from "@/lib/opencv/processor/steps/ExtractPaper";
+import CalibrationSettingStep from "./CalibrationSettingStep";
 
 const PIXEL_DIAMETER = "pixelDiameter";
 const BLUR_WIDTH = "blurWidth";
 const BLOCK_SIZE = "blockSize";
+const PAPER_INDEX = "paperIndex";
 
 type Props = {
   dictionary: Dictionary;
@@ -37,7 +40,11 @@ const FindPaperSettings = ({
   };
   return (
     <>
-      <SettingGroup dictionary={dictionary} name="findPaper">
+      <SettingGroup
+        dictionary={dictionary}
+        name="findPaper"
+        settingStep={CalibrationSettingStep.FIND_PAPER}
+      >
         <StepSettingField
           value={settings[StepName.BILATERAL_FILTER][PIXEL_DIAMETER]}
           name={"bilateralFilterPixelDiameter"}
@@ -57,6 +64,13 @@ const FindPaperSettings = ({
           name={BLOCK_SIZE}
           config={adaptiveThresholdStep.config![BLOCK_SIZE]}
           handleOnChange={onChange(StepName.ADAPTIVE_THRESHOLD, BLOCK_SIZE)}
+          dictionary={dictionary}
+        ></StepSettingField>
+        <StepSettingField
+          value={settings[StepName.EXTRACT_PAPER][PAPER_INDEX]}
+          name={PAPER_INDEX}
+          config={extractPaperStep.config![PAPER_INDEX]}
+          handleOnChange={onChange(StepName.EXTRACT_PAPER, PAPER_INDEX)}
           dictionary={dictionary}
         ></StepSettingField>
       </SettingGroup>

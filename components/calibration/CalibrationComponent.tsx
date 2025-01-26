@@ -6,7 +6,6 @@ import SimpleCalibration from "./simple/SimpleCalibration";
 import { AdvancedCalibration } from "./advanced/AdvancedCalibration";
 import { useOpenCvWorker } from "./OpenCvWorker";
 import { useLoading } from "@/context/LoadingContext";
-import StepResult from "@/lib/opencv/StepResult";
 import { useDetails } from "@/context/DetailsContext";
 import { applyDefaults, defaultSettings } from "@/lib/opencv/Settings";
 import { useIndexedDB } from "react-indexed-db-hook";
@@ -15,12 +14,13 @@ import ErrorMessage from "../error/ErrorMessage";
 import BottomButtons from "./BottomButtons";
 import useNavigationHistory from "@/context/NavigationHistory";
 import StepName from "@/lib/opencv/processor/steps/StepName";
+import { useResultContext } from "./ResultContext";
 
 type Props = {
   dictionary: Dictionary;
 };
 
-const OpenCvCalibration = ({ dictionary }: Props) => {
+const CalibrationComponent = ({ dictionary }: Props) => {
   const { update } = useIndexedDB("details");
   const router = useRouter();
   const { getHistory, clearHistory } = useNavigationHistory();
@@ -31,23 +31,12 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const [simpleMode, setSimpleMode] = useState(true);
 
-  const [stepResults, setStepResults] = useState<StepResult[]>([]);
-  const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
-  const [thresholdCheckImage, setThresholdCheckImage] = useState<ImageData>();
-
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const updateCheckImages = (outline: ImageData, threshold?: ImageData) => {
-    setOutlineCheckImage(outline);
-    setThresholdCheckImage(threshold);
-  };
+  const { stepResults } = useResultContext();
 
-  const { rerunOpenCv, settingsChanged, updateAllWorkData } = useOpenCvWorker(
-    stepResults,
-    setStepResults,
-    updateCheckImages,
-    setErrorMessage
-  );
+  const { rerunOpenCv, settingsChanged, updateAllWorkData } =
+    useOpenCvWorker(setErrorMessage);
 
   useEffect(() => {
     // TODO better initialization
@@ -100,19 +89,15 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
             <>
               <SimpleCalibration
                 dictionary={dictionary}
-                stepResults={stepResults}
                 settings={detailsContext.settings}
                 openAdvancedMode={() => setSimpleMode(false)}
-                outlineCheckImage={outlineCheckImage}
-                thresholdCheckImage={thresholdCheckImage}
               ></SimpleCalibration>
             </>
           )}
           {!simpleMode && detailsContext && (
             <>
               <AdvancedCalibration
-                dictionary={dictionary}
-                stepResults={stepResults}
+                dictionary={dictionary} 
               ></AdvancedCalibration>
             </>
           )}
@@ -131,4 +116,4 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   );
 };
 
-export default OpenCvCalibration;
+export default CalibrationComponent;

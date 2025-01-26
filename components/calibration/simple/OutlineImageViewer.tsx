@@ -35,6 +35,7 @@ const blendImageData = (
 
   return blendedImageData;
 };
+
 export const OutlineImageViewer = ({
   className,
   baseImage,

@@ -7,11 +7,12 @@ import blurStep from "./steps/Blur";
 import cannyStep from "./steps/Canny";
 import closeContoursStep from "./steps/CloseContours";
 import extractObjectStep from "./steps/ExtractObject";
-import extractPaperStep from "./steps/ExtractPaper";
 import grayScaleStep from "./steps/GrayScale";
 import ProcessingStep, { SettingsConfig } from "./steps/ProcessingFunction";
 import StepName from "./steps/StepName";
 import thresholdStep from "./steps/Threshold";
+import findPaperOutlineStep from "./steps/FindPaperOutline";
+import extractPaperStep from "./steps/ExtractPaper";
 
 const withStepName = (
   stepName: StepName,
@@ -44,12 +45,13 @@ const INPUT: ProcessingStep<any> = {
   },
 };
 
-const PROCESSING_STEPS: ProcessingStep<any>[] = [
+const PROCESSING_STEPS = (): ProcessingStep<any>[] => [
   bilateralFilterStep,
   grayScaleStep,
   blurStep,
   adaptiveThresholdStep,
   cannyStep,
+  findPaperOutlineStep,
   extractPaperStep,
   withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
   withStepName(
@@ -66,13 +68,13 @@ const PROCESSING_STEPS: ProcessingStep<any>[] = [
 ];
 
 const getAll = () => {
-  return [INPUT, ...PROCESSING_STEPS];
+  return [INPUT, ...PROCESSING_STEPS()];
 };
 
 const forSettings = (settings: Settings) => {
-  return PROCESSING_STEPS.filter(bilateralFilterDisabled(settings)).filter(
-    blurImageReused(settings)
-  );
+  return PROCESSING_STEPS()
+    .filter(bilateralFilterDisabled(settings))
+    .filter(blurImageReused(settings));
 };
 
 const bilateralFilterDisabled = (settings: Settings) => {

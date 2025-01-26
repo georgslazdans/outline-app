@@ -8,6 +8,8 @@ import StepSettingField from "../../advanced/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { GroupConfig } from "@/lib/opencv/processor/steps/StepSettings";
 import extractObjectStep from "@/lib/opencv/processor/steps/ExtractObject";
+import StepResult from "@/lib/opencv/StepResult";
+import CalibrationSettingStep from "./CalibrationSettingStep";
 
 const SMOOTH_ACCURACY = "smoothAccuracy";
 
@@ -46,7 +48,11 @@ const SmoothContourSettings = ({
     .smoothSettings as GroupConfig;
   return (
     <>
-      <SettingGroup dictionary={dictionary} name="smoothSettings">
+      <SettingGroup
+        dictionary={dictionary}
+        name="smoothSettings"
+        settingStep={CalibrationSettingStep.SMOOTHING}
+      >
         <StepSettingField
           value={
             settings[StepName.EXTRACT_OBJECT].smoothSettings?.smoothAccuracy

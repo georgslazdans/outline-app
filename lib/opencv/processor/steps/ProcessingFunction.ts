@@ -21,6 +21,7 @@ export type ProcessFunctionResult =
 export type PreviousData = {
   intermediateImageOf: (stepName: StepName) => cv.Mat;
   settingsOf: (stepName: StepName) => StepSetting;
+  contoursOf: (stepName: StepName) => ContourPoints[] | undefined;
 };
 
 export type Process<T extends StepSetting> = (

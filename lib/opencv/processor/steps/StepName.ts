@@ -6,6 +6,7 @@ enum StepName {
     CANNY_PAPER = "cannyPaper",
     CANNY_OBJECT = "cannyObject",
     EXTRACT_OBJECT = "extractObject",
+    FIND_PAPER_OUTLINE = "findPaperOutline",
     EXTRACT_PAPER = "extractPaper",
     GRAY_SCALE = "grayScale",
     GRAY_SCALE_OBJECT = "grayScaleObject",

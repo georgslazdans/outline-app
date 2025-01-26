@@ -35,11 +35,16 @@ export type GroupConfig = {
   config: { [key: string]: StepSettingConfig };
 } & DisplaySettings;
 
+export type PaperOutlineSelectConfig = {
+  type: "paperOutlineSelect";
+} & DisplaySettings;
+
 export type StepSettingConfig =
   | NumberConfig
   | CheckboxConfig
   | GroupConfig
-  | SelectConfig;
+  | SelectConfig
+  | PaperOutlineSelectConfig;
 
 export const eventFieldConverterFor = (
   config: StepSettingConfig
@@ -59,16 +64,21 @@ export const eventFieldConverterFor = (
     case "select":
       return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
         event.target.value;
+    case "paperOutlineSelect":
+      return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+        Number.parseInt(event.target.value);
   }
 };
 
-export const configOf = (stepName: StepName, key: string): StepSettingConfig => {
+export const configOf = (
+  stepName: StepName,
+  key: string
+): StepSettingConfig => {
   const config = Steps.getAll().find((it) => it.name == stepName)?.config;
   if (!config) {
     throw new Error(`Config not found for key: ${key} with step: ${stepName}}`);
   }
   return config[key];
 };
-
 
 export default StepSetting;

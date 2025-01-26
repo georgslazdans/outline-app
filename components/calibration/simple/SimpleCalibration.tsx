@@ -14,25 +14,23 @@ import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import SelectField from "@/components/fields/SelectField";
 import SimpleSettingsButtons from "./SimpleSettingsButtons";
 import { modifyContourList } from "@/lib/data/contour/ContourPoints";
+import { useResultContext } from "../ResultContext";
+import { SettingStepProvider } from "./SettingStepContext";
 
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
   openAdvancedMode: () => void;
-  stepResults: StepResult[];
-  outlineCheckImage?: ImageData;
-  thresholdCheckImage?: ImageData;
 };
 
 const SimpleCalibration = ({
   dictionary,
   settings,
   openAdvancedMode,
-  stepResults,
-  outlineCheckImage,
-  thresholdCheckImage,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
+  const { stepResults, outlineCheckImage, thresholdCheckImage } =
+    useResultContext();
 
   const handleSettingsChange = (updatedSettings: Settings) => {
     if (detailsContext) {
@@ -95,48 +93,50 @@ const SimpleCalibration = ({
   };
   return (
     <>
-      <div className="flex flex-col gap-4 xl:flex-row flex-grow">
-        <div className="xl:w-1/2">
-          <div className="mb-2">
-            <SelectField
-              label={"Background Image"}
-              name={"background-image"}
-              value={backgroundImageStepName}
-              options={backgroundImageOptions()}
-              onChange={(event) =>
-                setBackgroundImageStepName(event.target.value as StepName)
-              }
-            ></SelectField>
-          </div>
-          <OutlineImageViewer
-            className="max-h-[30vh] xl:max-h-[45vh]"
-            baseImage={backgroundImageStep?.imageData}
-            outlineImage={outlineCheckImage}
-          ></OutlineImageViewer>
+      <SettingStepProvider>
+        <div className="flex flex-col gap-4 xl:flex-row flex-grow">
+          <div className="xl:w-1/2">
+            <div className="mb-2">
+              <SelectField
+                label={"Background Image"}
+                name={"background-image"}
+                value={backgroundImageStepName}
+                options={backgroundImageOptions()}
+                onChange={(event) =>
+                  setBackgroundImageStepName(event.target.value as StepName)
+                }
+              ></SelectField>
+            </div>
+            <OutlineImageViewer
+              className="max-h-[30vh] xl:max-h-[45vh]"
+              baseImage={backgroundImageStep?.imageData}
+              outlineImage={outlineCheckImage}
+            ></OutlineImageViewer>
 
-          <div className="hidden xl:flex flex-row gap-2 mt-3">
-            <SimpleSettingsButtons
+            <div className="hidden xl:flex flex-row gap-2 mt-3">
+              <SimpleSettingsButtons
+                dictionary={dictionary}
+                openAdvancedMode={openAdvancedMode}
+                exportSvg={exportSvg}
+              ></SimpleSettingsButtons>
+            </div>
+          </div>
+          <div className="xl:h-[calc(100vh-15rem)] overflow-auto">
+            <SimpleSettingsEditor
               dictionary={dictionary}
-              openAdvancedMode={openAdvancedMode}
-              exportSvg={exportSvg}
-            ></SimpleSettingsButtons>
+              settings={settings}
+              onChange={handleSettingsChange}
+            ></SimpleSettingsEditor>
+            <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
+              <SimpleSettingsButtons
+                dictionary={dictionary}
+                openAdvancedMode={openAdvancedMode}
+                exportSvg={exportSvg}
+              ></SimpleSettingsButtons>
+            </div>
           </div>
         </div>
-        <div className="xl:h-[calc(100vh-15rem)] overflow-auto">
-          <SimpleSettingsEditor
-            dictionary={dictionary}
-            settings={settings}
-            onChange={handleSettingsChange}
-          ></SimpleSettingsEditor>
-          <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
-            <SimpleSettingsButtons
-              dictionary={dictionary}
-              openAdvancedMode={openAdvancedMode}
-              exportSvg={exportSvg}
-            ></SimpleSettingsButtons>
-          </div>
-        </div>
-      </div>
+      </SettingStepProvider>
     </>
   );
 };

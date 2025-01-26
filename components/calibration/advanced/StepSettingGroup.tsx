@@ -7,6 +7,7 @@ import StepSetting, {
 } from "@/lib/opencv/processor/steps/StepSettings";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import Settings from "@/lib/opencv/Settings";
+import StepResult from "@/lib/opencv/StepResult";
 
 type Props = {
   name: string;

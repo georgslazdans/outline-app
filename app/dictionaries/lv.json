@@ -44,6 +44,7 @@
       "cannyPaper": "Canny Lapas",
       "cannyObject": "Canny Objekta",
       "extractObject": "Izvilkt Objektu",
+      "findPaperOutline": "Atrast Lapas Kontūras",
       "extractPaper": "Izvlikt Lapu",
       "grayScale": "Pēlēkuma Skala",
       "grayScaleObject": "Objekta Pēlēkuma Skala",
@@ -85,7 +86,8 @@
       "iterations": "Iterations",
       "closeCornerSettings": "Close Corners",
       "disabled": "Disabled",
-      "reuseStep": "Reuse Step"
+      "reuseStep": "Reuse Step",
+      "paperIndex": "Paper Index"
     },
     "simpleSettings": {
       "title": "Iestatījumi",

@@ -13,8 +13,8 @@ export const imageOf = (
     }
     let destination = new cv.Mat();
     image.convertTo(destination, cv.CV_8U);
-    const convertionCode = conversionCodeOf(colorSpace);
-    cv.cvtColor(destination, destination, convertionCode);
+    const conversionCode = conversionCodeOf(colorSpace);
+    cv.cvtColor(destination, destination, conversionCode);
 
     image.delete();
     return destination;
@@ -64,6 +64,16 @@ const colorConversionOf = (channels: number) => {
     case 3:
       return cv.COLOR_RGB2RGBA;
   }
+};
+
+export const convertBlackToTransparent = (result: ImageData): ImageData => {
+  const data = result.data;
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
+      data[i + 3] = 0; // Set alpha to 0 (transparent)
+    }
+  }
+  return result;
 };
 
 export default imageDataOf;

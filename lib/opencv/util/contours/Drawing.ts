@@ -25,12 +25,12 @@ const drawContourShapes = (
 ) => {
   const image = cv.Mat.zeros(size.height, size.width, cv.CV_8UC3);
   contours.forEach((it) => {
-    drawPolylines(it.points, image, color);
+    drawPolyLines(it.points, image, color);
   });
   return image;
 };
 
-const drawPolylines = (points: Point[], image: cv.Mat, color: cv.Scalar) => {
+const drawPolyLines = (points: Point[], image: cv.Mat, color: cv.Scalar) => {
   const markersVector = new cv.MatVector();
   const mv = new cv.Mat(points.length, 1, cv.CV_32SC2);
   points.forEach(({ x, y }, idx) => {
@@ -77,7 +77,8 @@ export const drawLargestContour = (
 
 export const drawAllContours = (
   imageSize: cv.Size,
-  imageContours: ImageContours
+  imageContours: ImageContours,
+  drawIndexes: number[] | undefined = undefined
 ): cv.Mat => {
   const { contours, hierarchy } = imageContours;
 
@@ -86,6 +87,8 @@ export const drawAllContours = (
   // Create a color image to draw contours
   let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
   for (let i = 0; i < contours.size(); ++i) {
+    if (drawIndexes && !drawIndexes.includes(i)) continue;
+
     const hierarchyIndex = hierarchy.intPtr(0, i)[3]; // parent contour index
 
     if (!(hierarchyIndex in colorMap)) {

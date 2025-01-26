@@ -10,6 +10,7 @@ import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
 import StepName from "./steps/StepName";
 import ProcessingResult from "../ProcessingResult";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
@@ -36,14 +37,15 @@ const processorOf = (
   const processStep = (
     image: cv.Mat,
     step: ProcessingStep<any>,
-    intermediateImages: IntermediateImages
+    intermediateImages: IntermediateImages,
+    stepData: StepResult[]
   ): ProcessStepResult => {
     try {
       const stepSettings = settingsFor(step);
       const result = step.process(
         image,
         stepSettings,
-        previousDataOf(intermediateImages, settings)
+        previousDataOf(intermediateImages, settings, stepData)
       );
       if ("errorMessage" in result) {
         return {
@@ -93,7 +95,7 @@ const processorOf = (
     let currentImage = image;
 
     for (const step of processingSteps) {
-      const result = processStep(currentImage, step, intermediateImages);
+      const result = processStep(currentImage, step, intermediateImages, stepData);
       if (result.type == "success") {
         const stepResult = result.functionResult;
         currentImage = stepResult.image;
@@ -130,7 +132,8 @@ const processorOf = (
 
 const previousDataOf = (
   intermediateImages: IntermediateImages,
-  settings: Settings
+  settings: Settings,
+  stepData: StepResult[]
 ): PreviousData => {
   const handleImageSettingsFor = (stepName: StepName): StepName => {
     if (
@@ -156,9 +159,15 @@ const previousDataOf = (
   const settingsOf = (stepName: StepName): StepSetting => {
     return settings[stepName];
   };
+
+  const contoursOf = (stepName: StepName): ContourPoints[] | undefined => {
+    return stepData.find((it) => it.stepName == stepName)?.contours
+  };
+
   return {
     intermediateImageOf: intermediateImageOf,
     settingsOf: settingsOf,
+    contoursOf: contoursOf,
   };
 };
 

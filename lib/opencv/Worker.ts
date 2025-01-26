@@ -1,6 +1,6 @@
 import * as cv from "@techstark/opencv-js";
-import outlineCheckImageOf from "./processor/OutlineCheckImage";
-import objectThresholdCheckOf from "./processor/ObjectThresholdCheck";
+import outlineCheckImageOf from "./processor/images/OutlineCheckImage";
+import objectThresholdCheckOf from "./processor/images/ObjectThresholdCheck";
 import handleOpenCvError from "./OpenCvError";
 import processStep, { ProcessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
@@ -13,6 +13,7 @@ import WorkerResult, {
   SuccessResult,
 } from "./WorkerResult";
 import ProcessingResult from "./ProcessingResult";
+import paperOutlineImagesOf from "./processor/images/ContourOptionImages";
 
 let initialized = false;
 
@@ -35,6 +36,7 @@ const waitForInitialization = async () => {
 const successMessageOf = (
   stepResults: ProcessingResult,
   outlineCheckImage: ImageData,
+  paperOutlineImages: ImageData[],
   thresholdCheck?: ImageData
 ): SuccessResult => {
   return {
@@ -42,6 +44,7 @@ const successMessageOf = (
     result: stepResults,
     outlineCheckImage: outlineCheckImage,
     thresholdCheck: thresholdCheck,
+    paperOutlineImages: paperOutlineImages,
   };
 };
 
@@ -73,7 +76,13 @@ const processOutlineImage = async (data: ProcessAll): Promise<WorkerResult> => {
         result.data!,
         data.settings
       );
-      return successMessageOf(result, outlineCheckImage, thresholdCheck);
+      const paperOutlineImages = paperOutlineImagesOf(result.data!);
+      return successMessageOf(
+        result,
+        outlineCheckImage,
+        paperOutlineImages,
+        thresholdCheck
+      );
     } else {
       return failedMessageOf(result);
     }
@@ -118,9 +127,11 @@ const processOutlineStep = async (data: ProcessStep): Promise<WorkerResult> => {
         result.data!,
         data.settings
       );
+      const paperOutlineImages = paperOutlineImagesOf(result.data!);
       return successMessageOf(
         processedResult,
         outlineCheckImage,
+        paperOutlineImages,
         thresholdCheck
       );
     } else {

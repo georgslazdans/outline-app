@@ -4,6 +4,7 @@ import deepEqual, { deepMerge } from "../utils/Objects";
 import StepSetting, { StepSettingConfig } from "./processor/steps/StepSettings";
 import Steps from "./processor/Steps";
 import ThresholdType from "./processor/steps/ThresholdType";
+import extractPaperStep from "./processor/steps/ExtractPaper";
 
 type Settings = {
   [key: string]: StepSetting;
@@ -11,7 +12,10 @@ type Settings = {
 
 export const defaultSettings = (): Settings => {
   let settings = {};
+  console.log("All steps", Steps.getAll());
+  console.log("Extract paper step", extractPaperStep);
   for (const step of Steps.getAll()) {
+    console.log("Processing STEP", step);
     settings = { ...settings, [step.name]: step.settings };
   }
   return settings as Settings;

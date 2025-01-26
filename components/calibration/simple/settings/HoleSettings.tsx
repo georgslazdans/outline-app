@@ -8,6 +8,8 @@ import StepSettingField from "../../advanced/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import extractObjectStep from "@/lib/opencv/processor/steps/ExtractObject";
 import { GroupConfig } from "@/lib/opencv/processor/steps/StepSettings";
+import StepResult from "@/lib/opencv/StepResult";
+import CalibrationSettingStep from "./CalibrationSettingStep";
 
 const MEAN_THRESHOLD = "meanThreshold";
 const HOLE_AREA_THRESHOLD = "holeAreaThreshold";
@@ -18,7 +20,11 @@ type Props = {
   onSettingsChange: (settings: Settings) => void;
 };
 
-const HoleSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
+const HoleSettings = ({
+  dictionary,
+  settings,
+  onSettingsChange,
+}: Props) => {
   const onChange = (field: string) => {
     return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const value = Number.parseFloat(event.target.value);
@@ -43,7 +49,11 @@ const HoleSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
     .holeSettings as GroupConfig;
   return (
     <>
-      <SettingGroup dictionary={dictionary} name="holeSettings">
+      <SettingGroup
+        dictionary={dictionary}
+        name="holeSettings"
+        settingStep={CalibrationSettingStep.HOLE_SETTINGS}
+      >
         <StepSettingField
           value={settings[StepName.EXTRACT_OBJECT].holeSettings?.meanThreshold}
           name={MEAN_THRESHOLD}
