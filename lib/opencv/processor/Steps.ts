@@ -101,6 +101,7 @@ const blurImageReused = (settings: Settings) => {
 const mandatoryFor = (settings: Settings) => {
   const mandatorySteps = [
     StepName.INPUT,
+    StepName.FIND_PAPER_OUTLINE,
     StepName.EXTRACT_PAPER,
     StepName.BLUR_OBJECT,
     StepName.OBJECT_THRESHOLD,

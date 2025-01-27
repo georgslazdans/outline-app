@@ -12,10 +12,7 @@ type Settings = {
 
 export const defaultSettings = (): Settings => {
   let settings = {};
-  console.log("All steps", Steps.getAll());
-  console.log("Extract paper step", extractPaperStep);
   for (const step of Steps.getAll()) {
-    console.log("Processing STEP", step);
     settings = { ...settings, [step.name]: step.settings };
   }
   return settings as Settings;

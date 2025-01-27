@@ -24,7 +24,8 @@ export const useOpenCvWorker = (
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
   const { detailsContext } = useDetails();
-  const { stepResults, updateResult } = useResultContext();
+  const { stepResults, outlineCheckImage, paperOutlineImages, updateResult } =
+    useResultContext();
   const { setLoading } = useLoading();
   const [previousSettings, setPreviousSettings] = useState<Settings>();
   const { api: openCvApi } = useMemo(() => newWorkerInstance(), []);
@@ -49,7 +50,7 @@ export const useOpenCvWorker = (
       });
       return updatedResult;
     },
-    []
+    [stepResults]
   );
 
   const handleWorkerResult = useCallback(
@@ -59,19 +60,19 @@ export const useOpenCvWorker = (
         const updatedStepResults = updateStepResults(data.result.data!);
         updateResult(
           updatedStepResults,
-          data.outlineCheckImage,
           data.paperOutlineImages,
-          data.thresholdCheck
+          data.outlineCheckImage
         );
         setErrorMessage(undefined);
       } else if (data.status === "failed") {
-        updateStepResults(data.result.data!);
+        const updatedStepResults = updateStepResults(data.result.data!);
+        updateResult(updatedStepResults, paperOutlineImages, outlineCheckImage);
         setErrorMessage(data.result.error);
       } else {
         setErrorMessage(data.error);
       }
     },
-    [setLoading, updateStepResults, updateResult, setErrorMessage]
+    [setLoading, updateStepResults, updateResult, setErrorMessage, paperOutlineImages, outlineCheckImage]
   );
 
   const updateCurrentStepData = useCallback(

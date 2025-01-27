@@ -10,8 +10,10 @@ import StepName from "@/lib/opencv/processor/steps/StepName";
 import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshold";
 import binaryThresholdStep from "@/lib/opencv/processor/steps/BinaryThreshold";
 import CalibrationSettingStep from "./CalibrationSettingStep";
+import thresholdStep from "@/lib/opencv/processor/steps/Threshold";
 
 const BLUR_WIDTH = "blurWidth";
+const THRESHOLD_TYPE = "thresholdType";
 const BLOCK_SIZE = "blockSize";
 const THRESHOLD = "threshold";
 const INVERSE_THRESHOLD = "inverseThreshold";
@@ -27,9 +29,19 @@ const FindObjectSettings = ({
   settings,
   onSettingsChange,
 }: Props) => {
-  const onChange = (stepName: StepName, fieldName: string) => {
+  const onNumberChange = (stepName: StepName, fieldName: string) => {
     return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const value = Number.parseInt(event.target.value);
+      const updatedSettings = {
+        ...settings,
+        [stepName]: { ...settings[stepName], [fieldName]: value },
+      };
+      onSettingsChange(updatedSettings);
+    };
+  };
+  const onTypeChange = (stepName: StepName, fieldName: string) => {
+    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const value = event.target.value;
       const updatedSettings = {
         ...settings,
         [stepName]: { ...settings[stepName], [fieldName]: value },
@@ -69,10 +81,18 @@ const FindObjectSettings = ({
             value={settings[StepName.BLUR_OBJECT][BLUR_WIDTH]}
             name={BLUR_WIDTH}
             config={blurStep.config![BLUR_WIDTH]}
-            handleOnChange={onChange(StepName.BLUR_OBJECT, BLUR_WIDTH)}
+            handleOnChange={onNumberChange(StepName.BLUR_OBJECT, BLUR_WIDTH)}
             dictionary={dictionary}
           ></StepSettingField>
         )}
+
+        <StepSettingField
+          value={settings[StepName.OBJECT_THRESHOLD][THRESHOLD_TYPE]}
+          name={THRESHOLD_TYPE}
+          config={thresholdStep.config![THRESHOLD_TYPE]}
+          handleOnChange={onTypeChange(StepName.OBJECT_THRESHOLD, THRESHOLD_TYPE)}
+          dictionary={dictionary}
+        ></StepSettingField>
 
         {inSettings(settings).isObjectThresholdAdaptive() && (
           <StepSettingField

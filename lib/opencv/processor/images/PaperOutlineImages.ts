@@ -15,7 +15,7 @@ const paperOutlineImagesOf = (
   const findPaper = findStep(StepName.FIND_PAPER_OUTLINE).in(steps);
   const imageSize = new cv.Size(input.imageData.width, input.imageData.height);
 
-  const contours = findPaper.contours;
+  const contours = findPaper?.contours;
   if (!contours || contours.length == 0) {
     console.warn("No paper options for image!");
     return [new ImageData(1, 1)];

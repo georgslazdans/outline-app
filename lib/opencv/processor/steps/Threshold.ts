@@ -9,7 +9,7 @@ import StepName from "./StepName";
 import adaptiveThresholdStep from "./AdaptiveThreshold";
 import binaryThresholdStep from "./BinaryThreshold";
 import Settings from "../../Settings";
-import ThresholdType, { thresholdOptionsFor }  from "./ThresholdType";
+import ThresholdType, { thresholdOptionsFor } from "./ThresholdType";
 
 type BinaryThresholdSettings = typeof binaryThresholdStep.settings;
 type AdaptiveThresholdSettings = typeof adaptiveThresholdStep.settings;

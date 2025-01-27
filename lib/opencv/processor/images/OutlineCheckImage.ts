@@ -15,30 +15,15 @@ const outlineCheckImageOf = (
   steps: StepResult[],
   settings: Settings
 ): ImageData => {
-  const input = findStep(StepName.INPUT).in(steps);
-  const extractPaper = findStep(StepName.EXTRACT_PAPER).in(steps);
   const extractObject = findStep(StepName.EXTRACT_OBJECT).in(steps);
 
-  const imageSize = new cv.Size(input.imageData.width, input.imageData.height);
-
-  if (!extractPaper.contours || extractPaper.contours.length == 0) {
-    console.warn("No paper points for outline image!");
+  if (!extractObject) {
+    console.warn("No outline image for object!");
     return new ImageData(1, 1);
   }
-  const paperContours = extractPaper.contours[0];
-
   const objectImage = imageOf(extractObject.imageData, ColorSpace.RGBA);
-
-  const objectContourImage = reverseWarpedImageOf(
-    paperContours.points,
-    objectImage,
-    imageSize,
-    paperSettingsOf(settings)
-  );
-
-  const result = convertBlackToTransparent(imageDataOf(objectContourImage));
+  const result = convertBlackToTransparent(imageDataOf(objectImage));
   objectImage.delete();
-  objectContourImage.delete();
 
   return result;
 };

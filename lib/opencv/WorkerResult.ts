@@ -4,7 +4,6 @@ export type SuccessResult = {
   status: "success";
   result: ProcessingResult;
   outlineCheckImage: ImageData;
-  thresholdCheck?: ImageData;
   paperOutlineImages: ImageData[];
 };
 export type FailedResult = {

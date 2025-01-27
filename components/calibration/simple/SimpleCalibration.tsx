@@ -4,18 +4,15 @@ import { Dictionary } from "@/app/dictionaries";
 import SimpleSettingsEditor from "./SimpleSettingsEditor";
 import Settings from "@/lib/opencv/Settings";
 import { useDetails } from "@/context/DetailsContext";
-import StepName from "@/lib/opencv/processor/steps/StepName";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import Svg from "@/lib/svg/Svg";
-import StepResult from "@/lib/opencv/StepResult";
 import { downloadFile } from "@/lib/utils/Download";
-import { OutlineImageViewer } from "./OutlineImageViewer";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
-import SelectField from "@/components/fields/SelectField";
 import SimpleSettingsButtons from "./SimpleSettingsButtons";
 import { modifyContourList } from "@/lib/data/contour/ContourPoints";
 import { useResultContext } from "../ResultContext";
 import { SettingStepProvider } from "./SettingStepContext";
+import { OutlineImageSelector } from "./image/OutlineImageSelector";
 
 type Props = {
   dictionary: Dictionary;
@@ -29,8 +26,7 @@ const SimpleCalibration = ({
   openAdvancedMode,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
-  const { stepResults, outlineCheckImage, thresholdCheckImage } =
-    useResultContext();
+  const { stepResults } = useResultContext();
 
   const handleSettingsChange = (updatedSettings: Settings) => {
     if (detailsContext) {
@@ -52,66 +48,14 @@ const SimpleCalibration = ({
     downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.svg`);
   }, [detailsContext, stepResults]);
 
-  const [backgroundImageStepName, setBackgroundImageStepName] = useState(
-    StepName.INPUT
-  );
-  const [backgroundImageStep, setBackgroundImageStep] = useState<StepResult>();
-
-  useEffect(() => {
-    const backgroundImageOf = (stepName: StepName): StepResult => {
-      let step = stepResults.find((it) => it.stepName == stepName)!;
-      if (stepName == StepName.OBJECT_THRESHOLD) {
-        step = { ...step!, imageData: thresholdCheckImage! };
-      }
-      return step;
-    };
-
-    setBackgroundImageStep(backgroundImageOf(backgroundImageStepName));
-  }, [backgroundImageStepName, stepResults, thresholdCheckImage]);
-
-  const backgroundImageOptions = () => {
-    const options = [
-      {
-        label: dictionary.calibration.step[StepName.INPUT],
-        value: StepName.INPUT,
-      },
-      {
-        label: dictionary.calibration.step[StepName.BLUR],
-        value: StepName.BLUR,
-      },
-      {
-        label: dictionary.calibration.step[StepName.ADAPTIVE_THRESHOLD],
-        value: StepName.ADAPTIVE_THRESHOLD,
-      },
-      {
-        label: dictionary.calibration.step[StepName.OBJECT_THRESHOLD],
-        value: StepName.OBJECT_THRESHOLD,
-      },
-    ];
-    const stepResultNames = stepResults.map((it) => it.stepName);
-    return options.filter((it) => stepResultNames.includes(it.value));
-  };
   return (
     <>
       <SettingStepProvider>
         <div className="flex flex-col gap-4 xl:flex-row flex-grow">
           <div className="xl:w-1/2">
-            <div className="mb-2">
-              <SelectField
-                label={"Background Image"}
-                name={"background-image"}
-                value={backgroundImageStepName}
-                options={backgroundImageOptions()}
-                onChange={(event) =>
-                  setBackgroundImageStepName(event.target.value as StepName)
-                }
-              ></SelectField>
-            </div>
-            <OutlineImageViewer
-              className="max-h-[30vh] xl:max-h-[45vh]"
-              baseImage={backgroundImageStep?.imageData}
-              outlineImage={outlineCheckImage}
-            ></OutlineImageViewer>
+            <OutlineImageSelector
+              dictionary={dictionary}
+            ></OutlineImageSelector>
 
             <div className="hidden xl:flex flex-row gap-2 mt-3">
               <SimpleSettingsButtons

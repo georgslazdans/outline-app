@@ -11,6 +11,7 @@ import PaperSettings, {
 import Settings from "../../Settings";
 import StepName from "../steps/StepName";
 
+// TODO No longer used
 const objectThresholdCheckOf = (
   steps: StepResult[],
   settings: Settings

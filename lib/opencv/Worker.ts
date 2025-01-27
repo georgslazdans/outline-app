@@ -13,7 +13,7 @@ import WorkerResult, {
   SuccessResult,
 } from "./WorkerResult";
 import ProcessingResult from "./ProcessingResult";
-import paperOutlineImagesOf from "./processor/images/ContourOptionImages";
+import paperOutlineImagesOf from "./processor/images/PaperOutlineImages";
 
 let initialized = false;
 
@@ -37,13 +37,11 @@ const successMessageOf = (
   stepResults: ProcessingResult,
   outlineCheckImage: ImageData,
   paperOutlineImages: ImageData[],
-  thresholdCheck?: ImageData
 ): SuccessResult => {
   return {
     status: "success",
     result: stepResults,
     outlineCheckImage: outlineCheckImage,
-    thresholdCheck: thresholdCheck,
     paperOutlineImages: paperOutlineImages,
   };
 };
@@ -72,16 +70,11 @@ const processOutlineImage = async (data: ProcessAll): Promise<WorkerResult> => {
         result.data!,
         data.settings
       );
-      const thresholdCheck = objectThresholdCheckOf(
-        result.data!,
-        data.settings
-      );
       const paperOutlineImages = paperOutlineImagesOf(result.data!);
       return successMessageOf(
         result,
         outlineCheckImage,
         paperOutlineImages,
-        thresholdCheck
       );
     } else {
       return failedMessageOf(result);
@@ -123,16 +116,11 @@ const processOutlineStep = async (data: ProcessStep): Promise<WorkerResult> => {
         result.data!,
         data.settings
       );
-      const thresholdCheck = objectThresholdCheckOf(
-        result.data!,
-        data.settings
-      );
       const paperOutlineImages = paperOutlineImagesOf(result.data!);
       return successMessageOf(
         processedResult,
         outlineCheckImage,
-        paperOutlineImages,
-        thresholdCheck
+        paperOutlineImages
       );
     } else {
       return failedMessageOf(result);

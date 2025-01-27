@@ -5,13 +5,11 @@ import StepResult from "@/lib/opencv/StepResult";
 type ResultContextType = {
   stepResults: StepResult[];
   outlineCheckImage?: ImageData;
-  thresholdCheckImage?: ImageData;
   paperOutlineImages: ImageData[];
   updateResult: (
     results: StepResult[],
-    outline: ImageData,
     paperOutlines: ImageData[],
-    threshold?: ImageData
+    outline?: ImageData,
   ) => void;
 };
 
@@ -20,19 +18,16 @@ const ResultContext = createContext<ResultContextType | undefined>(undefined);
 export const ResultProvider = ({ children }: { children: ReactNode }) => {
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
   const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
-  const [thresholdCheckImage, setThresholdCheckImage] = useState<ImageData>();
   const [paperOutlineImages, setPaperOutlineImages] = useState<ImageData[]>([]);
 
   const updateResult = (
     results: StepResult[],
-    outline: ImageData,
     paperOutlines: ImageData[],
-    threshold?: ImageData
+    outline?: ImageData,
   ) => {
     setStepResults(results);
-    setOutlineCheckImage(outline);
     setPaperOutlineImages(paperOutlines);
-    setThresholdCheckImage(threshold);
+    setOutlineCheckImage(outline);
   };
 
   return (
@@ -40,7 +35,6 @@ export const ResultProvider = ({ children }: { children: ReactNode }) => {
       value={{
         stepResults,
         outlineCheckImage,
-        thresholdCheckImage,
         paperOutlineImages,
         updateResult: updateResult,
       }}
