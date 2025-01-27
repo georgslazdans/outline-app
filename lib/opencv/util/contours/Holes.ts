@@ -84,10 +84,10 @@ const isParent = (
 ): boolean => {
   const hierarchyValue = hierarchy.intPtr(0, i);
   if (hierarchyValue.length >= 4) {
-    const hierarchyIndex = hierarchy.intPtr(0, i)[3]; // parent contour index
+    const hierarchyIndex = hierarchyValue[3]; // parent contour index
     return (
       hierarchyIndex == parentIndex ||
-      isParent(hierarchyIndex, parentIndex, hierarchy)
+      (hierarchyIndex != -1 && isParent(hierarchyIndex, parentIndex, hierarchy))
     );
   } else {
     return false;
