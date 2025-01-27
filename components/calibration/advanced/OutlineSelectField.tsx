@@ -38,7 +38,7 @@ const OutlineSelectField = ({
   return (
     <div className={"flex flex-col " + className}>
       {label && (
-        <label className="ml-4 mb-0.5 w-full" htmlFor={name}>
+        <label className="ml-4 mb-0.5" htmlFor={name}>
           {label}
         </label>
       )}

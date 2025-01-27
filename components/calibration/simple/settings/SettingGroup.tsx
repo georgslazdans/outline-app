@@ -31,7 +31,7 @@ const SettingGroup = ({ name, dictionary, children, settingStep }: Props) => {
   return (
     <>
       <div
-        className={"flex flex-row " + (!expanded ? " hover:bg-gray " : "")}
+        className={"flex flex-row " + (!expanded ? " hover:bg-gray hover:text-black" : "")}
         onClick={onStepSelected}
       >
         <h3>{settingLabel(name)}</h3>
