@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import IconButton from "@/components/IconButton";
 import { useSettingStepContext } from "../SettingStepContext";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 type Props = {
   name: string;
@@ -29,15 +30,17 @@ const SettingGroup = ({ name, dictionary, children, settingStep }: Props) => {
 
   return (
     <>
-      <div className="flex flex-row">
+      <div
+        className={"flex flex-row " + (!expanded ? " hover:bg-gray " : "")}
+        onClick={onStepSelected}
+      >
         <h3>{settingLabel(name)}</h3>
-        {/* TODO add plus Icon based on visibility */}
         {!expanded ? (
           <IconButton
             className="ml-auto w-10 justify-center font-bold text-2xl"
             onClick={onStepSelected}
           >
-            <span>+</span>
+            <ChevronDownIcon />
           </IconButton>
         ) : null}
       </div>
