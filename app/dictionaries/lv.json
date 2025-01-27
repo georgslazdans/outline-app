@@ -87,7 +87,9 @@
       "closeCornerSettings": "Close Corners",
       "disabled": "Disabled",
       "reuseStep": "Reuse Step",
-      "paperIndex": "Paper Index"
+      "paperIndex": "Paper Index",
+      "filterSimilarOutlines": "Filter Similar Outlines",
+      "similarityThreshold": "Similarity Threshold"
     },
     "simpleSettings": {
       "title": "Iestatījumi",
