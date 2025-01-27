@@ -1,7 +1,7 @@
 "use client";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { findStep } from "@/lib/opencv/StepResult";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useCallback } from "react";
 import { useResultContext } from "../ResultContext";
 
 type Props = {
@@ -23,7 +23,7 @@ const OutlineSelectField = ({
 }: Props) => {
   const { stepResults } = useResultContext();
 
-  const getOutlineCount = () => {
+  const getOutlineCount = useCallback(() => {
     if (stepResults) {
       const findPaperOutline = findStep(StepName.FIND_PAPER_OUTLINE).in(
         stepResults
@@ -32,29 +32,32 @@ const OutlineSelectField = ({
         return findPaperOutline.contours.length - 1;
       }
     }
-    return 0;
-  };
+    return 1;
+  }, [stepResults]);
 
   return (
-    <div className={"flex flex-row " + className}>
+    <div className={"flex flex-col " + className}>
       {label && (
         <label className="ml-4 mb-0.5 w-full" htmlFor={name}>
           {label}
         </label>
       )}
-      <input
-        className={`border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white 
+      <div className="ml-auto mr-4">
+        <input
+          className={`border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white 
           p-1.5 pl-6 w-20 `}
-        id={name}
-        type="number"
-        value={value}
-        name={name}
-        min={0}
-        max={getOutlineCount()}
-        step={1}
-        placeholder={placeholder}
-        onChange={(event) => onChange(event)}
-      />
+          id={name}
+          type="number"
+          value={value}
+          name={name}
+          min={0}
+          max={getOutlineCount()}
+          step={1}
+          placeholder={placeholder}
+          onChange={(event) => onChange(event)}
+        />
+        <label> of {getOutlineCount()}</label>
+      </div>
     </div>
   );
 };

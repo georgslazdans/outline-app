@@ -143,7 +143,7 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
     },
     paperIndex: {
       type: "paperOutlineSelect",
-      tooltip: "Paper outline",
+      tooltip: "Array index. Counting starts from 0",
     },
   },
   imageColorSpace: imageColorSpace,
