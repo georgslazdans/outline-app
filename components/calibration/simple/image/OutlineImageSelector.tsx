@@ -40,13 +40,9 @@ const imageOptionsFor = (
   } else if (settingStep == CalibrationSettingStep.CLOSE_CORNERS) {
     return [imageEntryFor(StepName.CLOSE_CORNERS, dictionary)];
   } else if (settingStep == CalibrationSettingStep.HOLE_SETTINGS) {
-    return [
-      imageEntryFor(StepName.EXTRACT_PAPER, dictionary),
-    ];
+    return [imageEntryFor(StepName.EXTRACT_PAPER, dictionary)];
   } else if (settingStep == CalibrationSettingStep.SMOOTHING) {
-    return [
-      imageEntryFor(StepName.EXTRACT_PAPER, dictionary),
-    ];
+    return [imageEntryFor(StepName.EXTRACT_PAPER, dictionary)];
   }
   throw Error("Image entries not found for step: " + settingStep);
 };
@@ -72,17 +68,18 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
   >([]);
 
   useEffect(() => {
-    if (
-      settingStep == CalibrationSettingStep.FIND_PAPER &&
-      paperOutlineImages.length > 0
-    ) {
-      const paperIndex =
-        detailsContext.settings[StepName.EXTRACT_PAPER]["paperIndex"];
-      const index =
-        paperIndex >= paperOutlineImages.length
-          ? paperOutlineImages.length - 1
-          : paperIndex;
-      setOutlineImage(paperOutlineImages[index]);
+    if (settingStep == CalibrationSettingStep.FIND_PAPER) {
+      if (paperOutlineImages.length > 0) {
+        const paperIndex =
+          detailsContext.settings[StepName.EXTRACT_PAPER]["paperIndex"];
+        const index =
+          paperIndex >= paperOutlineImages.length
+            ? paperOutlineImages.length - 1
+            : paperIndex;
+        setOutlineImage(paperOutlineImages[index]);
+      } else {
+        setOutlineImage(undefined);
+      }
     } else {
       setOutlineImage(outlineCheckImage);
     }

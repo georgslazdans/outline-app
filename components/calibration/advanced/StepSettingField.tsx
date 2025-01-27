@@ -10,7 +10,7 @@ import {
 } from "@/lib/opencv/processor/steps/StepSettings";
 import { Tooltip } from "react-tooltip";
 import StepResult from "@/lib/opencv/StepResult";
-import OutlineSelectField from "./OutlineSelectField";
+import PaperOutlineSelectField from "./PaperOutlineSelectField";
 
 type Props = {
   value: string | number | boolean | undefined;
@@ -79,14 +79,14 @@ const StepSettingField = ({
     );
   };
 
-  const outlineSelectField = (name: string) => {
+  const paperOutlineSelectField = (name: string) => {
     return (
-      <OutlineSelectField
+      <PaperOutlineSelectField
         label={settingLabel(name)}
         name={name}
         value={value as number}
         onChange={handleOnChange}
-      ></OutlineSelectField>
+      ></PaperOutlineSelectField>
     );
   };
 
@@ -104,7 +104,7 @@ const StepSettingField = ({
       case "group":
         return <></>;
       case "paperOutlineSelect":
-        return outlineSelectField(name);
+        return paperOutlineSelectField(name);
     }
   };
 

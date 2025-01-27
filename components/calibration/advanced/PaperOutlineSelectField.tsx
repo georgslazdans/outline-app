@@ -13,7 +13,7 @@ type Props = {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-const OutlineSelectField = ({
+const PaperOutlineSelectField = ({
   value,
   label,
   name,
@@ -21,19 +21,15 @@ const OutlineSelectField = ({
   className,
   onChange,
 }: Props) => {
-  const { stepResults } = useResultContext();
+  const { paperOutlineImages } = useResultContext();
 
   const getOutlineCount = useCallback(() => {
-    if (stepResults) {
-      const findPaperOutline = findStep(StepName.FIND_PAPER_OUTLINE).in(
-        stepResults
-      );
-      if (findPaperOutline?.contours) {
-        return findPaperOutline.contours.length - 1;
-      }
-    }
-    return 1;
-  }, [stepResults]);
+    return paperOutlineImages.length - 1;
+  }, [paperOutlineImages]);
+  
+  if (getOutlineCount() <= 0) {
+    return <></>;
+  }
 
   return (
     <div className={"flex flex-col " + className}>
@@ -62,4 +58,4 @@ const OutlineSelectField = ({
   );
 };
 
-export default OutlineSelectField;
+export default PaperOutlineSelectField;

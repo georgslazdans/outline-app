@@ -5,7 +5,7 @@ import WorkerResult from "@/lib/opencv/WorkerResult";
 import { ProcessStep } from "@/lib/opencv/processor/ProcessStep";
 import * as Comlink from "comlink";
 import { useCallback, useMemo, useState } from "react";
-import StepResult from "@/lib/opencv/StepResult";
+import StepResult, { findStep } from "@/lib/opencv/StepResult";
 import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
 import { useLoading } from "@/context/LoadingContext";
 import { allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
@@ -66,7 +66,11 @@ export const useOpenCvWorker = (
         setErrorMessage(undefined);
       } else if (data.status === "failed") {
         const updatedStepResults = updateStepResults(data.result.data!);
-        updateResult(updatedStepResults, paperOutlineImages, outlineCheckImage);
+        const hasOutlineStep = !!findStep(StepName.FIND_PAPER_OUTLINE).in(data.result.data!)
+        const hasObjectStep = !!findStep(StepName.EXTRACT_OBJECT).in(data.result.data!)
+        updateResult(updatedStepResults, 
+          hasOutlineStep ? paperOutlineImages : [],
+          hasObjectStep ? outlineCheckImage : undefined);
         setErrorMessage(data.result.error);
       } else {
         setErrorMessage(data.error);
