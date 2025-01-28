@@ -2,7 +2,7 @@ import SelectField from "@/components/fields/SelectField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { OutlineImageViewer } from "./OutlineImageViewer";
 import StepResult from "@/lib/opencv/StepResult";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useResultContext } from "../../ResultContext";
 import { Dictionary } from "@/app/dictionaries";
 import { useSettingStepContext } from "../SettingStepContext";
@@ -56,10 +56,6 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
   const { stepResults, objectOutlineImages, paperOutlineImages } =
     useResultContext();
   const { settingStep } = useSettingStepContext();
-
-  const [backgroundImageStepName, setBackgroundImageStepName] = useState(
-    StepName.INPUT
-  );
   const [backgroundImageStep, setBackgroundImageStep] = useState<StepResult>();
   const [outlineImages, setOutlineImages] = useState<ImageData[]>([]);
 
@@ -96,12 +92,24 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
     }
   }, [settingStep, detailsContext, paperOutlineImages, objectOutlineImages]);
 
+  const updateBackgroundStep = useCallback(
+    (stepName: StepName) => {
+      const step = stepResults.find((it) => it.stepName == stepName)!;
+      setBackgroundImageStep(step);
+    },
+    [stepResults]
+  );
+
   useEffect(() => {
-    const step = stepResults.find(
-      (it) => it.stepName == backgroundImageStepName
-    )!;
-    setBackgroundImageStep(step);
-  }, [backgroundImageStepName, stepResults]);
+    if (backgroundImageStep) {
+      const step = stepResults.find(
+        (it) => it.stepName == backgroundImageStep.stepName
+      );
+      if (backgroundImageStep != step) {
+        setBackgroundImageStep(step);
+      }
+    }
+  }, [backgroundImageStep, stepResults]);
 
   useEffect(() => {
     const options = imageOptionsFor(settingStep, dictionary);
@@ -133,10 +141,10 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
         <SelectField
           label={"Background Image"}
           name={"background-image"}
-          value={backgroundImageStepName}
+          value={backgroundImageStep?.stepName}
           options={backgroundImageOptions}
           onChange={(event) =>
-            setBackgroundImageStepName(event.target.value as StepName)
+            updateBackgroundStep(event.target.value as StepName)
           }
         ></SelectField>
       </div>
