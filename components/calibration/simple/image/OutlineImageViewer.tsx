@@ -79,7 +79,7 @@ export const OutlineImageViewer = ({
         </div>
         <TransformComponent wrapperClass="!mx-auto">
           <canvas
-            className="max-w-full max-h-[30vh] xl:max-h-[43vh]"
+            className="max-w-full max-h-[30vh] xl:max-h-[40vh]"
             ref={canvasRef}
             width={baseImage?.width}
             height={baseImage?.height}

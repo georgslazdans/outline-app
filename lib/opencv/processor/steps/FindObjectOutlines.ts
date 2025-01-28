@@ -89,13 +89,6 @@ const findTopLevelContours = (
     if (isTopLevelContour(i, hierarchy)) {
       const contour = contours.get(i);
       const area = cv.contourArea(contour);
-      console.warn(
-        "Top level contour",
-        i,
-        area,
-        upperAreaThreshold,
-        lowerAreaThreshold
-      );
       if (area > lowerAreaThreshold && area < upperAreaThreshold) {
         results.push({
           index: i,

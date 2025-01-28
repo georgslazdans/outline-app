@@ -57,7 +57,11 @@ export const deepMerge = (defaultObject: any, currentObject: any): any => {
         currentObject[key] !== null &&
         !Array.isArray(currentObject[key])
       ) {
-        result[key] = deepMerge(defaultObject[key], currentObject[key]);
+        if (defaultObject) {
+          result[key] = deepMerge(defaultObject[key], currentObject[key]);
+        } else {
+          result[key] = currentObject[key];
+        }
       } else {
         result[key] = currentObject[key];
       }

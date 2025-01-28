@@ -59,7 +59,7 @@ const SimpleCalibration = ({
               ></SimpleSettingsButtons>
             </div>
           </div>
-          <div className="xl:h-[calc(100vh-15rem)] overflow-auto">
+          <div className="xl:h-[calc(100vh-15rem)] overflow-auto xl:w-1/2">
             <SimpleSettingsEditor
               dictionary={dictionary}
               settings={settings}

@@ -7,7 +7,6 @@ import StepSetting, {
 } from "@/lib/opencv/processor/steps/StepSettings";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import Settings from "@/lib/opencv/Settings";
-import StepResult from "@/lib/opencv/StepResult";
 
 type Props = {
   name: string;
@@ -34,14 +33,29 @@ const StepSettingGroup = ({
   };
 
   const handleOnChange = (key: string, config: StepSettingConfig) => {
-    const fieldConverter = eventFieldConverterFor(config);
-    return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const updatedSetting = {
-        ...settings,
-        [key]: fieldConverter(event),
+    if(config.type == "objectOutlineFilter") {
+      return (
+        value: number[]
+      ) => {
+        const updatedSetting = {
+          ...settings,
+          [key]: value,
+        };
+        onChange(updatedSetting);
       };
-      onChange(updatedSetting);
-    };
+    } else {
+      const fieldConverter = eventFieldConverterFor(config);
+      return (
+        event: (ChangeEvent<HTMLInputElement | HTMLSelectElement>)
+      ) => {
+        const updatedSetting = {
+          ...settings,
+          [key]: fieldConverter(event),
+        };
+        onChange(updatedSetting);
+      };
+    }
+
   };
 
   return (

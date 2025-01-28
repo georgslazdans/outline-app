@@ -82,7 +82,11 @@ const filterObjectsStep: ProcessingStep<FilterObjectSettings> = {
   settings: {
     objectIndexes: [],
   },
-  config: {},
+  config: {
+    objectIndexes: {
+      type:"objectOutlineFilter"
+    }
+  },
   imageColorSpace: () => ColorSpace.RGB,
   process: filterObjects,
 };

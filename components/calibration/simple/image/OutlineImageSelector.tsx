@@ -81,8 +81,16 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
         setOutlineImages([]);
       }
     } else if (settingStep == CalibrationSettingStep.FILTER_OBJECTS) {
-      // TODO filter by selected ID's indexes
-      setOutlineImages(objectOutlineImages);
+      const objectIndexes =
+        detailsContext.settings[StepName.FILTER_OBJECTS]["objectIndexes"];
+      if (objectIndexes && objectIndexes.length > 0) {
+        const images = objectOutlineImages.filter((it, index) =>
+          objectIndexes.includes(index)
+        );
+        setOutlineImages(images);
+      } else {
+        setOutlineImages(objectOutlineImages);
+      }
     } else {
       setOutlineImages(objectOutlineImages);
     }

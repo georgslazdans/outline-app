@@ -39,16 +39,21 @@ export type PaperOutlineSelectConfig = {
   type: "paperOutlineSelect";
 } & DisplaySettings;
 
+export type ObjectOutlineFilterConfig = {
+  type: "objectOutlineFilter";
+} & DisplaySettings;
+
 export type StepSettingConfig =
   | NumberConfig
   | CheckboxConfig
   | GroupConfig
   | SelectConfig
-  | PaperOutlineSelectConfig;
+  | PaperOutlineSelectConfig
+  | ObjectOutlineFilterConfig;
 
 export const eventFieldConverterFor = (
   config: StepSettingConfig
-): ((event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
+): ((event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => any) => {
   switch (config.type) {
     case "number":
       return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
@@ -67,6 +72,8 @@ export const eventFieldConverterFor = (
     case "paperOutlineSelect":
       return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
         Number.parseInt(event.target.value);
+    case "objectOutlineFilter":
+      throw Error("Object outline filter doesn't have an event!");
   }
 };
 

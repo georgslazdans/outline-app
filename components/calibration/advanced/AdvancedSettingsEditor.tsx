@@ -25,21 +25,31 @@ export const AdvancedSettingsEditor = ({
   currentSetting,
   settings,
   step,
-  onChange
+  onChange,
 }: Props) => {
   if (!step || !currentSetting) {
     return null;
   }
 
   const handleOnChange = (key: string, config: StepSettingConfig) => {
-    const fieldConverter = eventFieldConverterFor(config);
-    return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const updatedSetting = {
-        ...currentSetting,
-        [key]: fieldConverter(event),
+    if (config.type == "objectOutlineFilter") {
+      return (value: number[]) => {
+        const updatedSetting = {
+          ...settings,
+          [key]: value,
+        };
+        onChange(updatedSetting);
       };
-      onChange(updatedSetting);
-    };
+    } else {
+      const fieldConverter = eventFieldConverterFor(config);
+      return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const updatedSetting = {
+          ...currentSetting,
+          [key]: fieldConverter(event),
+        };
+        onChange(updatedSetting);
+      };
+    }
   };
 
   const handleOnGroupChange = (key: string) => {
