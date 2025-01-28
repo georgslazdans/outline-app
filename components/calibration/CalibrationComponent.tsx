@@ -16,7 +16,7 @@ import useNavigationHistory from "@/context/NavigationHistory";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useResultContext } from "./ResultContext";
 import { imageDataToBlob } from "@/lib/utils/ImageData";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
+import ContourPoints, { ContourOutline } from "@/lib/data/contour/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;
@@ -47,7 +47,7 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     }
   }, [detailsContext, stepResults]);
 
-  const saveContext = (contours?: ContourPoints[], paperImageBlob?: Blob) => {
+  const saveContext = (contours?: ContourOutline[], paperImageBlob?: Blob) => {
     const context: Context = {
       ...detailsContext,
       contours: contours ? contours : [],

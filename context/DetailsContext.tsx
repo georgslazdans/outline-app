@@ -10,11 +10,10 @@ import {
   SetStateAction,
   Dispatch,
   useEffect,
-  useRef,
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
+import { ContourOutline } from "@/lib/data/contour/ContourPoints";
 import { useSearchParams } from "next/navigation";
 
 const DetailsContext = createContext<any>(null);
@@ -27,7 +26,7 @@ export type Context = {
   id?: number;
   imageFile: Blob;
   details: Details;
-  contours: ContourPoints[];
+  contours: ContourOutline[];
   settings: Settings;
   addDate: Date;
   paperImage?: Blob;

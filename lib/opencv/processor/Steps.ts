@@ -6,13 +6,14 @@ import bilateralFilterStep from "./steps/BilateralFilter";
 import blurStep from "./steps/Blur";
 import cannyStep from "./steps/Canny";
 import closeContoursStep from "./steps/CloseContours";
-import extractObjectStep from "./steps/ExtractObject";
+import filterObjectsStep from "./steps/FilterObjects";
 import grayScaleStep from "./steps/GrayScale";
 import ProcessingStep, { SettingsConfig } from "./steps/ProcessingFunction";
 import StepName from "./steps/StepName";
 import thresholdStep from "./steps/Threshold";
 import findPaperOutlineStep from "./steps/FindPaperOutline";
 import extractPaperStep from "./steps/ExtractPaper";
+import findObjectOutlinesStep from "./steps/FindObjectOutlines";
 
 const withStepName = (
   stepName: StepName,
@@ -64,7 +65,8 @@ const PROCESSING_STEPS = (): ProcessingStep<any>[] => [
   withStepName(StepName.OBJECT_THRESHOLD, thresholdStep),
   withStepName(StepName.CANNY_OBJECT, cannyStep),
   closeContoursStep,
-  extractObjectStep,
+  findObjectOutlinesStep,
+  filterObjectsStep,
 ];
 
 const getAll = () => {
@@ -105,6 +107,7 @@ const mandatoryFor = (settings: Settings) => {
     StepName.EXTRACT_PAPER,
     StepName.BLUR_OBJECT,
     StepName.OBJECT_THRESHOLD,
+    StepName.FIND_PAPER_OUTLINE,
   ];
   mandatorySteps.push(extractPaperReuseStep(settings));
   return mandatorySteps;

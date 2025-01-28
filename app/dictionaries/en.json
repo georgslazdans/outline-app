@@ -43,7 +43,8 @@
       "blurObject": "Blur Object",
       "cannyPaper": "Canny Paper",
       "cannyObject": "Canny Object",
-      "extractObject": "Extract Object",
+      "findObjectOutlines": "Find Object Outlines",
+      "filterObjects": "Filter Objects",
       "findPaperOutline": "Find Paper Outline",
       "extractPaper": "Extract Paper",
       "grayScale": "Gray Scale",
@@ -89,7 +90,10 @@
       "reuseStep": "Reuse Step",
       "paperIndex": "Select Paper Outline",
       "filterSimilarOutlines": "Filter Similar Outlines",
-      "similarityThreshold": "Similarity Threshold"
+      "similarityThreshold": "Similarity Threshold",
+      "areaThresholdSettings": "Object Area Threshold Settings", 
+      "upperThreshold": "Upper Area Threshold", 
+      "lowerThreshold": "Lower Area Threshold" 
     },
     "simpleSettings": {
       "title": "Settings",
@@ -97,8 +101,8 @@
       "findPaper": "Find Paper",
       "findObject": "Find Object",
       "closeCorners": "Close Corners",
-      "holeSettings": "Hole Settings",
-      "smoothSettings": "Smoothing"
+      "holeSettings": "Hole Settings And Smoothing",
+      "filterObjects": "Filter Objects"
     },
     "settings": "Settings",
     "advancedSettings": "Detailed Settings",

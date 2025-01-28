@@ -1,9 +1,32 @@
 import * as cv from "@techstark/opencv-js";
 import ImageContours, { largestContourOf } from "./Contours";
 import Point from "@/lib/data/Point";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
+import ContourPoints, {
+  ContourOutline,
+} from "@/lib/data/contour/ContourPoints";
 
 const PRIMARY_COLOR = new cv.Scalar(218, 65, 103);
+
+export const drawContourOutlines = (
+  outlines: ContourOutline[],
+  imageSize: cv.Size
+): cv.Mat => {
+  let result: cv.Mat | undefined;
+  outlines.forEach((it) => {
+    const holes = it.holes ? it.holes : [];
+    const contourShapeImage = contourShapeOf([
+      ...holes,
+      it.outline,
+    ]).drawImageOfSize(imageSize);
+    if (result) {
+      cv.add(result, contourShapeImage, result);
+      contourShapeImage.delete();
+    } else {
+      result = contourShapeImage;
+    }
+  });
+  return result!;
+};
 
 export const contourShapeOf = (contours: ContourPoints[]) => {
   let color = PRIMARY_COLOR;

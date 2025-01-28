@@ -3,11 +3,11 @@ import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
 import StepSetting, { StepSettingConfig } from "./StepSettings";
 import Settings from "../../Settings";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
+import ContourPoints, { ContourOutline } from "@/lib/data/contour/ContourPoints";
 
 export type ProcessFunctionSuccess = {
   image: cv.Mat;
-  contours?: ContourPoints[];
+  contours?: ContourOutline[];
 };
 
 type ProcessFunctionFailed = {
@@ -21,7 +21,7 @@ export type ProcessFunctionResult =
 export type PreviousData = {
   intermediateImageOf: (stepName: StepName) => cv.Mat;
   settingsOf: (stepName: StepName) => StepSetting;
-  contoursOf: (stepName: StepName) => ContourPoints[] | undefined;
+  contoursOf: (stepName: StepName) => ContourOutline[] | undefined;
 };
 
 export type Process<T extends StepSetting> = (

@@ -9,6 +9,7 @@ import { paperContoursOf, smoothOf } from "../../util/contours/Contours";
 import StepName from "./StepName";
 import ContourPoints, { pointsFrom } from "@/lib/data/contour/ContourPoints";
 import { drawAllContours } from "../../util/contours/Drawing";
+import { outlineAppCache } from "@/app/swCache";
 
 interface ContourResult {
   index: number;
@@ -60,7 +61,10 @@ const findPaperOutline: Process<FindPaperOutlineSettings> = (
 
   const resultPoints = filteredOutlines
     .sort((a, b) => (a.area > b.area ? -1 : 1))
-    .map((it) => it.points);
+    .map((it) => it.points)
+    .map((it) => {
+      return { outline: it };
+    });
   return { image: result, contours: resultPoints };
 };
 

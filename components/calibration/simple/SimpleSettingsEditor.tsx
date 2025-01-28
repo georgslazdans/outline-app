@@ -2,9 +2,8 @@ import Settings from "@/lib/opencv/Settings";
 import { Dictionary } from "@/app/dictionaries";
 import FindPaperSettings from "./settings/FindPaperSettings";
 import CloseCornerSettings from "./settings/CloseCornersSettings";
-import HoleSettings from "./settings/HoleSettings";
+import HoleAndSmoothSettings from "./settings/HoleSettings";
 import FindObjectSettings from "./settings/FindObjectSettings";
-import SmoothContourSettings from "./settings/SmoothContourSettings";
 
 type Props = {
   dictionary: Dictionary;
@@ -38,16 +37,11 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
           settings={settings}
           onSettingsChange={onChange}
         />
-        <HoleSettings
+        <HoleAndSmoothSettings
           dictionary={dictionary}
           settings={settings}
           onSettingsChange={onChange}
         />
-        <SmoothContourSettings
-          dictionary={dictionary}
-          settings={settings}
-          onSettingsChange={onChange}
-        ></SmoothContourSettings>
       </div>
     </div>
   );

@@ -2,8 +2,8 @@ enum CalibrationSettingStep {
   FIND_PAPER,
   FIND_OBJECT,
   CLOSE_CORNERS,
-  HOLE_SETTINGS,
-  SMOOTHING,
+  HOLE_AND_SMOOTHING,
+  FILTER_OBJECTS,
 }
 
 export default CalibrationSettingStep;

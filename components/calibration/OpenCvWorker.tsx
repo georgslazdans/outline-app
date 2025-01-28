@@ -24,7 +24,7 @@ export const useOpenCvWorker = (
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
   const { detailsContext, contextImageData } = useDetails();
-  const { stepResults, outlineCheckImage, paperOutlineImages, updateResult } =
+  const { stepResults, objectOutlineImages, paperOutlineImages, updateResult } =
     useResultContext();
   const { setLoading } = useLoading();
   const [previousSettings, setPreviousSettings] = useState<Settings>();
@@ -61,7 +61,7 @@ export const useOpenCvWorker = (
         updateResult(
           updatedStepResults,
           data.paperOutlineImages,
-          data.outlineCheckImage
+          data.objectOutlineImages
         );
         setErrorMessage(undefined);
       } else if (data.status === "failed") {
@@ -69,13 +69,13 @@ export const useOpenCvWorker = (
         const hasOutlineStep = !!findStep(StepName.FIND_PAPER_OUTLINE).in(
           data.result.data!
         );
-        const hasObjectStep = !!findStep(StepName.EXTRACT_OBJECT).in(
+        const hasObjectStep = !!findStep(StepName.FIND_OBJECT_OUTLINES).in(
           data.result.data!
         );
         updateResult(
           updatedStepResults,
           hasOutlineStep ? paperOutlineImages : [],
-          hasObjectStep ? outlineCheckImage : undefined
+          hasObjectStep ? objectOutlineImages : []
         );
         setErrorMessage(data.result.error);
       } else {
@@ -88,7 +88,7 @@ export const useOpenCvWorker = (
       updateResult,
       setErrorMessage,
       paperOutlineImages,
-      outlineCheckImage,
+      objectOutlineImages,
     ]
   );
 
@@ -116,7 +116,13 @@ export const useOpenCvWorker = (
         handleWorkerResult(data);
       });
     }
-  }, [contextImageData, detailsContext, handleWorkerResult, openCvApi, setLoading]);
+  }, [
+    contextImageData,
+    detailsContext,
+    handleWorkerResult,
+    openCvApi,
+    setLoading,
+  ]);
 
   const rerunOpenCv = useCallback(() => {
     setLoading(true);

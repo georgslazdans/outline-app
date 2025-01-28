@@ -14,7 +14,7 @@ type Props = {
 };
 
 const SettingGroup = ({ name, dictionary, children, settingStep }: Props) => {
-  const { paperOutlineImages, outlineCheckImage } = useResultContext();
+  const { paperOutlineImages, objectOutlineImages } = useResultContext();
   const {
     settingStep: currentSettingStep,
     setSettingStep: setCurrentSettingStep,
@@ -35,15 +35,15 @@ const SettingGroup = ({ name, dictionary, children, settingStep }: Props) => {
       return false;
     }
     if (
-      settingStep == CalibrationSettingStep.HOLE_SETTINGS ||
-      settingStep == CalibrationSettingStep.SMOOTHING
+      settingStep == CalibrationSettingStep.HOLE_AND_SMOOTHING ||
+      settingStep == CalibrationSettingStep.FILTER_OBJECTS
     ) {
-      if (!outlineCheckImage) {
+      if (!objectOutlineImages || objectOutlineImages.length == 0) {
         return true;
       }
     }
     return paperOutlineImages.length <= 0;
-  }, [outlineCheckImage, paperOutlineImages.length, settingStep]);
+  }, [objectOutlineImages, paperOutlineImages.length, settingStep]);
 
   return (
     <>

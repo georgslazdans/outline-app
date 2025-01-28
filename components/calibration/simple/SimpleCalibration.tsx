@@ -38,14 +38,8 @@ const SimpleCalibration = ({
   const exportSvg = useCallback(() => {
     const lastStep = stepResults[stepResults.length - 1];
     const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
-    const contours = modifyContourList(lastStep.contours!).centerPoints(
-      paperDimensions
-    );
-    const svg = Svg.from(contours, paperDimensions);
-    const blob = new Blob([svg], {
-      type: "image/svg+xml",
-    });
-    downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.svg`);
+    const contourOutlines = lastStep.contours ? lastStep.contours : [];
+    Svg.download(contourOutlines, paperDimensions);
   }, [detailsContext, stepResults]);
 
   return (

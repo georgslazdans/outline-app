@@ -14,7 +14,6 @@ import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { modifyContourList } from "@/lib/data/contour/ContourPoints";
 import { idQuery } from "@/lib/utils/UrlParams";
-import imageDataOf from "@/lib/opencv/util/ImageData";
 import getImageData from "@/lib/utils/ImageData";
 
 type Props = {
@@ -37,19 +36,12 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
     router.push("/calibration" + "?" + idQuery(context.id!.toString()));
   };
 
-  const hasSvg = !!context.contours;
+  const hasSvg = !!context.contours && context.contours.length != 0;
 
   const exportSvg = () => {
     if (hasSvg) {
       const paperDimensions = paperDimensionsOfDetailsContext(context);
-      const contours = modifyContourList(context.contours!).centerPoints(
-        paperDimensions
-      );
-      const svg = Svg.from(contours, paperDimensions);
-      const blob = new Blob([svg], {
-        type: "image/svg+xml",
-      });
-      downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.svg`);
+      Svg.download(context.contours, paperDimensions);
     }
   };
 

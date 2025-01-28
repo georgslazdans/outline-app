@@ -10,7 +10,7 @@ import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
 import StepName from "./steps/StepName";
 import ProcessingResult from "../ProcessingResult";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
+import { ContourOutline } from "@/lib/data/contour/ContourPoints";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
@@ -95,7 +95,12 @@ const processorOf = (
     let currentImage = image;
 
     for (const step of processingSteps) {
-      const result = processStep(currentImage, step, intermediateImages, stepData);
+      const result = processStep(
+        currentImage,
+        step,
+        intermediateImages,
+        stepData
+      );
       if (result.type == "success") {
         const stepResult = result.functionResult;
         currentImage = stepResult.image;
@@ -160,8 +165,8 @@ const previousDataOf = (
     return settings[stepName];
   };
 
-  const contoursOf = (stepName: StepName): ContourPoints[] | undefined => {
-    return stepData.find((it) => it.stepName == stepName)?.contours
+  const contoursOf = (stepName: StepName): ContourOutline[] | undefined => {
+    return stepData.find((it) => it.stepName == stepName)?.contours;
   };
 
   return {

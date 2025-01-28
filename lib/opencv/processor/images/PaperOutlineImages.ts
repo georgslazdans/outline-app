@@ -8,18 +8,18 @@ import { contourShapeOf } from "../../util/contours/Drawing";
 import StepName from "../steps/StepName";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
 
-const paperOutlineImagesOf = (
-  steps: StepResult[],
-): ImageData[] => {
+const paperOutlineImagesOf = (steps: StepResult[]): ImageData[] => {
   const input = findStep(StepName.INPUT).in(steps);
   const findPaper = findStep(StepName.FIND_PAPER_OUTLINE).in(steps);
   const imageSize = new cv.Size(input.imageData.width, input.imageData.height);
 
-  const contours = findPaper?.contours;
-  if (!contours || contours.length == 0) {
+  const contourOutlines = findPaper?.contours;
+  if (!contourOutlines || contourOutlines.length == 0) {
     console.warn("No paper options for image!");
     return [new ImageData(1, 1)];
   }
+
+  const contours = contourOutlines.map((it) => it.outline);
 
   const result: ImageData[] = [];
   for (const contour of contours) {

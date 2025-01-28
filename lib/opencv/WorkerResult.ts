@@ -3,7 +3,7 @@ import ProcessingResult from "./ProcessingResult";
 export type SuccessResult = {
   status: "success";
   result: ProcessingResult;
-  outlineCheckImage: ImageData;
+  objectOutlineImages: ImageData[];
   paperOutlineImages: ImageData[];
 };
 export type FailedResult = {

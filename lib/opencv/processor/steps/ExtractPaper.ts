@@ -41,12 +41,13 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
   const paperOutlineContours = previous.contoursOf(
     StepName.FIND_PAPER_OUTLINE
   )!;
+
   const index =
     settings.paperIndex >= paperOutlineContours.length
       ? paperOutlineContours.length - 1
       : settings.paperIndex;
 
-  const cornerPoints = paperOutlineContours[index];
+  const cornerPoints = paperOutlineContours[index].outline;
   const scaledPoints = handlePaperShrinking(cornerPoints, settings.shrinkPaper);
 
   const previousStep = stepNameOfReuseStep(settings.reuseStep);
@@ -56,7 +57,7 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
     previousImage,
     settings.paperSettings
   );
-  return { image: result, contours: [scaledPoints] };
+  return { image: result, contours: [{ outline: scaledPoints }] };
 };
 
 const stepNameOfReuseStep = (reuseStep: ReuseStep) => {

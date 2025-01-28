@@ -1,11 +1,9 @@
 import * as cv from "@techstark/opencv-js";
-import outlineCheckImageOf from "./processor/images/OutlineCheckImage";
-import objectThresholdCheckOf from "./processor/images/ObjectThresholdCheck";
+import objectOutlineImagesOf from "./processor/images/OutlineCheckImage";
 import handleOpenCvError from "./OpenCvError";
 import processStep, { ProcessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
 import StepResult, { stepResultsBefore } from "./StepResult";
-import Settings from "./Settings";
 import * as Comlink from "comlink";
 import WorkerResult, {
   ErrorResult,
@@ -35,13 +33,13 @@ const waitForInitialization = async () => {
 
 const successMessageOf = (
   stepResults: ProcessingResult,
-  outlineCheckImage: ImageData,
+  objectOutlineImages: ImageData[],
   paperOutlineImages: ImageData[],
 ): SuccessResult => {
   return {
     status: "success",
     result: stepResults,
-    outlineCheckImage: outlineCheckImage,
+    objectOutlineImages: objectOutlineImages,
     paperOutlineImages: paperOutlineImages,
   };
 };
@@ -66,14 +64,13 @@ const processOutlineImage = async (data: ProcessAll): Promise<WorkerResult> => {
   try {
     const result = await processImage(data);
     if (!result.error) {
-      const outlineCheckImage = outlineCheckImageOf(
+      const objectOutlineImages = objectOutlineImagesOf(
         result.data!,
-        data.settings
       );
       const paperOutlineImages = paperOutlineImagesOf(result.data!);
       return successMessageOf(
         result,
-        outlineCheckImage,
+        objectOutlineImages,
         paperOutlineImages,
       );
     } else {
@@ -112,14 +109,13 @@ const processOutlineStep = async (data: ProcessStep): Promise<WorkerResult> => {
     const result = await processStep(data);
     if (!result.error) {
       const processedResult = postProcessResult(result, data);
-      const outlineCheckImage = outlineCheckImageOf(
+      const objectOutlineImages = objectOutlineImagesOf(
         result.data!,
-        data.settings
       );
       const paperOutlineImages = paperOutlineImagesOf(result.data!);
       return successMessageOf(
         processedResult,
-        outlineCheckImage,
+        objectOutlineImages,
         paperOutlineImages
       );
     } else {

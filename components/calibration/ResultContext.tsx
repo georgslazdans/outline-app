@@ -4,12 +4,12 @@ import StepResult from "@/lib/opencv/StepResult";
 
 type ResultContextType = {
   stepResults: StepResult[];
-  outlineCheckImage?: ImageData;
+  objectOutlineImages: ImageData[];
   paperOutlineImages: ImageData[];
   updateResult: (
     results: StepResult[],
     paperOutlines: ImageData[],
-    outline?: ImageData,
+    objectOutlines: ImageData[]
   ) => void;
 };
 
@@ -17,25 +17,27 @@ const ResultContext = createContext<ResultContextType | undefined>(undefined);
 
 export const ResultProvider = ({ children }: { children: ReactNode }) => {
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
-  const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
   const [paperOutlineImages, setPaperOutlineImages] = useState<ImageData[]>([]);
+  const [objectOutlineImages, setObjectOutlineImages] = useState<ImageData[]>(
+    []
+  );
 
   const updateResult = (
     results: StepResult[],
     paperOutlines: ImageData[],
-    outline?: ImageData,
+    objectOutlines: ImageData[]
   ) => {
     setStepResults(results);
     setPaperOutlineImages(paperOutlines);
-    setOutlineCheckImage(outline);
+    setObjectOutlineImages(objectOutlines);
   };
 
   return (
     <ResultContext.Provider
       value={{
-        stepResults,
-        outlineCheckImage,
-        paperOutlineImages,
+        stepResults: stepResults,
+        objectOutlineImages: objectOutlineImages,
+        paperOutlineImages: paperOutlineImages,
         updateResult: updateResult,
       }}
     >

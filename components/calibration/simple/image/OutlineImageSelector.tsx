@@ -39,9 +39,9 @@ const imageOptionsFor = (
     ];
   } else if (settingStep == CalibrationSettingStep.CLOSE_CORNERS) {
     return [imageEntryFor(StepName.CLOSE_CORNERS, dictionary)];
-  } else if (settingStep == CalibrationSettingStep.HOLE_SETTINGS) {
+  } else if (settingStep == CalibrationSettingStep.HOLE_AND_SMOOTHING) {
     return [imageEntryFor(StepName.EXTRACT_PAPER, dictionary)];
-  } else if (settingStep == CalibrationSettingStep.SMOOTHING) {
+  } else if (settingStep == CalibrationSettingStep.FILTER_OBJECTS) {
     return [imageEntryFor(StepName.EXTRACT_PAPER, dictionary)];
   }
   throw Error("Image entries not found for step: " + settingStep);
@@ -53,7 +53,7 @@ type Props = {
 
 export const OutlineImageSelector = ({ dictionary }: Props) => {
   const { detailsContext } = useDetails();
-  const { stepResults, outlineCheckImage, paperOutlineImages } =
+  const { stepResults, objectOutlineImages, paperOutlineImages } =
     useResultContext();
   const { settingStep } = useSettingStepContext();
 
@@ -61,7 +61,7 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
     StepName.INPUT
   );
   const [backgroundImageStep, setBackgroundImageStep] = useState<StepResult>();
-  const [outlineImage, setOutlineImage] = useState<ImageData>();
+  const [outlineImages, setOutlineImages] = useState<ImageData[]>([]);
 
   const [backgroundImageOptions, setBackgroundImageOptions] = useState<
     Option[]
@@ -76,14 +76,17 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
           paperIndex >= paperOutlineImages.length
             ? paperOutlineImages.length - 1
             : paperIndex;
-        setOutlineImage(paperOutlineImages[index]);
+        setOutlineImages([paperOutlineImages[index]]);
       } else {
-        setOutlineImage(undefined);
+        setOutlineImages([]);
       }
+    } else if (settingStep == CalibrationSettingStep.FILTER_OBJECTS) {
+      // TODO filter by selected ID's indexes
+      setOutlineImages(objectOutlineImages);
     } else {
-      setOutlineImage(outlineCheckImage);
+      setOutlineImages(objectOutlineImages);
     }
-  }, [settingStep, detailsContext, paperOutlineImages, outlineCheckImage]);
+  }, [settingStep, detailsContext, paperOutlineImages, objectOutlineImages]);
 
   useEffect(() => {
     const step = stepResults.find(
@@ -132,7 +135,7 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
       <OutlineImageViewer
         className="max-h-[30vh] xl:max-h-[45vh]"
         baseImage={backgroundImageStep?.imageData}
-        outlineImage={outlineImage}
+        outlineImages={outlineImages}
       ></OutlineImageViewer>
     </>
   );

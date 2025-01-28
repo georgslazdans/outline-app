@@ -5,7 +5,7 @@ import DrawOutlineButton from "../DrawOutlineButton";
 type Props = {
   className?: string;
   baseImage?: ImageData;
-  outlineImage?: ImageData;
+  outlineImages: ImageData[];
 };
 
 const blendImageData = (
@@ -39,7 +39,7 @@ const blendImageData = (
 export const OutlineImageViewer = ({
   className,
   baseImage,
-  outlineImage,
+  outlineImages,
 }: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -52,14 +52,17 @@ export const OutlineImageViewer = ({
   const drawImage = useCallback(() => {
     const ctx = getContext();
     if (ctx && baseImage) {
-      if (drawOutline && outlineImage) {
-        const blendedImage = blendImageData(ctx, baseImage, outlineImage);
+      if (drawOutline && outlineImages && outlineImages.length != 0) {
+        let blendedImage = baseImage
+        for(const outlineImage of outlineImages) {
+          blendedImage = blendImageData(ctx, blendedImage, outlineImage);
+        }
         ctx.putImageData(blendedImage, 0, 0);
       } else {
         ctx.putImageData(baseImage, 0, 0);
       }
     }
-  }, [baseImage, outlineImage, drawOutline]);
+  }, [baseImage, outlineImages, drawOutline]);
 
   useEffect(() => {
     drawImage();

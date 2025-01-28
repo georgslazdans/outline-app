@@ -43,7 +43,7 @@ export const paperContoursOf = (image: cv.Mat): ImageContours => {
   return new ImageContours(contours, hierarchy);
 };
 
-export const fancyContoursOf = (image: cv.Mat): ImageContours => {
+export const fullHierarchyContoursOf = (image: cv.Mat): ImageContours => {
   const contours = new cv.MatVector();
   const hierarchy = new cv.Mat();
   cv.findContours(
