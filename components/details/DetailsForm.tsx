@@ -81,7 +81,9 @@ const DetailsForm = ({ dictionary }: Props) => {
     setLoading(false);
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
@@ -116,14 +118,13 @@ const DetailsForm = ({ dictionary }: Props) => {
       orientation: formData.orientation as Orientation,
     };
     const newContext: Context = {
-      ...detailsContext,
       details: {
         ...formData,
         orientation: formData.orientation as Orientation,
       },
       settings: settings,
       addDate: new Date(),
-      // Clean up old data
+      imageFile: detailsContext.imageFile,
       contours: [],
       paperImage: undefined,
     };

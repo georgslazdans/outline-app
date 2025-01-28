@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import ImageUpload from "./ImageUpload";
 import PhotoUpload from "./PhotoCapture";
-import { useDetails } from "@/context/DetailsContext";
+import { Context, useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
 import getImageData from "@/lib/utils/ImageData";
 import { useLoading } from "@/context/LoadingContext";
@@ -26,8 +26,14 @@ const Upload = ({ dictionary }: Props) => {
     if (file) {
       const imageData = await getImageData(file);
       setContextImageData(imageData);
-      setDetailsContext((context) => {
-        return { ...context, imageFile: file };
+      setDetailsContext((context: Context) => {
+        return {
+          details: context.details,
+          addDate: new Date(),
+          contours: [],
+          settings: context.settings,
+          imageFile: file,
+        };
       });
 
       addHistory("/");
