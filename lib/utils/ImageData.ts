@@ -1,4 +1,7 @@
-const getImageData = async (blob: Blob, canvas: HTMLCanvasElement | null) => {
+const getImageData = async (
+  blob: Blob,
+  canvas: HTMLCanvasElement = document.createElement("canvas")
+) => {
   const ctx = canvas?.getContext("2d", { willReadFrequently: true });
 
   if (!canvas || !ctx) {

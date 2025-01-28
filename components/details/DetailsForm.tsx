@@ -123,6 +123,9 @@ const DetailsForm = ({ dictionary }: Props) => {
       },
       settings: settings,
       addDate: new Date(),
+      // Clean up old data
+      contours: [],
+      paperImage: undefined,
     };
     delete newContext.id;
     add(newContext).then(

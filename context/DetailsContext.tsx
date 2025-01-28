@@ -26,19 +26,17 @@ type Props = {
 export type Context = {
   id?: number;
   imageFile: Blob;
-  imageData: ImageData;
   details: Details;
   contours: ContourPoints[];
   settings: Settings;
   addDate: Date;
-  paperImage?: ImageData;
+  paperImage?: Blob;
 };
 
 const DetailsProvider = ({ children }: Props) => {
   const [detailsContext, setDetailsContext] = useState<Context>();
+  const [contextImageData, setContextImageData] = useState<ImageData>();
   const { getAll, getByID } = useIndexedDB("details");
-
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -48,11 +46,10 @@ const DetailsProvider = ({ children }: Props) => {
       if (detailsContext?.id != id) {
         getByID(id).then((dbModel) => {
           if (dbModel) {
-            getImageData(dbModel.imageFile, canvasRef.current).then(
-              (data) => {
-                setDetailsContext({ ...dbModel, imageData: data });
-              }
-            );
+            getImageData(dbModel.imageFile).then((data) => {
+              setDetailsContext(dbModel);
+              setContextImageData(data);
+            });
           }
         });
       }
@@ -61,9 +58,10 @@ const DetailsProvider = ({ children }: Props) => {
         getAll().then((allContexts) => {
           if (allContexts && allContexts.length > 0) {
             const loadedContext = allContexts.pop();
-            getImageData(loadedContext.imageFile, canvasRef.current).then(
+            getImageData(loadedContext.imageFile).then(
               (data) => {
-                setDetailsContext({ ...loadedContext, imageData: data });
+                setDetailsContext(loadedContext);
+                setContextImageData(data);
               }
             );
           }
@@ -72,10 +70,15 @@ const DetailsProvider = ({ children }: Props) => {
     }
   }, [getAll, getByID, detailsContext, searchParams]);
 
-
   return (
-    <DetailsContext.Provider value={{ detailsContext, setDetailsContext }}>
-      <canvas ref={canvasRef} style={{ display: "none" }} />
+    <DetailsContext.Provider
+      value={{
+        detailsContext,
+        setDetailsContext,
+        contextImageData,
+        setContextImageData,
+      }}
+    >
       {children}
     </DetailsContext.Provider>
   );
@@ -84,6 +87,8 @@ const DetailsProvider = ({ children }: Props) => {
 export const useDetails = (): {
   detailsContext: Context;
   setDetailsContext: Dispatch<SetStateAction<Context>>;
+  contextImageData: ImageData;
+  setContextImageData: Dispatch<SetStateAction<ImageData>>;
 } => useContext(DetailsContext);
 
 export default DetailsProvider;

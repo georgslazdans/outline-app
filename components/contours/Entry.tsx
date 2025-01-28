@@ -14,6 +14,8 @@ import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { modifyContourList } from "@/lib/data/contour/ContourPoints";
 import { idQuery } from "@/lib/utils/UrlParams";
+import imageDataOf from "@/lib/opencv/util/ImageData";
+import getImageData from "@/lib/utils/ImageData";
 
 type Props = {
   context: Context;
@@ -22,12 +24,14 @@ type Props = {
 };
 
 const Entry = ({ context, dictionary, onDelete }: Props) => {
-  const { setDetailsContext } = useDetails();
+  const { setDetailsContext, setContextImageData } = useDetails();
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("details");
 
-  const openSettings = () => {
+  const openSettings = async () => {
+    const data = await getImageData(context.imageFile);
+    setContextImageData(data);
     setDetailsContext(context);
     addHistory("/contours");
     router.push("/calibration" + "?" + idQuery(context.id!.toString()));

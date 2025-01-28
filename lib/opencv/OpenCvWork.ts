@@ -6,9 +6,12 @@ import { ProcessAll } from "./processor/ProcessAll";
 import StepName from "./processor/steps/StepName";
 import Steps from "./processor/Steps";
 
-export const allWorkOf = (context: Context): ProcessAll => {
+export const allWorkOf = (
+  context: Context,
+  contextImageData: ImageData
+): ProcessAll => {
   const imageData =
-    context.imageData ||
+    contextImageData ||
     (typeof window !== "undefined" ? new ImageData(1, 1) : null);
 
   return {

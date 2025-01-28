@@ -5,7 +5,7 @@ import ProcessingStep, {
   ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
-import { paperContoursOf } from "../../util/contours/Contours";
+import { paperContoursOf, smoothOf } from "../../util/contours/Contours";
 import StepName from "./StepName";
 import ContourPoints, { pointsFrom } from "@/lib/data/contour/ContourPoints";
 import { drawAllContours } from "../../util/contours/Drawing";
@@ -80,7 +80,7 @@ const findPaperOutlines = (
     if (contour.rows >= 4) {
       const calculatedArea = cv.contourArea(contour);
       if (calculatedArea > paperAreaThreshold) {
-        const smoothedContour = smoothContour(contour);
+        const smoothedContour = smoothOf(contour, 0.02);
         if (smoothedContour.rows == 4) {
           result.push({
             index: i,
@@ -106,7 +106,7 @@ const filterOutlines = (
   const { width, height } = imageSize;
   const distanceThreshold = Math.max(width, height) * similarityThreshold;
   const areaThreshold = width * height * similarityThreshold;
-  
+
   const result: ContourResult[] = [];
 
   outlines.forEach((it) => {
@@ -139,13 +139,6 @@ const smallestAreaOf = (contours: ContourResult[]): ContourResult => {
     }
   });
   return smallestContour;
-};
-
-const smoothContour = (contour: cv.Mat) => {
-  let result = new cv.Mat();
-  const accuracy = 0.02 * cv.arcLength(contour, true);
-  cv.approxPolyDP(contour, result, accuracy, true);
-  return result;
 };
 
 const findPaperOutlineStep: ProcessingStep<FindPaperOutlineSettings> = {

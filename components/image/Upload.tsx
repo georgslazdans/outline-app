@@ -16,9 +16,7 @@ type Props = {
 const Upload = ({ dictionary }: Props) => {
   const { addHistory } = useNavigationHistory();
   const { setLoading } = useLoading();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const { setDetailsContext } = useDetails();
+  const { setDetailsContext, setContextImageData } = useDetails();
   const router = useRouter();
   router.prefetch("/details");
 
@@ -26,10 +24,10 @@ const Upload = ({ dictionary }: Props) => {
     setLoading(true);
     const file = event.target.files[0];
     if (file) {
-      const imageData = await getImageData(file, canvasRef.current);
-
+      const imageData = await getImageData(file);
+      setContextImageData(imageData);
       setDetailsContext((context) => {
-        return { ...context, imageFile: file, imageData };
+        return { ...context, imageFile: file };
       });
 
       addHistory("/");
@@ -53,7 +51,6 @@ const Upload = ({ dictionary }: Props) => {
       >
         {dictionary.uploadPicture}
       </ImageUpload>
-      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 };

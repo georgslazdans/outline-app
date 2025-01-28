@@ -6,7 +6,7 @@ import SimpleCalibration from "./simple/SimpleCalibration";
 import { AdvancedCalibration } from "./advanced/AdvancedCalibration";
 import { useOpenCvWorker } from "./OpenCvWorker";
 import { useLoading } from "@/context/LoadingContext";
-import { useDetails } from "@/context/DetailsContext";
+import { Context, useDetails } from "@/context/DetailsContext";
 import { applyDefaults, defaultSettings } from "@/lib/opencv/Settings";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,8 @@ import BottomButtons from "./BottomButtons";
 import useNavigationHistory from "@/context/NavigationHistory";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useResultContext } from "./ResultContext";
+import { imageDataToBlob } from "@/lib/utils/ImageData";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;
@@ -45,16 +47,11 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     }
   }, [detailsContext, stepResults]);
 
-  const saveAndClose = () => {
-    setLoading(true);
-    const contours = stepResults.pop()!.contours;
-    const paperImage = stepResults.find(
-      (it) => it.stepName == StepName.EXTRACT_PAPER
-    )?.imageData;
-    const context = {
+  const saveContext = (contours?: ContourPoints[], paperImageBlob?: Blob) => {
+    const context: Context = {
       ...detailsContext,
-      contours: contours,
-      paperImage: paperImage,
+      contours: contours ? contours : [],
+      paperImage: paperImageBlob ? paperImageBlob : undefined,
     };
     update(context).then(() => {
       setLoading(false);
@@ -66,6 +63,21 @@ const CalibrationComponent = ({ dictionary }: Props) => {
       }
       clearHistory();
     });
+  };
+
+  const saveAndClose = () => {
+    setLoading(true);
+    const contours = stepResults.pop()!.contours;
+    const paperImage = stepResults.find(
+      (it) => it.stepName == StepName.EXTRACT_PAPER
+    )?.imageData;
+    if (paperImage) {
+      imageDataToBlob(paperImage).then((paperImageBlob) => {
+        saveContext(contours, paperImageBlob ? paperImageBlob : undefined);
+      });
+    } else {
+      saveContext(contours);
+    }
   };
 
   useEffect(() => {
@@ -97,7 +109,7 @@ const CalibrationComponent = ({ dictionary }: Props) => {
           {!simpleMode && detailsContext && (
             <>
               <AdvancedCalibration
-                dictionary={dictionary} 
+                dictionary={dictionary}
               ></AdvancedCalibration>
             </>
           )}
