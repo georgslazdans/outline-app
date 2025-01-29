@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DrawOutlineButton from "../DrawOutlineButton";
+import { DisplayImageInfo } from "./DisplayImageInfo";
 
 type Props = {
   className?: string;
-  baseImage?: ImageData;
-  outlineImages: ImageData[];
+  displayImageInfo: DisplayImageInfo;
 };
 
 const blendImageData = (
@@ -36,11 +36,7 @@ const blendImageData = (
   return blendedImageData;
 };
 
-export const OutlineImageViewer = ({
-  className,
-  baseImage,
-  outlineImages,
-}: Props) => {
+export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -50,11 +46,15 @@ export const OutlineImageViewer = ({
   };
 
   const drawImage = useCallback(() => {
+    const canvas = canvasRef.current;
     const ctx = getContext();
-    if (ctx && baseImage) {
+    if (canvas && ctx) {
+      const { baseImage, outlineImages } = displayImageInfo;
+      canvas.width = baseImage.width;
+      canvas.height = baseImage.height;
       if (drawOutline && outlineImages && outlineImages.length != 0) {
-        let blendedImage = baseImage
-        for(const outlineImage of outlineImages) {
+        let blendedImage = baseImage;
+        for (const outlineImage of outlineImages) {
           blendedImage = blendImageData(ctx, blendedImage, outlineImage);
         }
         ctx.putImageData(blendedImage, 0, 0);
@@ -62,11 +62,11 @@ export const OutlineImageViewer = ({
         ctx.putImageData(baseImage, 0, 0);
       }
     }
-  }, [baseImage, outlineImages, drawOutline]);
+  }, [displayImageInfo, drawOutline]);
 
   useEffect(() => {
     drawImage();
-  }, [drawImage, drawOutline]);
+  }, [drawImage]);
 
   return (
     <div className={className}>
@@ -81,8 +81,6 @@ export const OutlineImageViewer = ({
           <canvas
             className="max-w-full max-h-[30vh] xl:max-h-[40vh]"
             ref={canvasRef}
-            width={baseImage?.width}
-            height={baseImage?.height}
           />
         </TransformComponent>
       </TransformWrapper>

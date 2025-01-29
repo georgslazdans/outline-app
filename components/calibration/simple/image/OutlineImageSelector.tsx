@@ -8,6 +8,7 @@ import { Dictionary } from "@/app/dictionaries";
 import { useSettingStepContext } from "../SettingStepContext";
 import CalibrationSettingStep from "../settings/CalibrationSettingStep";
 import { useDetails } from "@/context/DetailsContext";
+import { DisplayImageInfo } from "./DisplayImageInfo";
 
 interface Option {
   label: string;
@@ -56,14 +57,17 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
   const { stepResults, objectOutlineImages, paperOutlineImages } =
     useResultContext();
   const { settingStep } = useSettingStepContext();
-  const [backgroundImageStep, setBackgroundImageStep] = useState<StepResult>();
-  const [outlineImages, setOutlineImages] = useState<ImageData[]>([]);
+  const [displayImageInfo, setDisplayImageInfo] = useState<DisplayImageInfo>({
+    baseStepName: StepName.INPUT,
+    baseImage: new ImageData(1, 1),
+    outlineImages: [],
+  });
 
   const [backgroundImageOptions, setBackgroundImageOptions] = useState<
     Option[]
   >([]);
 
-  useEffect(() => {
+  const outlineImagesForCurrentStep = useCallback((): ImageData[] => {
     if (settingStep == CalibrationSettingStep.FIND_PAPER) {
       if (paperOutlineImages.length > 0) {
         const paperIndex =
@@ -72,9 +76,9 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
           paperIndex >= paperOutlineImages.length
             ? paperOutlineImages.length - 1
             : paperIndex;
-        setOutlineImages([paperOutlineImages[index]]);
+        return [paperOutlineImages[index]];
       } else {
-        setOutlineImages([]);
+        return [];
       }
     } else if (settingStep == CalibrationSettingStep.FILTER_OBJECTS) {
       const objectIndexes =
@@ -83,33 +87,71 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
         const images = objectOutlineImages.filter((it, index) =>
           objectIndexes.includes(index)
         );
-        setOutlineImages(images);
+        return images;
       } else {
-        setOutlineImages(objectOutlineImages);
+        return objectOutlineImages;
       }
     } else {
-      setOutlineImages(objectOutlineImages);
+      return objectOutlineImages;
     }
   }, [settingStep, detailsContext, paperOutlineImages, objectOutlineImages]);
+
+  const newStepForAvailableOptions = useCallback((): StepResult | undefined => {
+    if (backgroundImageOptions.length > 0) {
+      const hasElementSelected = !!backgroundImageOptions.find(
+        (it) => it.value == displayImageInfo?.baseStepName
+      );
+      if (!hasElementSelected) {
+        const result = stepResults.find(
+          (it) => it.stepName == backgroundImageOptions[0].value
+        );
+        return result;
+      }
+    }
+  }, [backgroundImageOptions, displayImageInfo?.baseStepName, stepResults]);
+
+  useEffect(() => {
+    const outlineImages = outlineImagesForCurrentStep();
+    const newStep = newStepForAvailableOptions();
+    if (newStep) {
+      setDisplayImageInfo((previous) => {
+        return {
+          baseStepName: newStep.stepName,
+          baseImage: newStep.imageData,
+          outlineImages: outlineImages,
+        };
+      });
+    } else {
+      setDisplayImageInfo((previous) => {
+        return { ...previous, outlineImages: outlineImages };
+      });
+    }
+  }, [newStepForAvailableOptions, outlineImagesForCurrentStep]);
 
   const updateBackgroundStep = useCallback(
     (stepName: StepName) => {
       const step = stepResults.find((it) => it.stepName == stepName)!;
-      setBackgroundImageStep(step);
+      setDisplayImageInfo((previous) => {
+        return {
+          ...previous,
+          baseStepName: step.stepName,
+          baseImage: step.imageData,
+        };
+      });
     },
     [stepResults]
   );
 
   useEffect(() => {
-    if (backgroundImageStep) {
-      const step = stepResults.find(
-        (it) => it.stepName == backgroundImageStep.stepName
-      );
-      if (backgroundImageStep != step) {
-        setBackgroundImageStep(step);
-      }
+    const step = stepResults.find(
+      (it) => it.stepName == displayImageInfo.baseStepName
+    );
+    if (step && displayImageInfo.baseImage != step.imageData) {
+      setDisplayImageInfo((previous) => {
+        return { ...previous, baseImage: step.imageData };
+      });
     }
-  }, [backgroundImageStep, stepResults]);
+  }, [displayImageInfo.baseImage, displayImageInfo.baseStepName, stepResults]);
 
   useEffect(() => {
     const options = imageOptionsFor(settingStep, dictionary);
@@ -121,27 +163,13 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
     setBackgroundImageOptions(filteredOptions);
   }, [stepResults, settingStep, dictionary]);
 
-  useEffect(() => {
-    if (backgroundImageOptions.length > 0) {
-      const hasElementSelected = !!backgroundImageOptions.find(
-        (it) => it.value == backgroundImageStep?.stepName
-      );
-      if (!hasElementSelected) {
-        const result = stepResults.find(
-          (it) => it.stepName == backgroundImageOptions[0].value
-        );
-        setBackgroundImageStep(result);
-      }
-    }
-  }, [backgroundImageOptions, backgroundImageStep, stepResults]);
-
   return (
     <>
       <div className="mb-2">
         <SelectField
           label={"Background Image"}
           name={"background-image"}
-          value={backgroundImageStep?.stepName}
+          value={displayImageInfo.baseStepName}
           options={backgroundImageOptions}
           onChange={(event) =>
             updateBackgroundStep(event.target.value as StepName)
@@ -150,8 +178,7 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
       </div>
       <OutlineImageViewer
         className="max-h-[30vh] xl:max-h-[45vh]"
-        baseImage={backgroundImageStep?.imageData}
-        outlineImages={outlineImages}
+        displayImageInfo={displayImageInfo}
       ></OutlineImageViewer>
     </>
   );
