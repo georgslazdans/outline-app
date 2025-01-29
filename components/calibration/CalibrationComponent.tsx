@@ -16,7 +16,10 @@ import useNavigationHistory from "@/context/NavigationHistory";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useResultContext } from "./ResultContext";
 import { imageDataToBlob } from "@/lib/utils/ImageData";
-import ContourPoints, { ContourOutline } from "@/lib/data/contour/ContourPoints";
+import ContourPoints, {
+  ContourOutline,
+} from "@/lib/data/contour/ContourPoints";
+import ContextDetailsName from "./ContextDetailsName";
 
 type Props = {
   dictionary: Dictionary;
@@ -92,6 +95,7 @@ const CalibrationComponent = ({ dictionary }: Props) => {
 
   return (
     <>
+      <ContextDetailsName></ContextDetailsName>
       <div className="flex flex-col h-[calc(100vh-5.9rem)] xl:h-[calc(100vh-9.9rem)]">
         <div className="flex-grow overflow-auto mb-auto">
           {errorMessage && (

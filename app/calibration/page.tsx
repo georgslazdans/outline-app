@@ -6,9 +6,6 @@ export default async function CalibrationPage() {
 
   return (
     <>
-      <h1 className="text-center p-2 mb-2 mt-2">
-        {dictionary.calibration.title}
-      </h1>
       <Calibration dictionary={dictionary}></Calibration>
     </>
   );
