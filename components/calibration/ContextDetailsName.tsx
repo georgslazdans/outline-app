@@ -4,8 +4,7 @@ import React from "react";
 import NameEditField from "@/components/fields/NameEditField";
 import { Context, useDetails } from "@/context/DetailsContext";
 
-type Props = {
-};
+type Props = {};
 
 const ContextDetailsName = ({}: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
@@ -25,7 +24,7 @@ const ContextDetailsName = ({}: Props) => {
     <>
       <NameEditField
         title="Calibrating"
-        value={detailsContext.details.name}
+        value={detailsContext?.details?.name}
         onNameChanged={handleNameChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
