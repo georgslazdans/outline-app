@@ -36,6 +36,7 @@ const contourImageOf = (
 ): ImageData => {
   const paperContourImageRGB = contourShapeOf([contour])
     .withColour(blue)
+    .withStrokeWidth(15)
     .drawImageOfSize(imageSize);
   const paperContourImage = convertToRGBA(paperContourImageRGB);
   const result = convertBlackToTransparent(imageDataOf(paperContourImage));

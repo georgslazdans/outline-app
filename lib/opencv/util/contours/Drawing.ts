@@ -30,13 +30,18 @@ export const drawContourOutlines = (
 
 export const contourShapeOf = (contours: ContourPoints[]) => {
   let color = PRIMARY_COLOR;
+  let strokeWidth = 8;
   const drawImage = {
     withColour: (newColour: cv.Scalar) => {
       color = newColour;
       return drawImage;
     },
+    withStrokeWidth: (newStrokeWidth: number) => {
+      strokeWidth = newStrokeWidth;
+      return drawImage;
+    },
     drawImageOfSize: (size: cv.Size): cv.Mat =>
-      drawContourShapes(contours, size, color),
+      drawContourShapes(contours, size, color, strokeWidth),
   };
   return drawImage;
 };
@@ -44,16 +49,17 @@ export const contourShapeOf = (contours: ContourPoints[]) => {
 const drawContourShapes = (
   contours: ContourPoints[],
   size: cv.Size,
-  color: cv.Scalar
+  color: cv.Scalar,
+  strokeWidth: number
 ) => {
   const image = cv.Mat.zeros(size.height, size.width, cv.CV_8UC3);
   contours.forEach((it) => {
-    drawPolyLines(it.points, image, color);
+    drawPolyLines(it.points, image, color, strokeWidth);
   });
   return image;
 };
 
-const drawPolyLines = (points: Point[], image: cv.Mat, color: cv.Scalar) => {
+const drawPolyLines = (points: Point[], image: cv.Mat, color: cv.Scalar, strokeWidth: number) => {
   const markersVector = new cv.MatVector();
   const mv = new cv.Mat(points.length, 1, cv.CV_32SC2);
   points.forEach(({ x, y }, idx) => {
@@ -62,7 +68,6 @@ const drawPolyLines = (points: Point[], image: cv.Mat, color: cv.Scalar) => {
   });
   markersVector.push_back(mv);
 
-  const strokeWidth = 8;
   const closed = true;
   cv.polylines(image, markersVector, closed, color, strokeWidth);
   cv.polylines(image, markersVector, closed, new cv.Scalar(255, 255, 255), 1);
