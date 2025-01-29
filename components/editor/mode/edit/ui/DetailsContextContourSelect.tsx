@@ -70,10 +70,12 @@ const DetailsContextContourSelect = ({ dictionary, onSelect }: Props) => {
 
   const onContourIndexChange = (event: ChangeEvent<HTMLInputElement>) => {
     const contourIndex = Number.parseInt(event.target.value);
-    setSelectedContourIndex(contourIndex);
-    const selected = items?.find((it) => it.id == selectedContextId);
-    if (selected) {
-      onSelect(centeredPointsOf(selected, contourIndex), selected);
+    if(contourIndex) {
+      setSelectedContourIndex(contourIndex);
+      const selected = items?.find((it) => it.id == selectedContextId);
+      if (selected) {
+        onSelect(centeredPointsOf(selected, contourIndex), selected);
+      }
     }
   };
 

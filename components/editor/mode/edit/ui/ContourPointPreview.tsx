@@ -5,6 +5,7 @@ import ContourPoints from "@/lib/data/contour/ContourPoints";
 import Svg from "@/lib/svg/Svg";
 import { Context } from "@/context/DetailsContext";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
+import Orientation from "@/lib/Orientation";
 
 type Props = {
   contourPoints?: ContourPoints[];
@@ -24,9 +25,11 @@ const ContourPointPreview = ({ contourPoints, context }: Props) => {
   if (!svg) {
     return null;
   }
+  const widthClass =
+    Svg.orientationOf(svg) == Orientation.LANDSCAPE ? "w-48" : "w-20";
   return (
     <>
-      <div className="w-48 h-32 mx-auto p-2">
+      <div className={`${widthClass} h-32 mx-auto p-2`}>
         <div
           className="w-full h-full flex items-center justify-center text-black dark:text-white"
           dangerouslySetInnerHTML={{ __html: svg }}
