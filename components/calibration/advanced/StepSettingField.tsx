@@ -9,14 +9,19 @@ import {
   SelectConfig,
 } from "@/lib/opencv/processor/steps/StepSettings";
 import { Tooltip } from "react-tooltip";
+import PaperOutlineSelectField from "./PaperOutlineSelectField";
+import ObjectOutlineFilterField from "./ObjectOutlineFilterField";
+
+type EventHandler = (
+  event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+) => void;
+type ValueHandler = (value: number[]) => void;
 
 type Props = {
-  value: string | number | boolean | undefined;
+  value: string | number | boolean | number[] | undefined;
   name: string;
   config: StepSettingConfig;
-  handleOnChange: (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => void;
+  handleOnChange: EventHandler | ValueHandler;
   dictionary: Dictionary;
 };
 
@@ -39,7 +44,7 @@ const StepSettingField = ({
         label={settingLabel(name)}
         name={`${name}`}
         value={value as boolean}
-        onChange={handleOnChange}
+        onChange={handleOnChange as EventHandler}
       />
     );
   };
@@ -53,7 +58,7 @@ const StepSettingField = ({
         label={settingLabel(name)}
         name={`${name}`}
         value={value as number}
-        onChange={handleOnChange}
+        onChange={handleOnChange as EventHandler}
         numberRange={{
           min: numberConfig.min,
           max: numberConfig.max,
@@ -72,8 +77,30 @@ const StepSettingField = ({
         name={name}
         options={selectConfig.optionsFunction(dictionary)}
         value={value as string}
-        onChange={handleOnChange}
+        onChange={handleOnChange as EventHandler}
       ></SelectField>
+    );
+  };
+
+  const paperOutlineSelectField = (name: string) => {
+    return (
+      <PaperOutlineSelectField
+        label={settingLabel(name)}
+        name={name}
+        value={value as number}
+        onChange={handleOnChange as EventHandler}
+      ></PaperOutlineSelectField>
+    );
+  };
+
+  const objectOutlineFilterField = (name: string) => {
+    return (
+      <ObjectOutlineFilterField
+        label={settingLabel(name)}
+        name={name}
+        value={value as number[]}
+        onChange={handleOnChange as ValueHandler}
+      ></ObjectOutlineFilterField>
     );
   };
 
@@ -90,6 +117,10 @@ const StepSettingField = ({
         return selectField(name, config);
       case "group":
         return <></>;
+      case "paperOutlineSelect":
+        return paperOutlineSelectField(name);
+      case "objectOutlineFilter":
+        return objectOutlineFilterField(name);
     }
   };
 

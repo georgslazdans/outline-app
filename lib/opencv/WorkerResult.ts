@@ -3,12 +3,13 @@ import ProcessingResult from "./ProcessingResult";
 export type SuccessResult = {
   status: "success";
   result: ProcessingResult;
-  outlineCheckImage: ImageData;
-  thresholdCheck?: ImageData;
+  objectOutlineImages: ImageData[];
+  paperOutlineImages: ImageData[];
 };
 export type FailedResult = {
   status: "failed";
   result: ProcessingResult;
+  paperOutlineImages: ImageData[];
 };
 
 export type ErrorResult = {

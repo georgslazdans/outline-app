@@ -7,6 +7,11 @@ type ContourPoints = {
   points: Point[];
 };
 
+export type ContourOutline = {
+  outline: ContourPoints;
+  holes?: ContourPoints[];
+};
+
 export const pointsFrom = (shape: cv.Mat): ContourPoints => {
   const points = [];
   for (let i = 0; i < shape.rows; i++) {

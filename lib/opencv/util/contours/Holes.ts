@@ -82,8 +82,16 @@ const isParent = (
   parentIndex: number,
   hierarchy: cv.Mat
 ): boolean => {
-  const hierarchyIndex = hierarchy.intPtr(0, i)[3]; // parent contour index
-  return hierarchyIndex == parentIndex;
+  const hierarchyValue = hierarchy.intPtr(0, i);
+  if (hierarchyValue.length >= 4) {
+    const hierarchyIndex = hierarchyValue[3]; // parent contour index
+    return (
+      hierarchyIndex == parentIndex ||
+      (hierarchyIndex != -1 && isParent(hierarchyIndex, parentIndex, hierarchy))
+    );
+  } else {
+    return false;
+  }
 };
 
 const isHoleLargerThanThreshold = (

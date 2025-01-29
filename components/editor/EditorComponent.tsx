@@ -16,6 +16,7 @@ import SaveModel from "./ui/SaveModel";
 import WireframeButton from "./ui/canvas/WireframeButton";
 import RenderButton from "./ui/RenderButton";
 import LoadingIndicator from "./ui/canvas/LoadingIndicator";
+import NameEditField from "../fields/NameEditField";
 
 type Props = {
   dictionary: Dictionary;
@@ -41,7 +42,7 @@ const EditorComponent = ({ dictionary }: Props) => {
   };
 
   const currentEditorMode = editorModes[editorMode];
-
+    
   const content = (
     <>
       <div className="flex flex-col h-[95vh] xl:h-full">

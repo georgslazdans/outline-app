@@ -45,7 +45,7 @@ const closeContoursStep: ProcessingStep<CloseContoursSettings> = {
   config: {
     kernelSize: {
       type: "number",
-      min: 0,
+      min: 1,
       max: 50,
     },
     iterations: {

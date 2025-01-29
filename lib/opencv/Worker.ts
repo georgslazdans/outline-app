@@ -1,11 +1,9 @@
 import * as cv from "@techstark/opencv-js";
-import outlineCheckImageOf from "./processor/OutlineCheckImage";
-import objectThresholdCheckOf from "./processor/ObjectThresholdCheck";
+import objectOutlineImagesOf from "./processor/images/OutlineCheckImage";
 import handleOpenCvError from "./OpenCvError";
 import processStep, { ProcessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
-import StepResult, { stepResultsBefore } from "./StepResult";
-import Settings from "./Settings";
+import StepResult, { findStep, stepResultsBefore } from "./StepResult";
 import * as Comlink from "comlink";
 import WorkerResult, {
   ErrorResult,
@@ -13,6 +11,8 @@ import WorkerResult, {
   SuccessResult,
 } from "./WorkerResult";
 import ProcessingResult from "./ProcessingResult";
+import paperOutlineImagesOf from "./processor/images/PaperOutlineImages";
+import StepName from "./processor/steps/StepName";
 
 let initialized = false;
 
@@ -34,14 +34,14 @@ const waitForInitialization = async () => {
 
 const successMessageOf = (
   stepResults: ProcessingResult,
-  outlineCheckImage: ImageData,
-  thresholdCheck?: ImageData
+  objectOutlineImages: ImageData[],
+  paperOutlineImages: ImageData[],
 ): SuccessResult => {
   return {
     status: "success",
     result: stepResults,
-    outlineCheckImage: outlineCheckImage,
-    thresholdCheck: thresholdCheck,
+    objectOutlineImages: objectOutlineImages,
+    paperOutlineImages: paperOutlineImages,
   };
 };
 
@@ -54,9 +54,19 @@ const errorMessageOf = (e: any): ErrorResult => {
 };
 
 const failedMessageOf = (stepResults: ProcessingResult): FailedResult => {
+  let paperOutlineImages: ImageData[] = [];
+  if (stepResults.data) {
+    const paperStep = findStep(StepName.FIND_PAPER_OUTLINE).in(
+      stepResults.data
+    );
+    if (paperStep) {
+      paperOutlineImages = paperOutlineImagesOf(stepResults.data);
+    }
+  }
   return {
     status: "failed",
     result: stepResults,
+    paperOutlineImages: paperOutlineImages,
   };
 };
 
@@ -65,15 +75,15 @@ const processOutlineImage = async (data: ProcessAll): Promise<WorkerResult> => {
   try {
     const result = await processImage(data);
     if (!result.error) {
-      const outlineCheckImage = outlineCheckImageOf(
+      const objectOutlineImages = objectOutlineImagesOf(
         result.data!,
-        data.settings
       );
-      const thresholdCheck = objectThresholdCheckOf(
-        result.data!,
-        data.settings
+      const paperOutlineImages = paperOutlineImagesOf(result.data!);
+      return successMessageOf(
+        result,
+        objectOutlineImages,
+        paperOutlineImages,
       );
-      return successMessageOf(result, outlineCheckImage, thresholdCheck);
     } else {
       return failedMessageOf(result);
     }
@@ -110,18 +120,14 @@ const processOutlineStep = async (data: ProcessStep): Promise<WorkerResult> => {
     const result = await processStep(data);
     if (!result.error) {
       const processedResult = postProcessResult(result, data);
-      const outlineCheckImage = outlineCheckImageOf(
+      const objectOutlineImages = objectOutlineImagesOf(
         result.data!,
-        data.settings
       );
-      const thresholdCheck = objectThresholdCheckOf(
-        result.data!,
-        data.settings
-      );
+      const paperOutlineImages = paperOutlineImagesOf(result.data!);
       return successMessageOf(
         processedResult,
-        outlineCheckImage,
-        thresholdCheck
+        objectOutlineImages,
+        paperOutlineImages
       );
     } else {
       return failedMessageOf(result);

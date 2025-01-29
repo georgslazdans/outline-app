@@ -10,15 +10,15 @@ import { Dictionary } from "@/app/dictionaries";
 import { AdvancedSettingsEditor } from "./AdvancedSettingsEditor";
 import { ImageSelector } from "./ImageSelector";
 import StepSetting from "@/lib/opencv/processor/steps/StepSettings";
+import { useResultContext } from "../ResultContext";
 
 type Props = {
   dictionary: Dictionary;
-  stepResults: StepResult[];
 };
 
-export const AdvancedCalibration = ({ dictionary, stepResults }: Props) => {
+export const AdvancedCalibration = ({ dictionary }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
-
+  const { stepResults } = useResultContext();
   const [currentStep, setCurrentStep] = useState<StepResult>();
 
   useEffect(() => {

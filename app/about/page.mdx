@@ -18,6 +18,26 @@ The code for this project is available on GitHub. Feel free to review, use, and 
 
 If you find this project useful, consider supporting me on Ko-Fi.
 
-<div className="mt-4 mx-auto text-center">© 2024 Georgs Lazdāns. All rights reserved.</div>
+<div className="mt-4 mx-auto text-center">
+  © 2024 Georgs Lazdāns. All rights reserved.
+</div>
+
+# Changelog
+
+## 29.01.2025
+
+**Note:** Existing contours, svg export and their references to models will be broken and throw errors. To fix them simply rerun the calibration.
+
+- Allow to select paper outline from all found options
+- Support for finding contours for multiple objects
+- Improve calibration screen to make it a bit more user friendly.
+
+### Bug fixes and Improvements
+
+- Add name edit field to contour calibration screen
+- Add preview to contour import in editor
+- Add contours id to the calibration URL
+- Clean up raw image data from contours. Existing contours will still have the data.
+- Scale along normals in small increments of `0.01` to mitigate errors of outline being inverted. Should probably need a better fix.
 
 </div>

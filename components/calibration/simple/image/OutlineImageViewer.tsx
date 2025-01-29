@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import DrawOutlineButton from "./DrawOutlineButton";
+import DrawOutlineButton from "../DrawOutlineButton";
+import { DisplayImageInfo } from "./DisplayImageInfo";
 
 type Props = {
   className?: string;
-  baseImage?: ImageData;
-  outlineImage?: ImageData;
+  displayImageInfo: DisplayImageInfo;
 };
 
 const blendImageData = (
@@ -35,11 +35,8 @@ const blendImageData = (
 
   return blendedImageData;
 };
-export const OutlineImageViewer = ({
-  className,
-  baseImage,
-  outlineImage,
-}: Props) => {
+
+export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -49,20 +46,27 @@ export const OutlineImageViewer = ({
   };
 
   const drawImage = useCallback(() => {
+    const canvas = canvasRef.current;
     const ctx = getContext();
-    if (ctx && baseImage) {
-      if (drawOutline && outlineImage) {
-        const blendedImage = blendImageData(ctx, baseImage, outlineImage);
+    if (canvas && ctx) {
+      const { baseImage, outlineImages } = displayImageInfo;
+      canvas.width = baseImage.width;
+      canvas.height = baseImage.height;
+      if (drawOutline && outlineImages && outlineImages.length != 0) {
+        let blendedImage = baseImage;
+        for (const outlineImage of outlineImages) {
+          blendedImage = blendImageData(ctx, blendedImage, outlineImage);
+        }
         ctx.putImageData(blendedImage, 0, 0);
       } else {
         ctx.putImageData(baseImage, 0, 0);
       }
     }
-  }, [baseImage, outlineImage, drawOutline]);
+  }, [displayImageInfo, drawOutline]);
 
   useEffect(() => {
     drawImage();
-  }, [drawImage, drawOutline]);
+  }, [drawImage]);
 
   return (
     <div className={className}>
@@ -75,10 +79,8 @@ export const OutlineImageViewer = ({
         </div>
         <TransformComponent wrapperClass="!mx-auto">
           <canvas
-            className="max-w-full max-h-[30vh] xl:max-h-[43vh]"
+            className="max-w-full max-h-[30vh] xl:max-h-[40vh]"
             ref={canvasRef}
-            width={baseImage?.width}
-            height={baseImage?.height}
           />
         </TransformComponent>
       </TransformWrapper>

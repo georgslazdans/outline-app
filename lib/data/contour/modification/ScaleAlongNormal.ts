@@ -47,10 +47,26 @@ const scalePoints = (points: Point[], scale: number): Point[] => {
   return scaledPoints;
 };
 
+const scaleStep = 0.01;
+
 const scaleAlongNormal = (contour: ContourPoints) => {
   return (scale: number): ContourPoints => {
-    const scaledPoints = scalePoints(contour.points, scale);
-    return _cleanIfHasIntersections(scaledPoints);
+    let remainingScale = scale;
+    let scaledPoints = contour.points;
+
+    while (Math.abs(remainingScale) >= Math.abs(scaleStep)) {
+      const step = Math.sign(remainingScale) * scaleStep; // Determine the direction and size of the step
+      scaledPoints = scalePoints(scaledPoints, step);
+      scaledPoints = _cleanIfHasIntersections(scaledPoints).points;
+      remainingScale -= step;
+    }
+
+    if (remainingScale !== 0) {
+      // Apply the remainder of the scaling
+      scaledPoints = scalePoints(scaledPoints, remainingScale);
+      scaledPoints = _cleanIfHasIntersections(scaledPoints).points;
+    }
+    return { points: scaledPoints };
   };
 };
 

@@ -6,12 +6,14 @@ import bilateralFilterStep from "./steps/BilateralFilter";
 import blurStep from "./steps/Blur";
 import cannyStep from "./steps/Canny";
 import closeContoursStep from "./steps/CloseContours";
-import extractObjectStep from "./steps/ExtractObject";
-import extractPaperStep from "./steps/ExtractPaper";
+import filterObjectsStep from "./steps/FilterObjects";
 import grayScaleStep from "./steps/GrayScale";
 import ProcessingStep, { SettingsConfig } from "./steps/ProcessingFunction";
 import StepName from "./steps/StepName";
 import thresholdStep from "./steps/Threshold";
+import findPaperOutlineStep from "./steps/FindPaperOutline";
+import extractPaperStep from "./steps/ExtractPaper";
+import findObjectOutlinesStep from "./steps/FindObjectOutlines";
 
 const withStepName = (
   stepName: StepName,
@@ -44,12 +46,13 @@ const INPUT: ProcessingStep<any> = {
   },
 };
 
-const PROCESSING_STEPS: ProcessingStep<any>[] = [
+const PROCESSING_STEPS = (): ProcessingStep<any>[] => [
   bilateralFilterStep,
   grayScaleStep,
   blurStep,
   adaptiveThresholdStep,
   cannyStep,
+  findPaperOutlineStep,
   extractPaperStep,
   withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
   withStepName(
@@ -62,17 +65,18 @@ const PROCESSING_STEPS: ProcessingStep<any>[] = [
   withStepName(StepName.OBJECT_THRESHOLD, thresholdStep),
   withStepName(StepName.CANNY_OBJECT, cannyStep),
   closeContoursStep,
-  extractObjectStep,
+  findObjectOutlinesStep,
+  filterObjectsStep,
 ];
 
 const getAll = () => {
-  return [INPUT, ...PROCESSING_STEPS];
+  return [INPUT, ...PROCESSING_STEPS()];
 };
 
 const forSettings = (settings: Settings) => {
-  return PROCESSING_STEPS.filter(bilateralFilterDisabled(settings)).filter(
-    blurImageReused(settings)
-  );
+  return PROCESSING_STEPS()
+    .filter(bilateralFilterDisabled(settings))
+    .filter(blurImageReused(settings));
 };
 
 const bilateralFilterDisabled = (settings: Settings) => {
@@ -99,9 +103,11 @@ const blurImageReused = (settings: Settings) => {
 const mandatoryFor = (settings: Settings) => {
   const mandatorySteps = [
     StepName.INPUT,
+    StepName.FIND_PAPER_OUTLINE,
     StepName.EXTRACT_PAPER,
     StepName.BLUR_OBJECT,
     StepName.OBJECT_THRESHOLD,
+    StepName.FIND_PAPER_OUTLINE,
   ];
   mandatorySteps.push(extractPaperReuseStep(settings));
   return mandatorySteps;

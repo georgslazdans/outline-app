@@ -6,8 +6,7 @@ import SimpleCalibration from "./simple/SimpleCalibration";
 import { AdvancedCalibration } from "./advanced/AdvancedCalibration";
 import { useOpenCvWorker } from "./OpenCvWorker";
 import { useLoading } from "@/context/LoadingContext";
-import StepResult from "@/lib/opencv/StepResult";
-import { useDetails } from "@/context/DetailsContext";
+import { Context, useDetails } from "@/context/DetailsContext";
 import { applyDefaults, defaultSettings } from "@/lib/opencv/Settings";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useRouter } from "next/navigation";
@@ -15,12 +14,18 @@ import ErrorMessage from "../error/ErrorMessage";
 import BottomButtons from "./BottomButtons";
 import useNavigationHistory from "@/context/NavigationHistory";
 import StepName from "@/lib/opencv/processor/steps/StepName";
+import { useResultContext } from "./ResultContext";
+import { imageDataToBlob } from "@/lib/utils/ImageData";
+import ContourPoints, {
+  ContourOutline,
+} from "@/lib/data/contour/ContourPoints";
+import ContextDetailsName from "./ContextDetailsName";
 
 type Props = {
   dictionary: Dictionary;
 };
 
-const OpenCvCalibration = ({ dictionary }: Props) => {
+const CalibrationComponent = ({ dictionary }: Props) => {
   const { update } = useIndexedDB("details");
   const router = useRouter();
   const { getHistory, clearHistory } = useNavigationHistory();
@@ -31,23 +36,12 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   const [simpleMode, setSimpleMode] = useState(true);
 
-  const [stepResults, setStepResults] = useState<StepResult[]>([]);
-  const [outlineCheckImage, setOutlineCheckImage] = useState<ImageData>();
-  const [thresholdCheckImage, setThresholdCheckImage] = useState<ImageData>();
-
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const updateCheckImages = (outline: ImageData, threshold?: ImageData) => {
-    setOutlineCheckImage(outline);
-    setThresholdCheckImage(threshold);
-  };
+  const { stepResults } = useResultContext();
 
-  const { rerunOpenCv, settingsChanged, updateAllWorkData } = useOpenCvWorker(
-    stepResults,
-    setStepResults,
-    updateCheckImages,
-    setErrorMessage
-  );
+  const { rerunOpenCv, settingsChanged, updateAllWorkData } =
+    useOpenCvWorker(setErrorMessage);
 
   useEffect(() => {
     // TODO better initialization
@@ -56,16 +50,11 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
     }
   }, [detailsContext, stepResults]);
 
-  const saveAndClose = () => {
-    setLoading(true);
-    const contours = stepResults.pop()!.contours;
-    const paperImage = stepResults.find(
-      (it) => it.stepName == StepName.EXTRACT_PAPER
-    )?.imageData;
-    const context = {
+  const saveContext = (contours?: ContourOutline[], paperImageBlob?: Blob) => {
+    const context: Context = {
       ...detailsContext,
-      contours: contours,
-      paperImage: paperImage,
+      contours: contours ? contours : [],
+      paperImage: paperImageBlob ? paperImageBlob : undefined,
     };
     update(context).then(() => {
       setLoading(false);
@@ -77,6 +66,21 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
       }
       clearHistory();
     });
+  };
+
+  const saveAndClose = () => {
+    setLoading(true);
+    const contours = stepResults.pop()!.contours;
+    const paperImage = stepResults.find(
+      (it) => it.stepName == StepName.EXTRACT_PAPER
+    )?.imageData;
+    if (paperImage) {
+      imageDataToBlob(paperImage).then((paperImageBlob) => {
+        saveContext(contours, paperImageBlob ? paperImageBlob : undefined);
+      });
+    } else {
+      saveContext(contours);
+    }
   };
 
   useEffect(() => {
@@ -91,6 +95,7 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
 
   return (
     <>
+      <ContextDetailsName></ContextDetailsName>
       <div className="flex flex-col h-[calc(100vh-5.9rem)] xl:h-[calc(100vh-9.9rem)]">
         <div className="flex-grow overflow-auto mb-auto">
           {errorMessage && (
@@ -100,11 +105,8 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
             <>
               <SimpleCalibration
                 dictionary={dictionary}
-                stepResults={stepResults}
                 settings={detailsContext.settings}
                 openAdvancedMode={() => setSimpleMode(false)}
-                outlineCheckImage={outlineCheckImage}
-                thresholdCheckImage={thresholdCheckImage}
               ></SimpleCalibration>
             </>
           )}
@@ -112,7 +114,6 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
             <>
               <AdvancedCalibration
                 dictionary={dictionary}
-                stepResults={stepResults}
               ></AdvancedCalibration>
             </>
           )}
@@ -131,4 +132,4 @@ const OpenCvCalibration = ({ dictionary }: Props) => {
   );
 };
 
-export default OpenCvCalibration;
+export default CalibrationComponent;

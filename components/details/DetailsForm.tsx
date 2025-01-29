@@ -20,6 +20,7 @@ import NumberField from "../fields/NumberField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { useErrorModal } from "../error/ErrorContext";
+import { idQuery } from "@/lib/utils/UrlParams";
 
 type Props = {
   dictionary: any;
@@ -80,7 +81,9 @@ const DetailsForm = ({ dictionary }: Props) => {
     setLoading(false);
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
@@ -115,20 +118,22 @@ const DetailsForm = ({ dictionary }: Props) => {
       orientation: formData.orientation as Orientation,
     };
     const newContext: Context = {
-      ...detailsContext,
       details: {
         ...formData,
         orientation: formData.orientation as Orientation,
       },
       settings: settings,
       addDate: new Date(),
+      imageFile: detailsContext.imageFile,
+      contours: [],
+      paperImage: undefined,
     };
     delete newContext.id;
     add(newContext).then(
       (dbId) => {
         setDetailsContext({ ...newContext, id: dbId });
         addHistory("/details");
-        router.push("/calibration");
+        router.push("/calibration" + "?" + idQuery(dbId.toString()));
       },
       (error) => showError(error)
     );

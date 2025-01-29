@@ -1,5 +1,4 @@
 import { Context } from "@/context/DetailsContext";
-import { imageDataToBlob } from "@/lib/utils/ImageData";
 import React, { memo, useEffect, useState } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { Image } from "@react-three/drei";
@@ -27,13 +26,9 @@ const BackgroundImage = memo(function BackgroundImage({
     getByID(detailsContextId).then((context) => {
       const detailsContext = context as Context;
       if (detailsContext.paperImage) {
-        imageDataToBlob(detailsContext.paperImage).then((blob) => {
-          if (blob) {
-            const paperSettings = paperSettingsOf(detailsContext.settings);
-            setPaperDimensions(paperDimensionsOf(paperSettings));
-            setImageUrl(URL.createObjectURL(blob));
-          }
-        });
+        const paperSettings = paperSettingsOf(detailsContext.settings);
+        setPaperDimensions(paperDimensionsOf(paperSettings));
+        setImageUrl(URL.createObjectURL(detailsContext.paperImage));
       }
     });
   }, [detailsContextId, getByID]);

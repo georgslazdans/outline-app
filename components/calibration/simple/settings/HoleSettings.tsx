@@ -6,11 +6,13 @@ import React from "react";
 import SettingGroup from "./SettingGroup";
 import StepSettingField from "../../advanced/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
-import extractObjectStep from "@/lib/opencv/processor/steps/ExtractObject";
 import { GroupConfig } from "@/lib/opencv/processor/steps/StepSettings";
+import CalibrationSettingStep from "./CalibrationSettingStep";
+import findObjectOutlinesStep from "@/lib/opencv/processor/steps/FindObjectOutlines";
 
 const MEAN_THRESHOLD = "meanThreshold";
 const HOLE_AREA_THRESHOLD = "holeAreaThreshold";
+const SMOOTH_ACCURACY = "smoothAccuracy";
 
 type Props = {
   dictionary: Dictionary;
@@ -18,34 +20,66 @@ type Props = {
   onSettingsChange: (settings: Settings) => void;
 };
 
-const HoleSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
+const HoleAndSmoothSettings = ({
+  dictionary,
+  settings,
+  onSettingsChange,
+}: Props) => {
   const onChange = (field: string) => {
     return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const value = Number.parseFloat(event.target.value);
       const stepSettings = {
-        ...settings[StepName.EXTRACT_OBJECT],
+        ...settings[StepName.FIND_OBJECT_OUTLINES],
         holeSettings: {
-          ...settings[StepName.EXTRACT_OBJECT].holeSettings,
+          ...settings[StepName.FIND_OBJECT_OUTLINES].holeSettings,
           [field]: value,
         },
       };
 
       const updatedSettings = {
         ...settings,
-        [StepName.EXTRACT_OBJECT]: stepSettings,
+        [StepName.FIND_OBJECT_OUTLINES]: stepSettings,
+      };
+
+      onSettingsChange(updatedSettings);
+    };
+  };
+  const onSmoothValueChanged = (field: string) => {
+    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const value = Number.parseFloat(event.target.value);
+      const stepSettings = {
+        ...settings[StepName.FIND_OBJECT_OUTLINES],
+        smoothSettings: {
+          ...settings[StepName.FIND_OBJECT_OUTLINES].smoothSettings,
+          [field]: value,
+        },
+      };
+
+      const updatedSettings = {
+        ...settings,
+        [StepName.FIND_OBJECT_OUTLINES]: stepSettings,
       };
 
       onSettingsChange(updatedSettings);
     };
   };
 
-  const holeSettings: GroupConfig = extractObjectStep.config!
+  const smoothSettings: GroupConfig = findObjectOutlinesStep.config!
+    .smoothSettings as GroupConfig;
+
+  const holeSettings: GroupConfig = findObjectOutlinesStep.config!
     .holeSettings as GroupConfig;
   return (
     <>
-      <SettingGroup dictionary={dictionary} name="holeSettings">
+      <SettingGroup
+        dictionary={dictionary}
+        name="holeSettings"
+        settingStep={CalibrationSettingStep.HOLE_AND_SMOOTHING}
+      >
         <StepSettingField
-          value={settings[StepName.EXTRACT_OBJECT].holeSettings?.meanThreshold}
+          value={
+            settings[StepName.FIND_OBJECT_OUTLINES]?.holeSettings?.meanThreshold
+          }
           name={MEAN_THRESHOLD}
           config={holeSettings.config[MEAN_THRESHOLD]}
           handleOnChange={onChange(MEAN_THRESHOLD)}
@@ -53,11 +87,22 @@ const HoleSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
         ></StepSettingField>
         <StepSettingField
           value={
-            settings[StepName.EXTRACT_OBJECT].holeSettings?.holeAreaThreshold
+            settings[StepName.FIND_OBJECT_OUTLINES]?.holeSettings
+              ?.holeAreaThreshold
           }
           name={HOLE_AREA_THRESHOLD}
           config={holeSettings.config[HOLE_AREA_THRESHOLD]}
           handleOnChange={onChange(HOLE_AREA_THRESHOLD)}
+          dictionary={dictionary}
+        ></StepSettingField>
+        <StepSettingField
+          value={
+            settings[StepName.FIND_OBJECT_OUTLINES]?.smoothSettings
+              ?.smoothAccuracy
+          }
+          name={SMOOTH_ACCURACY}
+          config={smoothSettings.config[SMOOTH_ACCURACY]}
+          handleOnChange={onSmoothValueChanged(SMOOTH_ACCURACY)}
           dictionary={dictionary}
         ></StepSettingField>
       </SettingGroup>
@@ -65,4 +110,4 @@ const HoleSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
   );
 };
 
-export default HoleSettings;
+export default HoleAndSmoothSettings;

@@ -1,12 +1,12 @@
 import ColorSpace from "./util/ColorSpace";
 import StepName from "./processor/steps/StepName";
-import ContourPoints from "../data/contour/ContourPoints";
+import { ContourOutline } from "../data/contour/ContourPoints";
 
 export type StepResult = {
   stepName: StepName;
   imageData: ImageData;
   imageColorSpace: ColorSpace;
-  contours?: ContourPoints[];
+  contours?: ContourOutline[];
 };
 
 export const stepResultsBefore = (
@@ -21,6 +21,14 @@ export const stepResultsBefore = (
     result.push(step);
   }
   return result;
+};
+
+export const findStep = (stepName: StepName) => {
+  return {
+    in: (steps: StepResult[]) => {
+      return steps.find((it) => it.stepName == stepName)!;
+    },
+  };
 };
 
 export default StepResult;

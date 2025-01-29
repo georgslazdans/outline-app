@@ -29,7 +29,21 @@ export const contoursOf = (image: cv.Mat): ImageContours => {
   return new ImageContours(contours, hierarchy);
 };
 
-export const fancyContoursOf = (image: cv.Mat): ImageContours => {
+export const paperContoursOf = (image: cv.Mat): ImageContours => {
+  const contours = new cv.MatVector();
+  const hierarchy = new cv.Mat();
+  cv.findContours(
+    image,
+    contours,
+    hierarchy,
+    cv.RETR_CCOMP,
+    cv.CHAIN_APPROX_SIMPLE
+  );
+
+  return new ImageContours(contours, hierarchy);
+};
+
+export const fullHierarchyContoursOf = (image: cv.Mat): ImageContours => {
   const contours = new cv.MatVector();
   const hierarchy = new cv.Mat();
   cv.findContours(
@@ -59,7 +73,6 @@ export const largestContourOf = (
       }
     }
   }
-
   return result;
 };
 

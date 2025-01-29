@@ -43,7 +43,9 @@
       "blurObject": "Objekta Aizmiglojums",
       "cannyPaper": "Canny Lapas",
       "cannyObject": "Canny Objekta",
-      "extractObject": "Izvilkt Objektu",
+      "findObjectOutlines": "Atrast Objektu Kontūras",
+      "filterObjects": "Filtrēt Objektus",
+      "findPaperOutline": "Atrast Lapas Kontūras",
       "extractPaper": "Izvlikt Lapu",
       "grayScale": "Pēlēkuma Skala",
       "grayScaleObject": "Objekta Pēlēkuma Skala",
@@ -85,7 +87,13 @@
       "iterations": "Iterations",
       "closeCornerSettings": "Close Corners",
       "disabled": "Disabled",
-      "reuseStep": "Reuse Step"
+      "reuseStep": "Reuse Step",
+      "paperIndex": "Select Paper Outline",
+      "filterSimilarOutlines": "Filter Similar Outlines",
+      "similarityThreshold": "Similarity Threshold",
+      "areaThresholdSettings": "Object Area Threshold Settings",
+      "upperThreshold": "Upper Area Threshold",
+      "lowerThreshold": "Lower Area Threshold"
     },
     "simpleSettings": {
       "title": "Iestatījumi",
@@ -93,8 +101,8 @@
       "findPaper": "Atrast Lapu",
       "findObject": "Atrast Objektu",
       "closeCorners": "Close Corners",
-      "holeSettings": "Hole Settings",
-      "smoothSettings": "Smoothing"
+      "holeSettings": "Hole Settings And Smoothing",
+      "filterObjects": "Filter Objects"
     },
     "settings": "Iestatījumi",
     "advancedSettings": "Izvērstie Iestatījumi",

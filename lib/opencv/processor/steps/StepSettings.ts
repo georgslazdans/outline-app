@@ -35,15 +35,25 @@ export type GroupConfig = {
   config: { [key: string]: StepSettingConfig };
 } & DisplaySettings;
 
+export type PaperOutlineSelectConfig = {
+  type: "paperOutlineSelect";
+} & DisplaySettings;
+
+export type ObjectOutlineFilterConfig = {
+  type: "objectOutlineFilter";
+} & DisplaySettings;
+
 export type StepSettingConfig =
   | NumberConfig
   | CheckboxConfig
   | GroupConfig
-  | SelectConfig;
+  | SelectConfig
+  | PaperOutlineSelectConfig
+  | ObjectOutlineFilterConfig;
 
 export const eventFieldConverterFor = (
   config: StepSettingConfig
-): ((event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
+): ((event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => any) => {
   switch (config.type) {
     case "number":
       return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
@@ -59,16 +69,23 @@ export const eventFieldConverterFor = (
     case "select":
       return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
         event.target.value;
+    case "paperOutlineSelect":
+      return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+        Number.parseInt(event.target.value);
+    case "objectOutlineFilter":
+      throw Error("Object outline filter doesn't have an event!");
   }
 };
 
-export const configOf = (stepName: StepName, key: string): StepSettingConfig => {
+export const configOf = (
+  stepName: StepName,
+  key: string
+): StepSettingConfig => {
   const config = Steps.getAll().find((it) => it.name == stepName)?.config;
   if (!config) {
     throw new Error(`Config not found for key: ${key} with step: ${stepName}}`);
   }
   return config[key];
 };
-
 
 export default StepSetting;

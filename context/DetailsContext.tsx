@@ -10,11 +10,11 @@ import {
   SetStateAction,
   Dispatch,
   useEffect,
-  useRef,
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
+import { ContourOutline } from "@/lib/data/contour/ContourPoints";
+import { useSearchParams } from "next/navigation";
 
 const DetailsContext = createContext<any>(null);
 
@@ -25,38 +25,59 @@ type Props = {
 export type Context = {
   id?: number;
   imageFile: Blob;
-  imageData: ImageData;
   details: Details;
-  contours: ContourPoints[];
+  contours: ContourOutline[];
   settings: Settings;
   addDate: Date;
-  paperImage?: ImageData
+  paperImage?: Blob;
 };
 
 const DetailsProvider = ({ children }: Props) => {
   const [detailsContext, setDetailsContext] = useState<Context>();
-  const { getAll } = useIndexedDB("details");
-
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [contextImageData, setContextImageData] = useState<ImageData>();
+  const { getAll, getByID } = useIndexedDB("details");
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!detailsContext) {
-      getAll().then((allContexts) => {
-        if (allContexts && allContexts.length > 0) {
-          const loadedContext = allContexts.pop();
-          getImageData(loadedContext.imageFile, canvasRef.current).then(
-            (data) => {
-              setDetailsContext({ ...loadedContext, imageData: data });
-            }
-          );
-        }
-      });
+    const urlId = searchParams.get("id");
+    if (urlId) {
+      const id = Number.parseInt(urlId);
+      if (detailsContext?.id != id) {
+        getByID(id).then((dbModel) => {
+          if (dbModel) {
+            getImageData(dbModel.imageFile).then((data) => {
+              setDetailsContext(dbModel);
+              setContextImageData(data);
+            });
+          }
+        });
+      }
+    } else {
+      if (!detailsContext) {
+        getAll().then((allContexts) => {
+          if (allContexts && allContexts.length > 0) {
+            const loadedContext = allContexts.pop();
+            getImageData(loadedContext.imageFile).then(
+              (data) => {
+                setDetailsContext(loadedContext);
+                setContextImageData(data);
+              }
+            );
+          }
+        });
+      }
     }
-  }, [detailsContext, getAll]);
+  }, [getAll, getByID, detailsContext, searchParams]);
 
   return (
-    <DetailsContext.Provider value={{ detailsContext, setDetailsContext }}>
-      <canvas ref={canvasRef} style={{ display: "none" }} />
+    <DetailsContext.Provider
+      value={{
+        detailsContext,
+        setDetailsContext,
+        contextImageData,
+        setContextImageData,
+      }}
+    >
       {children}
     </DetailsContext.Provider>
   );
@@ -65,6 +86,8 @@ const DetailsProvider = ({ children }: Props) => {
 export const useDetails = (): {
   detailsContext: Context;
   setDetailsContext: Dispatch<SetStateAction<Context>>;
+  contextImageData: ImageData;
+  setContextImageData: Dispatch<SetStateAction<ImageData>>;
 } => useContext(DetailsContext);
 
 export default DetailsProvider;

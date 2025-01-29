@@ -7,6 +7,8 @@ import SettingGroup from "./SettingGroup";
 import StepSettingField from "../../advanced/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import closeContoursStep from "@/lib/opencv/processor/steps/CloseContours";
+import StepResult from "@/lib/opencv/StepResult";
+import CalibrationSettingStep from "./CalibrationSettingStep";
 
 const KERNEL_SIZE = "kernelSize";
 const ITERATIONS = "iterations";
@@ -17,24 +19,35 @@ type Props = {
   onSettingsChange: (settings: Settings) => void;
 };
 
-const CloseCornerSettings = ({ dictionary, settings, onSettingsChange }: Props) => {
+const CloseCornerSettings = ({
+  dictionary,
+  settings,
+  onSettingsChange,
+}: Props) => {
   const onChange = (field: string) => {
     return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const value = Number.parseInt(event.target.value);
-        const stepSettings = { ...settings[StepName.CLOSE_CORNERS], [field]: value };
-    
-        const updatedSettings = {
-          ...settings,
-          [StepName.CLOSE_CORNERS]: stepSettings
-        };
-    
-        onSettingsChange(updatedSettings);
+      const value = Number.parseInt(event.target.value);
+      const stepSettings = {
+        ...settings[StepName.CLOSE_CORNERS],
+        [field]: value,
       };
-  }
-   
+
+      const updatedSettings = {
+        ...settings,
+        [StepName.CLOSE_CORNERS]: stepSettings,
+      };
+
+      onSettingsChange(updatedSettings);
+    };
+  };
+
   return (
     <>
-      <SettingGroup dictionary={dictionary} name="closeCorners">
+      <SettingGroup
+        dictionary={dictionary}
+        name="closeCorners"
+        settingStep={CalibrationSettingStep.CLOSE_CORNERS}
+      >
         <StepSettingField
           value={settings[StepName.CLOSE_CORNERS].kernelSize}
           name={KERNEL_SIZE}

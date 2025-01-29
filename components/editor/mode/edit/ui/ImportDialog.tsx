@@ -9,6 +9,7 @@ import { useEditorContext } from "../../../EditorContext";
 import NumberField from "@/components/fields/NumberField";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
 import { Context } from "@/context/DetailsContext";
+import ContourPointPreview from "./ContourPointPreview";
 
 type Props = {
   dictionary: Dictionary;
@@ -72,6 +73,10 @@ const ImportDialog = ({
   return (
     <>
       <Modal isOpen={isOpen} onClose={onModalClose}>
+        <ContourPointPreview
+          contourPoints={selectedContour}
+          context={detailsContext}
+        ></ContourPointPreview>
         <DetailsContextContourSelect
           dictionary={dictionary}
           onSelect={onDetailsContextSelect}

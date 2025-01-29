@@ -1,19 +1,47 @@
 import * as cv from "@techstark/opencv-js";
 import ImageContours, { largestContourOf } from "./Contours";
 import Point from "@/lib/data/Point";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
+import ContourPoints, {
+  ContourOutline,
+} from "@/lib/data/contour/ContourPoints";
 
 const PRIMARY_COLOR = new cv.Scalar(218, 65, 103);
 
+export const drawContourOutlines = (
+  outlines: ContourOutline[],
+  imageSize: cv.Size
+): cv.Mat => {
+  let result: cv.Mat | undefined;
+  outlines.forEach((it) => {
+    const holes = it.holes ? it.holes : [];
+    const contourShapeImage = contourShapeOf([
+      ...holes,
+      it.outline,
+    ]).drawImageOfSize(imageSize);
+    if (result) {
+      cv.add(result, contourShapeImage, result);
+      contourShapeImage.delete();
+    } else {
+      result = contourShapeImage;
+    }
+  });
+  return result!;
+};
+
 export const contourShapeOf = (contours: ContourPoints[]) => {
   let color = PRIMARY_COLOR;
+  let strokeWidth = 8;
   const drawImage = {
     withColour: (newColour: cv.Scalar) => {
       color = newColour;
       return drawImage;
     },
+    withStrokeWidth: (newStrokeWidth: number) => {
+      strokeWidth = newStrokeWidth;
+      return drawImage;
+    },
     drawImageOfSize: (size: cv.Size): cv.Mat =>
-      drawContourShapes(contours, size, color),
+      drawContourShapes(contours, size, color, strokeWidth),
   };
   return drawImage;
 };
@@ -21,16 +49,17 @@ export const contourShapeOf = (contours: ContourPoints[]) => {
 const drawContourShapes = (
   contours: ContourPoints[],
   size: cv.Size,
-  color: cv.Scalar
+  color: cv.Scalar,
+  strokeWidth: number
 ) => {
   const image = cv.Mat.zeros(size.height, size.width, cv.CV_8UC3);
   contours.forEach((it) => {
-    drawPolylines(it.points, image, color);
+    drawPolyLines(it.points, image, color, strokeWidth);
   });
   return image;
 };
 
-const drawPolylines = (points: Point[], image: cv.Mat, color: cv.Scalar) => {
+const drawPolyLines = (points: Point[], image: cv.Mat, color: cv.Scalar, strokeWidth: number) => {
   const markersVector = new cv.MatVector();
   const mv = new cv.Mat(points.length, 1, cv.CV_32SC2);
   points.forEach(({ x, y }, idx) => {
@@ -39,7 +68,6 @@ const drawPolylines = (points: Point[], image: cv.Mat, color: cv.Scalar) => {
   });
   markersVector.push_back(mv);
 
-  const strokeWidth = 8;
   const closed = true;
   cv.polylines(image, markersVector, closed, color, strokeWidth);
   cv.polylines(image, markersVector, closed, new cv.Scalar(255, 255, 255), 1);
@@ -77,7 +105,8 @@ export const drawLargestContour = (
 
 export const drawAllContours = (
   imageSize: cv.Size,
-  imageContours: ImageContours
+  imageContours: ImageContours,
+  drawIndexes: number[] | undefined = undefined
 ): cv.Mat => {
   const { contours, hierarchy } = imageContours;
 
@@ -86,6 +115,8 @@ export const drawAllContours = (
   // Create a color image to draw contours
   let contourImg = cv.Mat.zeros(imageSize.height, imageSize.width, cv.CV_8UC3);
   for (let i = 0; i < contours.size(); ++i) {
+    if (drawIndexes && !drawIndexes.includes(i)) continue;
+
     const hierarchyIndex = hierarchy.intPtr(0, i)[3]; // parent contour index
 
     if (!(hierarchyIndex in colorMap)) {

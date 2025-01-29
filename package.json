@@ -24,6 +24,7 @@
     "@types/three": "^0.167.1",
     "comlink": "^4.4.1",
     "file-loader": "^6.2.0",
+    "jszip": "^3.10.1",
     "next": "^14.2.6",
     "next-image-export-optimizer": "^1.14.1",
     "react": "^18",

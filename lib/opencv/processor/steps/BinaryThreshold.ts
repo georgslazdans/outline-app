@@ -60,12 +60,11 @@ const binaryThresholdOf: Process<BinaryThresholdSettings> = (
   inverseThreshold.delete();
   blackPartsMask.delete();
   blackParts.delete();
-
   return { image: combined };
 };
 
 const binaryThresholdStep: ProcessingStep<BinaryThresholdSettings> = {
-  name: StepName.THRESHOLD,
+  name: StepName.BINARY_THRESHOLD,
   settings: {
     threshold: 130,
     inverseThreshold: 255,

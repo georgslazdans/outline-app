@@ -6,7 +6,6 @@ import ProcessingStep, {
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import Point from "../../../data/Point";
-import { contoursOf, largestContourOf } from "../../util/contours/Contours";
 import StepName from "./StepName";
 import imageWarper from "../ImageWarper";
 import Orientation, { orientationOptionsFor } from "@/lib/Orientation";
@@ -15,7 +14,6 @@ import Options from "@/lib/utils/Options";
 import Settings, { inSettings } from "../../Settings";
 import ContourPoints, {
   modifyContour,
-  pointsFrom,
   queryContour,
 } from "@/lib/data/contour/ContourPoints";
 
@@ -32,29 +30,24 @@ type ExtractPaperSettings = {
   reuseStep: ReuseStep;
   paperSettings: PaperSettings;
   shrinkPaper: number;
+  paperIndex: number;
 };
-
-const PAPER_NOT_FOUND_MESSAGE = "Paper contours not found! Ensure that the paper outline is fully visible and uninterrupted in \"Adaptive Threshold\" step!";
 
 const extractPaperFrom: Process<ExtractPaperSettings> = (
   image: cv.Mat,
   settings: ExtractPaperSettings,
   previous: PreviousData
 ): ProcessFunctionResult => {
-  const { contours, hierarchy } = contoursOf(image);
+  const paperOutlineContours = previous.contoursOf(
+    StepName.FIND_PAPER_OUTLINE
+  )!;
 
-  const contourIndex = largestContourOf(contours);
-  if (contourIndex == null) {
-    return { errorMessage: PAPER_NOT_FOUND_MESSAGE };
-  }
+  const index =
+    settings.paperIndex >= paperOutlineContours.length
+      ? paperOutlineContours.length - 1
+      : settings.paperIndex;
 
-  const smoothedContour = smoothContour(contours.get(contourIndex!));
-  const cornerPoints = pointsFrom(smoothedContour);
-
-  if (cornerPoints.points.length < 4) {
-    return { errorMessage: PAPER_NOT_FOUND_MESSAGE };
-  }
-
+  const cornerPoints = paperOutlineContours[index].outline;
   const scaledPoints = handlePaperShrinking(cornerPoints, settings.shrinkPaper);
 
   const previousStep = stepNameOfReuseStep(settings.reuseStep);
@@ -64,12 +57,7 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
     previousImage,
     settings.paperSettings
   );
-
-  contours.delete();
-  hierarchy.delete();
-  smoothedContour.delete();
-
-  return { image: result, contours: [scaledPoints] };
+  return { image: result, contours: [{ outline: scaledPoints }] };
 };
 
 const stepNameOfReuseStep = (reuseStep: ReuseStep) => {
@@ -79,13 +67,6 @@ const stepNameOfReuseStep = (reuseStep: ReuseStep) => {
     case ReuseStep.NONE:
       return StepName.BILATERAL_FILTER;
   }
-};
-
-const smoothContour = (contour: cv.Mat) => {
-  let result = new cv.Mat();
-  const accuracy = 0.02 * cv.arcLength(contour, true);
-  cv.approxPolyDP(contour, result, accuracy, true);
-  return result;
 };
 
 const warpedImageOf = (
@@ -128,6 +109,7 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
       orientation: Orientation.LANDSCAPE,
     },
     shrinkPaper: 0,
+    paperIndex: 0,
   },
   config: {
     reuseStep: {
@@ -159,6 +141,10 @@ const extractPaperStep: ProcessingStep<ExtractPaperSettings> = {
       max: 200,
       step: 0.01,
       tooltip: "Shrinks paper outline by given value in pixels",
+    },
+    paperIndex: {
+      type: "paperOutlineSelect",
+      tooltip: "Array index. Counting starts from 0",
     },
   },
   imageColorSpace: imageColorSpace,
