@@ -3,7 +3,7 @@ import objectOutlineImagesOf from "./processor/images/OutlineCheckImage";
 import handleOpenCvError from "./OpenCvError";
 import processStep, { ProcessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
-import StepResult, { stepResultsBefore } from "./StepResult";
+import StepResult, { findStep, stepResultsBefore } from "./StepResult";
 import * as Comlink from "comlink";
 import WorkerResult, {
   ErrorResult,
@@ -12,6 +12,7 @@ import WorkerResult, {
 } from "./WorkerResult";
 import ProcessingResult from "./ProcessingResult";
 import paperOutlineImagesOf from "./processor/images/PaperOutlineImages";
+import StepName from "./processor/steps/StepName";
 
 let initialized = false;
 
@@ -53,9 +54,19 @@ const errorMessageOf = (e: any): ErrorResult => {
 };
 
 const failedMessageOf = (stepResults: ProcessingResult): FailedResult => {
+  let paperOutlineImages: ImageData[] = [];
+  if (stepResults.data) {
+    const paperStep = findStep(StepName.FIND_PAPER_OUTLINE).in(
+      stepResults.data
+    );
+    if (paperStep) {
+      paperOutlineImages = paperOutlineImagesOf(stepResults.data);
+    }
+  }
   return {
     status: "failed",
     result: stepResults,
+    paperOutlineImages: paperOutlineImages,
   };
 };
 

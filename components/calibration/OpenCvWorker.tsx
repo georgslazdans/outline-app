@@ -66,15 +66,12 @@ export const useOpenCvWorker = (
         setErrorMessage(undefined);
       } else if (data.status === "failed") {
         const updatedStepResults = updateStepResults(data.result.data!);
-        const hasOutlineStep = !!findStep(StepName.FIND_PAPER_OUTLINE).in(
-          data.result.data!
-        );
         const hasObjectStep = !!findStep(StepName.FIND_OBJECT_OUTLINES).in(
           data.result.data!
         );
         updateResult(
           updatedStepResults,
-          hasOutlineStep ? paperOutlineImages : [],
+          data.paperOutlineImages,
           hasObjectStep ? objectOutlineImages : []
         );
         setErrorMessage(data.result.error);
@@ -82,14 +79,7 @@ export const useOpenCvWorker = (
         setErrorMessage(data.error);
       }
     },
-    [
-      setLoading,
-      updateStepResults,
-      updateResult,
-      setErrorMessage,
-      paperOutlineImages,
-      objectOutlineImages,
-    ]
+    [setLoading, updateStepResults, updateResult, setErrorMessage, objectOutlineImages]
   );
 
   const updateCurrentStepData = useCallback(

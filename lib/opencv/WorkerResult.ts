@@ -9,6 +9,7 @@ export type SuccessResult = {
 export type FailedResult = {
   status: "failed";
   result: ProcessingResult;
+  paperOutlineImages: ImageData[];
 };
 
 export type ErrorResult = {
