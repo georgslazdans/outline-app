@@ -4,6 +4,7 @@ import paperOnTable from "./images/paper_on_tble.jpg";
 import caliperOnPaper from "./images/caliper.jpg";
 import detailsForm from "./images/details_form.png";
 import calibrationPage from "./images/calibration_page.png";
+import backlitExample from "./images/backlit_tools.jpg";
 import "./page.css";
 
 <div className="hidden mt-8 list-inside list-disc my-1">
@@ -18,16 +19,20 @@ import "./page.css";
 
 - [Quick Start](#quick-start)
 - [Environment Setup](#environment-setup)
+  - [Basic Setup](#basic-setup)
+  - [Recommended Setup](#recommended-setup)
 - [Detailed Settings](#detailed-settings)
   - [Bilateral Filter](#bilateral-filter)
   - [Gray Scale](#gray-scale)
   - [Blur](#blur-setting)
   - [Adaptive Threshold](#adaptive-threshold)
   - [Canny Paper](#canny-paper)
+  - [Find Paper Outlines](#find-paper-outlines)
   - [Extract Paper](#extract-paper)
   - [Object Threshold](#object-threshold)
   - [Close Corners](#close-corners)
-  - [Extract Object](#extract-object)
+  - [Find Object Outlines](#find-object-outlines)
+  - [Filter Objects](#filter-objects)
 
 ## <a name="quick-start"> Quick Start </a>
 
@@ -43,9 +48,9 @@ Place a paper on a flat surface that has good contrast with the paper. Ensure th
   fill
 ></ExportedImage>
 
-### 2. Place object on top of a paper sheet
+### 2. Place objects on top of a paper sheet
 
-Place a object on top of the A4 paper. Make sure the object is centered and not touching the edges of the paper.
+Place a object or multiple objects on top of the A4 paper. Make sure the object is centered and not touching the edges of the paper.
 
 <ExportedImage
   className="object-contain !relative max-h-[30vh]"
@@ -87,33 +92,66 @@ Adjust the settings for detecting the paper and object. Fine-tuning these parame
 
 By changing the settings under **Find Paper** find the blue paper outline.
 
-- **Blur size:** Adjust the blur size to reduce noise in the image.
-- **Block size:** Set the block size for adaptive threshold.
+- **Bilateral Filter Pixel Diameter:** Adjust the pixel size to reduce noise in the image. For very noisy pictures a high value will help finding outlines at the cost of performance.
+- **Blur Size:** Adjust the blur size to reduce noise in the image.
+- **Block Size:** Set the block size for adaptive threshold.
+- **Select Paper Outline:** If there are multiple squares found in the picture, this setting changes which of them is the paper.
 
 #### Object Detection
 
-By changing the settings under **Find Object** along with **Close Corners** and **Hole Settings** find the red paper outline.
+By changing the settings under **Find Object** along with **Close Corners** find the red object outlines.
 
-- **Block size:** Set the block size for adaptive threshold specific to the object.
-- **Blur size:** Similar to paper detection, adjust the blur size to help identify the object.
+- **Blur Size:** Similar to paper detection, adjust the blur size to help identify the object.
+- **Threshold Type:** Sets threshold type. For pictures with high contrast "Binary" threshold will give more accurate results.
+- _Adaptive:_ Filters the image by finding outlines
+  - **Block size:** Set the block size for adaptive threshold.
+- _Binary:_ Filters the image by set values
+  - **Threshold:** Set the lower threshold value.
+  - **Inverse Threshold:** Set the upper threshold value.
 
-**Note**: Blur size is only available, if **`Extract Paper`** has **`Reuse Step`** set to **`None`**.
+**Note**: Blur size is only available, if **`Extract Paper`** has **`Reuse Step`** set to **`None`**. **`None`** is the default value.
 
-#### Corner Closure Settings
+#### Close Corners
 
-Larger values close more gaps, but introduces inaccuracy in resulting outline.
+Helps with outlines where there are gaps. Larger values close more gaps, but introduces inaccuracy in resulting outline.
 
 - **Kernel Size (px):** Define the kernel size for morphological operations.
-- **Iterations:** Set the number of iterations for closing corners.
+- **Iterations:** Set the number of iterations for closing corners. Set `0` for skipping this step.
 
-#### Hole Settings
+#### Hole Settings and Smoothing
 
 - **Max Background Difference:** Adjust to distinguish between the object and background.
 - **Area Size Threshold:** Set the minimum area size to identify holes.
+- **Smoothing Strength:** Set the contour smoothing to reduce unnecessary points in the outline. A value of `0` is not recommended.
+
+#### Filter Objects
+
+Select which contours will be exported and available in editor.
+
+**Note**: After selecting contours "Rerun" should be pressed to apply selected contours.
 
 ## <a name="environment-setup">Environment Setup</a>
 
-Ensure your lighting is consistent. Avoid reflections as much as possible to get a clear image. Zoom in when taking the photo to minimize distortion. Setting up the environment perfectly will save a lot of time adjusting settings later.
+Setting up the environment perfectly will save a lot of time adjusting settings later.
+
+### <a name="basic-setup">Basic Setup</a>
+
+- Ensure your lighting is consistent.
+- Avoid reflections as much as possible to get a clear image.
+- Zoom in when taking the photo to minimize distortion.
+
+### <a name="recommended-setup">Recommended Setup</a>
+
+For easiest and most accurate results, it's recommended to use a transparent backlight source, e.g. giant tablet, monitor or glass/plastic sheet with lights under.
+Calibration then is straightforward by using "Binary" threshold in **Find Object** and using low **Blur Size** and **Close Corners** values for the best accuracy.
+
+<ExportedImage
+  className="object-contain !relative max-h-[30vh]"
+  src={backlitExample}
+  alt={"Backlit paper from a computer monitor with multiple tools"}
+  priority
+  fill
+></ExportedImage>
 
 ## <a name="detailed-settings">Detailed Settings</a>
 
@@ -159,9 +197,16 @@ Uses the Canny edge detector to find edges in the image.
 
 For more details, see the [OpenCV Canny Edge Detection documentation](https://docs.opencv.org/4.10.0/dd/d1a/group__imgproc__feature.html#ga04723e007ed888ddf11d9ba04e2232de).
 
+### <a name="find-paper-outlines">Find Paper Outlines</a>
+
+Finds all rectangles with 4 points inside the image.
+
+- **Filter Similar Outlines** - Filters out similar paper outlines leaving behind the one with smallest area.
+- **Similarity Threshold** - Similarity percentage based on the image resolution.
+
 ### <a name="extract-paper">Extract Paper</a>
 
-Finds the largest contour and transforms the image to show only the paper.
+Extracts one of the paper outlines found in the previous step.
 
 - **Reuse Step** - Defines if previous blur data should be reused.
 
@@ -170,6 +215,9 @@ Finds the largest contour and transforms the image to show only the paper.
 - **Width** - The width of the paper in millimeters.
 - **Height** - The height of the paper in millimeters.
 - **Orientation** - The orientation of the paper: _Portrait_ or _Landscape_.
+
+- **Shrink Paper** - Shrinks the found paper outline by a set amount of pixels in all directions
+- **Select Paper Outlines** - Specifies the used paper outline found in the previous step.
 
 ### Gray Scale Object
 
@@ -214,18 +262,29 @@ Uses morphological operations to close gaps in corners.
 
 For more details, see the [OpenCV Morphological Transformations documentation](https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html).
 
-### <a name="extract-object">Extract Object</a>
+### <a name="find-object-outlines">Find Object Outlines</a>
 
-Finds the largest contour and identifies possible holes in the object.
+Finds objects contours and identifies possible holes in the object.
 
-#### <a name="smooth-settings">Smooth Settings</a>
+#### Smooth Settings
 
 - **Smooth Outline** - Flag to enable or disable smoothing of the object outline.
-- **Smooth Max Deviation** - Maximum deviation from the original line.
+- **Smoothing Strength** - Maximum deviation from the original line.
 
 #### Hole Settings
 
 - **Max Background Difference** - Max difference between the background mean value and contour mean value in blur image.
 - **Area Size Threshold (%)** - Minimum area size to consider a contour as a hole. Low values impact processing time.
+
+#### Object Area Threshold Settings
+
+Filters very large and very small contours based on it's area relative to the image.
+
+- **Upper Area Threshold** - Upper threshold for area filtering
+- **Lower Area Threshold** - Lower threshold for area filtering
+
+### <a name="filter-objects">Filter Objects</a>
+
+Filters out unselected outlines.
 
 </div>
