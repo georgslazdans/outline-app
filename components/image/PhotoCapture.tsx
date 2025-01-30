@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from "react";
+import React, { FormEvent, ReactNode, useRef } from "react";
 import Button from "../Button";
 
 type Props = {
@@ -11,15 +11,15 @@ type Props = {
 const PhotoCapture = ({ id, className, children, onChange }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (event: FormEvent<HTMLButtonElement>) => {
     if (inputRef.current) {
+      event.preventDefault();
       inputRef.current.click();
     }
   };
 
   return (
-    <Button className={className} onClick={handleButtonClick}>
-      <label htmlFor={id}>{children}</label>
+    <>
       <input
         ref={inputRef}
         className="hidden"
@@ -30,7 +30,10 @@ const PhotoCapture = ({ id, className, children, onChange }: Props) => {
         capture="environment"
         onChange={onChange}
       />
-    </Button>
+      <Button className={className} onClick={handleButtonClick}>
+        <label htmlFor={id}>{children}</label>
+      </Button>
+    </>
   );
 };
 
