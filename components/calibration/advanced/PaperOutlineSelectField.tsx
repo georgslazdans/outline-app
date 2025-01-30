@@ -25,10 +25,16 @@ const PaperOutlineSelectField = ({
   const getOutlineCount = useCallback(() => {
     return paperOutlineImages.length - 1;
   }, [paperOutlineImages]);
-  
+
   if (getOutlineCount() <= 0) {
     return <></>;
   }
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if(event.target.value) {
+      onChange(event);
+    }
+  };
 
   return (
     <div className={"flex flex-col " + className}>
@@ -49,7 +55,7 @@ const PaperOutlineSelectField = ({
           max={getOutlineCount()}
           step={1}
           placeholder={placeholder}
-          onChange={(event) => onChange(event)}
+          onChange={handleChange}
         />
         <label> of {getOutlineCount()}</label>
       </div>
