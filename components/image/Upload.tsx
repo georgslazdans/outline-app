@@ -28,10 +28,10 @@ const Upload = ({ dictionary }: Props) => {
       setContextImageData(imageData);
       setDetailsContext((context: Context) => {
         return {
-          details: context.details,
+          details: context?.details,
           addDate: new Date(),
           contours: [],
-          settings: context.settings,
+          settings: context?.settings,
           imageFile: file,
         };
       });
