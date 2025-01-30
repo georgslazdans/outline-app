@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from "react";
+import React, { FormEvent, ReactNode, useRef } from "react";
 import Button from "../Button";
 
 type Props = {
@@ -11,15 +11,15 @@ type Props = {
 const ImageUpload = ({ id, className, children, onChange }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (event: FormEvent<HTMLButtonElement>) => {
     if (inputRef.current) {
+      event.preventDefault();
       inputRef.current.click();
     }
   };
 
   return (
-    <Button className={className} onClick={() => handleButtonClick()}>
-      <label htmlFor={id}>{children}</label>
+    <>
       <input
         ref={inputRef}
         className="hidden"
@@ -29,7 +29,10 @@ const ImageUpload = ({ id, className, children, onChange }: Props) => {
         accept="image/*"
         onChange={onChange}
       />
-    </Button>
+      <Button className={className} onClick={(e) => handleButtonClick(e)}>
+        <label htmlFor={id}>{children}</label>
+      </Button>
+    </>
   );
 };
 
