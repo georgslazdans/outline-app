@@ -40,7 +40,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Self Hosting
 
-The `npm run build` creates static files that can be added to your server of choice.
+Requirements: [Node.js](https://nodejs.org/en)
+
+The `build` command creates static files in folder `out` that can be added to your web server of choice.
+
+```bash
+npm install
+npm run build
+```
 
 ### Using Next.js to host
 
@@ -48,6 +55,7 @@ It's possible to start the prod build using Next.js itself.
 Remove the `output: "export"` or change it's value from `"export"` to `"standalone"` inside config file `next.config.mjs`. Then just build and start the server.
 
 ```bash
+npm install
 npm run build
 npm run start
 ```
