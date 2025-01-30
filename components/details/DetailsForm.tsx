@@ -77,9 +77,10 @@ const DetailsForm = ({ dictionary }: Props) => {
     paperSettingsOf(detailsContext) || defaultSettings
   );
 
+  // Remove loading from previous screen, but not on form save
   useEffect(() => {
     setLoading(false);
-  });
+  }, []);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -135,7 +136,10 @@ const DetailsForm = ({ dictionary }: Props) => {
         addHistory("/details");
         router.push("/calibration" + "?" + idQuery(dbId.toString()));
       },
-      (error) => showError(error)
+      (error) => {
+        showError(error);
+        setLoading(false);
+      }
     );
   };
 
