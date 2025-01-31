@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import { useEffect, useState } from "react";
 import SimpleCalibration from "./simple/SimpleCalibration";
 import { AdvancedCalibration } from "./advanced/AdvancedCalibration";
-import { useOpenCvWorker } from "./OpenCvWorker";
+import { useOpenCvWorker } from "./worker/OpenCvWorker";
 import { useLoading } from "@/context/LoadingContext";
 import { Context, useDetails } from "@/context/DetailsContext";
 import { applyDefaults, defaultSettings } from "@/lib/opencv/Settings";
@@ -16,9 +16,7 @@ import useNavigationHistory from "@/context/NavigationHistory";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useResultContext } from "./ResultContext";
 import { imageDataToBlob } from "@/lib/utils/ImageData";
-import ContourPoints, {
-  ContourOutline,
-} from "@/lib/data/contour/ContourPoints";
+import { ContourOutline } from "@/lib/data/contour/ContourPoints";
 import ContextDetailsName from "./ContextDetailsName";
 
 type Props = {

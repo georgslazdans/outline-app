@@ -31,4 +31,22 @@ export const findStep = (stepName: StepName) => {
   };
 };
 
+export const updateStepResultsWithNewData = (
+  previousResults: StepResult[],
+  newResult: StepResult[]
+): StepResult[] => {
+  const updatedResult = [...previousResults];
+  newResult.forEach((newStep) => {
+    const index = updatedResult.findIndex(
+      (step) => step.stepName === newStep.stepName
+    );
+    if (index !== -1) {
+      updatedResult[index] = newStep;
+    } else {
+      updatedResult.push(newStep);
+    }
+  });
+  return updatedResult;
+};
+
 export default StepResult;

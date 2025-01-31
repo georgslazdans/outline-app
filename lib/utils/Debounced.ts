@@ -9,10 +9,15 @@ const useDebounced = (
   const handler = useRef<NodeJS.Timeout>();
   const pendingEvent = useRef<any>(null);
 
-  const createHandler = useCallback(() => {
+  const cancelCurrent = () => {
     if (handler.current) {
       clearTimeout(handler.current);
+      handler.current = undefined;
     }
+  };
+
+  const createHandler = useCallback(() => {
+    cancelCurrent();
     handler.current = setTimeout(() => {
       changeHandler(pendingEvent.current);
       pendingEvent.current = null;
@@ -35,6 +40,7 @@ const useDebounced = (
       createHandler();
     },
     flush: flush,
+    cancel: cancelCurrent,
   };
 };
 
