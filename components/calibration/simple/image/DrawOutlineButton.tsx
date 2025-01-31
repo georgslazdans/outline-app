@@ -2,6 +2,9 @@
 
 import IconButton from "@/components/IconButton";
 import React from "react";
+import { Tooltip } from "react-tooltip";
+
+const TOGGLE_OUTLINE_BUTTON = "toggle-outline-overlay";
 
 type Props = {
   icon: "eye" | "eye-slash";
@@ -50,11 +53,15 @@ const DrawOutlineButton = ({ icon, onClick }: Props) => {
   return (
     <>
       <IconButton
+        id={TOGGLE_OUTLINE_BUTTON}
         className="absolute px-3 py-3 mr-auto mt-2 ml-2"
         onClick={onClick}
       >
         {icon == "eye" ? eye : eyeSlash}
       </IconButton>
+      <Tooltip anchorSelect={"#" + TOGGLE_OUTLINE_BUTTON}>
+        {icon == "eye" ? "Show Outline" : "Hide Outline"}
+      </Tooltip>
     </>
   );
 };
