@@ -11,7 +11,7 @@ import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshol
 import bilateralFilterStep from "@/lib/opencv/processor/steps/BilateralFilter";
 import extractPaperStep from "@/lib/opencv/processor/steps/ExtractPaper";
 import CalibrationSettingStep from "./CalibrationSettingStep";
-import { useStepChangeHandler } from "./ChangeHandler";
+import { useStepChangeHandler } from "../../fields/ChangeHandler";
 
 const PIXEL_DIAMETER = "pixelDiameter";
 const BLUR_WIDTH = "blurWidth";

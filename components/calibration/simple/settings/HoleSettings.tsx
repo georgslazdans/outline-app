@@ -9,7 +9,7 @@ import StepName from "@/lib/opencv/processor/steps/StepName";
 import { GroupConfig } from "@/lib/opencv/processor/steps/StepSettings";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import findObjectOutlinesStep from "@/lib/opencv/processor/steps/FindObjectOutlines";
-import { useNestedStepChangeHandler } from "./ChangeHandler";
+import { useNestedStepChangeHandler } from "../../fields/ChangeHandler";
 
 const MEAN_THRESHOLD = "meanThreshold";
 const HOLE_AREA_THRESHOLD = "holeAreaThreshold";

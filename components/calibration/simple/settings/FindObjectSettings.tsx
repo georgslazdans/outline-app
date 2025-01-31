@@ -11,7 +11,7 @@ import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshol
 import binaryThresholdStep from "@/lib/opencv/processor/steps/BinaryThreshold";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import thresholdStep from "@/lib/opencv/processor/steps/Threshold";
-import { useNestedStepChangeHandler, useStepChangeHandler } from "./ChangeHandler";
+import { useNestedStepChangeHandler, useStepChangeHandler } from "../../fields/ChangeHandler";
 
 const BLUR_WIDTH = "blurWidth";
 const THRESHOLD_TYPE = "thresholdType";

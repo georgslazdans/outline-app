@@ -5,7 +5,6 @@ import CloseCornerSettings from "./settings/CloseCornersSettings";
 import HoleAndSmoothSettings from "./settings/HoleSettings";
 import FindObjectSettings from "./settings/FindObjectSettings";
 import FilterObjectOutlines from "./settings/FilterObjectOutlines";
-import IconButton from "@/components/IconButton";
 import PreferencesModal from "./preferences/PreferencesModal";
 
 type Props = {
@@ -28,7 +27,11 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
           </h2>
         </div>
         <div className="mr-2">
-          <PreferencesModal dictionary={dictionary}></PreferencesModal>
+          <PreferencesModal
+            dictionary={dictionary}
+            settings={settings}
+            onSettingsChanged={onChange}
+          ></PreferencesModal>
         </div>
       </div>
 

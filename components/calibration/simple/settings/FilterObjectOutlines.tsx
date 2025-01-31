@@ -8,7 +8,7 @@ import StepSettingField from "../../fields/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import filterObjectsStep from "@/lib/opencv/processor/steps/FilterObjects";
-import { useStepChangeHandler } from "./ChangeHandler";
+import { useStepChangeHandler } from "../../fields/ChangeHandler";
 
 const OBJECT_INDEXES = "objectIndexes";
 

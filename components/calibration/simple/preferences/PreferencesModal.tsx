@@ -7,14 +7,22 @@ import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import IconButton from "@/components/IconButton";
 import { Tooltip } from "react-tooltip";
 import UserPreferencesList from "./UserPreferencesList";
+import AdditionalSettings from "./AdditionalSettings";
+import Settings from "@/lib/opencv/Settings";
 
 type Props = {
   dictionary: Dictionary;
+  settings: Settings;
+  onSettingsChanged: (settings: Settings) => void;
 };
 
 const OPEN_PREFERENCES_BUTTON = "open-user-preferences-modal";
 
-const PreferencesModal = ({ dictionary }: Props) => {
+const PreferencesModal = ({
+  dictionary,
+  settings,
+  onSettingsChanged,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onModalClose = useCallback(() => {
@@ -34,12 +42,19 @@ const PreferencesModal = ({ dictionary }: Props) => {
       </IconButton>
 
       <Tooltip anchorSelect={"#" + OPEN_PREFERENCES_BUTTON} place="top">
-        User Preferences
+        User Preferences and Additional Settings
       </Tooltip>
 
       <Modal isOpen={isOpen} onClose={onModalClose}>
-        <div>
+        <div className="mb-8">
           <UserPreferencesList></UserPreferencesList>
+        </div>
+        <div>
+          <AdditionalSettings
+            dictionary={dictionary}
+            settings={settings}
+            onSettingsChanged={onSettingsChanged}
+          ></AdditionalSettings>
         </div>
       </Modal>
     </>

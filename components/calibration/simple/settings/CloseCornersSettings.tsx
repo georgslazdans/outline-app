@@ -8,7 +8,7 @@ import StepSettingField from "../../fields/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import closeContoursStep from "@/lib/opencv/processor/steps/CloseContours";
 import CalibrationSettingStep from "./CalibrationSettingStep";
-import { useStepChangeHandler } from "./ChangeHandler";
+import { useStepChangeHandler } from "../../fields/ChangeHandler";
 
 const KERNEL_SIZE = "kernelSize";
 const ITERATIONS = "iterations";
