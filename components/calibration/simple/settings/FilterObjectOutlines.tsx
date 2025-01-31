@@ -4,10 +4,11 @@ import { Dictionary } from "@/app/dictionaries";
 import Settings from "@/lib/opencv/Settings";
 import React from "react";
 import SettingGroup from "./SettingGroup";
-import StepSettingField from "../../advanced/StepSettingField";
+import StepSettingField from "../../fields/StepSettingField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import filterObjectsStep from "@/lib/opencv/processor/steps/FilterObjects";
+import { useStepChangeHandler } from "./ChangeHandler";
 
 const OBJECT_INDEXES = "objectIndexes";
 
@@ -22,19 +23,12 @@ const FilterObjectOutlines = ({
   settings,
   onSettingsChange,
 }: Props) => {
-  const onChange = (field: string) => {
-    return (value: number[]) => {
-      const stepSettings = {
-        ...settings[StepName.FILTER_OBJECTS],
-        [field]: value,
-      };
-      const updatedSettings = {
-        ...settings,
-        [StepName.FILTER_OBJECTS]: stepSettings,
-      };
-      onSettingsChange(updatedSettings);
-    };
-  };
+  const onChange = useStepChangeHandler(
+    StepName.FILTER_OBJECTS,
+    settings,
+    onSettingsChange
+  );
+
   return (
     <>
       <SettingGroup
@@ -46,7 +40,7 @@ const FilterObjectOutlines = ({
           value={settings[StepName.FILTER_OBJECTS]?.objectIndexes}
           name={OBJECT_INDEXES}
           config={filterObjectsStep.config![OBJECT_INDEXES]}
-          handleOnChange={onChange(OBJECT_INDEXES)}
+          onChange={onChange(OBJECT_INDEXES)}
           dictionary={dictionary}
         ></StepSettingField>
       </SettingGroup>
