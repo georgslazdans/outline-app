@@ -9,7 +9,7 @@ type Props = {
   onClick?: FormEventHandler<HTMLButtonElement>;
   type?: "submit" | "reset" | "button";
   style?: "primary" | "secondary" | "red" | "disabled";
-  size?: "big" | "medium";
+  size?: "big" | "medium" | "none";
   hotkey?: string;
   hotkeyCtrl?: boolean;
 };
@@ -25,6 +25,7 @@ const STYLES = {
 const SIZES = {
   big: "w-full rounded-[64px] p-4 ",
   medium: "rounded-[32px] p-2",
+  none: "",
 };
 
 const Button = ({

@@ -7,6 +7,7 @@ import ProcessingStep, {
 import ColorSpace from "../../util/ColorSpace";
 import ImageContours, {
   fullHierarchyContoursOf,
+  isParent,
   smoothOf,
 } from "../../util/contours/Contours";
 import StepName from "./StepName";
@@ -119,19 +120,23 @@ const contourAndHolesOf = (
 ): ContourOutline => {
   const handleSmoothing = handleContourSmoothing(settings);
 
+  const outlineContour = handleSmoothing(
+    objectContours.contours.get(outlineContourIndex)
+  );
+
   const holeIndexes = holeFinder()
     .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
     .withSettings(settings.holeSettings)
     .findHolesInContour(objectContours, outlineContourIndex);
 
-  const outlineContour = handleSmoothing(
-    objectContours.contours.get(outlineContourIndex)
+  const filteredHoles = holeIndexes.filter(
+    (it) => !hasChildContour(it, holeIndexes, objectContours.hierarchy)
   );
 
   const outlinePoints = pointsFrom(outlineContour);
   const holePoints = contourPointsOf(
     objectContours,
-    holeIndexes,
+    filteredHoles,
     handleSmoothing
   );
 
@@ -141,6 +146,23 @@ const contourAndHolesOf = (
     outline: outlinePoints,
     holes: holePoints,
   };
+};
+
+const hasChildContour = (
+  contourIndex: number,
+  holeInfo: number[],
+  hierarchy: cv.Mat
+): boolean => {
+  let hasChild = false;
+  for (const childIndex of holeInfo) {
+    if (childIndex != contourIndex) {
+      if (isParent(childIndex, contourIndex, hierarchy)) {
+        hasChild = true;
+        break;
+      }
+    }
+  }
+  return hasChild;
 };
 
 const copyOf = (image: cv.Mat) => {
@@ -157,21 +179,6 @@ const handleContourSmoothing = (
       ? smoothOf(contour, settings.smoothSettings.smoothAccuracy / 10000)
       : copyOf(contour);
 };
-
-// const darkBlue = new cv.Scalar(44, 125, 148);
-// const lineThickness = 5;
-// const drawOtherShapes = () => {
-//     const otherContours = drawAllContoursChild(
-//         image.size(),
-//         objectContours,
-//         outlineContourIndex,
-//         darkBlue,
-//         lineThickness,
-//         holeIndexes
-//       );
-//       cv.add(result, otherContours, resultingImage);
-//       otherContours.delete();
-// }
 
 const findObjectOutlinesStep: ProcessingStep<FindObjectOutlineSettings> = {
   name: StepName.FIND_OBJECT_OUTLINES,

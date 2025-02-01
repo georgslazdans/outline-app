@@ -1,0 +1,43 @@
+<div className="max-w-3xl mx-auto">
+
+# Changelog
+
+## Version 1.0.0 - 01.02.2025
+
+### Calibration
+- Add DFX file export
+- Add user preferences window
+- Add auto rerun on settings change. Changes to UI are planned to display processed steps immediately instead of waiting for all to completed
+- Add "Additional Settings" to preferences window. These are the same setting from "Detailed Settings", but in a convenient place 
+- Moved "Detailed Settings" to a smaller icon button next to preferences
+
+### Bug Fixes
+- Fix US Legal paper size to include decimal places in mm measurement
+- Fix hole detection so they are not overlapping or nested.
+
+## 30.01.2025
+
+### Bug fixes
+
+- Fix image upload issue when there aren't previous images
+- Fix loading screen when navigating from details form to calibration screen
+- Fix upload image button opening twice
+- Fix error when deleting paper selection index in calibration
+
+## 29.01.2025
+
+**Note:** Existing contours, svg export and their references to models will be broken and throw errors. To fix them simply rerun the calibration.
+
+- Allow to select paper outline from all found options
+- Support for finding contours for multiple objects
+- Improve calibration screen to make it a bit more user friendly.
+
+### Bug fixes and Improvements
+
+- Add name edit field to contour calibration screen
+- Add preview to contour import in editor
+- Add contours id to the calibration URL
+- Clean up raw image data from contours. Existing contours will still have the data.
+- Scale along normals in small increments of `0.01` to mitigate errors of outline being inverted. Should probably need a better fix.
+
+</div>

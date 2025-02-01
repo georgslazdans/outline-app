@@ -1,8 +1,8 @@
 import { Dictionary } from "@/app/dictionaries";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { ChangeEvent } from "react";
-import StepSettingField from "./StepSettingField";
-import StepSettingGroup from "./StepSettingGroup";
+import StepSettingField from "../fields/StepSettingField";
+import StepSettingGroup from "../fields/StepSettingGroup";
 import StepSetting, {
   GroupConfig,
   StepSettingConfig,
@@ -31,25 +31,15 @@ export const AdvancedSettingsEditor = ({
     return null;
   }
 
-  const handleOnChange = (key: string, config: StepSettingConfig) => {
-    if (config.type == "objectOutlineFilter") {
-      return (value: number[]) => {
-        const updatedSetting = {
-          ...settings,
-          [key]: value,
-        };
-        onChange(updatedSetting);
+  // TODO handle change update
+  const handleOnChange = (key: string) => {
+    return (value: any) => {
+      const updatedSetting = {
+        ...settings,
+        [key]: value,
       };
-    } else {
-      const fieldConverter = eventFieldConverterFor(config);
-      return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const updatedSetting = {
-          ...currentSetting,
-          [key]: fieldConverter(event),
-        };
-        onChange(updatedSetting);
-      };
-    }
+      onChange(updatedSetting);
+    };
   };
 
   const handleOnGroupChange = (key: string) => {
@@ -100,7 +90,7 @@ export const AdvancedSettingsEditor = ({
                     name={key}
                     value={currentSetting[key]}
                     config={config}
-                    handleOnChange={handleOnChange(key, config)}
+                    onChange={handleOnChange(key)}
                     dictionary={dictionary}
                   ></StepSettingField>
                 );

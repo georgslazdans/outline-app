@@ -1,6 +1,6 @@
 import * as cv from "@techstark/opencv-js";
 
-import ImageContours from "./Contours";
+import ImageContours, { isParent } from "./Contours";
 import ContourPoints, { pointsFrom } from "@/lib/data/contour/ContourPoints";
 
 export type HoleSettings = {
@@ -25,12 +25,13 @@ const holeFinder = () => {
       return result;
     },
     findHolesInContour: (
-      contours: ImageContours,
+      imageContours: ImageContours,
       parentIndex: number
     ): number[] => {
+      const { contours, hierarchy } = imageContours;
       const backgroundMask = inverseMaskOf(
         parentIndex,
-        contours.contours,
+        contours,
         _image.size()
       );
       _backgroundColor = cv.mean(_image, backgroundMask)[0];
@@ -38,17 +39,18 @@ const holeFinder = () => {
 
       const holeIndexes: number[] = [];
 
-      const parentAreaSize = cv.contourArea(contours.contours.get(parentIndex));
+      const parentAreaSize = cv.contourArea(contours.get(parentIndex));
       const areaThreshold = (parentAreaSize / 100) * _holeAreaThreshold;
-      for (let i = 0; i < contours.contours.size(); ++i) {
-        if (!isParent(i, parentIndex, contours.hierarchy)) {
+      for (let i = 0; i < contours.size(); ++i) {
+        if (!isParent(i, parentIndex, hierarchy)) {
           continue;
         }
 
-        const contour = contours.contours.get(i);
+        const contour = contours.get(i);
+        const contourArea = cv.contourArea(contour);
         if (
-          isHoleLargerThanThreshold(contour, areaThreshold) &&
-          isContour(contours.contours, i)
+          contourArea >= areaThreshold &&
+          isContour(contours, i)
             .ofBackgroundColour(_backgroundColor, _meanThreshold)
             .inImage(_image)
         ) {
@@ -65,41 +67,17 @@ const holeFinder = () => {
 };
 
 export const contourPointsOf = (
-  contours: ImageContours,
+  imageContours: ImageContours,
   holeIndexes: number[],
   processingFunction: (contour: cv.Mat) => cv.Mat
 ) => {
+  const { contours } = imageContours;
   const contourPoints: ContourPoints[] = [];
   for (const i of holeIndexes) {
-    const contour = processingFunction(contours.contours.get(i));
+    const contour = processingFunction(contours.get(i));
     contourPoints.push(pointsFrom(contour));
   }
   return contourPoints;
-};
-
-const isParent = (
-  i: number,
-  parentIndex: number,
-  hierarchy: cv.Mat
-): boolean => {
-  const hierarchyValue = hierarchy.intPtr(0, i);
-  if (hierarchyValue.length >= 4) {
-    const hierarchyIndex = hierarchyValue[3]; // parent contour index
-    return (
-      hierarchyIndex == parentIndex ||
-      (hierarchyIndex != -1 && isParent(hierarchyIndex, parentIndex, hierarchy))
-    );
-  } else {
-    return false;
-  }
-};
-
-const isHoleLargerThanThreshold = (
-  contour: cv.Mat,
-  areaHoleThreshold: number
-): boolean => {
-  const contourArea = cv.contourArea(contour);
-  return contourArea >= areaHoleThreshold;
 };
 
 const isContour = (contours: cv.MatVector, index: number) => {

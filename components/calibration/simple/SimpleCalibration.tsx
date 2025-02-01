@@ -11,17 +11,18 @@ import SimpleSettingsButtons from "./SimpleSettingsButtons";
 import { useResultContext } from "../ResultContext";
 import { SettingStepProvider } from "./SettingStepContext";
 import { OutlineImageSelector } from "./image/OutlineImageSelector";
+import Dxf from "@/lib/dxf/Dxf";
 
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
-  openAdvancedMode: () => void;
+  openDetailedSettings: () => void;
 };
 
 const SimpleCalibration = ({
   dictionary,
   settings,
-  openAdvancedMode,
+  openDetailedSettings,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
   const { stepResults } = useResultContext();
@@ -40,6 +41,13 @@ const SimpleCalibration = ({
     Svg.download(contourOutlines, paperDimensions);
   }, [detailsContext, stepResults]);
 
+  const exportDxf = useCallback(() => {
+    const lastStep = stepResults[stepResults.length - 1];
+    const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
+    const contourOutlines = lastStep.contours ? lastStep.contours : [];
+    Dxf.download(contourOutlines, paperDimensions);
+  }, [detailsContext, stepResults]);
+
   return (
     <>
       <SettingStepProvider>
@@ -52,8 +60,8 @@ const SimpleCalibration = ({
             <div className="hidden xl:flex flex-row gap-2 mt-3">
               <SimpleSettingsButtons
                 dictionary={dictionary}
-                openAdvancedMode={openAdvancedMode}
                 exportSvg={exportSvg}
+                exportDxf={exportDxf}
               ></SimpleSettingsButtons>
             </div>
           </div>
@@ -62,12 +70,13 @@ const SimpleCalibration = ({
               dictionary={dictionary}
               settings={settings}
               onChange={handleSettingsChange}
+              openDetailedSettings={openDetailedSettings}
             ></SimpleSettingsEditor>
             <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
               <SimpleSettingsButtons
                 dictionary={dictionary}
-                openAdvancedMode={openAdvancedMode}
                 exportSvg={exportSvg}
+                exportDxf={exportDxf}
               ></SimpleSettingsButtons>
             </div>
           </div>

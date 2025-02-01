@@ -5,23 +5,49 @@ import CloseCornerSettings from "./settings/CloseCornersSettings";
 import HoleAndSmoothSettings from "./settings/HoleSettings";
 import FindObjectSettings from "./settings/FindObjectSettings";
 import FilterObjectOutlines from "./settings/FilterObjectOutlines";
+import PreferencesModal from "./preferences/PreferencesModal";
+import IconButton from "@/components/IconButton";
+import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import OpenDetailedSettings from "./preferences/OpenDetailedSettings";
 
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
   onChange: (settings: Settings) => void;
+  openDetailedSettings: () => void;
 };
 
-const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
+const SimpleSettingsEditor = ({
+  dictionary,
+  settings,
+  onChange,
+  openDetailedSettings,
+}: Props) => {
   if (!settings) {
     return <></>;
   }
 
   return (
     <div>
-      <h2 className="text-center p-2">
-        {dictionary.calibration.simpleSettings.title}
-      </h2>
+      <div className="flex flex-row mb-2">
+        <div className="grow">
+          <h2 className="text-center p-2">
+            {dictionary.calibration.simpleSettings.title}
+          </h2>
+        </div>
+        <div className="mr-2 flex flex-row gap-1">
+          <OpenDetailedSettings
+            dictionary={dictionary}
+            openDetailedSettings={openDetailedSettings}
+          ></OpenDetailedSettings>
+          <PreferencesModal
+            dictionary={dictionary}
+            settings={settings}
+            onSettingsChanged={onChange}
+          ></PreferencesModal>
+        </div>
+      </div>
+
       <div>
         <FindPaperSettings
           dictionary={dictionary}

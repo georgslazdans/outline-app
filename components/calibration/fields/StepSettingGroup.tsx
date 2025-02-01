@@ -1,9 +1,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import StepSettingField from "./StepSettingField";
-import { ChangeEvent } from "react";
 import StepSetting, {
   StepSettingConfig,
-  eventFieldConverterFor,
 } from "@/lib/opencv/processor/steps/StepSettings";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import Settings from "@/lib/opencv/Settings";
@@ -32,30 +30,14 @@ const StepSettingGroup = ({
     return dictionary.calibration.stepSettings[name];
   };
 
-  const handleOnChange = (key: string, config: StepSettingConfig) => {
-    if(config.type == "objectOutlineFilter") {
-      return (
-        value: number[]
-      ) => {
-        const updatedSetting = {
-          ...settings,
-          [key]: value,
-        };
-        onChange(updatedSetting);
+  const handleOnChange = (key: string) => {
+    return (value: any) => {
+      const updatedSetting = {
+        ...settings,
+        [key]: value,
       };
-    } else {
-      const fieldConverter = eventFieldConverterFor(config);
-      return (
-        event: (ChangeEvent<HTMLInputElement | HTMLSelectElement>)
-      ) => {
-        const updatedSetting = {
-          ...settings,
-          [key]: fieldConverter(event),
-        };
-        onChange(updatedSetting);
-      };
-    }
-
+      onChange(updatedSetting);
+    };
   };
 
   return (
@@ -76,7 +58,7 @@ const StepSettingGroup = ({
             name={key}
             value={settings[key]}
             config={fieldConfig}
-            handleOnChange={handleOnChange(key, fieldConfig)}
+            onChange={handleOnChange(key)}
             dictionary={dictionary}
           ></StepSettingField>
         );

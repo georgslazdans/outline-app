@@ -33,7 +33,7 @@ const pointDataOf = (points: Point[]) => {
   for (let i = 1; i < points.length; i++) {
     pathData += ` L ${points[i].x} ${points[i].y}`;
   }
-  pathData += " Z"; // Close the path
+  pathData += " Z "; // Close the path
   return pathData;
 };
 

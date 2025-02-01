@@ -4,15 +4,19 @@ import { ProcessAll } from "@/lib/opencv/processor/ProcessAll";
 import WorkerResult from "@/lib/opencv/WorkerResult";
 import { ProcessStep } from "@/lib/opencv/processor/ProcessStep";
 import * as Comlink from "comlink";
-import { useCallback, useMemo, useState } from "react";
-import StepResult, { findStep } from "@/lib/opencv/StepResult";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import StepResult, {
+  findStep,
+  updateStepResultsWithNewData,
+} from "@/lib/opencv/StepResult";
 import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
 import { useLoading } from "@/context/LoadingContext";
 import { allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
 import deepEqual from "@/lib/utils/Objects";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useDetails } from "@/context/DetailsContext";
-import { useResultContext } from "./ResultContext";
+import { useResultContext } from "../ResultContext";
+import useAutoRerun from "./AutoRerun";
 
 export interface WorkerApi {
   processOutlineImage: (data: ProcessAll) => Promise<WorkerResult>;
@@ -24,8 +28,7 @@ export const useOpenCvWorker = (
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
   const { detailsContext, contextImageData } = useDetails();
-  const { stepResults, objectOutlineImages, paperOutlineImages, updateResult } =
-    useResultContext();
+  const { stepResults, objectOutlineImages, updateResult } = useResultContext();
   const { setLoading } = useLoading();
   const [previousSettings, setPreviousSettings] = useState<Settings>();
   const { api: openCvApi } = useMemo(() => newWorkerInstance(), []);
@@ -35,29 +38,14 @@ export const useOpenCvWorker = (
     [previousSettings, detailsContext]
   );
 
-  const updateStepResults = useCallback(
-    (newResult: StepResult[]): StepResult[] => {
-      const updatedResult = [...stepResults];
-      newResult.forEach((newStep) => {
-        const index = updatedResult.findIndex(
-          (step) => step.stepName === newStep.stepName
-        );
-        if (index !== -1) {
-          updatedResult[index] = newStep;
-        } else {
-          updatedResult.push(newStep);
-        }
-      });
-      return updatedResult;
-    },
-    [stepResults]
-  );
-
   const handleWorkerResult = useCallback(
     (data: WorkerResult) => {
       setLoading(false);
       if (data.status === "success") {
-        const updatedStepResults = updateStepResults(data.result.data!);
+        const updatedStepResults = updateStepResultsWithNewData(
+          stepResults,
+          data.result.data!
+        );
         updateResult(
           updatedStepResults,
           data.paperOutlineImages,
@@ -65,7 +53,10 @@ export const useOpenCvWorker = (
         );
         setErrorMessage(undefined);
       } else if (data.status === "failed") {
-        const updatedStepResults = updateStepResults(data.result.data!);
+        const updatedStepResults = updateStepResultsWithNewData(
+          stepResults,
+          data.result.data!
+        );
         const hasObjectStep = !!findStep(StepName.FIND_OBJECT_OUTLINES).in(
           data.result.data!
         );
@@ -79,7 +70,13 @@ export const useOpenCvWorker = (
         setErrorMessage(data.error);
       }
     },
-    [setLoading, updateStepResults, updateResult, setErrorMessage, objectOutlineImages]
+    [
+      setLoading,
+      stepResults,
+      updateResult,
+      setErrorMessage,
+      objectOutlineImages,
+    ]
   );
 
   const updateCurrentStepData = useCallback(
@@ -137,6 +134,8 @@ export const useOpenCvWorker = (
     updateAllWorkData,
     updateCurrentStepData,
   ]);
+
+  useAutoRerun(settingsChanged, rerunOpenCv);
 
   return {
     rerunOpenCv,

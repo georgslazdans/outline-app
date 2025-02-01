@@ -21,8 +21,8 @@ export const PaperDimensions = {
     height: 279.4,
   },
   [PaperSize.US_LEGAL]: {
-    width: 216,
-    height: 356,
+    width: 215.9,
+    height: 355.6,
   },
 };
 

@@ -7,14 +7,11 @@ import BlobImage from "../image/BlobImage";
 import EntryField from "./EntryField";
 import Button from "../Button";
 import { useRouter } from "next/navigation";
-import Svg from "@/lib/svg/Svg";
-import { downloadFile } from "@/lib/utils/Download";
 import { useIndexedDB } from "react-indexed-db-hook";
-import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import useNavigationHistory from "@/context/NavigationHistory";
-import { modifyContourList } from "@/lib/data/contour/ContourPoints";
 import { idQuery } from "@/lib/utils/UrlParams";
 import getImageData from "@/lib/utils/ImageData";
+import ExportDropdown from "./ExportDropdown";
 
 type Props = {
   context: Context;
@@ -34,15 +31,6 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
     setDetailsContext(context);
     addHistory("/contours");
     router.push("/calibration" + "?" + idQuery(context.id!.toString()));
-  };
-
-  const hasSvg = !!context.contours && context.contours.length != 0;
-
-  const exportSvg = () => {
-    if (hasSvg) {
-      const paperDimensions = paperDimensionsOfDetailsContext(context);
-      Svg.download(context.contours, paperDimensions);
-    }
   };
 
   const deleteEntry = () => {
@@ -68,15 +56,12 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
           className={buttonClass}
           style="secondary"
         >
-          <label>{dictionary.contours.settings}</label>
+          <label>{dictionary.contours.open}</label>
         </Button>
-        <Button
-          onClick={exportSvg}
-          className={buttonClass}
-          style={hasSvg ? "secondary" : "disabled"}
-        >
-          <label>{dictionary.contours.svg}</label>
-        </Button>
+        <ExportDropdown
+          context={context}
+          dictionary={dictionary}
+        ></ExportDropdown>
         <Button onClick={deleteEntry} className={buttonClass} style="red">
           <label>{dictionary.contours.delete}</label>
         </Button>

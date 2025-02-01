@@ -35,8 +35,9 @@ const ModelName = ({ title, value, onNameChanged, onBlur, onFocus }: Props) => {
 
   return (
     <>
-      <h1 className="text-center p-2 flex flex-row mb-2 mt-2">
-        <span className="ml-auto">{title + " - "}</span>
+      <h1 className="text-center p-2 flex flex-col xl:flex-row mb-2 mt-2 max-w-64 xl:max-w-full mx-auto">
+        <span className="xl:ml-auto">{title}</span>
+        <span className="px-1 hidden xl:block">-</span>
         {isEditing ? (
           <InputField
             className="ml-2 mr-auto"

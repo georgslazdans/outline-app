@@ -4,13 +4,14 @@ import { Dictionary } from "@/app/dictionaries";
 import Settings, { inSettings } from "@/lib/opencv/Settings";
 import React from "react";
 import SettingGroup from "./SettingGroup";
-import StepSettingField from "../../advanced/StepSettingField";
+import StepSettingField from "../../fields/StepSettingField";
 import blurStep from "@/lib/opencv/processor/steps/Blur";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshold";
 import binaryThresholdStep from "@/lib/opencv/processor/steps/BinaryThreshold";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import thresholdStep from "@/lib/opencv/processor/steps/Threshold";
+import { useNestedStepChangeHandler, useStepChangeHandler } from "../../fields/ChangeHandler";
 
 const BLUR_WIDTH = "blurWidth";
 const THRESHOLD_TYPE = "thresholdType";
@@ -29,46 +30,24 @@ const FindObjectSettings = ({
   settings,
   onSettingsChange,
 }: Props) => {
-  const onNumberChange = (stepName: StepName, fieldName: string) => {
-    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const value = Number.parseInt(event.target.value);
-      const updatedSettings = {
-        ...settings,
-        [stepName]: { ...settings[stepName], [fieldName]: value },
-      };
-      onSettingsChange(updatedSettings);
-    };
-  };
-  const onTypeChange = (stepName: StepName, fieldName: string) => {
-    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const value = event.target.value;
-      const updatedSettings = {
-        ...settings,
-        [stepName]: { ...settings[stepName], [fieldName]: value },
-      };
-      onSettingsChange(updatedSettings);
-    };
-  };
-  const onObjectThresholdChange = (
-    fieldName: string,
-    settingsField: string
-  ) => {
-    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const value = Number.parseInt(event.target.value);
-      const subSettings = {
-        ...settings[StepName.OBJECT_THRESHOLD],
-        [settingsField]: {
-          ...settings[StepName.OBJECT_THRESHOLD][settingsField],
-          [fieldName]: value,
-        },
-      };
-      const updatedSettings = {
-        ...settings,
-        [StepName.OBJECT_THRESHOLD]: subSettings,
-      };
-      onSettingsChange(updatedSettings);
-    };
-  };
+  const onBlurChange = useStepChangeHandler(
+    StepName.BLUR_OBJECT,
+    settings,
+    onSettingsChange
+  );
+
+  const onThresholdChange = useStepChangeHandler(
+    StepName.OBJECT_THRESHOLD,
+    settings,
+    onSettingsChange
+  );
+
+  const onNestedThresholdChange = useNestedStepChangeHandler(
+    StepName.OBJECT_THRESHOLD,
+    settings,
+    onSettingsChange
+  );
+
   return (
     <>
       <SettingGroup
@@ -81,7 +60,7 @@ const FindObjectSettings = ({
             value={settings[StepName.BLUR_OBJECT][BLUR_WIDTH]}
             name={BLUR_WIDTH}
             config={blurStep.config![BLUR_WIDTH]}
-            handleOnChange={onNumberChange(StepName.BLUR_OBJECT, BLUR_WIDTH)}
+            onChange={onBlurChange(BLUR_WIDTH)}
             dictionary={dictionary}
           ></StepSettingField>
         )}
@@ -90,7 +69,7 @@ const FindObjectSettings = ({
           value={settings[StepName.OBJECT_THRESHOLD][THRESHOLD_TYPE]}
           name={THRESHOLD_TYPE}
           config={thresholdStep.config![THRESHOLD_TYPE]}
-          handleOnChange={onTypeChange(StepName.OBJECT_THRESHOLD, THRESHOLD_TYPE)}
+          onChange={onThresholdChange(THRESHOLD_TYPE)}
           dictionary={dictionary}
         ></StepSettingField>
 
@@ -101,10 +80,7 @@ const FindObjectSettings = ({
             }
             name={BLOCK_SIZE}
             config={adaptiveThresholdStep.config![BLOCK_SIZE]}
-            handleOnChange={onObjectThresholdChange(
-              BLOCK_SIZE,
-              "adaptiveSettings"
-            )}
+            onChange={onNestedThresholdChange(BLOCK_SIZE, "adaptiveSettings")}
             dictionary={dictionary}
           ></StepSettingField>
         )}
@@ -117,10 +93,7 @@ const FindObjectSettings = ({
               }
               name={THRESHOLD}
               config={binaryThresholdStep.config![THRESHOLD]}
-              handleOnChange={onObjectThresholdChange(
-                THRESHOLD,
-                "binarySettings"
-              )}
+              onChange={onNestedThresholdChange(THRESHOLD, "binarySettings")}
               dictionary={dictionary}
             ></StepSettingField>
 
@@ -132,7 +105,7 @@ const FindObjectSettings = ({
               }
               name={INVERSE_THRESHOLD}
               config={binaryThresholdStep.config![INVERSE_THRESHOLD]}
-              handleOnChange={onObjectThresholdChange(
+              onChange={onNestedThresholdChange(
                 INVERSE_THRESHOLD,
                 "binarySettings"
               )}

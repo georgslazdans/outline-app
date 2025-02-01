@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import DrawOutlineButton from "../DrawOutlineButton";
+import DrawOutlineButton from "./DrawOutlineButton";
 import { DisplayImageInfo } from "./DisplayImageInfo";
 
 type Props = {
