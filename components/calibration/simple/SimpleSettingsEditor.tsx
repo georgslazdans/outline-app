@@ -6,14 +6,23 @@ import HoleAndSmoothSettings from "./settings/HoleSettings";
 import FindObjectSettings from "./settings/FindObjectSettings";
 import FilterObjectOutlines from "./settings/FilterObjectOutlines";
 import PreferencesModal from "./preferences/PreferencesModal";
+import IconButton from "@/components/IconButton";
+import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import OpenDetailedSettings from "./preferences/OpenDetailedSettings";
 
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
   onChange: (settings: Settings) => void;
+  openDetailedSettings: () => void;
 };
 
-const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
+const SimpleSettingsEditor = ({
+  dictionary,
+  settings,
+  onChange,
+  openDetailedSettings,
+}: Props) => {
   if (!settings) {
     return <></>;
   }
@@ -26,7 +35,11 @@ const SimpleSettingsEditor = ({ dictionary, settings, onChange }: Props) => {
             {dictionary.calibration.simpleSettings.title}
           </h2>
         </div>
-        <div className="mr-2">
+        <div className="mr-2 flex flex-row">
+          <OpenDetailedSettings
+            dictionary={dictionary}
+            openDetailedSettings={openDetailedSettings}
+          ></OpenDetailedSettings>
           <PreferencesModal
             dictionary={dictionary}
             settings={settings}

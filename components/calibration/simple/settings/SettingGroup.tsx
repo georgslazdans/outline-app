@@ -50,7 +50,7 @@ const SettingGroup = ({ name, dictionary, children, settingStep }: Props) => {
         className={
           "flex flex-row h-10 " +
           (!expanded && !isDisabled()
-            ? " hover:bg-gray hover:text-black"
+            ? " hover:bg-gray hover:text-black cursor-pointer"
             : "mb-1") +
           (isDisabled() ? " text-gray " : "")
         }

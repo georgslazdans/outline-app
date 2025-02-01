@@ -104,7 +104,7 @@ const CalibrationComponent = ({ dictionary }: Props) => {
               <SimpleCalibration
                 dictionary={dictionary}
                 settings={detailsContext.settings}
-                openAdvancedMode={() => setSimpleMode(false)}
+                openDetailedSettings={() => setSimpleMode(false)}
               ></SimpleCalibration>
             </>
           )}

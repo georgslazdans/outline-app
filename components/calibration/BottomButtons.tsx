@@ -25,10 +25,10 @@ const BottomButtons = ({
         onClick={() => rerun()}
         style={settingsChanged ? "red" : "disabled"}
       >
-        <label>{dictionary.calibration.rerun}</label>
+        <label className="cursor-pointer">{dictionary.calibration.rerun}</label>
       </Button>
       <Button onClick={() => onClose()}>
-        <label>
+        <label className="cursor-pointer">
           {simpleMode
             ? dictionary.calibration.save
             : dictionary.calibration.done}

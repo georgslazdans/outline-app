@@ -16,13 +16,13 @@ import Dxf from "@/lib/dxf/Dxf";
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
-  openAdvancedMode: () => void;
+  openDetailedSettings: () => void;
 };
 
 const SimpleCalibration = ({
   dictionary,
   settings,
-  openAdvancedMode,
+  openDetailedSettings,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
   const { stepResults } = useResultContext();
@@ -60,7 +60,6 @@ const SimpleCalibration = ({
             <div className="hidden xl:flex flex-row gap-2 mt-3">
               <SimpleSettingsButtons
                 dictionary={dictionary}
-                openAdvancedMode={openAdvancedMode}
                 exportSvg={exportSvg}
                 exportDxf={exportDxf}
               ></SimpleSettingsButtons>
@@ -71,11 +70,11 @@ const SimpleCalibration = ({
               dictionary={dictionary}
               settings={settings}
               onChange={handleSettingsChange}
+              openDetailedSettings={openDetailedSettings}
             ></SimpleSettingsEditor>
             <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
               <SimpleSettingsButtons
                 dictionary={dictionary}
-                openAdvancedMode={openAdvancedMode}
                 exportSvg={exportSvg}
                 exportDxf={exportDxf}
               ></SimpleSettingsButtons>
