@@ -57,6 +57,24 @@ export const fullHierarchyContoursOf = (image: cv.Mat): ImageContours => {
   return new ImageContours(contours, hierarchy);
 };
 
+export const isParent = (
+  i: number,
+  parentIndex: number,
+  hierarchy: cv.Mat
+): boolean => {
+  const hierarchyValue = hierarchy.intPtr(0, i);
+  if (hierarchyValue.length >= 4) {
+    const hierarchyIndex = hierarchyValue[3]; // parent contour index
+    return (
+      hierarchyIndex == parentIndex ||
+      (hierarchyIndex != -1 && isParent(hierarchyIndex, parentIndex, hierarchy))
+    );
+  } else {
+    return false;
+  }
+};
+
+
 export const largestContourOf = (
   contours: cv.MatVector,
   maxAreaSize?: number
