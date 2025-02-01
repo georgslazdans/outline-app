@@ -119,8 +119,10 @@
     "name": "Nosaukums",
     "date": "Datums",
     "searchByName": "Meklēt pēc nosaukuma",
-    "settings": "Iestatījumi",
+    "open": "Atvērt",
+    "export": "Eksportēt",
     "svg": "SVG",
+    "dxf": "DXF",
     "delete": "Izdzēst"
   },
   "models": {

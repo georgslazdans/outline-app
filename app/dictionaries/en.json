@@ -119,8 +119,10 @@
     "name": "Name",
     "date": "Date",
     "searchByName": "Search by Name",
-    "settings": "Settings",
+    "open": "Open",
+    "export": "Export",
     "svg": "SVG",
+    "dxf": "DXF",
     "delete": "Delete"
   },
   "models": {
