@@ -35,7 +35,7 @@ const SimpleSettingsEditor = ({
             {dictionary.calibration.simpleSettings.title}
           </h2>
         </div>
-        <div className="mr-2 flex flex-row">
+        <div className="mr-2 flex flex-row gap-1">
           <OpenDetailedSettings
             dictionary={dictionary}
             openDetailedSettings={openDetailedSettings}
