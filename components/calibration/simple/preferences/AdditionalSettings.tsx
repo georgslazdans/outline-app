@@ -17,11 +17,13 @@ import {
   StepSettingConfig,
 } from "@/lib/opencv/processor/steps/StepSettings";
 import { SettingsConfig } from "@/lib/opencv/processor/steps/ProcessingFunction";
+import StepSettingGroup from "../../fields/StepSettingGroup";
 
 const FILTER_SIMILAR_OUTLINES = "filterSimilarOutlines";
 const SIMILARITY_THRESHOLD = "similarityThreshold";
 
 const SHRINK_PAPER = "shrinkPaper";
+const PAPER_SETTINGS = "paperSettings";
 
 const AREA_THRESHOLD_SETTINGS = "areaThresholdSettings";
 const LOWER_THRESHOLD = "lowerThreshold";
@@ -54,6 +56,10 @@ const AdditionalSettings = ({
     settings,
     onSettingsChanged
   );
+
+  const paperConfig = (extractPaperStep.config![PAPER_SETTINGS] as GroupConfig)
+    .config;
+  const paperSettings = settings[StepName.EXTRACT_PAPER][PAPER_SETTINGS];
 
   const areaThresholdConfig = (
     findObjectOutlinesStep.config![AREA_THRESHOLD_SETTINGS] as GroupConfig
@@ -90,6 +96,15 @@ const AdditionalSettings = ({
           onChange={onExtractPaperChange(SHRINK_PAPER)}
           dictionary={dictionary}
         ></StepSettingField>
+        <StepSettingGroup
+          name={PAPER_SETTINGS}
+          settings={paperSettings}
+          settingsConfig={paperConfig}
+          onChange={onExtractPaperChange(PAPER_SETTINGS)}
+          dictionary={dictionary}
+          stepName={StepName.EXTRACT_PAPER}
+          allSettings={settings}
+        ></StepSettingGroup>
       </div>
       <div className="mb-2">
         <h3 className="mb-2">Find Object Outlines</h3>
