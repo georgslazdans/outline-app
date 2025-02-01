@@ -4,6 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import React from "react";
 import navbarPaths, { NavbarPath } from "./NavbarPaths";
 import { usePathname, useRouter } from "next/navigation";
+import Version from "../Version";
 
 type Props = {
   dictionary: Dictionary;
@@ -27,19 +28,24 @@ const NavbarMenu = ({ dictionary }: Props) => {
           return (
             <li
               key={it.path}
-              className={`mx-2 p-4 ${pathname == it.path ? "underline" : ""}`}
+              className={`cursor-pointer mx-2 p-4 ${
+                pathname == it.path ? "underline" : ""
+              }`}
               onClick={onNavigation(it)}
             >
               <a
+                className="cursor-pointer"
                 href={it.path}
                 aria-current={pathname == it.path ? "page" : "false"}
               >
                 {/* {it.name} */}
-                <label>{it.name}</label>
+                <label className="cursor-pointer">{it.name}</label>
               </a>
             </li>
           );
         })}
+
+        <Version></Version>
       </ul>
     </div>
   );
