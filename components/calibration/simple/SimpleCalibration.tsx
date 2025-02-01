@@ -11,6 +11,7 @@ import SimpleSettingsButtons from "./SimpleSettingsButtons";
 import { useResultContext } from "../ResultContext";
 import { SettingStepProvider } from "./SettingStepContext";
 import { OutlineImageSelector } from "./image/OutlineImageSelector";
+import Dxf from "@/lib/dxf/Dxf";
 
 type Props = {
   dictionary: Dictionary;
@@ -40,6 +41,13 @@ const SimpleCalibration = ({
     Svg.download(contourOutlines, paperDimensions);
   }, [detailsContext, stepResults]);
 
+  const exportDxf = useCallback(() => {
+    const lastStep = stepResults[stepResults.length - 1];
+    const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
+    const contourOutlines = lastStep.contours ? lastStep.contours : [];
+    Dxf.download(contourOutlines, paperDimensions);
+  }, [detailsContext, stepResults]);
+
   return (
     <>
       <SettingStepProvider>
@@ -54,6 +62,7 @@ const SimpleCalibration = ({
                 dictionary={dictionary}
                 openAdvancedMode={openAdvancedMode}
                 exportSvg={exportSvg}
+                exportDxf={exportDxf}
               ></SimpleSettingsButtons>
             </div>
           </div>
@@ -68,6 +77,7 @@ const SimpleCalibration = ({
                 dictionary={dictionary}
                 openAdvancedMode={openAdvancedMode}
                 exportSvg={exportSvg}
+                exportDxf={exportDxf}
               ></SimpleSettingsButtons>
             </div>
           </div>

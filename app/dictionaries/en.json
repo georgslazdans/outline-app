@@ -91,9 +91,9 @@
       "paperIndex": "Select Paper Outline",
       "filterSimilarOutlines": "Filter Similar Outlines",
       "similarityThreshold": "Similarity Threshold",
-      "areaThresholdSettings": "Object Area Threshold Settings", 
-      "upperThreshold": "Upper Area Threshold", 
-      "lowerThreshold": "Lower Area Threshold" 
+      "areaThresholdSettings": "Object Area Threshold Settings",
+      "upperThreshold": "Upper Area Threshold",
+      "lowerThreshold": "Lower Area Threshold"
     },
     "simpleSettings": {
       "title": "Settings",
@@ -106,7 +106,9 @@
     },
     "settings": "Settings",
     "advancedSettings": "Detailed Settings",
-    "exportSvg": "Export SVG",
+    "export": "Export",
+    "exportSvg": "SVG",
+    "exportDxf": "DXF",
     "rerun": "Rerun",
     "done": "Done",
     "save": "Save"

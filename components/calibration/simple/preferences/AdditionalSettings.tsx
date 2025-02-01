@@ -70,7 +70,7 @@ const AdditionalSettings = ({
   return (
     <>
       <h2 className="mb-2">Additional Settings</h2>
-      <div className="mb-2">
+      <div className="mb-4">
         <h3 className="mb-2">Find Paper Outlines</h3>
         <StepSettingField
           value={settings[StepName.FIND_PAPER_OUTLINE][FILTER_SIMILAR_OUTLINES]}
@@ -87,7 +87,7 @@ const AdditionalSettings = ({
           dictionary={dictionary}
         ></StepSettingField>
       </div>
-      <div className="mb-2">
+      <div className="mb-4">
         <h3 className="mb-2">Extract Paper</h3>
         <StepSettingField
           value={settings[StepName.EXTRACT_PAPER][SHRINK_PAPER]}
@@ -106,7 +106,7 @@ const AdditionalSettings = ({
           allSettings={settings}
         ></StepSettingGroup>
       </div>
-      <div className="mb-2">
+      <div className="mb-4">
         <h3 className="mb-2">Find Object Outlines</h3>
         <StepSettingField
           value={areaThresholdSettings[LOWER_THRESHOLD]}

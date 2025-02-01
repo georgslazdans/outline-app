@@ -106,7 +106,9 @@
     },
     "settings": "Iestatījumi",
     "advancedSettings": "Izvērstie Iestatījumi",
-    "exportSvg": "Eksportēt SVG",
+    "export": "Eksportēt",
+    "exportSvg": "SVG",
+    "exportDxf": "DXF",
     "rerun": "Atkārtoti Izpildīt",
     "done": "Pabeigt",
     "save": "Saglabāt"
