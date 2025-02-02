@@ -69,7 +69,7 @@ const PROCESSING_STEPS = (): ProcessingStep<any>[] => [
   filterObjectsStep,
 ];
 
-const getAll = () => {
+const getAll = (): ProcessingStep<any>[] => {
   return [INPUT, ...PROCESSING_STEPS()];
 };
 

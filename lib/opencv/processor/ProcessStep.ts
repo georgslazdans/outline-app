@@ -1,4 +1,5 @@
-import ProcessingResult from "../ProcessingResult";
+import HandleProcessing from "../HandleProcessing";
+import handleOpenCvError from "../OpenCvError";
 import Settings from "../Settings";
 import StepResult, { stepResultsBefore } from "../StepResult";
 import ColorSpace from "../util/ColorSpace";
@@ -17,19 +18,25 @@ export type ProcessStep = {
 };
 
 const processStep = async (
-  command: ProcessStep
-): Promise<ProcessingResult> => {
-  const image = imageOf(command.imageData, command.imageColorSpace);
-  const previousSteps = stepResultsBefore(
-    command.stepName,
-    command.previousData
-  );
-  const steps = stepsStartingFrom(command.stepName, command.settings);
-  const result = processorOf(steps, command.settings)
-    .withPreviousSteps(previousSteps)
-    .process(image);
-  image.delete();
-  return result;
+  command: ProcessStep,
+  handleProcessing: HandleProcessing,
+  signal: AbortSignal
+) => {
+  try {
+    const image = imageOf(command.imageData, command.imageColorSpace);
+    const previousSteps = stepResultsBefore(
+      command.stepName,
+      command.previousData
+    );
+    const steps = stepsStartingFrom(command.stepName, command.settings);
+    processorOf(steps, command.settings, handleProcessing, signal)
+      .withPreviousSteps(previousSteps)
+      .process(image);
+    image.delete();
+  } catch (e) {
+    const errorMessage = "Error while processing step! " + handleOpenCvError(e);
+    handleProcessing.onError(errorMessage);
+  }
 };
 
 const stepsStartingFrom = (
@@ -48,6 +55,5 @@ const stepsStartingFrom = (
   }
   return result;
 };
-
 
 export default processStep;

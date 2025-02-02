@@ -1,6 +1,5 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
-  PreviousData,
   Process,
   ProcessFunctionResult,
 } from "./ProcessingFunction";
@@ -17,6 +16,7 @@ import holeFinder, {
 } from "../../util/contours/Holes";
 import { ContourOutline, pointsFrom } from "@/lib/data/contour/ContourPoints";
 import { drawContourOutlines } from "../../util/contours/Drawing";
+import PreviousData from "../PreviousData";
 
 interface ContourResult {
   index: number;

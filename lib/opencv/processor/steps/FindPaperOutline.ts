@@ -1,6 +1,5 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
-  PreviousData,
   Process,
   ProcessFunctionResult,
 } from "./ProcessingFunction";
@@ -9,7 +8,7 @@ import { paperContoursOf, smoothOf } from "../../util/contours/Contours";
 import StepName from "./StepName";
 import ContourPoints, { pointsFrom } from "@/lib/data/contour/ContourPoints";
 import { drawAllContours } from "../../util/contours/Drawing";
-import { outlineAppCache } from "@/app/swCache";
+import PreviousData from "../PreviousData";
 
 interface ContourResult {
   index: number;
@@ -91,9 +90,6 @@ const findPaperOutlines = (
             area: calculatedArea,
             points: pointsFrom(smoothedContour),
           });
-        }
-        if (smoothedContour.rows > 4) {
-          console.warn("Contour with more than 4 points found!");
         }
         smoothedContour.delete();
       }

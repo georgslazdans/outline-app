@@ -48,8 +48,8 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
   const drawImage = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = getContext();
-    if (canvas && ctx) {
-      const { baseImage, outlineImages } = displayImageInfo;
+    const { baseImage, outlineImages } = displayImageInfo;
+    if (canvas && ctx && baseImage) {
       canvas.width = baseImage.width;
       canvas.height = baseImage.height;
       if (drawOutline && outlineImages && outlineImages.length != 0) {

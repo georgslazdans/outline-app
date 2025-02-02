@@ -1,18 +1,9 @@
 import * as cv from "@techstark/opencv-js";
-import objectOutlineImagesOf from "./processor/images/OutlineCheckImage";
-import handleOpenCvError from "./OpenCvError";
 import processStep, { ProcessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
-import StepResult, { findStep, stepResultsBefore } from "./StepResult";
 import * as Comlink from "comlink";
-import WorkerResult, {
-  ErrorResult,
-  FailedResult,
-  SuccessResult,
-} from "./WorkerResult";
-import ProcessingResult from "./ProcessingResult";
-import paperOutlineImagesOf from "./processor/images/PaperOutlineImages";
-import StepName from "./processor/steps/StepName";
+import { processingResultHandlerFor } from "./HandleProcessing";
+import WorkerContext, { WorkerResultCallback } from "./WorkerContext";
 
 let initialized = false;
 
@@ -32,109 +23,51 @@ const waitForInitialization = async () => {
   await initializedPromise;
 };
 
-const successMessageOf = (
-  stepResults: ProcessingResult,
-  objectOutlineImages: ImageData[],
-  paperOutlineImages: ImageData[],
-): SuccessResult => {
-  return {
-    status: "success",
-    result: stepResults,
-    objectOutlineImages: objectOutlineImages,
-    paperOutlineImages: paperOutlineImages,
-  };
-};
+let workerContext: WorkerContext | undefined = undefined;
 
-const errorMessageOf = (e: any): ErrorResult => {
-  const errorMessage = "Error while executing OpenCv! " + handleOpenCvError(e);
-  return {
-    status: "error",
-    error: errorMessage,
-  };
-};
-
-const failedMessageOf = (stepResults: ProcessingResult): FailedResult => {
-  let paperOutlineImages: ImageData[] = [];
-  if (stepResults.data) {
-    const paperStep = findStep(StepName.FIND_PAPER_OUTLINE).in(
-      stepResults.data
-    );
-    if (paperStep) {
-      paperOutlineImages = paperOutlineImagesOf(stepResults.data);
-    }
+const cancelPreviousJob = async () => {
+  if (workerContext) {
+    workerContext.abortController.abort();
+    await workerContext.jobPromise;
   }
+};
+
+const createContextFor = (
+  processingFunction: (signal: AbortSignal) => Promise<void>
+): WorkerContext => {
+  const abortController = new AbortController();
+  const signal: AbortSignal = abortController.signal;
+  const jobPromise = processingFunction(signal);
   return {
-    status: "failed",
-    result: stepResults,
-    paperOutlineImages: paperOutlineImages,
+    abortController: abortController,
+    jobPromise: jobPromise,
   };
 };
 
-const processOutlineImage = async (data: ProcessAll): Promise<WorkerResult> => {
+const processOutlineImage = async (
+  data: ProcessAll,
+  onResult: WorkerResultCallback
+) => {
   await waitForInitialization();
-  try {
-    const result = await processImage(data);
-    if (!result.error) {
-      const objectOutlineImages = objectOutlineImagesOf(
-        result.data!,
-      );
-      const paperOutlineImages = paperOutlineImagesOf(result.data!);
-      return successMessageOf(
-        result,
-        objectOutlineImages,
-        paperOutlineImages,
-      );
-    } else {
-      return failedMessageOf(result);
-    }
-  } catch (e) {
-    return errorMessageOf(e);
-  }
+  await cancelPreviousJob();
+  workerContext = createContextFor((signal) => {
+    const handleProcessing = processingResultHandlerFor(onResult);
+    return processImage(data, handleProcessing, signal);
+  });
+  await workerContext.jobPromise;
 };
 
-const filterPreviousSteps = (
-  list: StepResult[],
-  previousSteps: StepResult[]
-): StepResult[] => {
-  const previousStepNames = previousSteps.map((it) => it.stepName);
-  return list.filter((it) => !previousStepNames.includes(it.stepName));
-};
-
-const postProcessResult = (
-  result: ProcessingResult,
-  data: ProcessStep
-): ProcessingResult => {
-  const { previousData, stepName } = data;
-  return {
-    ...result,
-    data: filterPreviousSteps(
-      result.data!,
-      stepResultsBefore(stepName, previousData)
-    ),
-  };
-};
-
-const processOutlineStep = async (data: ProcessStep): Promise<WorkerResult> => {
+const processOutlineStep = async (
+  data: ProcessStep,
+  onResult: WorkerResultCallback
+) => {
   await waitForInitialization();
-  try {
-    const result = await processStep(data);
-    if (!result.error) {
-      const processedResult = postProcessResult(result, data);
-      const objectOutlineImages = objectOutlineImagesOf(
-        result.data!,
-      );
-      const paperOutlineImages = paperOutlineImagesOf(result.data!);
-      return successMessageOf(
-        processedResult,
-        objectOutlineImages,
-        paperOutlineImages
-      );
-    } else {
-      return failedMessageOf(result);
-    }
-  } catch (e) {
-    return errorMessageOf(e);
-  }
+  await cancelPreviousJob();
+  workerContext = createContextFor((signal) => {
+    const handleProcessing = processingResultHandlerFor(onResult);
+    return processStep(data, handleProcessing, signal);
+  });
+  await workerContext.jobPromise;
 };
 
 Comlink.expose({ processOutlineImage, processOutlineStep });

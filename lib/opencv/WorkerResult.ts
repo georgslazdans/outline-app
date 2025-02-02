@@ -1,22 +1,35 @@
-import ProcessingResult from "./ProcessingResult";
+import handleOpenCvError from "./OpenCvError";
+import StepResult from "./StepResult";
 
-export type SuccessResult = {
-  status: "success";
-  result: ProcessingResult;
+export type SuccessStepResult = {
+  status: "step";
+  step: StepResult;
+};
+
+export type ObjectOutlinesResult = {
+  status: "objectOutlines";
   objectOutlineImages: ImageData[];
+}
+
+export type PaperOutlinesResult = {
+  status: "paperOutlines";
   paperOutlineImages: ImageData[];
-};
-export type FailedResult = {
-  status: "failed";
-  result: ProcessingResult;
-  paperOutlineImages: ImageData[];
-};
+}
 
 export type ErrorResult = {
   status: "error";
   error: string;
 };
 
-type WorkerResult = SuccessResult | FailedResult | ErrorResult;
+type WorkerResult = SuccessStepResult | ObjectOutlinesResult | PaperOutlinesResult | ErrorResult;
+
+export const errorMessageOf = (e: any): ErrorResult => {
+  const errorMessage = "Error while executing OpenCv! " + handleOpenCvError(e);
+  return {
+    status: "error",
+    error: errorMessage,
+  };
+};
+
 
 export default WorkerResult;

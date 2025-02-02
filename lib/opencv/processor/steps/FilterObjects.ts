@@ -1,6 +1,5 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
-  PreviousData,
   Process,
   ProcessFunctionResult,
 } from "./ProcessingFunction";
@@ -14,6 +13,7 @@ import {
   modifyContourList,
 } from "@/lib/data/contour/ContourPoints";
 import { drawContourOutlines } from "../../util/contours/Drawing";
+import PreviousData from "../PreviousData";
 
 type FilterObjectSettings = {
   objectIndexes: number[];
