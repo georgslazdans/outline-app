@@ -19,7 +19,7 @@ const LoadingSpinner = () => {
 
   return (
     <div className="absolute w-full">
-      <div className="mt-2">
+      <div className="mt-2 mr-2">
         <TailSpin
           visible={isLoaderVisible()}
           height="56"
