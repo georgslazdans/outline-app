@@ -9,7 +9,10 @@ export type HandleProcessingResult = (
   stepResults: StepResult[]
 ) => void;
 
-export type HandleProcessingError = (errorMessage: string) => void;
+export type HandleProcessingError = (
+  errorMessage: string,
+  stepName?: StepName
+) => void;
 
 type HandleProcessing = {
   onResult: HandleProcessingResult;
@@ -42,10 +45,11 @@ const handleProcessingResult = (
 const handleProcessingError = (
   onResult: WorkerResultCallback
 ): HandleProcessingError => {
-  return (errorMessage: string) => {
+  return (errorMessage: string, stepName?: StepName) => {
     onResult({
       status: "error",
       error: errorMessage,
+      stepName: stepName,
     });
   };
 };

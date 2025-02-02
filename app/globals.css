@@ -5,6 +5,7 @@
 :root {
   --foreground: theme(colors.black);
   --background: theme(colors.white);
+  --red-highlight: theme(colors.red);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -57,6 +58,12 @@ p {
 
 .loader path {
   stroke: var(--foreground);
+}
+
+.image-loader svg {
+  margin-left: auto;
+  stroke: var(--red-highlight);
+  filter: drop-shadow(0 0 1px #fff);
 }
 
 /* Slider */

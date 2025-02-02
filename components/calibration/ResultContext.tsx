@@ -18,12 +18,13 @@ import { isImageDataEmpty } from "@/lib/utils/ImageData";
 
 type ResultContextType = {
   stepResults: StepResult[];
-  objectOutlineImages: ImageData[];
-  paperOutlineImages: ImageData[];
-  updateResult: (result: StepResult) => void;
   setStepResults: React.Dispatch<React.SetStateAction<StepResult[]>>;
-  updatePaperOutlines: (paperOutlines: ImageData[]) => void;
+  outdatedSteps: StepName[];
+  setOutdatedSteps: React.Dispatch<React.SetStateAction<StepName[]>>;
+  objectOutlineImages: ImageData[];
   updateObjectOutlines: (objectOutlines: ImageData[]) => void;
+  paperOutlineImages: ImageData[];
+  updatePaperOutlines: (paperOutlines: ImageData[]) => void;
 };
 
 const ResultContext = createContext<ResultContextType | undefined>(undefined);
@@ -33,6 +34,7 @@ export const ResultProvider = ({ children }: { children: ReactNode }) => {
   const [stepResults, setStepResults] = useState<StepResult[]>(
     placeholderSteps(detailsContext)
   );
+  const [outdatedSteps, setOutdatedSteps] = useState<StepName[]>([]);
   const [paperOutlineImages, setPaperOutlineImages] = useState<ImageData[]>([]);
   const [objectOutlineImages, setObjectOutlineImages] = useState<ImageData[]>(
     []
@@ -61,12 +63,16 @@ export const ResultProvider = ({ children }: { children: ReactNode }) => {
     <ResultContext.Provider
       value={{
         stepResults: stepResults,
-        objectOutlineImages: objectOutlineImages,
-        paperOutlineImages: paperOutlineImages,
-        updateResult: updateResult,
         setStepResults: setStepResults,
-        updatePaperOutlines: setPaperOutlineImages,
+
+        outdatedSteps: outdatedSteps,
+        setOutdatedSteps: setOutdatedSteps,
+
+        objectOutlineImages: objectOutlineImages,
         updateObjectOutlines: setObjectOutlineImages,
+
+        paperOutlineImages: paperOutlineImages,
+        updatePaperOutlines: setPaperOutlineImages,
       }}
     >
       {children}

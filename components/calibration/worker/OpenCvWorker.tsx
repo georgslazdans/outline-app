@@ -13,6 +13,7 @@ import { useDetails } from "@/context/DetailsContext";
 import { useResultContext } from "../ResultContext";
 import useAutoRerun from "./AutoRerun";
 import { WorkerResultCallback } from "@/lib/opencv/WorkerContext";
+import Steps from "@/lib/opencv/processor/Steps";
 
 export interface WorkerApi {
   processOutlineImage: (
@@ -32,8 +33,9 @@ export const useOpenCvWorker = (
   const { detailsContext, contextImageData } = useDetails();
   const {
     stepResults,
-    updateResult,
     setStepResults,
+    outdatedSteps,
+    setOutdatedSteps,
     updateObjectOutlines,
     updatePaperOutlines,
   } = useResultContext();
@@ -48,14 +50,18 @@ export const useOpenCvWorker = (
   const handleWorkerResult = useCallback(
     (data: WorkerResult) => {
       if (data.status == "step") {
+        const stepName = data.step.stepName;
         setStepResults((previous) => {
           return previous.map((it) => {
-            if (it.stepName == data.step.stepName) {
+            if (it.stepName == stepName) {
               return data.step;
             } else {
               return it;
             }
           });
+        });
+        setOutdatedSteps((previous) => {
+          return previous.filter((it) => it != stepName);
         });
       } else if (data.status == "objectOutlines") {
         updateObjectOutlines(data.objectOutlineImages);
@@ -63,13 +69,35 @@ export const useOpenCvWorker = (
         updatePaperOutlines(data.paperOutlineImages);
       } else if (data.status == "error") {
         setErrorMessage(data.error);
+        const stepName = data.stepName;
+        if (stepName) {
+          if (
+            stepName == StepName.FIND_PAPER_OUTLINE ||
+            Steps.is(stepName).before(StepName.FIND_PAPER_OUTLINE)
+          ) {
+            updatePaperOutlines([]);
+          }
+          if (
+            stepName == StepName.FIND_OBJECT_OUTLINES ||
+            Steps.is(stepName).before(StepName.FIND_OBJECT_OUTLINES)
+          ) {
+            updateObjectOutlines([]);
+          }
+        }
+        setOutdatedSteps([]);
       }
     },
-    [setStepResults, updateObjectOutlines, updatePaperOutlines, setErrorMessage]
+    [
+      setStepResults,
+      setOutdatedSteps,
+      updateObjectOutlines,
+      updatePaperOutlines,
+      setErrorMessage,
+    ]
   );
 
   const updateCurrentStepData = useCallback(
-    (stepName: string) => {
+    (stepName: StepName) => {
       setErrorMessage(undefined);
       const workData = stepWorkOf(
         stepResults,
@@ -79,12 +107,14 @@ export const useOpenCvWorker = (
       setPreviousSettings(workData.settings);
       const resultHandler = Comlink.proxy(handleWorkerResult);
       openCvApi.processOutlineStep(workData, resultHandler);
+      setOutdatedSteps(Steps.allStepNamesAfter(stepName));
     },
     [
       detailsContext?.settings,
       handleWorkerResult,
       openCvApi,
       setErrorMessage,
+      setOutdatedSteps,
       stepResults,
     ]
   );
@@ -96,6 +126,7 @@ export const useOpenCvWorker = (
       setPreviousSettings(workData.settings);
       const resultHandler = Comlink.proxy(handleWorkerResult);
       openCvApi.processOutlineImage(workData, resultHandler);
+      setOutdatedSteps(Steps.allProcessingStepNames());
     }
   }, [
     contextImageData,
@@ -103,6 +134,7 @@ export const useOpenCvWorker = (
     handleWorkerResult,
     openCvApi,
     setErrorMessage,
+    setOutdatedSteps,
   ]);
 
   const rerunOpenCv = useCallback(() => {

@@ -121,10 +121,50 @@ const extractPaperReuseStep = (settings: Settings): StepName => {
   }
 };
 
+const allProcessingStepNames = (): StepName[] => {
+  return getAll()
+    .map((it) => it.name)
+    .filter((it) => it != StepName.INPUT);
+};
+
+const allStepNamesAfter = (stepName: StepName): StepName[] => {
+  const stepNames = allProcessingStepNames();
+  const result: StepName[] = [];
+  let isAfter = false;
+  for (const name of stepNames) {
+    if (name == stepName) {
+      isAfter = true;
+    }
+    if (isAfter) {
+      result.push(name);
+    }
+  }
+  return result;
+};
+
+const isStep = (stepName: StepName) => {
+  return {
+    before: (otherStepName: StepName) => {
+      const stepNames = allProcessingStepNames();
+      for (const name of stepNames) {
+        if (name == stepName) {
+          return true;
+        }
+        if (name == otherStepName) {
+          return false;
+        }
+      }
+    },
+  };
+};
+
 const Steps = {
   forSettings,
   getAll,
   mandatoryStepsFor: mandatoryFor,
+  allProcessingStepNames: allProcessingStepNames,
+  allStepNamesAfter: allStepNamesAfter,
+  is: isStep,
 };
 
 export default Steps;

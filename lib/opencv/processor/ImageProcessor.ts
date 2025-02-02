@@ -130,7 +130,7 @@ const processorOf = (
         onResult(step.name, stepData);
       } else {
         errorMessage = result.error;
-        onError(errorMessage);
+        onError(errorMessage, step.name);
         break;
       }
     }
