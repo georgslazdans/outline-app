@@ -17,6 +17,7 @@ const ErrorModal = ({ isOpen, onClose, errorMessage }: Props) => {
       .writeText(errorText)
       .then(() => {})
       .catch((err) => {
+        console.error("Failed to copy to clipboard", err);
         alert("Failed to copy error message: ");
       });
   };
@@ -32,10 +33,10 @@ const ErrorModal = ({ isOpen, onClose, errorMessage }: Props) => {
         </button>
         {errorMessage.map((it, index) => {
           return (
-            <>
+            <div key={"error-message-" + index}>
               <ErrorMessage key={index} text={it}></ErrorMessage>
               <br></br>
-            </>
+            </div>
           );
         })}
         <div className="flex flex-row gap-4">
