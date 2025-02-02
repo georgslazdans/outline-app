@@ -4,7 +4,6 @@ import React, {
   useContext,
   useState,
   ReactNode,
-  useCallback,
   useEffect,
 } from "react";
 import StepResult, {
@@ -40,24 +39,23 @@ export const ResultProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  const updateResult = useCallback((result: StepResult) => {
-    setStepResults((previous) => {
-      return previous.map((it) => {
-        if (it.stepName == result.stepName) {
-          return result;
-        } else {
-          return it;
-        }
-      });
-    });
-  }, []);
-
   useEffect(() => {
     const input = findStep(StepName.INPUT).in(stepResults);
-    if (!input.imageData || isImageDataEmpty(input.imageData)) {
-      updateResult(inputStepOf(contextImageData));
+    if (
+      contextImageData &&
+      (!input.imageData || isImageDataEmpty(input.imageData))
+    ) {
+      setStepResults((previous) => {
+        return previous.map((it) => {
+          if (it.stepName == StepName.INPUT) {
+            return inputStepOf(contextImageData);
+          } else {
+            return it;
+          }
+        });
+      });
     }
-  }, [contextImageData, stepResults, updateResult]);
+  }, [contextImageData, stepResults]);
 
   return (
     <ResultContext.Provider
