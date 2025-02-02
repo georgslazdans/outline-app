@@ -10,39 +10,30 @@ import Settings from "@/lib/opencv/Settings";
 
 type Props = {
   dictionary: Dictionary;
-  currentSetting?: StepSetting;
-  settings: Settings;
-  step?: StepName;
+  allSettings: Settings;
+  stepName?: StepName;
   onChange: (stepSettings: StepSetting) => void;
 };
 
 export const AdvancedSettingsEditor = ({
   dictionary,
-  currentSetting,
-  settings,
-  step,
+  allSettings,
+  stepName,
   onChange,
 }: Props) => {
-  if (!step || !currentSetting) {
+  if (!stepName) {
+    return null;
+  }
+  const currentSetting = allSettings[stepName];
+  if (!currentSetting) {
     return null;
   }
 
-  // TODO handle change update
   const handleOnChange = (key: string) => {
     return (value: any) => {
       const updatedSetting = {
-        ...settings,
-        [key]: value,
-      };
-      onChange(updatedSetting);
-    };
-  };
-
-  const handleOnGroupChange = (key: string) => {
-    return (stepSettings: StepSetting) => {
-      const updatedSetting = {
         ...currentSetting,
-        [key]: stepSettings,
+        [key]: value
       };
       onChange(updatedSetting);
     };
@@ -56,11 +47,11 @@ export const AdvancedSettingsEditor = ({
       <div className="flex flex-col gap-1">
         {currentSetting &&
           Object.keys(currentSetting).map((key) => {
-            const config = configOf(step, key);
+            const config = configOf(stepName, key);
             if (!config) {
               return;
             }
-            if (config.display && !config.display(settings, step)) {
+            if (config.display && !config.display(allSettings, stepName)) {
               return <></>;
             }
             if (config.type == "group") {
@@ -71,14 +62,14 @@ export const AdvancedSettingsEditor = ({
                   name={key}
                   settings={currentSetting[key]}
                   settingsConfig={groupConfig.config}
-                  onChange={handleOnGroupChange(key)}
+                  onChange={handleOnChange(key)}
                   dictionary={dictionary}
-                  stepName={step}
-                  allSettings={settings}
+                  stepName={stepName}
+                  allSettings={allSettings}
                 ></StepSettingGroup>
               );
             } else {
-              const config = configOf(step, key);
+              const config = configOf(stepName, key);
               if (config) {
                 return (
                   <StepSettingField

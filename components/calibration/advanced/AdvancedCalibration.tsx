@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 import { useDetails } from "@/context/DetailsContext";
-import Settings from "@/lib/opencv/Settings";
 import StepResult from "@/lib/opencv/StepResult";
 import { Dictionary } from "@/app/dictionaries";
 import { AdvancedSettingsEditor } from "./AdvancedSettingsEditor";
@@ -42,24 +41,13 @@ export const AdvancedCalibration = ({ dictionary }: Props) => {
   };
 
   const handleSettingsChange = (stepSetting: StepSetting) => {
-    const saveSettings = (settings: Settings) => {
-      const newDetails = { ...detailsContext, settings: settings };
-      setDetailsContext(newDetails);
-    };
-
     if (detailsContext) {
       const updatedSettings = {
         ...detailsContext.settings,
         [currentStep!.stepName]: stepSetting,
       };
-      saveSettings(updatedSettings);
-    }
-  };
-
-  const currentStepSettings = () => {
-    const stepName = currentStep?.stepName;
-    if (stepName) {
-      return detailsContext.settings[stepName];
+      const newDetails = { ...detailsContext, settings: updatedSettings };
+      setDetailsContext(newDetails);
     }
   };
 
@@ -74,10 +62,9 @@ export const AdvancedCalibration = ({ dictionary }: Props) => {
         <StepImage currentStep={currentStep}></StepImage>
         <AdvancedSettingsEditor
           dictionary={dictionary}
-          currentSetting={currentStepSettings()}
           onChange={handleSettingsChange}
-          step={currentStep?.stepName}
-          settings={detailsContext.settings}
+          stepName={currentStep?.stepName}
+          allSettings={detailsContext.settings}
         ></AdvancedSettingsEditor>
       </div>
     </>
