@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { Context } from "@/context/DetailsContext";
-import { bool } from "@techstark/opencv-js";
 
 type ContourCacheContextType = {
   items: Context[];
