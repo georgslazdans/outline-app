@@ -40,3 +40,10 @@ next-env.d.ts
 
 **/public/images/next-image-export-optimizer-hashes.json
 **/public/nextImageExportOptimizer/*
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
