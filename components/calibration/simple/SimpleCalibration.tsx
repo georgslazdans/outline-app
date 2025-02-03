@@ -5,7 +5,7 @@ import SimpleSettingsEditor from "./SimpleSettingsEditor";
 import Settings from "@/lib/opencv/Settings";
 import { useDetails } from "@/context/DetailsContext";
 import { ReactNode } from "react";
-import ExportFileButtons from "./SimpleSettingsButtons";
+import ExportFileButtons from "./ExportFileButtons";
 import { SettingStepProvider } from "./SettingStepContext";
 import { OutlineImageSelector } from "./image/OutlineImageSelector";
 

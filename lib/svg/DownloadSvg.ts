@@ -9,16 +9,15 @@ import JsZip from "jszip";
 
 export const downloadAsSvg = (
   contourOutlines: ContourOutline[],
-  paperDimensions: PaperDimensions
+  paperDimensions: PaperDimensions,
+  fileName: string
 ) => {
   if (contourOutlines.length == 1) {
     const blob = asXmlFile(contourOutlines[0], paperDimensions);
-    downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.svg`);
+    downloadFile(blob, `${fileName}.svg`);
   } else {
     const blobs = contourOutlines.map((it) => asXmlFile(it, paperDimensions));
-    asZipFile(blobs).then((zip) =>
-      downloadFile(zip, `outline-${new Date().toLocaleDateString("lv")}.zip`)
-    );
+    asZipFile(blobs).then((zip) => downloadFile(zip, `${fileName}_svg.zip`));
   }
 };
 

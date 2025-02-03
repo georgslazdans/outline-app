@@ -9,6 +9,7 @@ import Svg from "@/lib/svg/Svg";
 import React, { useCallback } from "react";
 import { useResultContext } from "../ResultContext";
 import StepName from "@/lib/opencv/processor/steps/StepName";
+import exportNameOf from "@/lib/utils/ExportName";
 
 type Props = {
   dictionary: Dictionary;
@@ -23,14 +24,16 @@ const ExportFileButtons = ({ dictionary }: Props) => {
     const lastStep = stepResults[stepResults.length - 1];
     const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
     const contourOutlines = lastStep.contours ? lastStep.contours : [];
-    Svg.download(contourOutlines, paperDimensions);
+    const exportName = exportNameOf(detailsContext.details.name);
+    Svg.download(contourOutlines, paperDimensions, exportName);
   }, [detailsContext, stepResults]);
 
   const exportDxf = useCallback(() => {
     const lastStep = stepResults[stepResults.length - 1];
     const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
     const contourOutlines = lastStep.contours ? lastStep.contours : [];
-    Dxf.download(contourOutlines, paperDimensions);
+    const exportName = exportNameOf(detailsContext.details.name);
+    Dxf.download(contourOutlines, paperDimensions, exportName);
   }, [detailsContext, stepResults]);
 
   if (
