@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { useDetails } from "@/context/DetailsContext";
 import StepResult from "@/lib/opencv/StepResult";
@@ -13,9 +13,10 @@ import StepImage from "./StepImage";
 
 type Props = {
   dictionary: Dictionary;
+  children: ReactNode;
 };
 
-export const AdvancedCalibration = ({ dictionary }: Props) => {
+export const AdvancedCalibration = ({ dictionary, children }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
   const { stepResults } = useResultContext();
   const [currentStep, setCurrentStep] = useState<StepResult>();
@@ -58,8 +59,12 @@ export const AdvancedCalibration = ({ dictionary }: Props) => {
         stepResults={stepResults}
         onDataChange={handleDataChange}
       ></ImageSelector>
+
       <div className="mt-2 flex flex-col gap-2 xl:flex-row flex-grow">
-        <StepImage currentStep={currentStep}></StepImage>
+        <div className="xl:w-1/2">
+          <StepImage currentStep={currentStep}></StepImage>
+          {children}
+        </div>
         <AdvancedSettingsEditor
           dictionary={dictionary}
           onChange={handleSettingsChange}

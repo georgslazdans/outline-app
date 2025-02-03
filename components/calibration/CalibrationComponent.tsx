@@ -48,6 +48,10 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     }
   }, [detailsContext, stepResults]);
 
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
   const saveContext = (contours?: ContourOutline[], paperImageBlob?: Blob) => {
     const context: Context = {
       ...detailsContext,
@@ -91,28 +95,40 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     }
   });
 
+  const largeScreenErrorMessage = (
+    <div className="hidden xl:block ml-4 mt-2">
+      {errorMessage && (
+        <ErrorMessage className="" text={errorMessage}></ErrorMessage>
+      )}
+    </div>
+  );
+
   return (
     <>
       <ContextDetailsName></ContextDetailsName>
+      <div className="xl:hidden">
+        {errorMessage && (
+          <ErrorMessage className="mb-2" text={errorMessage}></ErrorMessage>
+        )}
+      </div>
       <div className="flex flex-col h-[calc(100vh-5.9rem)] xl:h-[calc(100vh-9.9rem)]">
         <div className="flex-grow overflow-auto mb-auto">
-          {errorMessage && (
-            <ErrorMessage className="mb-2" text={errorMessage}></ErrorMessage>
-          )}
           {simpleMode && detailsContext && (
             <>
               <SimpleCalibration
                 dictionary={dictionary}
                 settings={detailsContext.settings}
                 openDetailedSettings={() => setSimpleMode(false)}
-              ></SimpleCalibration>
+              >
+                {largeScreenErrorMessage}
+              </SimpleCalibration>
             </>
           )}
           {!simpleMode && detailsContext && (
             <>
-              <AdvancedCalibration
-                dictionary={dictionary}
-              ></AdvancedCalibration>
+              <AdvancedCalibration dictionary={dictionary}>
+                {largeScreenErrorMessage}
+              </AdvancedCalibration>
             </>
           )}
         </div>

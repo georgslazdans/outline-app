@@ -4,28 +4,25 @@ import { Dictionary } from "@/app/dictionaries";
 import SimpleSettingsEditor from "./SimpleSettingsEditor";
 import Settings from "@/lib/opencv/Settings";
 import { useDetails } from "@/context/DetailsContext";
-import { useCallback } from "react";
-import Svg from "@/lib/svg/Svg";
-import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
-import SimpleSettingsButtons from "./SimpleSettingsButtons";
-import { useResultContext } from "../ResultContext";
+import { ReactNode } from "react";
+import ExportFileButtons from "./SimpleSettingsButtons";
 import { SettingStepProvider } from "./SettingStepContext";
 import { OutlineImageSelector } from "./image/OutlineImageSelector";
-import Dxf from "@/lib/dxf/Dxf";
 
 type Props = {
   dictionary: Dictionary;
   settings: Settings;
   openDetailedSettings: () => void;
+  children: ReactNode;
 };
 
 const SimpleCalibration = ({
   dictionary,
   settings,
   openDetailedSettings,
+  children,
 }: Props) => {
   const { detailsContext, setDetailsContext } = useDetails();
-  const { stepResults } = useResultContext();
 
   const handleSettingsChange = (updatedSettings: Settings) => {
     if (detailsContext) {
@@ -33,20 +30,6 @@ const SimpleCalibration = ({
       setDetailsContext(newDetails);
     }
   };
-
-  const exportSvg = useCallback(() => {
-    const lastStep = stepResults[stepResults.length - 1];
-    const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
-    const contourOutlines = lastStep.contours ? lastStep.contours : [];
-    Svg.download(contourOutlines, paperDimensions);
-  }, [detailsContext, stepResults]);
-
-  const exportDxf = useCallback(() => {
-    const lastStep = stepResults[stepResults.length - 1];
-    const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
-    const contourOutlines = lastStep.contours ? lastStep.contours : [];
-    Dxf.download(contourOutlines, paperDimensions);
-  }, [detailsContext, stepResults]);
 
   return (
     <>
@@ -56,13 +39,11 @@ const SimpleCalibration = ({
             <OutlineImageSelector
               dictionary={dictionary}
             ></OutlineImageSelector>
-
+            {children}
             <div className="hidden xl:flex flex-row gap-2 mt-3">
-              <SimpleSettingsButtons
+              <ExportFileButtons
                 dictionary={dictionary}
-                exportSvg={exportSvg}
-                exportDxf={exportDxf}
-              ></SimpleSettingsButtons>
+              ></ExportFileButtons>
             </div>
           </div>
           <div className="xl:h-[calc(100vh-15rem)] overflow-auto xl:w-1/2">
@@ -73,11 +54,9 @@ const SimpleCalibration = ({
               openDetailedSettings={openDetailedSettings}
             ></SimpleSettingsEditor>
             <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
-              <SimpleSettingsButtons
+              <ExportFileButtons
                 dictionary={dictionary}
-                exportSvg={exportSvg}
-                exportDxf={exportDxf}
-              ></SimpleSettingsButtons>
+              ></ExportFileButtons>
             </div>
           </div>
         </div>

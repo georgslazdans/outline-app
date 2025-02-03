@@ -2,18 +2,49 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
-import React from "react";
+import { useDetails } from "@/context/DetailsContext";
+import Dxf from "@/lib/dxf/Dxf";
+import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
+import Svg from "@/lib/svg/Svg";
+import React, { useCallback } from "react";
+import { useResultContext } from "../ResultContext";
+import StepName from "@/lib/opencv/processor/steps/StepName";
 
 type Props = {
   dictionary: Dictionary;
-  exportSvg: () => void;
-  exportDxf: () => void;
 };
 
-const SimpleSettingsButtons = ({ dictionary, exportSvg, exportDxf }: Props) => {
+const ExportFileButtons = ({ dictionary }: Props) => {
+  const { detailsContext } = useDetails();
+  const { stepResults, outdatedSteps, objectOutlineImages } =
+    useResultContext();
+
+  const exportSvg = useCallback(() => {
+    const lastStep = stepResults[stepResults.length - 1];
+    const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
+    const contourOutlines = lastStep.contours ? lastStep.contours : [];
+    Svg.download(contourOutlines, paperDimensions);
+  }, [detailsContext, stepResults]);
+
+  const exportDxf = useCallback(() => {
+    const lastStep = stepResults[stepResults.length - 1];
+    const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
+    const contourOutlines = lastStep.contours ? lastStep.contours : [];
+    Dxf.download(contourOutlines, paperDimensions);
+  }, [detailsContext, stepResults]);
+
+  if (
+    outdatedSteps.includes(StepName.FIND_OBJECT_OUTLINES) ||
+    objectOutlineImages.length == 0
+  ) {
+    return null;
+  }
+
   return (
     <>
-      <label className="mx-auto xl:mr-4 my-auto mb-2">{dictionary.calibration.export}</label>
+      <label className="mx-auto xl:mr-4 my-auto mb-2">
+        {dictionary.calibration.export}
+      </label>
       <div className="flex flex-row gap-4 mx-auto xl:ml-0 mx:mr-2">
         <Button
           size="medium"
@@ -40,4 +71,4 @@ const SimpleSettingsButtons = ({ dictionary, exportSvg, exportDxf }: Props) => {
   );
 };
 
-export default SimpleSettingsButtons;
+export default ExportFileButtons;
