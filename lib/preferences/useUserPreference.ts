@@ -7,15 +7,17 @@ import UserPreference, {
   PreferenceValue,
 } from "./UserPreference";
 
-type ChangeHandler = { [key: string]: [() => void] };
+type ChangeHandler = { [key: string]: [(value: PreferenceValue) => void] };
 
 const CHANGE_LISTENER_HANDLERS: ChangeHandler = {
-  [UserPreference.AUTO_RERUN_ON_SETTING_CHANGE]: [() => {}],
+  [UserPreference.AUTO_RERUN_ON_SETTING_CHANGE]: [
+    (value: PreferenceValue) => {},
+  ],
 };
 
 const addPreferenceChangeHandler = (
   userPreference: UserPreference,
-  onChange: () => void
+  onChange: (value: PreferenceValue) => void
 ) => {
   const handlers = CHANGE_LISTENER_HANDLERS[userPreference];
   if (handlers) {
@@ -25,11 +27,48 @@ const addPreferenceChangeHandler = (
   }
 };
 
-const onPreferenceChanged = (userPreference: UserPreference) => {
+const onPreferenceChanged = (
+  userPreference: UserPreference,
+  value: PreferenceValue
+) => {
   const handlers = CHANGE_LISTENER_HANDLERS[userPreference];
   if (handlers) {
-    handlers.forEach((it) => it());
+    handlers.forEach((it) => it(value));
   }
+};
+
+const INITIALIZATION_IN_FLIGHT: Record<
+  string,
+  Promise<PreferenceEntry> | null
+> = {};
+
+const initializeFromDb = (
+  userPreference: UserPreference,
+  getByID: (id: number | string) => Promise<PreferenceEntry>,
+  add: (value: PreferenceEntry, key?: any) => Promise<number | string>
+): Promise<PreferenceEntry> => {
+  return new Promise((resolve, reject) => {
+    getByID(userPreference).then(
+      (setting: PreferenceEntry) => {
+        if (setting) {
+          resolve(setting);
+        } else {
+          const preference = defaultPreferenceOf(userPreference);
+          add(preference).then(
+            () => {
+              resolve(preference);
+            },
+            (error) => {
+              reject(error);
+            }
+          );
+        }
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
 };
 
 export const useUserPreference = (
@@ -45,31 +84,20 @@ export const useUserPreference = (
     defaultPreferenceOf(userPreference)
   );
 
-  const refreshEntryFromDb = useCallback(() => {
-    getByID(userPreference).then(
-      (setting: PreferenceEntry) => {
-        if (setting) {
-          setPreferenceEntry(setting);
-        } else {
-          add(defaultPreferenceOf(userPreference)).then(
-            () => {},
-            (error) => {
-              showError(error);
-            }
-          );
-        }
-      },
-      (error) => {
-        showError(error);
-      }
-    );
-  }, [add, getByID, showError, userPreference]);
-
   useEffect(() => {
-    refreshEntryFromDb();
-  }, []);
+    let promise = INITIALIZATION_IN_FLIGHT[userPreference];
+    if (promise == null) {
+      promise = initializeFromDb(userPreference, getByID, add);
+      INITIALIZATION_IN_FLIGHT[userPreference] = promise;
+    }
+    promise.then((entry) => setPreferenceEntry(entry));
+  }, [add, getByID, userPreference]);
 
-  addPreferenceChangeHandler(userPreference, refreshEntryFromDb);
+  addPreferenceChangeHandler(userPreference, (value) => {
+    setPreferenceEntry((previous) => {
+      return { ...previous, value: value };
+    });
+  });
 
   const updateEntry = (value: PreferenceValue) => {
     const updatedEntry: PreferenceEntry = {
@@ -79,7 +107,7 @@ export const useUserPreference = (
     update(updatedEntry).then(
       () => {
         setPreferenceEntry(updatedEntry);
-        onPreferenceChanged(userPreference);
+        onPreferenceChanged(userPreference, updatedEntry.value);
       },
       (error) => {
         showError(error);
