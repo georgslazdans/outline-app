@@ -67,7 +67,7 @@ const ExportDropdown = ({ context, dictionary }: Props) => {
         className={buttonClass}
         style={hasExportableContours ? "secondary" : "disabled"}
       >
-        <label>{dictionary.contours.export}</label>
+        <label className="cursor-pointer">{dictionary.contours.export}</label>
       </Button>
       {isOpen && (
         <div
@@ -84,7 +84,9 @@ const ExportDropdown = ({ context, dictionary }: Props) => {
               style="secondary"
               size="medium"
             >
-              <label>{dictionary.contours.svg}</label>
+              <label className="cursor-pointer">
+                {dictionary.contours.svg}
+              </label>
             </Button>
             <Button
               onClick={exportDxf}
@@ -92,7 +94,9 @@ const ExportDropdown = ({ context, dictionary }: Props) => {
               style="secondary"
               size="medium"
             >
-              <label>{dictionary.contours.dxf}</label>
+              <label className="cursor-pointer">
+                {dictionary.contours.dxf}
+              </label>
             </Button>
           </div>
         </div>
