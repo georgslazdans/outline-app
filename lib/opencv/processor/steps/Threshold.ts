@@ -1,6 +1,5 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
-  PreviousData,
   Process,
   ProcessFunctionResult,
 } from "./ProcessingFunction";
@@ -10,6 +9,7 @@ import adaptiveThresholdStep from "./AdaptiveThreshold";
 import binaryThresholdStep from "./BinaryThreshold";
 import Settings from "../../Settings";
 import ThresholdType, { thresholdOptionsFor } from "./ThresholdType";
+import PreviousData from "../PreviousData";
 
 type BinaryThresholdSettings = typeof binaryThresholdStep.settings;
 type AdaptiveThresholdSettings = typeof adaptiveThresholdStep.settings;

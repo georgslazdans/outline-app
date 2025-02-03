@@ -44,7 +44,7 @@ const Upload = ({ dictionary }: Props) => {
   return (
     <div className="w-full flex flex-col xl:flex-row">
       <PhotoUpload
-        className="mt-4 xl:hidden max-w-[50vh]"
+        className="mt-4 xl:hidden max-w-[50vh] mx-auto"
         id="camera"
         onChange={onFileUpload}
       >

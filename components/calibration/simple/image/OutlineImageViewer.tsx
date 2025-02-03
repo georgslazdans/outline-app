@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DrawOutlineButton from "./DrawOutlineButton";
 import { DisplayImageInfo } from "./DisplayImageInfo";
+import LoadingSpinner from "./LoadingSpinner";
 
 type Props = {
   className?: string;
@@ -48,8 +49,8 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
   const drawImage = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = getContext();
-    if (canvas && ctx) {
-      const { baseImage, outlineImages } = displayImageInfo;
+    const { baseImage, outlineImages } = displayImageInfo;
+    if (canvas && ctx && baseImage) {
       canvas.width = baseImage.width;
       canvas.height = baseImage.height;
       if (drawOutline && outlineImages && outlineImages.length != 0) {
@@ -76,6 +77,7 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
             icon={drawOutline ? "eye-slash" : "eye"}
             onClick={() => setDrawOutline(!drawOutline)}
           ></DrawOutlineButton>
+          <LoadingSpinner></LoadingSpinner>
         </div>
         <TransformComponent wrapperClass="!mx-auto">
           <canvas

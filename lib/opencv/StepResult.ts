@@ -1,6 +1,10 @@
 import ColorSpace from "./util/ColorSpace";
 import StepName from "./processor/steps/StepName";
 import { ContourOutline } from "../data/contour/ContourPoints";
+import Settings, { settingsOf } from "./Settings";
+import Steps from "./processor/Steps";
+import ProcessingStep from "./processor/steps/ProcessingFunction";
+import { Context } from "@/context/DetailsContext";
 
 export type StepResult = {
   stepName: StepName;
@@ -31,22 +35,34 @@ export const findStep = (stepName: StepName) => {
   };
 };
 
-export const updateStepResultsWithNewData = (
-  previousResults: StepResult[],
-  newResult: StepResult[]
+
+export const placeholderSteps = (
+  context: Context
 ): StepResult[] => {
-  const updatedResult = [...previousResults];
-  newResult.forEach((newStep) => {
-    const index = updatedResult.findIndex(
-      (step) => step.stepName === newStep.stepName
-    );
-    if (index !== -1) {
-      updatedResult[index] = newStep;
-    } else {
-      updatedResult.push(newStep);
-    }
-  });
-  return updatedResult;
+  const settings = settingsOf(context);
+  const allSteps = Steps.getAll();
+  const result = [];
+  for (let i = 0; i < allSteps.length; i++) {
+    result.push(emptyStepResultFor(allSteps[i], settings));
+  }
+  return result;
 };
+
+const emptyStepResultFor = (step: ProcessingStep<any>, settings: Settings) => {
+  return {
+    stepName: step.name,
+    imageData: new ImageData(1, 1),
+    imageColorSpace: step.imageColorSpace(settings),
+  };
+};
+
+export const inputStepOf = (image: ImageData): StepResult => {
+  return {
+    stepName: StepName.INPUT,
+    imageData: image,
+    imageColorSpace: ColorSpace.RGBA,
+  };
+};
+
 
 export default StepResult;

@@ -54,7 +54,7 @@ const ModelName = ({ title, value, onNameChanged, onBlur, onFocus }: Props) => {
           <span
             id="model-name-field"
             onClick={handleEditClick}
-            className="ml-2 mr-auto cursor-pointer hover:bg-gray"
+            className="ml-2 xl:mr-auto cursor-pointer hover:bg-gray"
           >
             {value}
           </span>

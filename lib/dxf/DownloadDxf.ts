@@ -9,16 +9,15 @@ import Dxf from "./Dxf";
 
 export const downloadAsDxf = (
   contourOutlines: ContourOutline[],
-  paperDimensions: PaperDimensions
+  paperDimensions: PaperDimensions,
+  fileName: string
 ) => {
   if (contourOutlines.length == 1) {
     const blob = asDxfFile(contourOutlines[0], paperDimensions);
-    downloadFile(blob, `outline-${new Date().toLocaleDateString("lv")}.dxf`);
+    downloadFile(blob, `${fileName}.dxf`);
   } else {
     const blobs = contourOutlines.map((it) => asDxfFile(it, paperDimensions));
-    asZipFile(blobs).then((zip) =>
-      downloadFile(zip, `outline-${new Date().toLocaleDateString("lv")}.zip`)
-    );
+    asZipFile(blobs).then((zip) => downloadFile(zip, `${fileName}_dxf.zip`));
   }
 };
 

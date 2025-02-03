@@ -111,7 +111,8 @@
     "exportDxf": "DXF",
     "rerun": "Rerun",
     "done": "Done",
-    "save": "Save"
+    "close": "Close",
+    "saveAndClose": "Save and Close"
   },
   "contours": {
     "title": "Contours",

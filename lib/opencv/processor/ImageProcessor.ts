@@ -1,16 +1,15 @@
 import * as cv from "@techstark/opencv-js";
-import Settings, { inSettings } from "../Settings";
+import Settings from "../Settings";
 import { StepResult } from "../StepResult";
 import ProcessingStep, {
-  PreviousData,
   ProcessFunctionSuccess,
 } from "./steps/ProcessingFunction";
 import imageDataOf, { imageOf } from "../util/ImageData";
 import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
 import StepName from "./steps/StepName";
-import ProcessingResult from "../ProcessingResult";
-import { ContourOutline } from "@/lib/data/contour/ContourPoints";
+import { previousDataOf } from "./PreviousData";
+import HandleProcessing from "../HandleProcessing";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
@@ -28,7 +27,9 @@ type ProcessStepResult =
 
 const processorOf = (
   processingSteps: ProcessingStep<any>[],
-  settings: Settings
+  settings: Settings,
+  { onResult, onError }: HandleProcessing,
+  signal: AbortSignal
 ) => {
   if (!processingSteps || processingSteps.length === 0) {
     throw new Error("No functions supplied to image processor");
@@ -90,11 +91,32 @@ const processorOf = (
     return result;
   };
 
-  const process = (image: cv.Mat): ProcessingResult => {
+  const addSuccessResult = (
+    step: ProcessingStep<any>,
+    processResult: ProcessFunctionSuccess
+  ) => {
+    const stepResult = {
+      stepName: step.name,
+      imageData: imageDataOf(processResult.image),
+      imageColorSpace: step.imageColorSpace(settings),
+      contours: processResult.contours,
+    };
+    stepData.push(stepResult);
+    intermediateImages = {
+      ...intermediateImages,
+      [step.name]: processResult.image,
+    };
+  };
+
+  const process = (image: cv.Mat) => {
     let errorMessage = undefined;
     let currentImage = image;
 
     for (const step of processingSteps) {
+      if (signal.aborted) {
+        console.warn("Processing aborted!");
+        break;
+      }
       const result = processStep(
         currentImage,
         step,
@@ -102,20 +124,13 @@ const processorOf = (
         stepData
       );
       if (result.type == "success") {
-        const stepResult = result.functionResult;
-        currentImage = stepResult.image;
-        stepData.push({
-          stepName: step.name,
-          imageData: imageDataOf(currentImage),
-          imageColorSpace: step.imageColorSpace(settings),
-          contours: stepResult.contours,
-        });
-        intermediateImages = {
-          ...intermediateImages,
-          [step.name]: currentImage,
-        };
+        const functionResult = result.functionResult;
+        currentImage = functionResult.image;
+        addSuccessResult(step, functionResult);
+        onResult(step.name, stepData);
       } else {
         errorMessage = result.error;
+        onError(errorMessage, step.name);
         break;
       }
     }
@@ -123,8 +138,6 @@ const processorOf = (
     Object.values(intermediateImages).forEach((value) => {
       value.delete();
     });
-
-    return { data: stepData, error: errorMessage };
   };
 
   const result = {
@@ -133,47 +146,6 @@ const processorOf = (
   };
 
   return result;
-};
-
-const previousDataOf = (
-  intermediateImages: IntermediateImages,
-  settings: Settings,
-  stepData: StepResult[]
-): PreviousData => {
-  const handleImageSettingsFor = (stepName: StepName): StepName => {
-    if (
-      stepName == StepName.BLUR_OBJECT &&
-      inSettings(settings).isBlurReused()
-    ) {
-      stepName = StepName.EXTRACT_PAPER;
-    }
-    if (
-      stepName == StepName.BILATERAL_FILTER &&
-      inSettings(settings).isBilateralFilterDisabled()
-    ) {
-      stepName = StepName.INPUT;
-    }
-    return stepName;
-  };
-  const intermediateImageOf = (stepName: StepName) => {
-    stepName = handleImageSettingsFor(stepName);
-    return Object.entries(intermediateImages).findLast(
-      ([key]) => key === stepName
-    )![1];
-  };
-  const settingsOf = (stepName: StepName): StepSetting => {
-    return settings[stepName];
-  };
-
-  const contoursOf = (stepName: StepName): ContourOutline[] | undefined => {
-    return stepData.find((it) => it.stepName == stepName)?.contours;
-  };
-
-  return {
-    intermediateImageOf: intermediateImageOf,
-    settingsOf: settingsOf,
-    contoursOf: contoursOf,
-  };
 };
 
 export default processorOf;

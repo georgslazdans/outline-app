@@ -56,14 +56,14 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
           className={buttonClass}
           style="secondary"
         >
-          <label>{dictionary.contours.open}</label>
+          <label className="cursor-pointer">{dictionary.contours.open}</label>
         </Button>
         <ExportDropdown
           context={context}
           dictionary={dictionary}
         ></ExportDropdown>
         <Button onClick={deleteEntry} className={buttonClass} style="red">
-          <label>{dictionary.contours.delete}</label>
+          <label className="cursor-pointer">{dictionary.contours.delete}</label>
         </Button>
       </div>
     </div>

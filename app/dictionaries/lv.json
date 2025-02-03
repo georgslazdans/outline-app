@@ -111,7 +111,8 @@
     "exportDxf": "DXF",
     "rerun": "Atkārtoti Izpildīt",
     "done": "Pabeigt",
-    "save": "Saglabāt"
+    "close": "Aizvērt",
+    "saveAndClose": "Saglabāt un Aizvērt"
   },
   "contours": {
     "title": "Kontūras",

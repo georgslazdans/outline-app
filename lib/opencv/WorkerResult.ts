@@ -1,22 +1,32 @@
-import ProcessingResult from "./ProcessingResult";
+import handleOpenCvError from "./OpenCvError";
+import StepName from "./processor/steps/StepName";
+import StepResult from "./StepResult";
 
-export type SuccessResult = {
-  status: "success";
-  result: ProcessingResult;
-  objectOutlineImages: ImageData[];
-  paperOutlineImages: ImageData[];
+export type SuccessStepResult = {
+  status: "step";
+  step: StepResult;
 };
-export type FailedResult = {
-  status: "failed";
-  result: ProcessingResult;
+
+export type ObjectOutlinesResult = {
+  status: "objectOutlines";
+  objectOutlineImages: ImageData[];
+};
+
+export type PaperOutlinesResult = {
+  status: "paperOutlines";
   paperOutlineImages: ImageData[];
 };
 
 export type ErrorResult = {
   status: "error";
   error: string;
+  stepName?: StepName;
 };
 
-type WorkerResult = SuccessResult | FailedResult | ErrorResult;
+type WorkerResult =
+  | SuccessStepResult
+  | ObjectOutlinesResult
+  | PaperOutlinesResult
+  | ErrorResult;
 
 export default WorkerResult;

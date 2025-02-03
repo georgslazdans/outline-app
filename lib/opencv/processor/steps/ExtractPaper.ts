@@ -1,6 +1,5 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
-  PreviousData,
   Process,
   ProcessFunctionResult,
 } from "./ProcessingFunction";
@@ -16,6 +15,7 @@ import ContourPoints, {
   modifyContour,
   queryContour,
 } from "@/lib/data/contour/ContourPoints";
+import PreviousData from "../PreviousData";
 
 export enum ReuseStep {
   BLUR = StepName.BLUR,

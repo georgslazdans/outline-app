@@ -4,23 +4,26 @@ import { ProcessAll } from "@/lib/opencv/processor/ProcessAll";
 import WorkerResult from "@/lib/opencv/WorkerResult";
 import { ProcessStep } from "@/lib/opencv/processor/ProcessStep";
 import * as Comlink from "comlink";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import StepResult, {
-  findStep,
-  updateStepResultsWithNewData,
-} from "@/lib/opencv/StepResult";
+import { useCallback, useMemo, useState } from "react";
 import Settings, { firstChangedStep, settingsOf } from "@/lib/opencv/Settings";
-import { useLoading } from "@/context/LoadingContext";
 import { allWorkOf, stepWorkOf } from "@/lib/opencv/OpenCvWork";
 import deepEqual from "@/lib/utils/Objects";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { useDetails } from "@/context/DetailsContext";
 import { useResultContext } from "../ResultContext";
 import useAutoRerun from "./AutoRerun";
+import { WorkerResultCallback } from "@/lib/opencv/WorkerContext";
+import Steps from "@/lib/opencv/processor/Steps";
 
 export interface WorkerApi {
-  processOutlineImage: (data: ProcessAll) => Promise<WorkerResult>;
-  processOutlineStep: (data: ProcessStep) => Promise<WorkerResult>;
+  processOutlineImage: (
+    data: ProcessAll,
+    callback: WorkerResultCallback
+  ) => void;
+  processOutlineStep: (
+    data: ProcessStep,
+    callback: WorkerResultCallback
+  ) => void;
   [Comlink.releaseProxy]: () => void;
 }
 
@@ -28,8 +31,14 @@ export const useOpenCvWorker = (
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
   const { detailsContext, contextImageData } = useDetails();
-  const { stepResults, objectOutlineImages, updateResult } = useResultContext();
-  const { setLoading } = useLoading();
+  const {
+    stepResults,
+    setStepResults,
+    outdatedSteps,
+    setOutdatedSteps,
+    updateObjectOutlines,
+    updatePaperOutlines,
+  } = useResultContext();
   const [previousSettings, setPreviousSettings] = useState<Settings>();
   const { api: openCvApi } = useMemo(() => newWorkerInstance(), []);
 
@@ -40,79 +49,95 @@ export const useOpenCvWorker = (
 
   const handleWorkerResult = useCallback(
     (data: WorkerResult) => {
-      setLoading(false);
-      if (data.status === "success") {
-        const updatedStepResults = updateStepResultsWithNewData(
-          stepResults,
-          data.result.data!
-        );
-        updateResult(
-          updatedStepResults,
-          data.paperOutlineImages,
-          data.objectOutlineImages
-        );
-        setErrorMessage(undefined);
-      } else if (data.status === "failed") {
-        const updatedStepResults = updateStepResultsWithNewData(
-          stepResults,
-          data.result.data!
-        );
-        const hasObjectStep = !!findStep(StepName.FIND_OBJECT_OUTLINES).in(
-          data.result.data!
-        );
-        updateResult(
-          updatedStepResults,
-          data.paperOutlineImages,
-          hasObjectStep ? objectOutlineImages : []
-        );
-        setErrorMessage(data.result.error);
-      } else {
+      if (data.status == "step") {
+        const stepName = data.step.stepName;
+        setStepResults((previous) => {
+          return previous.map((it) => {
+            if (it.stepName == stepName) {
+              return data.step;
+            } else {
+              return it;
+            }
+          });
+        });
+        setOutdatedSteps((previous) => {
+          return previous.filter((it) => it != stepName);
+        });
+      } else if (data.status == "objectOutlines") {
+        updateObjectOutlines(data.objectOutlineImages);
+      } else if (data.status == "paperOutlines") {
+        updatePaperOutlines(data.paperOutlineImages);
+      } else if (data.status == "error") {
         setErrorMessage(data.error);
+        const stepName = data.stepName;
+        if (stepName) {
+          if (
+            stepName == StepName.FIND_PAPER_OUTLINE ||
+            Steps.is(stepName).before(StepName.FIND_PAPER_OUTLINE)
+          ) {
+            updatePaperOutlines([]);
+          }
+          if (
+            stepName == StepName.FIND_OBJECT_OUTLINES ||
+            Steps.is(stepName).before(StepName.FIND_OBJECT_OUTLINES)
+          ) {
+            updateObjectOutlines([]);
+          }
+        }
+        setOutdatedSteps([]);
       }
     },
     [
-      setLoading,
-      stepResults,
-      updateResult,
+      setStepResults,
+      setOutdatedSteps,
+      updateObjectOutlines,
+      updatePaperOutlines,
       setErrorMessage,
-      objectOutlineImages,
     ]
   );
 
   const updateCurrentStepData = useCallback(
-    (stepName: string) => {
+    (stepName: StepName) => {
+      setErrorMessage(undefined);
       const workData = stepWorkOf(
         stepResults,
         stepName,
         detailsContext?.settings
       );
       setPreviousSettings(workData.settings);
-      openCvApi.processOutlineStep(workData).then((data: WorkerResult) => {
-        handleWorkerResult(data);
-      });
+      const resultHandler = Comlink.proxy(handleWorkerResult);
+      openCvApi.processOutlineStep(workData, resultHandler);
+      setOutdatedSteps(Steps.allStepNamesAfter(stepName));
     },
-    [detailsContext?.settings, handleWorkerResult, openCvApi, stepResults]
+    [
+      detailsContext?.settings,
+      handleWorkerResult,
+      openCvApi,
+      setErrorMessage,
+      setOutdatedSteps,
+      stepResults,
+    ]
   );
 
   const updateAllWorkData = useCallback(() => {
+    setErrorMessage(undefined);
     if (detailsContext && contextImageData) {
-      setLoading(true);
       const workData = allWorkOf(detailsContext, contextImageData);
       setPreviousSettings(workData.settings);
-      openCvApi.processOutlineImage(workData).then((data: WorkerResult) => {
-        handleWorkerResult(data);
-      });
+      const resultHandler = Comlink.proxy(handleWorkerResult);
+      openCvApi.processOutlineImage(workData, resultHandler);
+      setOutdatedSteps(Steps.allProcessingStepNames());
     }
   }, [
     contextImageData,
     detailsContext,
     handleWorkerResult,
     openCvApi,
-    setLoading,
+    setErrorMessage,
+    setOutdatedSteps,
   ]);
 
   const rerunOpenCv = useCallback(() => {
-    setLoading(true);
     const currentSettings = settingsOf(detailsContext);
     if (!previousSettings) {
       updateAllWorkData();
@@ -130,7 +155,6 @@ export const useOpenCvWorker = (
   }, [
     detailsContext,
     previousSettings,
-    setLoading,
     updateAllWorkData,
     updateCurrentStepData,
   ]);

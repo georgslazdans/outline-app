@@ -10,6 +10,7 @@ import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicat
 import { useErrorModal } from "@/components/error/ErrorContext";
 import { useResultContext } from "./ResultContext";
 import { useModelContext } from "@/components/editor/ModelContext";
+import exportNameOf from "@/lib/utils/ExportName";
 
 type Props = {
   dictionary: Dictionary;
@@ -23,7 +24,7 @@ const ResultToolbar = ({ dictionary }: Props) => {
   const { api } = useResultContext();
 
   const getExportName = useCallback(() => {
-    return model.name.toLowerCase().replaceAll(" ", "_");
+    return exportNameOf(model.name);
   }, [model.name]);
 
   const onStlDownload = useCallback(() => {

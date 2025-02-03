@@ -15,7 +15,6 @@ export const adjustSvgForViewing = (
   // -95.98780487804879 56.53658536585366 88.45731707317071 78.26829268292683
   if (path) {
     const bbox = calculatePathBounds(path);
-    console.warn("Bounding box for path", bbox);
     const minX = bbox.minX - border;
     const minY = bbox.minY - border;
     const width = bbox.maxX - bbox.minX + 2 * border;

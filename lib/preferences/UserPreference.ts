@@ -5,8 +5,8 @@ enum UserPreference {
 }
 
 const DEFAULT_VALUES = {
-  [UserPreference.AUTO_RERUN_ON_SETTING_CHANGE]: false,
-  [UserPreference.AUTO_RERUN_ON_SETTING_CHANGE_DEBOUNCE_TIME]: 1000,
+  [UserPreference.AUTO_RERUN_ON_SETTING_CHANGE]: true,
+  [UserPreference.AUTO_RERUN_ON_SETTING_CHANGE_DEBOUNCE_TIME]: 200,
 };
 
 export type PreferenceValue = boolean | string | number;

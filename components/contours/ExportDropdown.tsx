@@ -7,6 +7,7 @@ import Button from "../Button";
 import Svg from "@/lib/svg/Svg";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import Dxf from "@/lib/dxf/Dxf";
+import exportNameOf from "@/lib/utils/ExportName";
 
 type Props = {
   context: Context;
@@ -23,14 +24,16 @@ const ExportDropdown = ({ context, dictionary }: Props) => {
   const exportSvg = () => {
     if (hasExportableContours) {
       const paperDimensions = paperDimensionsOfDetailsContext(context);
-      Svg.download(context.contours, paperDimensions);
+      const exportName = exportNameOf(context.details.name);
+      Svg.download(context.contours, paperDimensions, exportName);
     }
   };
 
   const exportDxf = () => {
     if (hasExportableContours) {
       const paperDimensions = paperDimensionsOfDetailsContext(context);
-      Dxf.download(context.contours, paperDimensions);
+      const exportName = exportNameOf(context.details.name);
+      Dxf.download(context.contours, paperDimensions, exportName);
     }
   };
 
@@ -64,7 +67,7 @@ const ExportDropdown = ({ context, dictionary }: Props) => {
         className={buttonClass}
         style={hasExportableContours ? "secondary" : "disabled"}
       >
-        <label>{dictionary.contours.export}</label>
+        <label className="cursor-pointer">{dictionary.contours.export}</label>
       </Button>
       {isOpen && (
         <div
@@ -81,7 +84,9 @@ const ExportDropdown = ({ context, dictionary }: Props) => {
               style="secondary"
               size="medium"
             >
-              <label>{dictionary.contours.svg}</label>
+              <label className="cursor-pointer">
+                {dictionary.contours.svg}
+              </label>
             </Button>
             <Button
               onClick={exportDxf}
@@ -89,7 +94,9 @@ const ExportDropdown = ({ context, dictionary }: Props) => {
               style="secondary"
               size="medium"
             >
-              <label>{dictionary.contours.dxf}</label>
+              <label className="cursor-pointer">
+                {dictionary.contours.dxf}
+              </label>
             </Button>
           </div>
         </div>

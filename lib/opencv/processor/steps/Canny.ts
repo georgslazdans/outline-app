@@ -1,11 +1,11 @@
 import * as cv from "@techstark/opencv-js";
 import ProcessingStep, {
-  PreviousData,
   Process,
   ProcessFunctionResult,
 } from "./ProcessingFunction";
 import ColorSpace from "../../util/ColorSpace";
 import StepName from "./StepName";
+import PreviousData from "../PreviousData";
 
 type CannySettings = {
   firstThreshold: number;
