@@ -1,11 +1,9 @@
-import ContourPoints, {
-  ContourOutline,
-  modifyContourList,
-} from "../data/contour/ContourPoints";
-import { downloadFile } from "../utils/Download";
-import { PaperDimensions } from "../opencv/PaperSettings";
+
 import JsZip from "jszip";
 import Dxf from "./Dxf";
+import ContourPoints, { ContourOutline, modifyContourList } from "@/lib/data/contour/ContourPoints";
+import { PaperDimensions } from "@/lib/opencv/PaperSettings";
+import { downloadFile } from "@/lib/utils/Download";
 
 export const downloadAsDxf = (
   contourOutlines: ContourOutline[],

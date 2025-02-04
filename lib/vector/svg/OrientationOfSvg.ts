@@ -1,4 +1,4 @@
-import Orientation from "../Orientation";
+import Orientation from "@/lib/Orientation";
 
 export const extractOrientationOf = (svgString: string): Orientation => {
   const parser = new DOMParser();

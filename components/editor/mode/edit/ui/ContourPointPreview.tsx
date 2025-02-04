@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo } from "react";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
-import Svg from "@/lib/svg/Svg";
+import Svg from "@/lib/vector/svg/Svg";
 import { Context } from "@/context/DetailsContext";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import Orientation from "@/lib/Orientation";

@@ -4,10 +4,10 @@ import { Dictionary } from "@/app/dictionaries";
 import { Context } from "@/context/DetailsContext";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../Button";
-import Svg from "@/lib/svg/Svg";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
-import Dxf from "@/lib/dxf/Dxf";
+import Dxf from "@/lib/vector/dxf/Dxf";
 import exportNameOf from "@/lib/utils/ExportName";
+import Svg from "@/lib/vector/svg/Svg";
 
 type Props = {
   context: Context;
