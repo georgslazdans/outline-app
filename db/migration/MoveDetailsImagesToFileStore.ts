@@ -46,6 +46,9 @@ const updateDetail = async (
   if (context.paperImage instanceof Blob) {
     updated.paperImage = await addFile({ blob: context.paperImage });
   }
+  // @ts-expect-error: Clean up old entries that might still have image data!
+  updated.imageData = undefined;
+
   update(updated);
 };
 
