@@ -68,7 +68,7 @@ const DetailsForm = ({ dictionary }: Props) => {
     paperSizeOfContext(detailsContext)
   );
 
-  const [formData, setFormData] = useState<Form>( // TODO what is this???
+  const [formData, setFormData] = useState<Form>(
     paperSettingsOf(detailsContext) || defaultSettings
   );
 
@@ -148,10 +148,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       className="m-4 flex flex-col gap-3 max-w-[60vh] mx-auto"
       onSubmit={onFormSave}
     >
-      <ImageField
-        dictionary={dictionary}
-        blob={imageBlob}
-      ></ImageField>
+      <ImageField dictionary={dictionary} blob={imageBlob}></ImageField>
 
       <InputField
         value={formData.name}

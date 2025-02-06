@@ -17,7 +17,7 @@ export const useSavedFile = (id?: number) => {
         setImageBlob(it.blob);
       });
     }
-  });
+  }, [getByID, id]);
 
   return imageBlob;
 };
