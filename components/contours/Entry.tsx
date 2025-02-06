@@ -1,18 +1,16 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { Context, useDetails } from "@/context/DetailsContext";
-import React, { useEffect, useMemo, useState } from "react";
-import BlobImage from "../image/BlobImage";
+import { Context } from "@/context/DetailsContext";
+import React, {  } from "react";
 import EntryField from "./EntryField";
 import Button from "../Button";
 import { useRouter } from "next/navigation";
 import { useIndexedDB } from "react-indexed-db-hook";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { idQuery } from "@/lib/utils/UrlParams";
-import getImageData from "@/lib/utils/ImageData";
 import ExportDropdown from "./ExportDropdown";
-import { useSavedFile } from "@/lib/SavedFile";
+import LazyLoadImage from "../image/lazy/LazyLoadedImage";
 
 type Props = {
   context: Context;
@@ -21,18 +19,11 @@ type Props = {
 };
 
 const Entry = ({ context, dictionary, onDelete }: Props) => {
-  const { setDetailsContext, setContextImageData } = useDetails();
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("details");
-  const imageBlob = useSavedFile(context.imageFile);
 
   const openSettings = async () => {
-    if (imageBlob) {
-      const data = await getImageData(imageBlob);
-      setContextImageData(data);
-      setDetailsContext(context);
-    }
     addHistory("/contours");
     router.push("/calibration" + "?" + idQuery(context.id!.toString()));
   };
@@ -47,7 +38,7 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
     <div className="flex flex-col border border-black dark:border-white rounded-[16px] p-3 w-full h-full">
       <div className="flex flex-row grow">
         <div className="w-[16rem]">
-          <BlobImage image={imageBlob}></BlobImage>
+          <LazyLoadImage imageId={context.imageFile}></LazyLoadImage>
         </div>
         <div className="ml-4 w-full">
           <h2>{context.details?.name}</h2>

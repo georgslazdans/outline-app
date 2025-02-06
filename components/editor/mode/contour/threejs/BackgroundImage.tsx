@@ -23,10 +23,10 @@ const BackgroundImage = memo(function BackgroundImage({
   const { getByID: getImageBlobById } = useIndexedDB("files");
   const [imageUrl, setImageUrl] = useState<string>();
   const [paperDimensions, setPaperDimensions] = useState<PaperDimensions>();
-  
+
   useEffect(() => {
-    getByID(detailsContextId).then((context) => {
-      const detailsContext = context as Context;
+    getByID(detailsContextId).then((context: Context) => {
+      const detailsContext = context;
       if (detailsContext.paperImage) {
         getImageBlobById(detailsContext.paperImage).then((it: SavedFile) => {
           const paperSettings = paperSettingsOf(detailsContext.settings);
