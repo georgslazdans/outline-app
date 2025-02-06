@@ -30,7 +30,7 @@ const ContoursList = ({ dictionary }: Props) => {
   const refreshData = useCallback(() => {
     getAll().then((allContexts) => {
       if (allContexts && allContexts.length > 0) {
-        setItems(allContexts);
+        setItems(allContexts.reverse());
       }
     });
   }, [getAll]);
