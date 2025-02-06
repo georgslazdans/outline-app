@@ -1,17 +1,17 @@
-import { moveDetailsImagesToFileStore } from "./migration/MoveDetailsImagesToFileStore";
+import { moveDetailsImagesToFileStore } from "./functions/MoveDetailsImagesToFileStore";
 
-export type MigrationFunction = (
+export type UpgradeMigrationFunction = (
   database: IDBDatabase,
   transaction: IDBTransaction
 ) => Promise<void>;
 
-type MigrationEntry = {
+type UpgradeMigrationEntry = {
   version: number;
   onFreshDatabase: boolean;
-  function: MigrationFunction;
+  function: UpgradeMigrationFunction;
 };
 
-const MIGRATION_LIST: MigrationEntry[] = [
+const MIGRATION_LIST: UpgradeMigrationEntry[] = [
   {
     version: 4,
     onFreshDatabase: false,
@@ -25,7 +25,7 @@ const migrateDatabase = async (
   version?: number,
   oldVersion?: number
 ) => {
-  console.log(
+  console.warn(
     "Performing IndexedDB migration",
     "Old version: " + oldVersion,
     "New Version: " + version

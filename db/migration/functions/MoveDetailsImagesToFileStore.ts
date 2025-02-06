@@ -1,9 +1,9 @@
 import Model from "@/lib/Model";
-import { MigrationFunction } from "../Migrations";
-import using from "./Operations";
+import { UpgradeMigrationFunction } from "../Migrations";
+import using from "../access/Operations";
 import { Context } from "@/context/DetailsContext";
 
-export const moveDetailsImagesToFileStore: MigrationFunction = (
+export const moveDetailsImagesToFileStore: UpgradeMigrationFunction = (
   database: IDBDatabase,
   transaction: IDBTransaction
 ) => {
@@ -22,9 +22,7 @@ const updateDetails = async (
     const { getAll } = using<Context>(database, transaction, "details");
     getAll().then((entries: Context[]) => {
       Promise.all(
-        entries.map((entry) => {
-          updateDetail(database, transaction, entry);
-        })
+        entries.map((entry) => updateDetail(database, transaction, entry))
       ).then(() => resolve());
     });
   });
@@ -47,7 +45,7 @@ const updateDetail = async (
     updated.paperImage = await addFile({ blob: context.paperImage });
   }
   // @ts-expect-error: Clean up old entries that might still have image data!
-  updated.imageData = undefined;
+  delete updated.imageData;
 
   update(updated);
 };
@@ -60,9 +58,7 @@ const updateModels = async (
     const { getAll } = using<Model>(database, transaction, "models");
     getAll().then((entries: Model[]) => {
       Promise.all(
-        entries.map((entry) => {
-          updateModel(database, transaction, entry);
-        })
+        entries.map((entry) => updateModel(database, transaction, entry))
       ).then(() => resolve());
     });
   });

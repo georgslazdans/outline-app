@@ -2,7 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import { Context } from "@/context/DetailsContext";
-import React, {  } from "react";
+import React from "react";
 import EntryField from "./EntryField";
 import Button from "../Button";
 import { useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
     <div className="flex flex-col border border-black dark:border-white rounded-[16px] p-3 w-full h-full">
       <div className="flex flex-row grow">
         <div className="w-[16rem]">
-          <LazyLoadImage imageId={context.imageFile}></LazyLoadImage>
+          <LazyLoadImage imageId={context.thumbnail}></LazyLoadImage>
         </div>
         <div className="ml-4 w-full">
           <h2>{context.details?.name}</h2>

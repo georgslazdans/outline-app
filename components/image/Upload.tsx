@@ -5,7 +5,7 @@ import ImageUpload from "./ImageUpload";
 import PhotoUpload from "./PhotoCapture";
 import { Context, useDetails } from "@/context/DetailsContext";
 import { useRouter } from "next/navigation";
-import getImageData from "@/lib/utils/ImageData";
+import getImageData, { scaleImage } from "@/lib/utils/ImageData";
 import { useLoading } from "@/context/LoadingContext";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { useIndexedDB } from "react-indexed-db-hook";
@@ -28,6 +28,7 @@ const Upload = ({ dictionary }: Props) => {
     if (file) {
       const imageData = getImageData(file);
       const fileId = await addFile({ blob: file });
+      const thumbnailId = await addFile({ blob: await scaleImage(file) });
       setContextImageData(await imageData);
       setDetailsContext((context: Context) => {
         return {
@@ -36,6 +37,7 @@ const Upload = ({ dictionary }: Props) => {
           contours: [],
           settings: context?.settings,
           imageFile: fileId,
+          thumbnail: thumbnailId
         };
       });
 

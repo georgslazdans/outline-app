@@ -123,6 +123,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       imageFile: detailsContext.imageFile,
       contours: [],
       paperImage: undefined,
+      thumbnail: detailsContext.thumbnail,
     };
     delete newContext.id;
     add(newContext).then(

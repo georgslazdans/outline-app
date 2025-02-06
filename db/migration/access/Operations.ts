@@ -1,10 +1,5 @@
 // Bunch of operations copied and simplified from react-indexeddb-hook, to be used for migrations
 
-enum DBMode {
-  readonly = "readonly",
-  readwrite = "readwrite",
-}
-
 const using = <T>(
   db: IDBDatabase,
   transaction: IDBTransaction,
@@ -44,10 +39,28 @@ const using = <T>(
       request.onerror = (error) => reject(error);
     });
 
+  const getByID = (id: string | number) =>
+    new Promise<T>((resolve, reject) => {
+      const store = transaction.objectStore(storeName);
+      const request = store.get(id);
+      request.onsuccess = function (event: Event) {
+        resolve((event.target as any).result as T);
+      };
+    });
+
+  const deleteRecord = (key: string | number) =>
+    new Promise<any>((resolve, reject) => {
+      const store = transaction.objectStore(storeName);
+      const request = store.delete(key);
+      request.onsuccess = (event) => resolve(event);
+    });
+
   return {
     getAll: getAll,
     update: update,
     add: add,
+    getByID: getByID,
+    deleteRecord: deleteRecord,
   };
 };
 

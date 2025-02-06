@@ -31,6 +31,7 @@ export type Context = {
   settings: Settings;
   addDate: Date;
   paperImage?: number;
+  thumbnail?: number;
 };
 
 const DetailsProvider = ({ children }: Props) => {

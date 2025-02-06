@@ -10,6 +10,7 @@ import { useEditorContext } from "../EditorContext";
 import { Tooltip } from "react-tooltip";
 import Model from "@/lib/Model";
 import { useErrorModal } from "@/components/error/ErrorContext";
+import { scaleImage } from "@/lib/utils/ImageData";
 
 type Props = {
   dictionary: Dictionary;
@@ -54,15 +55,15 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
 
     canvasRef.current!.toBlob((blob) => {
       if (blob) {
-        addImageBlob({ blob: blob }).then((imageFileId) => {
-          if (model.imageFile) {
-            deleteImageBlob(model.imageFile).then(() => {
-              console.warn("Old image blob deleted", model.imageFile);
+        scaleImage(blob).then((scaledBlob) => {
+          addImageBlob({ blob: scaledBlob }).then((imageFileId) => {
+            if (model.imageFile) {
+              deleteImageBlob(model.imageFile).then(() => {});
+            }
+            saveModel({
+              ...model,
+              imageFile: imageFileId,
             });
-          }
-          saveModel({
-            ...model,
-            imageFile: imageFileId,
           });
         });
       } else {
