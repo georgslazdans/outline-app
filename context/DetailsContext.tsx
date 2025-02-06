@@ -45,11 +45,13 @@ const DetailsProvider = ({ children }: Props) => {
     if (urlId) {
       const id = Number.parseInt(urlId);
       if (detailsContext?.id != id) {
-        getByID(id).then((dbModel) => {
+        getByID(id).then((dbModel: Context) => {
           if (dbModel) {
-            getImageData(dbModel.imageFile).then((data) => {
-              setDetailsContext(dbModel);
-              setContextImageData(data);
+            getFileById(dbModel.imageFile).then((savedFile: SavedFile) => {
+              getImageData(savedFile.blob).then((data) => {
+                setDetailsContext(dbModel);
+                setContextImageData(data);
+              });
             });
           }
         });
