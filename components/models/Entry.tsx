@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../Button";
 import { useRouter } from "next/navigation";
 import { useIndexedDB } from "react-indexed-db-hook";
@@ -10,6 +10,7 @@ import Model from "@/lib/Model";
 import EntryField from "../contours/EntryField";
 import BlobImage from "../image/BlobImage";
 import { idQuery } from "@/lib/utils/UrlParams";
+import { useSavedFile } from "@/lib/SavedFile";
 
 type Props = {
   dictionary: Dictionary;
@@ -21,6 +22,7 @@ const Entry = ({ dictionary, model, onDelete }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("models");
+  const imageBlob = useSavedFile(model.imageFile);
 
   const openModelEditor = () => {
     addHistory("/models");
@@ -36,9 +38,9 @@ const Entry = ({ dictionary, model, onDelete }: Props) => {
   return (
     <div className="flex flex-col border border-black dark:border-white rounded-[16px] p-3 w-full h-full">
       <div className="flex flex-row grow">
-        {model.imageFile && (
+        {imageBlob && (
           <div className="w-[16rem]">
-            <BlobImage image={model.imageFile}></BlobImage>
+            <BlobImage image={imageBlob}></BlobImage>
           </div>
         )}
         <div className="ml-4 w-full">

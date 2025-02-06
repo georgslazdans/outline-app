@@ -3,7 +3,7 @@
 import React from "react";
 
 type Props = {
-  image: Blob;
+  image?: Blob;
   className?: string;
 };
 

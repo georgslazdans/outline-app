@@ -21,6 +21,7 @@ import StepName from "@/lib/opencv/processor/steps/StepName";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { useErrorModal } from "../error/ErrorContext";
 import { idQuery } from "@/lib/utils/UrlParams";
+import { useSavedFile } from "@/lib/SavedFile";
 
 type Props = {
   dictionary: any;
@@ -31,13 +32,6 @@ type Form = {
   orientation: string;
   width: number;
   height: number;
-};
-
-const DEFAULT_PAPER_SETTINGS = {
-  name: "",
-  orientation: Orientation.LANDSCAPE,
-  width: 210,
-  height: 297,
 };
 
 const paperSettingsOf = (context: Context) => {
@@ -69,6 +63,7 @@ const DetailsForm = ({ dictionary }: Props) => {
   const { setLoading } = useLoading();
   const { add } = useIndexedDB("details");
 
+  const imageBlob = useSavedFile(detailsContext.imageFile);
   const [paperSize, setPaperSize] = useState(
     paperSizeOfContext(detailsContext)
   );
@@ -155,7 +150,7 @@ const DetailsForm = ({ dictionary }: Props) => {
     >
       <ImageField
         dictionary={dictionary}
-        blob={detailsContext?.imageFile}
+        blob={imageBlob}
       ></ImageField>
 
       <InputField

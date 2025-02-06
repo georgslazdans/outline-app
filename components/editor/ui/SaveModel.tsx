@@ -18,12 +18,13 @@ type Props = {
 
 const SaveModel = ({ dictionary, canvasRef }: Props) => {
   const { add, update } = useIndexedDB("models");
+  const { add: addImageBlob, deleteRecord: deleteImageBlob } =
+    useIndexedDB("files");
 
   const { withHotkey } = useEditorContext();
   const { model, setModel } = useModelContext();
   const { setLoading } = useLoading();
   const { showError } = useErrorModal();
-
 
   const saveModel = (newModel: Model) => {
     if (newModel.id) {
@@ -53,11 +54,17 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
 
     canvasRef.current!.toBlob((blob) => {
       if (blob) {
-        const newModel = {
-          ...model,
-          imageFile: blob,
-        };
-        saveModel(newModel);
+        addImageBlob({ blob: blob }).then((imageFileId) => {
+          if (model.imageFile) {
+            deleteImageBlob(model.imageFile).then(() => {
+              console.warn("Old image blob deleted", model.imageFile);
+            });
+          }
+          saveModel({
+            ...model,
+            imageFile: imageFileId,
+          });
+        });
       } else {
         saveModel(model);
       }

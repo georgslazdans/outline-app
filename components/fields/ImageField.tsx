@@ -5,7 +5,7 @@ import BlobImage from "../image/BlobImage";
 import { useState } from "react";
 
 type Props = {
-  blob: Blob;
+  blob?: Blob;
   dictionary: Dictionary;
 };
 

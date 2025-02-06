@@ -9,6 +9,7 @@ import {
   paperSettingsOf,
 } from "@/lib/opencv/PaperSettings";
 import { useEditorContext } from "@/components/editor/EditorContext";
+import SavedFile, { useSavedFile } from "@/lib/SavedFile";
 
 type Props = {
   detailsContextId: number;
@@ -19,19 +20,22 @@ const BackgroundImage = memo(function BackgroundImage({
 }: Props) {
   const { wireframe } = useEditorContext();
   const { getByID } = useIndexedDB("details");
+  const { getByID: getImageBlobById } = useIndexedDB("files");
   const [imageUrl, setImageUrl] = useState<string>();
   const [paperDimensions, setPaperDimensions] = useState<PaperDimensions>();
-
+  
   useEffect(() => {
     getByID(detailsContextId).then((context) => {
       const detailsContext = context as Context;
       if (detailsContext.paperImage) {
-        const paperSettings = paperSettingsOf(detailsContext.settings);
-        setPaperDimensions(paperDimensionsOf(paperSettings));
-        setImageUrl(URL.createObjectURL(detailsContext.paperImage));
+        getImageBlobById(detailsContext.paperImage).then((it: SavedFile) => {
+          const paperSettings = paperSettingsOf(detailsContext.settings);
+          setPaperDimensions(paperDimensionsOf(paperSettings));
+          setImageUrl(URL.createObjectURL(it.blob));
+        });
       }
     });
-  }, [detailsContextId, getByID]);
+  }, [detailsContextId, getByID, getImageBlobById]);
 
   const calculateScale = (): [number, number] => {
     if (paperDimensions) {

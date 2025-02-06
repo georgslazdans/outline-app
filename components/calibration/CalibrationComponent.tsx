@@ -25,6 +25,8 @@ type Props = {
 
 const CalibrationComponent = ({ dictionary }: Props) => {
   const { update } = useIndexedDB("details");
+  const { add: addImageBlob, deleteRecord: deleteImageBlob } =
+    useIndexedDB("files");
   const router = useRouter();
   const { getHistory, clearHistory } = useNavigationHistory();
 
@@ -52,11 +54,16 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     setLoading(false);
   }, []);
 
-  const saveContext = (contours?: ContourOutline[], paperImageBlob?: Blob) => {
+  const saveContext = (contours?: ContourOutline[], paperImageId?: number) => {
+    if (paperImageId && detailsContext.paperImage) {
+      deleteImageBlob(detailsContext.paperImage).then(() => {
+        console.warn("Old paper image deleted!", detailsContext.paperImage);
+      });
+    }
     const context: Context = {
       ...detailsContext,
       contours: contours ? contours : [],
-      paperImage: paperImageBlob ? paperImageBlob : undefined,
+      paperImage: paperImageId ? paperImageId : detailsContext.paperImage,
     };
     update(context).then(() => {
       setLoading(false);
@@ -78,7 +85,9 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     )?.imageData;
     if (paperImage) {
       imageDataToBlob(paperImage).then((paperImageBlob) => {
-        saveContext(contours, paperImageBlob ? paperImageBlob : undefined);
+        addImageBlob({ blob: paperImageBlob }).then((paperImageId) => {
+          saveContext(contours, paperImageId);
+        });
       });
     } else {
       saveContext(contours);

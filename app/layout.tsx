@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Navbar from "@/components/navbar/Navbar";
 import {ErrorProvider} from "@/components/error/ErrorContext";
 
-const IndexedDbContext = dynamic(() => import("@/context/IndexedDbContext"), {
+const IndexedDbContext = dynamic(() => import("@/db/IndexedDbContext"), {
     ssr: false,
 });
 const DetailsProvider = dynamic(() => import("@/context/DetailsContext"), {
