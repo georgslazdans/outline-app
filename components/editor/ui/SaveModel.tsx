@@ -10,6 +10,7 @@ import { useEditorContext } from "../EditorContext";
 import { Tooltip } from "react-tooltip";
 import Model from "@/lib/Model";
 import { useErrorModal } from "@/components/error/ErrorContext";
+import { scaleImage } from "@/lib/utils/ImageData";
 
 type Props = {
   dictionary: Dictionary;
@@ -18,12 +19,13 @@ type Props = {
 
 const SaveModel = ({ dictionary, canvasRef }: Props) => {
   const { add, update } = useIndexedDB("models");
+  const { add: addImageBlob, deleteRecord: deleteImageBlob } =
+    useIndexedDB("files");
 
   const { withHotkey } = useEditorContext();
   const { model, setModel } = useModelContext();
   const { setLoading } = useLoading();
   const { showError } = useErrorModal();
-
 
   const saveModel = (newModel: Model) => {
     if (newModel.id) {
@@ -36,7 +38,7 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
         }
       );
     } else {
-      add(model).then(
+      add(newModel).then(
         (dbId) => {
           setModel({ ...newModel, id: dbId });
           console.log("Model saved!", newModel.id);
@@ -53,15 +55,22 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
 
     canvasRef.current!.toBlob((blob) => {
       if (blob) {
-        const newModel = {
-          ...model,
-          imageFile: blob,
-        };
-        saveModel(newModel);
+        scaleImage(blob).then((scaledBlob) => {
+          addImageBlob({ blob: scaledBlob }).then((imageFileId) => {
+            if (model.imageFile) {
+              deleteImageBlob(model.imageFile).then(() => {});
+            }
+            saveModel({
+              ...model,
+              imageFile: imageFileId,
+            });
+            setLoading(false);
+          });
+        });
       } else {
         saveModel(model);
+        setLoading(false);
       }
-      setLoading(false);
     }, "image/png");
   };
 

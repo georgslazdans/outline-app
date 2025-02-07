@@ -1,6 +1,6 @@
-import { PaperDimensions } from "../opencv/PaperSettings";
-import ContourPoints from "../data/contour/ContourPoints";
-import Point from "../data/Point";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
+import Point from "@/lib/data/Point";
+import { PaperDimensions } from "@/lib/opencv/PaperSettings";
 
 const HEADER = `0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n4\n0\nENDSEC\n`;
 const SECTION_ENTITIES = `0\nSECTION\n2\nENTITIES\n`;

@@ -30,7 +30,7 @@ const ModelsList = ({ dictionary }: Props) => {
   const refreshData = useCallback(() => {
     getAll().then((allModels) => {
       if (allModels && allModels.length > 0) {
-        setItems(allModels);
+        setItems(allModels.reverse());
       }
     });
   }, [getAll]);

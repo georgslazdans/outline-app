@@ -21,6 +21,7 @@ import StepName from "@/lib/opencv/processor/steps/StepName";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { useErrorModal } from "../error/ErrorContext";
 import { idQuery } from "@/lib/utils/UrlParams";
+import { useSavedFile } from "@/lib/SavedFile";
 
 type Props = {
   dictionary: any;
@@ -31,13 +32,6 @@ type Form = {
   orientation: string;
   width: number;
   height: number;
-};
-
-const DEFAULT_PAPER_SETTINGS = {
-  name: "",
-  orientation: Orientation.LANDSCAPE,
-  width: 210,
-  height: 297,
 };
 
 const paperSettingsOf = (context: Context) => {
@@ -69,11 +63,12 @@ const DetailsForm = ({ dictionary }: Props) => {
   const { setLoading } = useLoading();
   const { add } = useIndexedDB("details");
 
+  const imageBlob = useSavedFile(detailsContext.imageFile);
   const [paperSize, setPaperSize] = useState(
     paperSizeOfContext(detailsContext)
   );
 
-  const [formData, setFormData] = useState<Form>( // TODO what is this???
+  const [formData, setFormData] = useState<Form>(
     paperSettingsOf(detailsContext) || defaultSettings
   );
 
@@ -128,6 +123,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       imageFile: detailsContext.imageFile,
       contours: [],
       paperImage: undefined,
+      thumbnail: detailsContext.thumbnail,
     };
     delete newContext.id;
     add(newContext).then(
@@ -153,10 +149,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       className="m-4 flex flex-col gap-3 max-w-[60vh] mx-auto"
       onSubmit={onFormSave}
     >
-      <ImageField
-        dictionary={dictionary}
-        blob={detailsContext?.imageFile}
-      ></ImageField>
+      <ImageField dictionary={dictionary} blob={imageBlob}></ImageField>
 
       <InputField
         value={formData.name}

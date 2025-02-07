@@ -1,6 +1,6 @@
-import { PaperDimensions } from "../opencv/PaperSettings";
-import ContourPoints from "../data/contour/ContourPoints";
-import Point from "../data/Point";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
+import Point from "@/lib/data/Point";
+import { PaperDimensions } from "@/lib/opencv/PaperSettings";
 
 const fromContours = (
   contours: ContourPoints[],

@@ -35,20 +35,18 @@ const CanvasItemList = ({
       {items.map((item) => {
         if (item.type == ItemType.Group) {
           return (
-            <>
-              <GroupTransform
-                key={item.id}
-                group={item}
+            <GroupTransform
+              key={item.id}
+              group={item}
+              onItemChange={onItemChange}
+            >
+              <CanvasItemList
+                dictionary={dictionary}
+                items={item.items}
                 onItemChange={onItemChange}
-              >
-                <CanvasItemList
-                  dictionary={dictionary}
-                  items={item.items}
-                  onItemChange={onItemChange}
-                  parents={getWithParents(item)}
-                ></CanvasItemList>
-              </GroupTransform>
-            </>
+                parents={getWithParents(item)}
+              ></CanvasItemList>
+            </GroupTransform>
           );
         } else {
           return (

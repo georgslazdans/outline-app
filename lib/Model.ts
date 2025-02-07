@@ -4,8 +4,8 @@ type Model = {
   id?: number;
   name: string;
   modelData: ModelData;
-  addDate: Date,
-  imageFile?: Blob
+  addDate: Date;
+  imageFile?: number;
 };
 
 export default Model;

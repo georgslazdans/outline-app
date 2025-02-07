@@ -15,6 +15,7 @@ import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
 import { ContourOutline } from "@/lib/data/contour/ContourPoints";
 import { useSearchParams } from "next/navigation";
+import SavedFile from "@/lib/SavedFile";
 
 const DetailsContext = createContext<any>(null);
 
@@ -24,18 +25,20 @@ type Props = {
 
 export type Context = {
   id?: number;
-  imageFile: Blob;
+  imageFile: number;
   details: Details;
   contours: ContourOutline[];
   settings: Settings;
   addDate: Date;
-  paperImage?: Blob;
+  paperImage?: number;
+  thumbnail?: number;
 };
 
 const DetailsProvider = ({ children }: Props) => {
   const [detailsContext, setDetailsContext] = useState<Context>();
   const [contextImageData, setContextImageData] = useState<ImageData>();
   const { getAll, getByID } = useIndexedDB("details");
+  const { getByID: getFileById } = useIndexedDB("files");
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -43,31 +46,35 @@ const DetailsProvider = ({ children }: Props) => {
     if (urlId) {
       const id = Number.parseInt(urlId);
       if (detailsContext?.id != id) {
-        getByID(id).then((dbModel) => {
+        getByID(id).then((dbModel: Context) => {
           if (dbModel) {
-            getImageData(dbModel.imageFile).then((data) => {
-              setDetailsContext(dbModel);
-              setContextImageData(data);
+            getFileById(dbModel.imageFile).then((savedFile: SavedFile) => {
+              getImageData(savedFile.blob).then((data) => {
+                setDetailsContext(dbModel);
+                setContextImageData(data);
+              });
             });
           }
         });
       }
     } else {
       if (!detailsContext) {
-        getAll().then((allContexts) => {
+        getAll().then((allContexts: Context[]) => {
           if (allContexts && allContexts.length > 0) {
             const loadedContext = allContexts.pop();
-            getImageData(loadedContext.imageFile).then(
-              (data) => {
-                setDetailsContext(loadedContext);
-                setContextImageData(data);
-              }
-            );
+            if (loadedContext) {
+              getFileById(loadedContext.imageFile).then((it: SavedFile) => {
+                getImageData(it.blob).then((data) => {
+                  setDetailsContext(loadedContext);
+                  setContextImageData(data);
+                });
+              });
+            }
           }
         });
       }
     }
-  }, [getAll, getByID, detailsContext, searchParams]);
+  }, [getAll, getByID, detailsContext, searchParams, getFileById]);
 
   return (
     <DetailsContext.Provider

@@ -1,17 +1,16 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { Context, useDetails } from "@/context/DetailsContext";
+import { Context } from "@/context/DetailsContext";
 import React from "react";
-import BlobImage from "../image/BlobImage";
 import EntryField from "./EntryField";
 import Button from "../Button";
 import { useRouter } from "next/navigation";
 import { useIndexedDB } from "react-indexed-db-hook";
 import useNavigationHistory from "@/context/NavigationHistory";
 import { idQuery } from "@/lib/utils/UrlParams";
-import getImageData from "@/lib/utils/ImageData";
 import ExportDropdown from "./ExportDropdown";
+import LazyLoadImage from "../image/lazy/LazyLoadedImage";
 
 type Props = {
   context: Context;
@@ -20,20 +19,26 @@ type Props = {
 };
 
 const Entry = ({ context, dictionary, onDelete }: Props) => {
-  const { setDetailsContext, setContextImageData } = useDetails();
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("details");
+  const { deleteRecord: deleteFile } = useIndexedDB("files");
 
   const openSettings = async () => {
-    const data = await getImageData(context.imageFile);
-    setContextImageData(data);
-    setDetailsContext(context);
     addHistory("/contours");
     router.push("/calibration" + "?" + idQuery(context.id!.toString()));
   };
 
   const deleteEntry = () => {
+    if (context.paperImage) {
+      deleteFile(context.paperImage).then(() => {});
+    }
+    if (context.thumbnail) {
+      deleteFile(context.thumbnail).then(() => {});
+    }
+    if (context.imageFile) {
+      deleteFile(context.imageFile).then(() => {});
+    }
     deleteRecord(context.id!).then(() => onDelete());
   };
 
@@ -43,7 +48,7 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
     <div className="flex flex-col border border-black dark:border-white rounded-[16px] p-3 w-full h-full">
       <div className="flex flex-row grow">
         <div className="w-[16rem]">
-          <BlobImage image={context.imageFile}></BlobImage>
+          <LazyLoadImage imageId={context.thumbnail}></LazyLoadImage>
         </div>
         <div className="ml-4 w-full">
           <h2>{context.details?.name}</h2>
