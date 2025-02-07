@@ -64,12 +64,13 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
               ...model,
               imageFile: imageFileId,
             });
+            setLoading(false);
           });
         });
       } else {
         saveModel(model);
+        setLoading(false);
       }
-      setLoading(false);
     }, "image/png");
   };
 
