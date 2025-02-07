@@ -21,18 +21,14 @@ const ActionMenu = ({ options, onChange, selected }: Props) => {
       <div className="w-full flex flex-row justify-between mb-2 px-4">
         {options.map((it, index) => {
           return (
-            <>
+            <div key={index}>
               <h3
-                key={index}
                 className={"" + selectedClass(it.value)}
                 onClick={() => onChange(it.value)}
               >
                 {it.label}
               </h3>
-              {index != options.length - 1 && (
-                <div className="border border-l-black dark:border-l-white"></div>
-              )}
-            </>
+            </div>
           );
         })}
       </div>
