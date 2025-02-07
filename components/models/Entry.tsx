@@ -21,6 +21,7 @@ const Entry = ({ dictionary, model, onDelete }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("models");
+  const { deleteRecord: deleteFile } = useIndexedDB("files");
 
   const openModelEditor = () => {
     addHistory("/models");
@@ -28,6 +29,9 @@ const Entry = ({ dictionary, model, onDelete }: Props) => {
   };
 
   const deleteEntry = () => {
+    if (model.imageFile) {
+      deleteFile(model.imageFile).then(() => {});
+    }
     deleteRecord(model.id!).then(() => onDelete());
   };
 

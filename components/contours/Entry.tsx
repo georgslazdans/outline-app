@@ -22,6 +22,7 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("details");
+  const { deleteRecord: deleteFile } = useIndexedDB("files");
 
   const openSettings = async () => {
     addHistory("/contours");
@@ -29,6 +30,15 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
   };
 
   const deleteEntry = () => {
+    if (context.paperImage) {
+      deleteFile(context.paperImage).then(() => {});
+    }
+    if (context.thumbnail) {
+      deleteFile(context.thumbnail).then(() => {});
+    }
+    if (context.imageFile) {
+      deleteFile(context.imageFile).then(() => {});
+    }
     deleteRecord(context.id!).then(() => onDelete());
   };
 
