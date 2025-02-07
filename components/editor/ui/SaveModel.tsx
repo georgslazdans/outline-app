@@ -38,7 +38,7 @@ const SaveModel = ({ dictionary, canvasRef }: Props) => {
         }
       );
     } else {
-      add(model).then(
+      add(newModel).then(
         (dbId) => {
           setModel({ ...newModel, id: dbId });
           console.log("Model saved!", newModel.id);
