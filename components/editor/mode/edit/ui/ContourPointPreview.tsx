@@ -26,7 +26,7 @@ const ContourPointPreview = ({ contourPoints, context }: Props) => {
     return null;
   }
   const widthClass =
-    Svg.orientationOf(svg) == Orientation.LANDSCAPE ? "w-48" : "w-20";
+    Svg.orientationOf(svg) == Orientation.LANDSCAPE ? "w-64 xl:w-96" : "w-20";
   return (
     <>
       <div className={`${widthClass} h-32 mx-auto p-2`}>
