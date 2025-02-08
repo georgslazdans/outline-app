@@ -31,7 +31,7 @@ const ContourPointPreview = ({ contourPoints, context }: Props) => {
     <>
       <div className={`${widthClass} h-32 mx-auto p-2`}>
         <div
-          className="w-full h-full flex items-center justify-center text-black dark:text-white"
+          className="w-full h-full flex items-center justify-center text-black dark:text-white scale-y-[-1]"
           dangerouslySetInnerHTML={{ __html: svg }}
         />
       </div>
