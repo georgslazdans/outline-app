@@ -2,6 +2,20 @@
 
 # Changelog
 
+## Version 1.2.2 - 08.02.2025
+
+Just small additions and bugfixes
+
+### Calibration
+
+- Add disable bilateral filter and reuse step in "Additional Settings"
+- Always show close button in "Additional Settings"
+
+### Editor
+
+- Flip SVG preview to be alignment with image
+- Fix SVG preview for vertical contours so they are contained
+
 ## Version 1.2.1 - 07.02.2025
 
 - Migrate old paper images to separate store
@@ -9,12 +23,14 @@
 ## Version 1.2.0 - 07.02.2025
 
 ### Contour and Model Lists
+
 - Optimized image storage
 - Show newest entries in lists
 - Added smaller image for thumbnails
 - Lazy load images in lists
 
 ### Bug Fixes
+
 - Save thumbnail for new models
 
 ## Version 1.1.0 - 03.02.2025
@@ -22,12 +38,14 @@
 **Note:** For existing users, auto rerun must be enabled manually in the "User Preferences and Additional Settings" window. The default debounce time is lowered to 200 (ms).
 
 ### Calibration
+
 - Reworked image processing to immediately return processed steps
 - Remove full screen loading indicator in favor of a smaller one over the result image
 - Move error message in larger screens below result image to avoid shifting the UI
 - Export filename uses the contour name
 
 ### Bug Fixes
+
 - Fix "Detailed Settings" field value updates
 - Fix contour and model name displaying on smaller screens
 - Fix home screen button alignment on smaller screens
@@ -37,13 +55,15 @@
 ## Version 1.0.0 - 01.02.2025
 
 ### Calibration
+
 - Add DFX file export
 - Add user preferences window
 - Add auto rerun on settings change. Changes to UI are planned to display processed steps immediately instead of waiting for all to completed
-- Add "Additional Settings" to preferences window. These are the same setting from "Detailed Settings", but in a convenient place 
+- Add "Additional Settings" to preferences window. These are the same setting from "Detailed Settings", but in a convenient place
 - Moved "Detailed Settings" to a smaller icon button next to preferences
 
 ### Bug Fixes
+
 - Fix US Legal paper size to include decimal places in mm measurement
 - Fix hole detection so they are not overlapping or nested.
 

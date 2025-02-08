@@ -26,6 +26,8 @@ export const adjustSvgForViewing = (
   svgElement.removeAttribute("width");
   svgElement.removeAttribute("height");
 
+  svgElement.setAttribute("style", "max-width: 100%; max-height: 100%;");
+
   const serializer = new XMLSerializer();
   return serializer.serializeToString(svgElement);
 };

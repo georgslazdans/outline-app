@@ -25,7 +25,7 @@ const migrateDatabase = async (
   version?: number,
   oldVersion?: number
 ) => {
-  console.warn(
+  console.log(
     "Performing IndexedDB migration",
     "Old version: " + oldVersion,
     "New Version: " + version

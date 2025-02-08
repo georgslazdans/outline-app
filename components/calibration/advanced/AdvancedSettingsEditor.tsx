@@ -52,7 +52,7 @@ export const AdvancedSettingsEditor = ({
               return;
             }
             if (config.display && !config.display(allSettings, stepName)) {
-              return <></>;
+              return;
             }
             if (config.type == "group") {
               const groupConfig = config as GroupConfig;
