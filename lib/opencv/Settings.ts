@@ -4,7 +4,6 @@ import deepEqual, { deepMerge } from "../utils/Objects";
 import StepSetting, { StepSettingConfig } from "./processor/steps/StepSettings";
 import Steps from "./processor/Steps";
 import ThresholdType from "./processor/steps/ThresholdType";
-import extractPaperStep from "./processor/steps/ExtractPaper";
 
 type Settings = {
   [key: string]: StepSetting;
@@ -38,7 +37,7 @@ export const firstChangedStep = (
 export const inSettings = (settings: Settings) => {
   return {
     isBilateralFilterDisabled: () => {
-      return settings[StepName.BILATERAL_FILTER].disabled;
+      return settings[StepName.BILATERAL_FILTER].disabledBilateralFilter;
     },
     isBlurReused: () => {
       return settings[StepName.EXTRACT_PAPER].reuseStep == StepName.BLUR;

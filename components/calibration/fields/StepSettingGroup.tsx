@@ -50,7 +50,7 @@ const StepSettingGroup = ({
           (fieldConfig.display &&
             !fieldConfig.display(allSettings, stepName as StepName))
         ) {
-          return <></>;
+          return;
         }
         return (
           <StepSettingField

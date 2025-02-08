@@ -14,10 +14,9 @@ import extractPaperStep from "@/lib/opencv/processor/steps/ExtractPaper";
 import findObjectOutlinesStep from "@/lib/opencv/processor/steps/FindObjectOutlines";
 import {
   GroupConfig,
-  StepSettingConfig,
 } from "@/lib/opencv/processor/steps/StepSettings";
-import { SettingsConfig } from "@/lib/opencv/processor/steps/ProcessingFunction";
 import StepSettingGroup from "../../fields/StepSettingGroup";
+import bilateralFilterStep from "@/lib/opencv/processor/steps/BilateralFilter";
 
 const FILTER_SIMILAR_OUTLINES = "filterSimilarOutlines";
 const SIMILARITY_THRESHOLD = "similarityThreshold";
@@ -28,6 +27,9 @@ const PAPER_SETTINGS = "paperSettings";
 const AREA_THRESHOLD_SETTINGS = "areaThresholdSettings";
 const LOWER_THRESHOLD = "lowerThreshold";
 const UPPER_THRESHOLD = "upperThreshold";
+
+const DISABLED_BILATERAL_FILTER = "disabledBilateralFilter";
+const REUSE_STEP = "reuseStep";
 
 type Props = {
   dictionary: Dictionary;
@@ -53,6 +55,12 @@ const AdditionalSettings = ({
 
   const onFindObjectOutlinesChanged = useNestedStepChangeHandler(
     StepName.FIND_OBJECT_OUTLINES,
+    settings,
+    onSettingsChanged
+  );
+
+  const onBilateralFilterChanged = useStepChangeHandler(
+    StepName.BILATERAL_FILTER,
     settings,
     onSettingsChanged
   );
@@ -126,6 +134,23 @@ const AdditionalSettings = ({
             UPPER_THRESHOLD,
             "areaThresholdSettings"
           )}
+          dictionary={dictionary}
+        ></StepSettingField>
+      </div>
+      <div className="mb-4">
+        <h3 className="mb-2">Disable Steps</h3>
+        <StepSettingField
+          value={settings[StepName.BILATERAL_FILTER][DISABLED_BILATERAL_FILTER]}
+          name={DISABLED_BILATERAL_FILTER}
+          config={bilateralFilterStep.config![DISABLED_BILATERAL_FILTER]}
+          onChange={onBilateralFilterChanged(DISABLED_BILATERAL_FILTER)}
+          dictionary={dictionary}
+        ></StepSettingField>
+        <StepSettingField
+          value={settings[StepName.EXTRACT_PAPER][REUSE_STEP]}
+          name={REUSE_STEP}
+          config={extractPaperStep.config![REUSE_STEP]}
+          onChange={onExtractPaperChange(REUSE_STEP)}
           dictionary={dictionary}
         ></StepSettingField>
       </div>

@@ -13,6 +13,7 @@ import extractPaperStep from "@/lib/opencv/processor/steps/ExtractPaper";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import { useStepChangeHandler } from "../../fields/ChangeHandler";
 
+const DISABLED_BILATERAL_FILTER = "disabledBilateralFilter";
 const PIXEL_DIAMETER = "pixelDiameter";
 const BLUR_WIDTH = "blurWidth";
 const BLOCK_SIZE = "blockSize";
@@ -59,13 +60,16 @@ const FindPaperSettings = ({
         name="findPaper"
         settingStep={CalibrationSettingStep.FIND_PAPER}
       >
-        <StepSettingField
-          value={settings[StepName.BILATERAL_FILTER][PIXEL_DIAMETER]}
-          name={"bilateralFilterPixelDiameter"}
-          config={bilateralFilterStep.config![PIXEL_DIAMETER]}
-          onChange={onBilateralFilterChange(PIXEL_DIAMETER)}
-          dictionary={dictionary}
-        ></StepSettingField>
+        {settings[StepName.BILATERAL_FILTER][DISABLED_BILATERAL_FILTER] ==
+          false && (
+          <StepSettingField
+            value={settings[StepName.BILATERAL_FILTER][PIXEL_DIAMETER]}
+            name={"bilateralFilterPixelDiameter"}
+            config={bilateralFilterStep.config![PIXEL_DIAMETER]}
+            onChange={onBilateralFilterChange(PIXEL_DIAMETER)}
+            dictionary={dictionary}
+          ></StepSettingField>
+        )}
         <StepSettingField
           value={settings[StepName.BLUR][BLUR_WIDTH]}
           name={BLUR_WIDTH}
