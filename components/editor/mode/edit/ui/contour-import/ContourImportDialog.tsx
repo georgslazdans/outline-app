@@ -5,9 +5,8 @@ import React, { ChangeEvent, useCallback, useState } from "react";
 import DetailsContextContourSelect from "./DetailsContextContourSelect";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
-import { useEditorContext } from "../../../EditorContext";
+import { useEditorContext } from "../../../../EditorContext";
 import NumberField from "@/components/fields/NumberField";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
 import { Context } from "@/context/DetailsContext";
 import ContourPointPreview from "./ContourPointPreview";
 
@@ -16,44 +15,39 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   onContourSelect: (
-    contours: ContourPoints[],
-    height: number,
-    name: string,
-    detailsContextId: number
+    detailsContext: Context,
+    contourIndex: number,
+    height: number
   ) => void;
 };
 
-const ImportDialog = ({
+const ContourImportDialog = ({
   dictionary,
   isOpen,
   onClose,
   onContourSelect,
 }: Props) => {
   const { setInputFieldFocused } = useEditorContext();
-  const [selectedContour, setSelectedContour] = useState<ContourPoints[]>();
   const [shadowHeight, setShadowHeight] = useState(10);
   const [detailsContext, setDetailsContext] = useState<Context>();
+  const [contourIndex, setContourIndex] = useState<number>(0);
 
   const onModalClose = useCallback(() => {
-    setSelectedContour(undefined);
+    setContourIndex(0);
+    setDetailsContext(undefined);
     setInputFieldFocused(false);
     onClose();
   }, [onClose, setInputFieldFocused]);
 
   const onImport = useCallback(() => {
-    if (selectedContour && detailsContext) {
-      onContourSelect(
-        selectedContour,
-        shadowHeight,
-        detailsContext.details.name,
-        detailsContext.id!
-      );
+    if (detailsContext) {
+      onContourSelect(detailsContext, contourIndex, shadowHeight);
       onModalClose();
     }
   }, [
-    selectedContour,
     detailsContext,
     onContourSelect,
+    contourIndex,
     shadowHeight,
     onModalClose,
   ]);
@@ -63,19 +57,19 @@ const ImportDialog = ({
   };
 
   const onDetailsContextSelect = useCallback(
-    (contourPoints: ContourPoints[], context: Context) => {
-      setSelectedContour(contourPoints);
+    (context: Context, contourIndex: number) => {
       setDetailsContext(context);
+      setContourIndex(contourIndex);
     },
-    [setSelectedContour]
+    []
   );
 
   return (
     <>
       <Modal isOpen={isOpen} onClose={onModalClose}>
         <ContourPointPreview
-          contourPoints={selectedContour}
           context={detailsContext}
+          contourIndex={contourIndex}
         ></ContourPointPreview>
         <DetailsContextContourSelect
           dictionary={dictionary}
@@ -91,7 +85,7 @@ const ImportDialog = ({
         <Button
           className="mt-4"
           onClick={onImport}
-          style={selectedContour ? "primary" : "disabled"}
+          style={detailsContext ? "primary" : "disabled"}
         >
           <label>Import Contour</label>
         </Button>
@@ -100,4 +94,4 @@ const ImportDialog = ({
   );
 };
 
-export default ImportDialog;
+export default ContourImportDialog;

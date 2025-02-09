@@ -13,9 +13,13 @@ import {
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import getImageData from "@/lib/utils/ImageData";
-import { ContourOutline } from "@/lib/data/contour/ContourPoints";
+import ContourPoints, {
+  ContourOutline,
+  modifyContourList,
+} from "@/lib/data/contour/ContourPoints";
 import { useSearchParams } from "next/navigation";
 import SavedFile from "@/lib/SavedFile";
+import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 
 const DetailsContext = createContext<any>(null);
 
@@ -32,6 +36,27 @@ export type Context = {
   addDate: Date;
   paperImage?: number;
   thumbnail?: number;
+};
+
+export const contourOutlineOf = (context: Context, contourIndex: number) => {
+  const index =
+    contourIndex >= context.contours.length
+      ? context.contours.length - 1
+      : contourIndex;
+  return context.contours[index];
+};
+
+export const centerPoints = (
+  context: Context,
+  contourPoints: ContourPoints[]
+): ContourPoints[] => {
+  const paperDimensions = paperDimensionsOfDetailsContext(context);
+  if (contourPoints && contourPoints.length > 0) {
+    const contours =
+      modifyContourList(contourPoints).centerPoints(paperDimensions);
+    return modifyContourList(contours).mirrorPointsOnXAxis();
+  }
+  return [];
 };
 
 const DetailsProvider = ({ children }: Props) => {

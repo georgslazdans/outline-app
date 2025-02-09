@@ -22,7 +22,8 @@ const defaultParams = {
   screwRadius: 1.5,
   keepFull: false,
   wallThickness: 1.2,
-  gridSize: 42.0
+  gridSize: 42.0,
+  includeLip: true,
 };
 
 // Gridfinity magic numbers
@@ -57,7 +58,7 @@ const buildSocket = ({
   screwRadius = 1.5,
   withScrew = true,
   withMagnet = true,
-  gridSize
+  gridSize,
 } = {}) => {
   const baseSocket = drawRoundedRectangle(
     gridSize - CLEARANCE,
@@ -112,7 +113,11 @@ const cloneOnGrid = (
   const yCorr = ((ySteps - 1) * (ySpan || xSpan || span)) / 2;
 
   const translations = range(xSteps).flatMap((i) => {
-    return range(ySteps).map((j) => [i * gridSize - xCorr, j * gridSize - yCorr, 0]);
+    return range(ySteps).map((j) => [
+      i * gridSize - xCorr,
+      j * gridSize - yCorr,
+      0,
+    ]);
   });
   return translations.map((translation) =>
     shape.clone().translate(translation)
@@ -122,9 +127,9 @@ const cloneOnGrid = (
 const buildTopShape = ({
   xSize,
   ySize,
-  includeLip = true,
+  includeBottomLip = true,
   wallThickness = 1.2,
-  gridSize
+  gridSize,
 }) => {
   const topShape = (basePlane, startPosition) => {
     const sketcher = draw([-SOCKET_TAPER_WIDTH, 0])
@@ -132,7 +137,7 @@ const buildTopShape = ({
       .vLine(SOCKET_VERTICAL_PART)
       .line(SOCKET_BIG_TAPER, SOCKET_BIG_TAPER);
 
-    if (includeLip) {
+    if (includeBottomLip) {
       sketcher
         .vLineTo(-(SOCKET_TAPER_WIDTH + wallThickness))
         .lineTo([-SOCKET_TAPER_WIDTH, -wallThickness]);
@@ -145,7 +150,7 @@ const buildTopShape = ({
     const shiftedShape = basicShape
       .translate(AXIS_CLEARANCE, -AXIS_CLEARANCE)
       .intersect(
-        drawRoundedRectangle(10, 10).translate(-5, includeLip ? 0 : 5)
+        drawRoundedRectangle(10, 10).translate(-5, includeBottomLip ? 0 : 5)
       );
 
     // We need to shave off the clearance
@@ -153,7 +158,7 @@ const buildTopShape = ({
       .translate(CLEARANCE / 2, 0)
       .intersect(drawRoundedRectangle(10, 10).translate(-5, 0));
 
-    if (includeLip) {
+    if (includeBottomLip) {
       // We remove the wall if we add a lip
       topProfile = topProfile.cut(
         drawRoundedRectangle(1.2, 10).translate(-0.6, -5)
@@ -190,7 +195,8 @@ function gridfinityBox({
   magnetRadius = 3.25,
   magnetHeight = 2,
   screwRadius = 1.5,
-  gridSize = 42.0
+  gridSize = 42.0,
+  includeLip = true,
 } = {}): ReplicadModelData {
   const stdHeight = height * 42;
 
@@ -206,32 +212,39 @@ function gridfinityBox({
     box = box.shell(wallThickness, (f) => f.inPlane("XY", stdHeight));
   }
 
-  const top = buildTopShape({
-    xSize,
-    ySize,
-    includeLip: !keepFull,
-    gridSize
-  }).translateZ(stdHeight);
-
   const socket = buildSocket({
     withMagnet,
     withScrew,
     magnetRadius,
     magnetHeight,
     screwRadius,
-    gridSize
+    gridSize,
   });
 
   let base = null;
-  cloneOnGrid(socket, { xSteps: xSize, ySteps: ySize, span: gridSize }, gridSize).forEach(
-    (movedSocket) => {
-      if (base) base = base.fuse(movedSocket, { optimisation: "commonFace" });
-      else base = movedSocket;
-    }
-  );
-  return base
-    .fuse(box, { optimisation: "commonFace" })
-    .fuse(top, { optimisation: "commonFace" });
+  cloneOnGrid(
+    socket,
+    { xSteps: xSize, ySteps: ySize, span: gridSize },
+    gridSize
+  ).forEach((movedSocket) => {
+    if (base) base = base.fuse(movedSocket, { optimisation: "commonFace" });
+    else base = movedSocket;
+  });
+
+  if (includeLip) {
+    const top = buildTopShape({
+      xSize,
+      ySize,
+      includeBottomLip: !keepFull,
+      gridSize,
+    }).translateZ(stdHeight);
+
+    return base
+      .fuse(box, { optimisation: "commonFace" })
+      .fuse(top, { optimisation: "commonFace" });
+  } else {
+    return base.fuse(box, { optimisation: "commonFace" });
+  }
 }
 
 export default gridfinityBox;

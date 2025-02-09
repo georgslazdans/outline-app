@@ -60,6 +60,12 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
         label={"Keep Full"}
         name={"keepFull"}
       ></CheckboxField>
+      <CheckboxField
+        value={params.includeLip != undefined ? params.includeLip : true}
+        onChange={handleCheckboxChange("includeLip")}
+        label={"Include Lip"}
+        name={"includeLip"}
+      ></CheckboxField>
       <EditField
         value={params.wallThickness}
         onChange={handleNumberChange("wallThickness")}

@@ -138,6 +138,12 @@ test("E2E flow: upload image from home page", async ({ page }) => {
       throw new Error("Failed to download the file.");
     }
 
+    // // Define the new file path in the same directory
+    // const newFilePath = path.resolve(__dirname, "downloaded.step");
+
+    // // Copy the downloaded file to "downloaded.step"
+    // await fs.promises.copyFile(downloadPath, newFilePath);
+
     const downloadedContent = await fs.promises.readFile(downloadPath, "utf-8");
 
     const expectedFilePath = path.resolve(__dirname, "test.step");

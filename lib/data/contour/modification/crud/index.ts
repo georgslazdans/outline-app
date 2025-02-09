@@ -3,6 +3,13 @@ import _addPoint from "./AddPoint";
 import _deleteContourPoint from "./DeleteContourIndex";
 import _deletePoint from "./DeletePoint";
 import _deleteByPointIndexes from "./DeleteByPointIndexes";
+import _offsetPoints from "./OffsetPoints";
+
+export const _crudApi = () => {
+  return {
+    offsetPoints: _offsetPoints
+  }
+}
 
 export const _crudSingleOnlyApi = () => {
   return {

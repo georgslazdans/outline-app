@@ -1,6 +1,6 @@
 import ContourPoints from "../ContourPoints";
 import _centerPoints from "./CenterPoints";
-import { _crudListOnlyApi, _crudSingleOnlyApi } from "./crud";
+import { _crudApi, _crudListOnlyApi, _crudSingleOnlyApi } from "./crud";
 import _mirrorPointsOnXAxis from "./MirrorPointsOnXAxis";
 import _scaleAlongNormal from "./ScaleAlongNormal";
 import _scalePoints from "./ScalePoints";
@@ -15,6 +15,7 @@ const modificationApi = () => {
     mirrorPointsOnXAxis: _mirrorPointsOnXAxis,
     scaleAlongNormal: _scaleAlongNormal,
     scalePoints: _scalePoints,
+    ..._crudApi(),
   };
 };
 

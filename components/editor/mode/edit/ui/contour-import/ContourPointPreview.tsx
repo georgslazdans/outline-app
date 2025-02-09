@@ -1,18 +1,30 @@
 "use client";
 
 import React, { useCallback, useMemo } from "react";
-import ContourPoints from "@/lib/data/contour/ContourPoints";
 import Svg from "@/lib/vector/svg/Svg";
-import { Context } from "@/context/DetailsContext";
+import {
+  centerPoints,
+  Context,
+  contourOutlineOf,
+} from "@/context/DetailsContext";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import Orientation from "@/lib/Orientation";
+import { contourPointsOf } from "@/lib/data/contour/ContourPoints";
 
 type Props = {
-  contourPoints?: ContourPoints[];
   context?: Context;
+  contourIndex: number;
 };
 
-const ContourPointPreview = ({ contourPoints, context }: Props) => {
+const ContourPointPreview = ({ context, contourIndex }: Props) => {
+  const contourPoints = useMemo(() => {
+    if (context) {
+      const outline = contourOutlineOf(context, contourIndex)
+      const points = contourPointsOf(outline);
+      return centerPoints(context, points);
+    }
+  }, [context, contourIndex]);
+
   const createSvg = useCallback(() => {
     if (context && contourPoints && contourPoints.length != 0) {
       const paperDimensions = paperDimensionsOfDetailsContext(context);

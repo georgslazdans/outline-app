@@ -5,7 +5,7 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Context } from "@/context/DetailsContext";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import SelectField, { Option } from "@/components/fields/SelectField";
-import { useContourCacheContext } from "../../../cache/ContourCacheContext";
+import { useContourCacheContext } from "../../../../cache/ContourCacheContext";
 import ContourPoints, {
   modifyContourList,
 } from "@/lib/data/contour/ContourPoints";
@@ -13,27 +13,7 @@ import NumberField from "@/components/fields/NumberField";
 
 type Props = {
   dictionary: Dictionary;
-  onSelect: (ContourPoints: ContourPoints[], context: Context) => void;
-};
-
-const centeredPointsOf = (
-  context: Context,
-  contourIndex: number
-): ContourPoints[] => {
-  const paperDimensions = paperDimensionsOfDetailsContext(context);
-  if (context.contours && context.contours.length > 0) {
-    const index =
-      contourIndex >= context.contours.length
-        ? context.contours.length - 1
-        : contourIndex;
-    const outline = context.contours[index];
-    const holePoints = outline.holes ? outline.holes : [];
-    const contourPoints = [...holePoints, outline.outline];
-    const contours =
-      modifyContourList(contourPoints).centerPoints(paperDimensions);
-    return modifyContourList(contours).mirrorPointsOnXAxis();
-  }
-  return [];
+  onSelect: (context: Context, contourIndex: number) => void;
 };
 
 const asOption = (context: Context): Option => {
@@ -54,7 +34,7 @@ const DetailsContextContourSelect = ({ dictionary, onSelect }: Props) => {
       setOptions(items.map(asOption));
       const item = items[0];
       setSelectedContextId(item.id!);
-      onSelect(centeredPointsOf(item, 0), item);
+      onSelect(item, 0);
     }
   }, [items, onSelect]);
 
@@ -62,7 +42,7 @@ const DetailsContextContourSelect = ({ dictionary, onSelect }: Props) => {
     const contextId = Number.parseInt(event.target.value);
     const selected = items?.find((it) => it.id == contextId);
     if (selected) {
-      onSelect(centeredPointsOf(selected, 0), selected);
+      onSelect(selected, 0);
       setSelectedContextId(contextId);
       setSelectedContourIndex(0);
     }
@@ -74,7 +54,7 @@ const DetailsContextContourSelect = ({ dictionary, onSelect }: Props) => {
       setSelectedContourIndex(contourIndex);
       const selected = items?.find((it) => it.id == selectedContextId);
       if (selected) {
-        onSelect(centeredPointsOf(selected, contourIndex), selected);
+        onSelect(selected, contourIndex);
       }
     }
   };

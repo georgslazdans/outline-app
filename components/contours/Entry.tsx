@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { Context } from "@/context/DetailsContext";
+import { Context, useDetails } from "@/context/DetailsContext";
 import React from "react";
 import EntryField from "./EntryField";
 import Button from "../Button";
@@ -11,6 +11,9 @@ import useNavigationHistory from "@/context/NavigationHistory";
 import { idQuery } from "@/lib/utils/UrlParams";
 import ExportDropdown from "./ExportDropdown";
 import LazyLoadImage from "../image/lazy/LazyLoadedImage";
+import SavedFile from "@/lib/SavedFile";
+import getImageData from "@/lib/utils/ImageData";
+import { useLoading } from "@/context/LoadingContext";
 
 type Props = {
   context: Context;
@@ -22,11 +25,21 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
   const { deleteRecord } = useIndexedDB("details");
-  const { deleteRecord: deleteFile } = useIndexedDB("files");
+  const { getByID: getFileById, deleteRecord: deleteFile } =
+    useIndexedDB("files");
+  const { setDetailsContext, setContextImageData } = useDetails();
+  const { setLoading } = useLoading();
 
   const openSettings = async () => {
-    addHistory("/contours");
-    router.push("/calibration" + "?" + idQuery(context.id!.toString()));
+    setLoading(true);
+    getFileById(context.imageFile).then((savedFile: SavedFile) => {
+      getImageData(savedFile.blob).then((data) => {
+        setDetailsContext(context);
+        setContextImageData(data);
+        addHistory("/contours");
+        router.push("/calibration" + "?" + idQuery(context.id!.toString()));
+      });
+    });
   };
 
   const deleteEntry = () => {

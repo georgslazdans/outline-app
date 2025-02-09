@@ -10,6 +10,7 @@ type GridfinityParams = {
   magnetHeight: number;
   screwRadius: number;
   gridSize: number;
+  includeLip: boolean;
 };
 
 export const defaultGridfinityParams = (): GridfinityParams => {
@@ -25,6 +26,7 @@ export const defaultGridfinityParams = (): GridfinityParams => {
     magnetHeight: 2,
     screwRadius: 1.5,
     gridSize: 42.0,
+    includeLip: true,
   };
 };
 
