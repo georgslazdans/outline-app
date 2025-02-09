@@ -19,7 +19,7 @@ export const gridfinityItemOf = (params: GridfinityParams): Item => {
 };
 
 export const gridfinityHeightOf = (modelData: ModelData) => {
-  const magicConstant = 42;
+  const magicConstant = 7;
   const item = modelData.items.find(
     (it) => it.type == ItemType.Gridfinity
   ) as Gridfinity;
