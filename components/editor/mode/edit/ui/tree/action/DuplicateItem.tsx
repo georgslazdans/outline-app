@@ -33,7 +33,7 @@ const duplicateDocumentSvg = (
   </svg>
 );
 
-const SUPPORTED_TYPES = [ItemType.Group, ItemType.Primitive, ItemType.Contour];
+const SUPPORTED_TYPES = [ItemType.Group, ItemType.Primitive, ItemType.Contour, ItemType.Text];
 const DuplicateItem = ({ selectedItem }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
   const { withHotkey } = useEditorContext();
