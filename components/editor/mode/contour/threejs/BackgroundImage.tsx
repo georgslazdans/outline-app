@@ -1,5 +1,5 @@
 import { Context } from "@/context/DetailsContext";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { Image } from "@react-three/drei";
 import { Vector3 } from "three";
@@ -9,14 +9,17 @@ import {
   paperSettingsOf,
 } from "@/lib/opencv/PaperSettings";
 import { useEditorContext } from "@/components/editor/EditorContext";
-import SavedFile, { useSavedFile } from "@/lib/SavedFile";
+import SavedFile from "@/lib/SavedFile";
+import Point from "@/lib/data/Point";
 
 type Props = {
   detailsContextId: number;
+  offset?: Point;
 };
 
 const BackgroundImage = memo(function BackgroundImage({
   detailsContextId,
+  offset,
 }: Props) {
   const { wireframe } = useEditorContext();
   const { getByID } = useIndexedDB("details");
@@ -47,6 +50,22 @@ const BackgroundImage = memo(function BackgroundImage({
     return [1, 1];
   };
 
+  const position = () => {
+    if (offset) {
+      const [xScale, yScale] = calculateScale();
+      return new Vector3(offset.x / 100, offset.y / 100, -0.01);
+    } else {
+      return new Vector3(0, 0, -0.01);
+    }
+  };
+  console.log(
+    "Image URL",
+    imageUrl,
+    "Position",
+    position(),
+    "scale",
+    calculateScale()
+  );
   return (
     <>
       {imageUrl && (
@@ -54,7 +73,7 @@ const BackgroundImage = memo(function BackgroundImage({
         <Image
           visible={!wireframe}
           scale={calculateScale()}
-          position={new Vector3(0, 0, -0.01)}
+          position={position()}
           url={imageUrl}
         />
       )}

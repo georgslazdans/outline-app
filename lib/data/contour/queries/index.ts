@@ -4,19 +4,21 @@ import _findLargestContourOf from "./FindLargestContourOf";
 import _findMiddleBetweenPoints from "./FindMiddleBetweenPoints";
 import _arePointsClockwise from "./ArePointsClockwise";
 import { _listOnlySplitQuery } from "./split";
+import _findPathBounds from "./FindPathBounds";
 
 const singleOnlyQuery = () => {
   return {
     findMiddleBetweenPoints: _findMiddleBetweenPoints,
     findLineSegmentClosestToPoint: _findLineSegmentClosestToPoint,
     arePointsClockwise: _arePointsClockwise,
+    findPathBounds: _findPathBounds,
   };
 };
 
 const listOnlyQuery = () => {
   return {
     findLargestContourOf: _findLargestContourOf,
-    ..._listOnlySplitQuery()
+    ..._listOnlySplitQuery(),
   };
 };
 

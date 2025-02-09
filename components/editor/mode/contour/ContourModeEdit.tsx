@@ -80,11 +80,18 @@ const ContourModeEdit = ({ dictionary }: Props) => {
     }
   };
 
+  const getOffset = () => {
+    if (selectedItem?.type == ItemType.Contour) {
+      return selectedItem.offset;
+    }
+  };
+
   return (
     <>
       {getDetailsContext() && (
         <BackgroundImage
           detailsContextId={getDetailsContext()!}
+          offset={getOffset()}
         ></BackgroundImage>
       )}
 
