@@ -51,8 +51,8 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
         onChange={handleNumberChange("height")}
         label={"Height"}
         name={"height"}
-        numberRange={{ min: 0, max: 99999, step: 0.01 }}
-        tooltip="Resulting height is 42 multiplied by height value"
+        numberRange={{ min: 0, max: 99999, step: 1 }}
+        tooltip="Standard Gridfinity height units of 7mm"
       ></EditField>
       <CheckboxField
         value={params.keepFull}

@@ -2,7 +2,7 @@ import { IndexedDBProps } from "react-indexed-db-hook";
 
 export const DBConfig: IndexedDBProps = {
   name: "OutlineAppDb",
-  version: 5,
+  version: 6,
   objectStoresMeta: [
     {
       store: "details",

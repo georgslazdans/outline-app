@@ -1,4 +1,5 @@
 import { addThumbnails } from "./functions/AddThumbnails";
+import { changeGridfinityHeightToStandard } from "./functions/ChangeGridfinityHeightToStandard";
 import { changePaperImageDataToSavedFile } from "./functions/ChangePaperImageToBeBlob";
 
 export type AfterUpgradeFunction = (database: IDBDatabase) => Promise<void>;
@@ -19,6 +20,11 @@ const MIGRATION_LIST: UpgradeMigrationEntry[] = [
     version: 5,
     onFreshDatabase: false,
     function: changePaperImageDataToSavedFile,
+  },
+  {
+    version: 6,
+    onFreshDatabase: false,
+    function: changeGridfinityHeightToStandard,
   },
 ];
 

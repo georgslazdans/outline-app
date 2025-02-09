@@ -17,7 +17,7 @@ export const defaultGridfinityParams = (): GridfinityParams => {
   return {
     xSize: 5,
     ySize: 2,
-    height: 0.5, // TODO use standard units of 7mm
+    height: 3,
     keepFull: true,
     wallThickness: 1.2,
     withMagnet: false,
