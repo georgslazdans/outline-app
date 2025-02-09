@@ -187,7 +187,7 @@ const buildTopShape = ({
 function gridfinityBox({
   xSize = 2,
   ySize = 1,
-  height = 0.5,
+  height = 3,
   keepFull = false,
   wallThickness = 1.2,
   withMagnet = false,
@@ -198,7 +198,7 @@ function gridfinityBox({
   gridSize = 42.0,
   includeLip = true,
 } = {}): ReplicadModelData {
-  const stdHeight = height * 42;
+  const stdHeight = height * 7;
 
   let box = drawRoundedRectangle(
     xSize * gridSize - CLEARANCE,
