@@ -37,6 +37,7 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
           onChange={handleNumberChange("xSize")}
           label={"X Size"}
           name={"xSize"}
+          numberRange={{ min: 1, max: 99999, step: 1 }}
         ></EditField>
         <EditField
           className="w-full"
@@ -44,6 +45,7 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
           onChange={handleNumberChange("ySize")}
           label={"Y Size"}
           name={"ySize"}
+          numberRange={{ min: 1, max: 99999, step: 1 }}
         ></EditField>
       </div>
       <EditField
@@ -51,8 +53,8 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
         onChange={handleNumberChange("height")}
         label={"Height"}
         name={"height"}
-        numberRange={{ min: 0, max: 99999, step: 1 }}
-        tooltip="Standard Gridfinity height units of 7mm"
+        numberRange={{ min: 0.0001, max: 99999, step: 1 }}
+        tooltip="Standard Gridfinity height units of 7mm. Defines the inside of the bin."
       ></EditField>
       <CheckboxField
         value={params.keepFull}
@@ -71,7 +73,7 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
         onChange={handleNumberChange("wallThickness")}
         label={"Wall Thickness"}
         name={"wallThickness"}
-        numberRange={{ min: 0, max: 99999, step: 0.01 }}
+        numberRange={{ min: 0.00001, max: 99999, step: 0.01 }}
       ></EditField>
       <CheckboxField
         value={params.withMagnet}
