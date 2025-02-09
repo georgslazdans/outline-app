@@ -11,7 +11,7 @@ import { usePointClickContext } from "../selection/PointClickContext";
 import PointClickMode from "../selection/PointClickMode";
 import Contour, { contourItemOf } from "@/lib/replicad/model/item/Contour";
 import Item from "@/lib/replicad/model/Item";
-import { modifyContourList, queryContourList } from "@/lib/data/contour/ContourPoints";
+import { queryContourList } from "@/lib/data/contour/ContourPoints";
 import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";
 import BooleanOperation from "@/lib/replicad/model/BooleanOperation";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
@@ -37,15 +37,16 @@ const DoneButton = ({ dictionary }: Props) => {
     if (clickMode == PointClickMode.SELECTION) {
       compressHistoryEvents(EditorHistoryType.CONTOUR_UPDATED);
     } else if (clickMode == PointClickMode.SPLIT && splitPoints.length > 0) {
-      const newContours = queryContourList(selectedContour.points).divideContour(
-        splitPoints
-      );
+      const newContours = queryContourList(
+        selectedContour.points
+      ).divideContour(splitPoints);
       const contourItems = newContours.map((it, index) => {
         const newName = selectedContour.name + " " + (index + 1);
         const item = contourItemOf(
           it,
-          selectedContour.height,
           newName,
+          selectedContour.height,
+          selectedContour.offset,
           selectedContour.detailsContextId
         );
         item.booleanOperation = BooleanOperation.UNION;
@@ -55,7 +56,7 @@ const DoneButton = ({ dictionary }: Props) => {
       group.id = selectedContour.id;
       group.translation = selectedContour.translation;
       group.rotation = selectedContour.rotation;
-      
+
       setModelData(
         forModelData(modelData).updateItem(group),
         EditorHistoryType.OBJ_ADDED,

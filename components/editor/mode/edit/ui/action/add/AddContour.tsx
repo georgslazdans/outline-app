@@ -6,7 +6,10 @@ import React, { useState } from "react";
 import ContourImportDialog from "../../contour-import/ContourImportDialog";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
-import { contourItemOf } from "@/lib/replicad/model/item/Contour";
+import {
+  contourItemFromContext,
+  contourItemOf,
+} from "@/lib/replicad/model/item/Contour";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
@@ -40,7 +43,7 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
       forModelData(modelData);
 
     const parentId = parentIdForObjectCreation(selectedItem);
-    let item = contourItemOf(detailsContext, contourIndex, height);
+    let item = contourItemFromContext(detailsContext, contourIndex, height);
     if (!parentId) {
       const gridfinityHeight = gridfinityHeightOf(modelData);
       item = {

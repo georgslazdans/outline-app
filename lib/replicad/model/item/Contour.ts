@@ -38,27 +38,38 @@ const offsetOf = (contourOutline: ContourOutline, context: Context): Point => {
   };
 };
 
-export const contourItemOf = (
+export const contourItemFromContext = (
   context: Context,
   contourIndex: number,
   height: number
-): Item => {
+) => {
   const name = context.details.name;
   const contourOutline = contourOutlineOf(context, contourIndex);
   const offset = offsetOf(contourOutline, context);
   const centeredPoints = centerPoints(context, contourPointsOf(contourOutline));
   const offsetPoints = modifyContourList(centeredPoints).offsetPoints(offset);
+
+  return contourItemOf(offsetPoints, name, height, offset, context.id);
+};
+
+export const contourItemOf = (
+  points: ContourPoints[],
+  name: string,
+  height: number,
+  offset: Point,
+  detailsContextId?: number
+): Item => {
   return {
     id: randomUUID(),
     type: ItemType.Contour,
     name: name ? name : "Contour",
-    points: offsetPoints,
+    points: points,
     height: height,
     offset: offset,
     translation: zeroPoint(),
     rotation: zeroPoint(),
     booleanOperation: BooleanOperation.CUT,
-    detailsContextId: context.id,
+    detailsContextId: detailsContextId,
   };
 };
 
