@@ -2,13 +2,15 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import SelectField from "@/components/fields/SelectField";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useCallback } from "react";
 import SphereEdit from "./SphereEdit";
 import PrimitiveParams, {
   BoxParams,
   CapsuleParams,
   CylinderParams,
   defaultParamsFor,
+  defaultPrimitiveHeightOf,
+  defaultRotationOf,
   SphereParams,
 } from "@/lib/replicad/model/item/PrimitiveParams";
 import BoxEdit from "./BoxEdit";
@@ -21,19 +23,87 @@ import PrimitiveType, {
   primitiveTypeOptionsFor,
 } from "@/lib/replicad/model/item/PrimitiveType";
 import CapsuleEdit from "./CapsuleEdit";
+import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
+import { useModelDataContext } from "@/components/editor/ModelDataContext";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
+import ModelData from "@/lib/replicad/model/ModelData";
+import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
 
 type Props = {
   dictionary: Dictionary;
   item: Item & Primitive;
-  onItemChange: (params: Item) => void;
 };
 
-const PrimitiveEdit = ({ dictionary, item, onItemChange }: Props) => {
+const gridfinityAlignmentHeight = (data: ModelData, item: Item & Primitive) => {
+  const { parentTotalHeight } = forModelData(data);
+  const gridfinityHeight = gridfinityHeightOf(data);
+  return (
+    gridfinityHeight +
+    defaultPrimitiveHeightOf(item.params) -
+    parentTotalHeight(item.id)
+  );
+};
+
+const HEIGHT_CHANGE_TYPES = [PrimitiveType.BOX, PrimitiveType.CYLINDER];
+const boxOrCylinderHeightChanged = (
+  oldItem: Item & Primitive,
+  newItem: Item & Primitive
+): boolean => {
+  if (
+    oldItem.params.type == newItem.params.type &&
+    HEIGHT_CHANGE_TYPES.includes(oldItem.params.type)
+  ) {
+    const oldParams = oldItem.params as CylinderParams | BoxParams;
+    const newParams = newItem.params as CylinderParams | BoxParams;
+    return oldParams.height != newParams.height;
+  }
+  return false;
+};
+
+const updateAlignment = (
+  data: ModelData,
+  oldItem: Item & Primitive,
+  newItem: Item & Primitive
+): Item => {
+  if (
+    (oldItem.params.type != newItem.params.type ||
+      boxOrCylinderHeightChanged(oldItem, newItem)) &&
+    gridfinityAlignmentHeight(data, oldItem) == oldItem.translation?.z
+  ) {
+    return {
+      ...newItem,
+      translation: {
+        ...newItem.translation!,
+        z: gridfinityAlignmentHeight(data, newItem),
+      },
+    };
+  } else {
+    return newItem;
+  }
+};
+
+const PrimitiveEdit = ({ dictionary, item }: Props) => {
+  const { modelData, setModelData } = useModelDataContext();
+
+  const onItemChange = useCallback(
+    (newItem: Item) => {
+      const updatedData = forModelData(modelData).updateItem(
+        updateAlignment(modelData, item, newItem as Item & Primitive)
+      );
+      setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);
+    },
+    [item, modelData, setModelData]
+  );
+
   const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     if (item.params.type != value) {
       const updatedParams = defaultParamsFor(value as PrimitiveType);
-      const updatedItem = { ...item, params: updatedParams };
+      const updatedItem = {
+        ...item,
+        params: updatedParams,
+        rotation: defaultRotationOf(value as PrimitiveType),
+      };
       onItemChange(updatedItem);
     }
   };

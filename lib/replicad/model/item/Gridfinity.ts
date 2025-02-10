@@ -2,7 +2,9 @@ import ModelData from "../ModelData";
 import ItemType from "../ItemType";
 import GridfinityParams from "./GridfinityParams";
 import Item from "../Item";
-import { v4 as randomUUID } from 'uuid';
+import { v4 as randomUUID } from "uuid";
+
+const HEIGHT_UNIT = 7;
 
 type Gridfinity = {
   type: ItemType.Gridfinity;
@@ -19,12 +21,14 @@ export const gridfinityItemOf = (params: GridfinityParams): Item => {
 };
 
 export const gridfinityHeightOf = (modelData: ModelData) => {
-  const magicConstant = 7;
   const item = modelData.items.find(
     (it) => it.type == ItemType.Gridfinity
   ) as Gridfinity;
-  const gridfinityHeight = item.params.height;
-  return gridfinityHeight * magicConstant;
+  return convertGridfinityHeightUnits(item.params.height);
+};
+
+export const convertGridfinityHeightUnits = (gridfinityHeightUnit: number) => {
+  return gridfinityHeightUnit * HEIGHT_UNIT;
 };
 
 export default Gridfinity;

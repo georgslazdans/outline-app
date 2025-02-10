@@ -1,5 +1,6 @@
 import { Vector3 } from "three";
 import PrimitiveType from "./PrimitiveType";
+import Point3D, { zeroPoint } from "@/lib/Point3D";
 
 export type BoxParams = {
   type: PrimitiveType.BOX;
@@ -55,24 +56,36 @@ export const defaultParamsFor = (type: PrimitiveType): PrimitiveParams => {
   }
 };
 
+export const defaultRotationOf = (type: PrimitiveType): Point3D => {
+  if (type == PrimitiveType.CAPSULE) {
+    return {
+      x: 0,
+      y: 90,
+      z: 0,
+    };
+  } else {
+    return zeroPoint();
+  }
+};
+
 export const defaultTranslationOf = (
   params: PrimitiveParams,
   gridfinityHeight: number
 ): Vector3 => {
+  const offset = gridfinityHeight + defaultPrimitiveHeightOf(params);
+  return new Vector3(0, 0, offset);
+};
+
+export const defaultPrimitiveHeightOf = (params: PrimitiveParams): number => {
   switch (params.type) {
     case PrimitiveType.BOX:
-      const boxOffset = gridfinityHeight - params.height;
-      return new Vector3(0, 0, boxOffset);
+      return -params.height;
     case PrimitiveType.CYLINDER:
-      const cylinderOffset = gridfinityHeight - params.height;
-      return new Vector3(0, 0, cylinderOffset);
+      return -params.height;
     case PrimitiveType.SPHERE:
-      const sphereOffset = gridfinityHeight;
-      return new Vector3(0, 0, sphereOffset);
+      return 0;
     case PrimitiveType.CAPSULE:
-      const capsuleOffset =
-        gridfinityHeight - params.middleHeight - params.radius * 2;
-      return new Vector3(0, 0, capsuleOffset);
+      return 0;
   }
 };
 
