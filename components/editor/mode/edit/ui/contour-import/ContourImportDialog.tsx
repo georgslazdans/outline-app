@@ -9,6 +9,7 @@ import { useEditorContext } from "../../../../EditorContext";
 import NumberField from "@/components/fields/NumberField";
 import { Context } from "@/context/DetailsContext";
 import ContourPointPreview from "./ContourPointPreview";
+import AutoScaleAlongNormal from "./AutoScaleAlongNormal";
 
 type Props = {
   dictionary: Dictionary;
@@ -82,6 +83,7 @@ const ContourImportDialog = ({
           onChange={onHeightChange}
           numberRange={{ min: 0, max: 10000, step: 0.01 }}
         ></NumberField>
+        <AutoScaleAlongNormal></AutoScaleAlongNormal>
         <Button
           className="mt-4"
           onClick={onImport}

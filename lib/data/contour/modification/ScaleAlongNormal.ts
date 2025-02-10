@@ -49,7 +49,7 @@ const scalePoints = (points: Point[], scale: number): Point[] => {
 
 const scaleStep = 0.01;
 
-const scaleAlongNormal = (contour: ContourPoints) => {
+const _scaleAlongNormal = (contour: ContourPoints) => {
   return (scale: number): ContourPoints => {
     let remainingScale = scale;
     let scaledPoints = contour.points;
@@ -70,4 +70,4 @@ const scaleAlongNormal = (contour: ContourPoints) => {
   };
 };
 
-export default scaleAlongNormal;
+export default _scaleAlongNormal;

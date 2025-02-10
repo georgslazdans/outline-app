@@ -58,7 +58,7 @@ export const contourItemOf = (
   height: number,
   offset: Point,
   detailsContextId?: number
-): Item => {
+): Item & Contour => {
   return {
     id: randomUUID(),
     type: ItemType.Contour,

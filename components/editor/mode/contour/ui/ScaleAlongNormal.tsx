@@ -3,9 +3,7 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useState } from "react";
 import ContourPoints, {
-  modifyContour,
-  queryContour,
-  queryContourList,
+  modifyContourList,
 } from "@/lib/data/contour/ContourPoints";
 import ActionGroup from "@/components/editor/ui/action/ActionGroup";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
@@ -42,20 +40,7 @@ const ScaleAlongNormal = ({ dictionary, contour, onContourChanged }: Props) => {
   };
 
   const scaleContour = () => {
-    const { findLargestContourOf } = queryContourList(contour);
-    const {contour: base} = findLargestContourOf();
-    const scaledContours = contour.map((it) => {
-      const isClockwise = queryContour(it).arePointsClockwise();
-      const scaleOfContour = () => {
-        if (it == base) {
-          return isClockwise ? -scale : scale;
-        } else {
-          return isClockwise ? scale : -scale;
-        }
-      };
-      const { scaleAlongNormal } = modifyContour(it);
-      return scaleAlongNormal(scaleOfContour());
-    });
+    const scaledContours = modifyContourList(contour).scaleAlongNormal(scale);
     onContourChanged(scaledContours);
   };
 

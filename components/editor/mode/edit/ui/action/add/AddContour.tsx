@@ -6,10 +6,7 @@ import React, { useState } from "react";
 import ContourImportDialog from "../../contour-import/ContourImportDialog";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
-import {
-  contourItemFromContext,
-  contourItemOf,
-} from "@/lib/replicad/model/item/Contour";
+import { contourItemFromContext } from "@/lib/replicad/model/item/Contour";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
@@ -17,6 +14,9 @@ import ItemType from "@/lib/replicad/model/ItemType";
 import getItemTypeIconFor from "../../icon/itemType/Icons";
 import ActionButton from "../../../../../ui/action/ActionButton";
 import { Context } from "@/context/DetailsContext";
+import { useUserPreference } from "@/lib/preferences/useUserPreference";
+import UserPreference from "@/lib/preferences/UserPreference";
+import { modifyContourList } from "@/lib/data/contour/ContourPoints";
 
 type Props = {
   dictionary: Dictionary;
@@ -28,6 +28,12 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
   const { setSelectedId, setInputFieldFocused } = useEditorContext();
 
   const [openImportDialog, setOpenImportDialog] = useState(false);
+  const { value: autoScale } = useUserPreference(
+    UserPreference.AUTO_SCALE_ALONG_NORMALS_ON_CONTOUR_IMPORT
+  );
+  const { value: autoScaleValue } = useUserPreference(
+    UserPreference.AUTO_SCALE_ALONG_NORMALS_ON_CONTOUR_IMPORT_VALUE
+  );
 
   const openContourDialog = () => {
     setInputFieldFocused(true);
@@ -51,7 +57,14 @@ const AddContour = ({ dictionary, selectedItem }: Props) => {
         translation: { x: 0, y: 0, z: gridfinityHeight },
       };
     }
-
+    if (autoScale) {
+      item = {
+        ...item,
+        points: modifyContourList(item.points).scaleAlongNormal(
+          autoScaleValue as number
+        ),
+      };
+    }
     setModelData(addItem(item, parentId), EditorHistoryType.OBJ_ADDED, item.id);
     setSelectedId(item.id);
   };
