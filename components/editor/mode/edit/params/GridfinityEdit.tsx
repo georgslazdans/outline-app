@@ -33,10 +33,9 @@ const updateAlignedItems = (
 
     let result = data;
     previouslyAlignedItems.forEach((id) => {
-      const { alignWithGridfinity, getById, updateItem } = forModelData(result);
+      const { alignWithGridfinity, getById } = forModelData(result);
       const item = getById(id);
-      const newItem = alignWithGridfinity(item);
-      result = updateItem(newItem);
+      result = alignWithGridfinity(item);
     });
     return result;
   } else {
@@ -58,7 +57,7 @@ const GridfinityEdit = ({ dictionary, item }: Props) => {
       updatedData = updateAlignedItems(updatedData, params, newParams);
       setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);
     },
-    [modelData, setModelData]
+    [item, modelData, params, setModelData]
   );
 
   const handleNumberChange = (name: string) => {

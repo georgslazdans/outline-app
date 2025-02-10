@@ -21,9 +21,9 @@ const AlignWithGridfinityButton = ({ item }: Props) => {
   const { modelData, setModelData } = useModelDataContext();
 
   const onAlign = () => {
-    const { updateItem, alignWithGridfinity } = forModelData(modelData);
+    const { alignWithGridfinity } = forModelData(modelData);
     setModelData(
-      updateItem(alignWithGridfinity(item)),
+      alignWithGridfinity(item),
       EditorHistoryType.OBJ_UPDATED,
       item.id
     );

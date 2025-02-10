@@ -36,8 +36,18 @@ const itemModificationsFor = (data: ModelData) => {
     },
     reorderItems: reorderItems(data),
     duplicateItem: duplicateItemFor(data),
-    alignItem: _alignItem,
-    alignWithGridfinity: _alignWithGridfinity(data),
+    alignItem: (item: Item, offset: number): ModelData => {
+      return {
+        ...data,
+        items: updateItem(_alignItem(item, offset), data.items),
+      };
+    },
+    alignWithGridfinity: (item: Item): ModelData => {
+      return {
+        ...data,
+        items: updateItem(_alignWithGridfinity(data)(item), data.items),
+      };
+    },
   };
 };
 

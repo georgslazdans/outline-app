@@ -92,7 +92,7 @@ const PrimitiveEdit = ({ dictionary, item }: Props) => {
       );
       setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);
     },
-    [modelData, setModelData]
+    [item, modelData, setModelData]
   );
 
   const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
