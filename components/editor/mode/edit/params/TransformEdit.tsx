@@ -4,6 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent } from "react";
 import EditField from "../../EditField";
 import Item from "@/lib/replicad/model/Item";
+import AlignWithGridfinity from "./AlignWithGridfinity";
 
 type Props = {
   dictionary: Dictionary;
@@ -59,13 +60,16 @@ const TransformEdit = ({ dictionary, item, onItemChange }: Props) => {
           name={"y"}
           numberRange={translationNumberRange}
         ></EditField>
-        <EditField
-          value={item.translation!.z}
-          onChange={handleTranslationChange("z")}
-          label={"Z"}
-          name={"z"}
-          numberRange={translationNumberRange}
-        ></EditField>
+        <div className="flex flex-row">
+          <EditField
+            value={item.translation!.z}
+            onChange={handleTranslationChange("z")}
+            label={"Z"}
+            name={"z"}
+            numberRange={translationNumberRange}
+          ></EditField>
+          <AlignWithGridfinity item={item}></AlignWithGridfinity>
+        </div>
       </div>
       <div className="flex flex-row gap-2">
         <EditField

@@ -59,20 +59,20 @@ export const defaultTranslationOf = (
   params: PrimitiveParams,
   gridfinityHeight: number
 ): Vector3 => {
+  const offset = gridfinityHeight + defaultHeightOf(params);
+  return new Vector3(0, 0, offset);
+};
+
+export const defaultHeightOf = (params: PrimitiveParams): number => {
   switch (params.type) {
     case PrimitiveType.BOX:
-      const boxOffset = gridfinityHeight - params.height;
-      return new Vector3(0, 0, boxOffset);
+      return -params.height;
     case PrimitiveType.CYLINDER:
-      const cylinderOffset = gridfinityHeight - params.height;
-      return new Vector3(0, 0, cylinderOffset);
+      return -params.height;
     case PrimitiveType.SPHERE:
-      const sphereOffset = gridfinityHeight;
-      return new Vector3(0, 0, sphereOffset);
+      return 0;
     case PrimitiveType.CAPSULE:
-      const capsuleOffset =
-        gridfinityHeight - params.middleHeight - params.radius * 2;
-      return new Vector3(0, 0, capsuleOffset);
+      return 0;
   }
 };
 
