@@ -3,16 +3,64 @@
 import { Dictionary } from "@/app/dictionaries";
 import CheckboxField from "@/components/fields/CheckboxField";
 import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useCallback } from "react";
 import EditField from "../../EditField";
+import { useModelDataContext } from "@/components/editor/ModelDataContext";
+import { forModelData } from "@/lib/replicad/model/ForModelData";
+import Gridfinity, {
+  convertGridfinityHeightUnits,
+} from "@/lib/replicad/model/item/Gridfinity";
+import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
+import Item from "@/lib/replicad/model/Item";
+import ModelData from "@/lib/replicad/model/ModelData";
 
 type Props = {
   dictionary: Dictionary;
-  params: GridfinityParams;
-  onParamsChange: (params: GridfinityParams) => void;
+  item: Item & Gridfinity;
 };
 
-const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
+const updateAlignedItems = (
+  data: ModelData,
+  oldParams: GridfinityParams,
+  newParams: GridfinityParams
+): ModelData => {
+  const previousHeight = oldParams.height;
+  if (previousHeight != newParams.height) {
+    const { findAlignedItems } = forModelData(data);
+    const previouslyAlignedItems = findAlignedItems(
+      convertGridfinityHeightUnits(previousHeight)
+    );
+
+    let result = data;
+    previouslyAlignedItems.forEach((id) => {
+      const { alignWithGridfinity, getById, updateItem } = forModelData(result);
+      const item = getById(id);
+      const newItem = alignWithGridfinity(item);
+      result = updateItem(newItem);
+    });
+    return result;
+  } else {
+    return data;
+  }
+};
+
+const GridfinityEdit = ({ dictionary, item }: Props) => {
+  const { modelData, setModelData } = useModelDataContext();
+  const params = item.params;
+
+  const onParamsChange = useCallback(
+    (newParams: GridfinityParams) => {
+      const { updateItem } = forModelData(modelData);
+      let updatedData = updateItem({
+        ...item,
+        params: newParams,
+      });
+      updatedData = updateAlignedItems(updatedData, params, newParams);
+      setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);
+    },
+    [modelData, setModelData]
+  );
+
   const handleNumberChange = (name: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = Number.parseFloat(event.target.value);
@@ -53,7 +101,7 @@ const GridfinityEdit = ({ dictionary, params, onParamsChange }: Props) => {
         onChange={handleNumberChange("height")}
         label={"Height"}
         name={"height"}
-        numberRange={{ min: 0.0001, max: 99999, step: 1 }}
+        numberRange={{ min: 0, max: 99999, step: 1 }}
         tooltip="Standard Gridfinity height units of 7mm. Defines the inside of the bin."
       ></EditField>
       <CheckboxField

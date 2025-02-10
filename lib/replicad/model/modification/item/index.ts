@@ -3,6 +3,8 @@ import Item from "../../Item";
 import ItemGroup from "../../item/ItemGroup";
 import ModelData from "../../ModelData";
 import addItem from "./AddItem";
+import _alignItem from "./AlignItem";
+import _alignWithGridfinity from "./AlignWithGridfinity";
 import duplicateItemFor from "./DuplicateItem";
 import deleteById from "./RemoveById";
 import reorderItems from "./ReorderItems";
@@ -33,7 +35,9 @@ const itemModificationsFor = (data: ModelData) => {
       };
     },
     reorderItems: reorderItems(data),
-    duplicateItem: duplicateItemFor(data)
+    duplicateItem: duplicateItemFor(data),
+    alignItem: _alignItem,
+    alignWithGridfinity: _alignWithGridfinity(data),
   };
 };
 

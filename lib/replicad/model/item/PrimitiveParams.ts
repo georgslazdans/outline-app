@@ -59,11 +59,11 @@ export const defaultTranslationOf = (
   params: PrimitiveParams,
   gridfinityHeight: number
 ): Vector3 => {
-  const offset = gridfinityHeight + defaultHeightOf(params);
+  const offset = gridfinityHeight + defaultPrimitiveHeightOf(params);
   return new Vector3(0, 0, offset);
 };
 
-export const defaultHeightOf = (params: PrimitiveParams): number => {
+export const defaultPrimitiveHeightOf = (params: PrimitiveParams): number => {
   switch (params.type) {
     case PrimitiveType.BOX:
       return -params.height;

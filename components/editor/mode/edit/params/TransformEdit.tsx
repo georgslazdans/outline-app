@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent } from "react";
 import EditField from "../../EditField";
 import Item from "@/lib/replicad/model/Item";
-import AlignWithGridfinity from "./AlignWithGridfinity";
+import AlignWithGridfinityButton from "./AlignWithGridfinityButton";
 
 type Props = {
   dictionary: Dictionary;
@@ -68,7 +68,7 @@ const TransformEdit = ({ dictionary, item, onItemChange }: Props) => {
             name={"z"}
             numberRange={translationNumberRange}
           ></EditField>
-          <AlignWithGridfinity item={item}></AlignWithGridfinity>
+          <AlignWithGridfinityButton item={item}></AlignWithGridfinityButton>
         </div>
       </div>
       <div className="flex flex-row gap-2">
