@@ -6,6 +6,7 @@ import doesItemFor from "./DoesItem";
 import _findAlignedItems from "./FindAlignedItems";
 import findById from "./FindById";
 import findParentGroupId from "./FindParentId";
+import _parentTotalHeight from "./ParentTotalHeight";
 
 const queriesFor = (data: ModelData) => {
   return {
@@ -30,6 +31,7 @@ const queriesFor = (data: ModelData) => {
       }
     },
     findAlignedItems: _findAlignedItems(data),
+    parentTotalHeight: _parentTotalHeight(data),
   };
 };
 

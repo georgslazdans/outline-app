@@ -6,7 +6,6 @@ import PrimitiveEdit from "./primitive/PrimitiveEdit";
 import ContourEdit from "./ShadowEdit";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
-import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
 import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
@@ -50,7 +49,6 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
             <PrimitiveEdit
               dictionary={dictionary}
               item={item}
-              onItemChange={(params) => onItemChanged(item.id, params)}
             ></PrimitiveEdit>
           </>
         );

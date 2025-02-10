@@ -1,5 +1,6 @@
 import { Vector3 } from "three";
 import PrimitiveType from "./PrimitiveType";
+import Point3D, { zeroPoint } from "@/lib/Point3D";
 
 export type BoxParams = {
   type: PrimitiveType.BOX;
@@ -52,6 +53,18 @@ export const defaultParamsFor = (type: PrimitiveType): PrimitiveParams => {
         middleHeight: 10,
       };
     }
+  }
+};
+
+export const defaultRotationOf = (type: PrimitiveType): Point3D => {
+  if (type == PrimitiveType.CAPSULE) {
+    return {
+      x: 0,
+      y: 90,
+      z: 0,
+    };
+  } else {
+    return zeroPoint();
   }
 };
 
