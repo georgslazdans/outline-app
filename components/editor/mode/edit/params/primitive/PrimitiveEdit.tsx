@@ -44,13 +44,30 @@ const gridfinityAlignmentHeight = (data: ModelData, item: Item & Primitive) => {
   );
 };
 
+const HEIGHT_CHANGE_TYPES = [PrimitiveType.BOX, PrimitiveType.CYLINDER];
+const boxOrCylinderHeightChanged = (
+  oldItem: Item & Primitive,
+  newItem: Item & Primitive
+): boolean => {
+  if (
+    oldItem.params.type == newItem.params.type &&
+    HEIGHT_CHANGE_TYPES.includes(oldItem.params.type)
+  ) {
+    const oldParams = oldItem.params as CylinderParams | BoxParams;
+    const newParams = newItem.params as CylinderParams | BoxParams;
+    return oldParams.height != newParams.height;
+  }
+  return false;
+};
+
 const updateAlignment = (
   data: ModelData,
   oldItem: Item & Primitive,
   newItem: Item & Primitive
 ): Item => {
   if (
-    oldItem.params.type != newItem.params.type &&
+    (oldItem.params.type != newItem.params.type ||
+      boxOrCylinderHeightChanged(oldItem, newItem)) &&
     gridfinityAlignmentHeight(data, oldItem) == oldItem.translation?.z
   ) {
     return {
