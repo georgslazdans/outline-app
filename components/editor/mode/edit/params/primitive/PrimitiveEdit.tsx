@@ -27,7 +27,7 @@ import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import ModelData from "@/lib/replicad/model/ModelData";
-import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
+import { gridfinityHeightOf } from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 
 type Props = {
   dictionary: Dictionary;

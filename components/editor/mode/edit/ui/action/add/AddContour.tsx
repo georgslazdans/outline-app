@@ -4,7 +4,7 @@ import { Dictionary } from "@/app/dictionaries";
 import { useEditorContext } from "@/components/editor/EditorContext";
 import React, { useState } from "react";
 import ContourImportDialog from "../../contour-import/ContourImportDialog";
-import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
+import { gridfinityHeightOf } from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import { contourItemFromContext } from "@/lib/replicad/model/item/Contour";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";

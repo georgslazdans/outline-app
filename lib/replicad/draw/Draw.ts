@@ -1,4 +1,4 @@
-import Gridfinity from "../model/item/Gridfinity";
+import Gridfinity from "../model/item/gridfinity/Gridfinity";
 import Primitive from "../model/item/Primitive";
 import Contour from "../model/item/Contour";
 import ItemType from "../model/ItemType";

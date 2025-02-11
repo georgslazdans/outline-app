@@ -31,6 +31,9 @@ const ItemTree = ({ dictionary }: Props) => {
           localIndex: localIndex,
         });
         localIndex += 1;
+        if (item.type == ItemType.Gridfinity) {
+          processGroup(item.modifications, groupLevel + 1);
+        }
         if (item.type == ItemType.Group) {
           processGroup(item.items, groupLevel + 1);
         }
@@ -40,10 +43,13 @@ const ItemTree = ({ dictionary }: Props) => {
     return result;
   }, [modelData]);
 
-  const gridfinityId = useMemo(() => {
+  const gridfinityIds: string[] = useMemo(() => {
     const item = modelData.items.find((it) => it.type == ItemType.Gridfinity);
     if (item) {
-      return item.id;
+      const modificationIds = item.modifications.map((it) => it.id);
+      return [item.id, ...modificationIds];
+    } else {
+      return [];
     }
   }, [modelData]);
 
@@ -105,12 +111,23 @@ const ItemTree = ({ dictionary }: Props) => {
     setModelData(updatedData, EditorHistoryType.OBJ_REORDER);
   };
 
+  const isModifyingGridfinityItems = (result: DropResult) => {
+    const gridfinityItemIndex = gridfinityIds.length - 1;
+    const destinationIndex = result.destination?.index
+      ? result.destination?.index
+      : 0;
+    return (
+      destinationIndex <= gridfinityItemIndex ||
+      result.source.index <= gridfinityItemIndex
+    );
+  };
+
   const onDragEnd = (result: DropResult) => {
-    if (result.destination?.index == 0 || result.source.index == 0) {
+    if (isModifyingGridfinityItems(result)) {
       return;
     }
     if (result.combine) {
-      if (result.combine.draggableId == gridfinityId) {
+      if (gridfinityIds.includes(result.combine.draggableId)) {
         return;
       }
       onItemCombine(result.draggableId, result.combine.draggableId);

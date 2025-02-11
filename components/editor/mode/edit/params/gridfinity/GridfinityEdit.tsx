@@ -2,14 +2,14 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import CheckboxField from "@/components/fields/CheckboxField";
-import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
+import GridfinityParams from "@/lib/replicad/model/item/gridfinity/GridfinityParams";
 import React, { ChangeEvent, useCallback } from "react";
-import EditField from "../../EditField";
+import EditField from "../../../EditField";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import Gridfinity, {
   convertGridfinityHeightUnits,
-} from "@/lib/replicad/model/item/Gridfinity";
+} from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 import ModelData from "@/lib/replicad/model/ModelData";

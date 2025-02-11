@@ -9,8 +9,8 @@ import React, {
     useRef,
 } from "react";
 import Model from "@/lib/Model";
-import {defaultGridfinityParams} from "@/lib/replicad/model/item/GridfinityParams";
-import {gridfinityItemOf} from "@/lib/replicad/model/item/Gridfinity";
+import {defaultGridfinityParams} from "@/lib/replicad/model/item/gridfinity/GridfinityParams";
+import {gridfinityItemOf} from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 import {useIndexedDB} from "react-indexed-db-hook";
 import {useErrorModal} from "@/components/error/ErrorContext";
 import {useSearchParams} from "next/navigation";
