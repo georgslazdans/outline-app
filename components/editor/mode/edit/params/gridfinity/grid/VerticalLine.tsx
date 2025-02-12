@@ -1,4 +1,3 @@
-import { SplitCut } from "@/lib/replicad/model/item/gridfinity/Modification";
 import { CELL_SIZE, STROKE_WIDTH } from "./GridfinityGrid";
 
 const linePointsFor = (
@@ -22,31 +21,16 @@ const linePointsFor = (
   };
 };
 
-const splitCutFromVertical = (
-  lineX: number,
-  lineY: number,
-  xCount: number,
-  yCount: number
-): SplitCut => {
-  return {
-    start: {
-      x: lineX,
-      y: 0,
-    },
-    end: {
-      x: lineX,
-      y: yCount,
-    },
-  };
-};
 
 type Props = {
   x: number;
   y: number;
   xCount: number;
   yCount: number;
-  highlighted: SplitCut | null;
-  onHighlight: (splitCut: SplitCut | null) => void;
+  color: string;
+  onHighlight: (x: number, y: number) => void;
+  onHighlightLeave: () => void;
+  onSelect: (x: number, y: number) => void;
 };
 
 const VerticalLine = ({
@@ -54,33 +38,14 @@ const VerticalLine = ({
   y,
   xCount,
   yCount,
-  highlighted,
+  color,
   onHighlight,
+  onHighlightLeave,
+  onSelect,
 }: Props) => {
   const points = linePointsFor(x, y, xCount, yCount);
   const id = `v-${x}-${y}`;
   const isClickable = x != 0 && x != xCount && y != yCount;
-
-  const isHighlighted = () => {
-    if (highlighted && highlighted.start.x == highlighted.end.x) {
-      return highlighted.start.x == x;
-    }
-    return false;
-  };
-
-  const getColor = () => {
-    return isHighlighted() ? "red" : "black";
-  };
-
-  const handleMouseEnter = () => {
-    const splitCut = splitCutFromVertical(x, y, xCount, yCount);
-    onHighlight(splitCut);
-  };
-
-  const handleMouseLeave = () => {
-    onHighlight(null);
-  };
-
   return (
     <line
       key={id}
@@ -88,11 +53,11 @@ const VerticalLine = ({
       y1={points.y1}
       x2={points.x2}
       y2={points.y2}
-      stroke={getColor()}
+      stroke={color}
       strokeWidth={STROKE_WIDTH}
-      onMouseEnter={() => isClickable && handleMouseEnter()}
-      onMouseLeave={() => isClickable && handleMouseLeave()}
-      //   onClick={() => isClickable && handleClick(id)}
+      onMouseEnter={() => isClickable && onHighlight(x, y)}
+      onMouseLeave={() => isClickable && onHighlightLeave()}
+      onClick={() => isClickable && onSelect(x, y)}
       cursor={isClickable ? "pointer" : ""}
     />
   );

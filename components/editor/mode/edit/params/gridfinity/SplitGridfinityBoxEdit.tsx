@@ -19,6 +19,7 @@ const SplitGridfinityBoxEdit = ({ item, onItemChange }: Props) => {
 
   return (
     <>
+      <h2 className="">Split Grid</h2>
       <div className="p-4">
         <GridfinityGrid
           xCount={gridfinity!.params.xSize}
