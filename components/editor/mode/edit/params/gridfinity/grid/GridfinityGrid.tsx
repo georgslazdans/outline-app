@@ -7,6 +7,7 @@ import SplitCut, {
   splitCutUsing,
 } from "@/lib/replicad/model/item/gridfinity/SplitCut";
 import deepEqual from "@/lib/utils/Objects";
+import { useGridfinitySplitContext } from "../../../GridfinitySplitContext";
 
 type Props = {
   xCount: number;
@@ -32,8 +33,8 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
   const width = CELL_SIZE * xCount;
   const height = CELL_SIZE * yCount;
 
-  const [highlighted, setHighlighted] = useState<SplitCut | undefined>();
-  const [selected, setSelected] = useState<SplitCut[]>([]);
+  const { highlighted, setHighlighted, selected, setSelected } =
+    useGridfinitySplitContext();
 
   const onVerticalHighlight = (x: number, y: number) => {
     const existing = selected.find((it) =>
@@ -113,6 +114,7 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
         <>
           {drawVertical(x, y) && (
             <VerticalLine
+              key={`v-${x}-${y}-${color}`}
               x={x}
               y={y}
               xCount={xCount}
@@ -126,6 +128,7 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
 
           {drawHorizontal(x, y) && (
             <HorizontalLine
+              key={`h-${x}-${y}-${color}`}
               x={x}
               y={y}
               xCount={xCount}

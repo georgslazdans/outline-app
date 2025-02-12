@@ -8,6 +8,7 @@ import EditorHistoryType from "../../history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 import { useModelDataContext } from "../../ModelDataContext";
 import CanvasSelection from "./CanvasSelection";
+import SplitCutCanvasItem from "./modifications/SplitCutCanvasItem";
 
 type Props = {
   dictionary: Dictionary;
@@ -35,6 +36,7 @@ const EditCanvas = ({ dictionary }: Props) => {
           onItemChange={onItemChange}
         ></CanvasItemList>
       </CanvasSelection>
+      <SplitCutCanvasItem></SplitCutCanvasItem>
     </>
   );
 };
