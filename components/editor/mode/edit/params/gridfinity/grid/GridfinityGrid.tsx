@@ -3,10 +3,10 @@ import HorizontalLine from "./HorizontalLine";
 import VerticalLine from "./VerticalLine";
 import SplitCut, {
   forSplitCut,
+  reconstructSplitCuts,
   splitCutUsing,
 } from "@/lib/replicad/model/item/gridfinity/SplitCut";
 import deepEqual from "@/lib/utils/Objects";
-import { selectors } from "@playwright/test";
 
 type Props = {
   xCount: number;
@@ -66,26 +66,7 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
       const existing = previous.find((it) => deepEqual(it, cut));
       if (existing) {
         const updated = previous.filter((it) => it != existing);
-
-        return updated
-          .map((it) => {
-            const { x, y } = it.start;
-            if (forSplitCut(it).isVertical()) {
-              return splitCutUsing(xCount, yCount, updated).createVertical(
-                x,
-                y
-              );
-            } else {
-              return splitCutUsing(xCount, yCount, updated).createHorizontal(
-                x,
-                y
-              );
-            }
-          })
-          .filter(
-            (item, index, self) =>
-              index === self.findIndex((other) => deepEqual(item, other))
-          );
+        return reconstructSplitCuts(xCount, yCount, updated);
       } else {
         return [...previous, cut];
       }
@@ -160,21 +141,23 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
     });
   };
 
+  const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
   const baseGrid = useMemo(() => {
     {
       return drawGrid(
-        "black",
+        isDark ? "#F4F7F5" : "#0D0D0E",
         () => true,
         () => true
       );
     }
-  }, []);
+  }, [isDark]);
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} className="border">
       {baseGrid}
       {drawGrid(
-        "purple",
+        "#1296b6",
         (x, y) => {
           return (
             selected.find((it) => forSplitCut(it).containsVerticalLine(x, y)) !=
@@ -190,7 +173,7 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
         }
       )}
       {drawGrid(
-        "red",
+        "#DA4167",
         forSplitCut(highlighted).containsVerticalLine,
         forSplitCut(highlighted).containsHorizontalLine
       )}

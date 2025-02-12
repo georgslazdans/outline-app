@@ -1,4 +1,5 @@
 import Point from "@/lib/data/Point";
+import deepEqual from "@/lib/utils/Objects";
 
 type SplitCut = {
   start: Point;
@@ -118,6 +119,26 @@ export const splitCutUsing = (
     createVertical: splitCutFromVertical,
     createHorizontal: splitCutFromHorizontal,
   };
+};
+
+export const reconstructSplitCuts = (
+  xCount: number,
+  yCount: number,
+  splitCuts: SplitCut[]
+) => {
+  const result: SplitCut[] = [];
+  splitCuts.forEach((it) => {
+    const { x, y } = it.start;
+    if (forSplitCut(it).isVertical()) {
+      result.push(splitCutUsing(xCount, yCount, result).createVertical(x, y));
+    } else {
+      result.push(splitCutUsing(xCount, yCount, result).createHorizontal(x, y));
+    }
+  });
+  return result.filter(
+    (item, index, self) =>
+      index === self.findIndex((other) => deepEqual(item, other))
+  );
 };
 
 export default SplitCut;
