@@ -12,6 +12,7 @@ import AddButtonGroup from "./ui/action/add/AddButtonGroup";
 import EditContourGroup from "./ui/action/contour/EditContourGroup";
 import EditActionMenu, { editActionMenuOptionsFor } from "./ui/EditActionMenu";
 import ActionMenu from "../../ui/action/ActionMenu";
+import EditGridfinityGroup from "./ui/action/gridfinity/EditGridfinityGroup";
 
 type Props = {
   dictionary: Dictionary;
@@ -58,6 +59,10 @@ const EditToolbar = ({ dictionary }: Props) => {
               dictionary={dictionary}
               selectedItem={selectedItem}
             ></EditContourGroup>
+            <EditGridfinityGroup
+              dictionary={dictionary}
+              selectedItem={selectedItem}
+            ></EditGridfinityGroup>
           </ActionButtons>
         )}
 
@@ -80,6 +85,10 @@ const EditToolbar = ({ dictionary }: Props) => {
             dictionary={dictionary}
             selectedItem={selectedItem}
           ></EditContourGroup>
+          <EditGridfinityGroup
+            dictionary={dictionary}
+            selectedItem={selectedItem}
+          ></EditGridfinityGroup>
         </ActionButtons>
 
         {selectedItem && (

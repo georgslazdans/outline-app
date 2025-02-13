@@ -3,6 +3,7 @@ import _centerPoints from "./CenterPoints";
 import { _crudApi, _crudListOnlyApi, _crudSingleOnlyApi } from "./crud";
 import _mirrorPointsOnXAxis from "./MirrorPointsOnXAxis";
 import _scaleAlongNormal from "./ScaleAlongNormal";
+import _scaleAlongNormalList from "./ScaleAlongNormalList";
 import _scalePoints from "./ScalePoints";
 
 type ModificationFunction = (
@@ -13,7 +14,6 @@ const modificationApi = () => {
   return {
     centerPoints: _centerPoints,
     mirrorPointsOnXAxis: _mirrorPointsOnXAxis,
-    scaleAlongNormal: _scaleAlongNormal,
     scalePoints: _scalePoints,
     ..._crudApi(),
   };
@@ -21,12 +21,14 @@ const modificationApi = () => {
 
 const singleOnlyApi = () => {
   return {
+    scaleAlongNormal: _scaleAlongNormal,
     ..._crudSingleOnlyApi(),
   };
 };
 
 const listOnlyApi = () => {
   return {
+    scaleAlongNormal: _scaleAlongNormalList,
     ..._crudListOnlyApi(),
   };
 };

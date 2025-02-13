@@ -3,7 +3,6 @@
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import React, { useCallback } from "react";
-import { downloadFile } from "@/lib/utils/Download";
 import { useModelDataContext } from "../../ModelDataContext";
 import { Tooltip } from "react-tooltip";
 import { useModelLoadingIndicatorContext } from "../../cache/ModelLoadingIndicatorContext";
@@ -11,6 +10,7 @@ import { useErrorModal } from "@/components/error/ErrorContext";
 import { useResultContext } from "./ResultContext";
 import { useModelContext } from "@/components/editor/ModelContext";
 import exportNameOf from "@/lib/utils/ExportName";
+import downloadModelBlobs from "@/lib/export/ModelBlobs";
 
 type Props = {
   dictionary: Dictionary;
@@ -30,8 +30,8 @@ const ResultToolbar = ({ dictionary }: Props) => {
   const onStlDownload = useCallback(() => {
     setIsLoading(true);
     api?.downloadStl(modelData).then(
-      (blob) => {
-        downloadFile(blob as Blob, `${getExportName()}.stl`);
+      (blobs) => {
+        downloadModelBlobs(blobs, getExportName(), "stl")
         setIsLoading(false);
       },
       (error) => {
@@ -44,8 +44,8 @@ const ResultToolbar = ({ dictionary }: Props) => {
   const onStepDownload = useCallback(() => {
     setIsLoading(true);
     api?.downloadStep(modelData).then(
-      (blob) => {
-        downloadFile(blob as Blob, `${getExportName()}.step`);
+      (blobs) => {
+        downloadModelBlobs(blobs, getExportName(), "step")
         setIsLoading(false);
       },
       (error) => {

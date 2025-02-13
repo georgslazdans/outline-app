@@ -7,9 +7,13 @@ import { drawItem } from "./draw/Draw";
 import rotateModel from "./transform/RotateModel";
 import translateModel from "./transform/TranslateModel";
 import processBooleanOperation from "./transform/BooleanOperation";
+import cutModel from "./CutModel";
 
 const modelOf = (item: Item): ReplicadModelData | undefined => {
   let model;
+  if (item.type == ItemType.GridfinitySplit) {
+    return;
+  }
   if (item.type == ItemType.Group) {
     if (item.items.length > 0) {
       model = processItems(item.items)!;
@@ -42,12 +46,30 @@ const processItems = (items: Item[]) => {
   return base;
 };
 
-export const processModelData = (data: ModelData): ReplicadModelData => {
+const processModifications = (
+  data: ModelData,
+  result: ReplicadModelData
+): ReplicadModelData[] => {
+  const gridfinity = data.items.find((it) => it.type == ItemType.Gridfinity);
+  const params = gridfinity?.params;
+  const splitModification = gridfinity?.modifications.find(
+    (it) => it.type == ItemType.GridfinitySplit
+  );
+  if (params && splitModification && splitModification.cuts.length > 0) {
+    return cutModel(result, splitModification.cuts, params);
+  } else {
+    return [result];
+  }
+};
+
+export const processModelData = (data: ModelData): ReplicadModelData[] => {
   if (!data.items || data.items.length <= 0) {
     throw new Error("No items passed");
   }
   if (data.items[0].type != ItemType.Gridfinity) {
     console.warn("First item is not a gridfinity box!");
   }
-  return processItems(data.items)!;
+
+  const result = processItems(data.items)!;
+  return processModifications(data, result);
 };

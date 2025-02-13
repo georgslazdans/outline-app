@@ -4,11 +4,14 @@ enum ItemType {
   Gridfinity = "gridfinity",
   Group = "group",
   Text = "text",
+  GridfinitySplit = "gridfinity-split",
 }
 
 export const nameItemTypeOf = (item: ItemType): string => {
-  const itemType = item.valueOf();
-  return itemType.charAt(0).toUpperCase() + itemType.slice(1);
+  const nameParts = item.valueOf().split("-");
+  return nameParts.map(it => {
+    return it.charAt(0).toUpperCase() + it.slice(1);
+  }).join(" ");
 }
 
 export default ItemType;

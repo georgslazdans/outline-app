@@ -1,7 +1,7 @@
-import ReplicadResult from "@/lib/replicad/WorkerResult";
+import { ReplicadMeshData } from "@/lib/replicad/WorkerResult";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
 import newWorkerInstance from "../ReplicadWorker";
-import Item, { modelKeyOf, withoutItemData } from "@/lib/replicad/model/Item";
+import Item, { modelKeyOf } from "@/lib/replicad/model/Item";
 import { useModelLoadingIndicatorContext } from "./ModelLoadingIndicatorContext";
 import { useErrorModal } from "@/components/error/ErrorContext";
 
@@ -12,21 +12,21 @@ type Props = {
 };
 
 type WorkInstance = {
-  promise: Promise<ReplicadResult>;
+  promise: Promise<ReplicadMeshData>;
   cancel: () => void;
 };
 
 export const ModelCacheProvider = ({ children }: Props) => {
-  const cacheRef = useRef(new Map<string, ReplicadResult>());
+  const cacheRef = useRef(new Map<string, ReplicadMeshData>());
   const workInstancesRef = useRef<Map<string, WorkInstance>>(new Map());
   const { isLoading, setIsLoading } = useModelLoadingIndicatorContext();
   const { showError } = useErrorModal();
 
-  const addToCache = (key: string, result: ReplicadResult) => {
+  const addToCache = (key: string, result: ReplicadMeshData) => {
     cacheRef.current.set(key, result);
   };
 
-  const getFromCache = (key: string): ReplicadResult | undefined => {
+  const getFromCache = (key: string): ReplicadMeshData | undefined => {
     return cacheRef.current.get(key);
   };
 
@@ -65,9 +65,13 @@ export const ModelCacheProvider = ({ children }: Props) => {
     const promise = api
       .processItem(item)
       .then((result) => {
-        addToCache(key, result);
+        if(result.models.length != 1) {
+          throw Error("Multiple models for a single item!")
+        }
+        const meshData = result.models[0];
+        addToCache(key, meshData);
         cancel();
-        return result;
+        return meshData;
       });
 
     const instance = { promise, cancel };

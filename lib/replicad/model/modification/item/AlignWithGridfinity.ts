@@ -1,5 +1,5 @@
 import Item from "../../Item";
-import { gridfinityHeightOf } from "../../item/Gridfinity";
+import { gridfinityHeightOf } from "../../item/gridfinity/Gridfinity";
 import ModelData from "../../ModelData";
 import _parentTotalHeight from "../../queries/ParentTotalHeight";
 import _alignItem from "./AlignItem";

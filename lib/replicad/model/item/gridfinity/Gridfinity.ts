@@ -1,14 +1,16 @@
-import ModelData from "../ModelData";
-import ItemType from "../ItemType";
+import ModelData from "../../ModelData";
+import ItemType from "../../ItemType";
 import GridfinityParams from "./GridfinityParams";
-import Item from "../Item";
+import Item from "../../Item";
 import { v4 as randomUUID } from "uuid";
+import Modification from "./Modification";
 
 const HEIGHT_UNIT = 7;
 
 type Gridfinity = {
   type: ItemType.Gridfinity;
   params: GridfinityParams;
+  modifications: (Item & Modification)[];
 };
 
 export const gridfinityItemOf = (params: GridfinityParams): Item => {
@@ -17,6 +19,7 @@ export const gridfinityItemOf = (params: GridfinityParams): Item => {
     type: ItemType.Gridfinity,
     name: "Gridfinity",
     params: params,
+    modifications: [],
   };
 };
 

@@ -2,11 +2,7 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import ActionButton from "@/components/editor/ui/action/ActionButton";
-import ContourPoints, {
-  modifyContourList,
-} from "@/lib/data/contour/ContourPoints";
 import React from "react";
-import { TRASH_CAN_SVG } from "../../icon/GlobalIcons";
 import { usePointClickContext } from "../../../../contour/selection/PointClickContext";
 import PointClickMode from "../../../../contour/selection/PointClickMode";
 import { useEditorContext } from "@/components/editor/EditorContext";

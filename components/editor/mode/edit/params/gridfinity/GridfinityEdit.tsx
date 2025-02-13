@@ -2,17 +2,20 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import CheckboxField from "@/components/fields/CheckboxField";
-import GridfinityParams from "@/lib/replicad/model/item/GridfinityParams";
+import GridfinityParams from "@/lib/replicad/model/item/gridfinity/GridfinityParams";
 import React, { ChangeEvent, useCallback } from "react";
-import EditField from "../../EditField";
+import EditField from "../../../EditField";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import Gridfinity, {
   convertGridfinityHeightUnits,
-} from "@/lib/replicad/model/item/Gridfinity";
+} from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 import ModelData from "@/lib/replicad/model/ModelData";
+import ItemType from "@/lib/replicad/model/ItemType";
+import { SplitModification } from "@/lib/replicad/model/item/gridfinity/Modification";
+import { reconstructSplitCuts } from "@/lib/replicad/model/item/gridfinity/SplitCut";
 
 type Props = {
   dictionary: Dictionary;
@@ -25,22 +28,57 @@ const updateAlignedItems = (
   newParams: GridfinityParams
 ): ModelData => {
   const previousHeight = oldParams.height;
-  if (previousHeight != newParams.height) {
-    const { findAlignedItems } = forModelData(data);
-    const previouslyAlignedItems = findAlignedItems(
-      convertGridfinityHeightUnits(previousHeight)
-    );
+  const { findAlignedItems } = forModelData(data);
+  const previouslyAlignedItems = findAlignedItems(
+    convertGridfinityHeightUnits(previousHeight)
+  );
 
-    let result = data;
-    previouslyAlignedItems.forEach((id) => {
-      const { alignWithGridfinity, getById } = forModelData(result);
-      const item = getById(id);
-      result = alignWithGridfinity(item);
-    });
-    return result;
+  let result = data;
+  previouslyAlignedItems.forEach((id) => {
+    const { alignWithGridfinity, getById } = forModelData(result);
+    const item = getById(id);
+    result = alignWithGridfinity(item);
+  });
+  return result;
+};
+
+const updateSplitCuts = (
+  data: ModelData,
+  newParams: GridfinityParams
+): ModelData => {
+  const split = data.items
+    .find((it) => it.type == ItemType.Gridfinity)
+    ?.modifications.find((it) => it.type == ItemType.GridfinitySplit);
+  if (split) {
+    const { updateItem } = forModelData(data);
+    const newSplit: Item & SplitModification = {
+      ...split,
+      cuts: reconstructSplitCuts(newParams.xSize, newParams.ySize, split.cuts),
+    };
+    return updateItem(newSplit);
   } else {
     return data;
   }
+};
+
+const handleParamsChange = (
+  data: ModelData,
+  oldParams: GridfinityParams,
+  newParams: GridfinityParams
+): ModelData => {
+  const previousHeight = oldParams.height;
+  let modelData = data;
+  if (previousHeight != newParams.height) {
+    modelData = updateAlignedItems(data, oldParams, newParams);
+  }
+  if (
+    oldParams.xSize != newParams.xSize ||
+    oldParams.ySize != newParams.ySize
+  ) {
+    modelData = updateSplitCuts(data, newParams);
+  }
+
+  return modelData;
 };
 
 const GridfinityEdit = ({ dictionary, item }: Props) => {
@@ -54,7 +92,7 @@ const GridfinityEdit = ({ dictionary, item }: Props) => {
         ...item,
         params: newParams,
       });
-      updatedData = updateAlignedItems(updatedData, params, newParams);
+      updatedData = handleParamsChange(updatedData, params, newParams);
       setModelData(updatedData, EditorHistoryType.OBJ_UPDATED, item.id);
     },
     [item, modelData, params, setModelData]

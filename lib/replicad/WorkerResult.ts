@@ -1,10 +1,13 @@
 import { ShapeMesh } from "replicad";
 import { ReplicadMeshedEdges } from "replicad-threejs-helper";
 
-type ReplicadResult = {
+export type ReplicadMeshData = {
   faces: ShapeMesh;
   edges: ReplicadMeshedEdges;
-  messageId: number;
+};
+type ReplicadResult = {
+  messageId: string;
+  models: ReplicadMeshData[];
 };
 
 export default ReplicadResult;

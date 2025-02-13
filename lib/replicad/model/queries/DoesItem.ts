@@ -48,6 +48,14 @@ const doesItemFor = (data: ModelData) => {
               const result = checkItems(group.items);
               if (result) return true;
             }
+
+            const gridfinity = items.find(
+              (it) => it.type == ItemType.Gridfinity
+            );
+            if (gridfinity) {
+              const result = checkItems(gridfinity.modifications);
+              if (result) return true;
+            }
           }
           return false;
         };

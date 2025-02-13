@@ -5,7 +5,7 @@ import { useEditorContext } from "@/components/editor/EditorContext";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
-import { gridfinityHeightOf } from "@/lib/replicad/model/item/Gridfinity";
+import { gridfinityHeightOf } from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import React from "react";
 import ActionButton from "../../../../../ui/action/ActionButton";

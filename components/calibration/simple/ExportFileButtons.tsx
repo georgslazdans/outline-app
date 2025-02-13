@@ -3,9 +3,9 @@
 import { Dictionary } from "@/app/dictionaries";
 import Button from "@/components/Button";
 import { useDetails } from "@/context/DetailsContext";
-import Dxf from "@/lib/vector/dxf/Dxf";
+import Dxf from "@/lib/export/dxf/Dxf";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
-import Svg from "@/lib/vector/svg/Svg";
+import Svg from "@/lib/export/svg/Svg";
 import React, { useCallback } from "react";
 import { useResultContext } from "../ResultContext";
 import StepName from "@/lib/opencv/processor/steps/StepName";

@@ -1,6 +1,6 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { useCallback } from "react";
-import GridfinityEdit from "./GridfinityEdit";
+import GridfinityEdit from "./gridfinity/GridfinityEdit";
 import GroupEdit from "./GroupEdit";
 import PrimitiveEdit from "./primitive/PrimitiveEdit";
 import ContourEdit from "./ShadowEdit";
@@ -10,6 +10,7 @@ import Item from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import TextItemEdit from "./TextItemEdit";
+import SplitGridfinityBoxEdit from "./gridfinity/SplitGridfinityBoxEdit";
 
 type Props = {
   dictionary: Dictionary;
@@ -46,10 +47,7 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
       case ItemType.Primitive:
         return (
           <>
-            <PrimitiveEdit
-              dictionary={dictionary}
-              item={item}
-            ></PrimitiveEdit>
+            <PrimitiveEdit dictionary={dictionary} item={item}></PrimitiveEdit>
           </>
         );
       case ItemType.Group:
@@ -71,6 +69,13 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
               onItemChange={(params) => onItemChanged(item.id, params)}
             ></TextItemEdit>
           </>
+        );
+      case ItemType.GridfinitySplit:
+        return (
+          <SplitGridfinityBoxEdit
+            item={item}
+            onItemChange={(params) => onItemChanged(item.id, params)}
+          ></SplitGridfinityBoxEdit>
         );
     }
   };

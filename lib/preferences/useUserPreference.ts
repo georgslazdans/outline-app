@@ -37,7 +37,7 @@ const onPreferenceChanged = (
   }
 };
 
-const INITIALIZATION_IN_FLIGHT: Record<
+const DB_REQUEST_CACHE: Record<
   string,
   Promise<PreferenceEntry> | null
 > = {};
@@ -85,10 +85,10 @@ export const useUserPreference = (
   );
 
   useEffect(() => {
-    let promise = INITIALIZATION_IN_FLIGHT[userPreference];
+    let promise = DB_REQUEST_CACHE[userPreference];
     if (promise == null) {
       promise = initializeFromDb(userPreference, getByID, add);
-      INITIALIZATION_IN_FLIGHT[userPreference] = promise;
+      DB_REQUEST_CACHE[userPreference] = promise;
     }
     promise.then((entry) => setPreferenceEntry(entry));
   }, [add, getByID, userPreference]);
@@ -106,6 +106,9 @@ export const useUserPreference = (
     };
     update(updatedEntry).then(
       () => {
+        DB_REQUEST_CACHE[userPreference] = new Promise((resolve, _) =>
+          resolve(updatedEntry)
+        );
         setPreferenceEntry(updatedEntry);
         onPreferenceChanged(userPreference, updatedEntry.value);
       },
