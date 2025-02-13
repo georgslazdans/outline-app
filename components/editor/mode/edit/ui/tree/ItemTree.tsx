@@ -32,7 +32,7 @@ const ItemTree = ({ dictionary }: Props) => {
           localIndex: localIndex,
         });
         localIndex += 1;
-        if (item.type == ItemType.Gridfinity) {
+        if (item.type == ItemType.Gridfinity && item.modifications) {
           processGroup(item.modifications, groupLevel + 1);
         }
         if (item.type == ItemType.Group) {
@@ -48,7 +48,7 @@ const ItemTree = ({ dictionary }: Props) => {
     const item = modelData.items.find(
       (it) => it.type == ItemType.Gridfinity
     ) as Item & Gridfinity;
-    if (item) {
+    if (item && item.modifications) {
       const modificationIds = item.modifications.map((it) => it.id);
       return [item.id, ...modificationIds];
     } else {

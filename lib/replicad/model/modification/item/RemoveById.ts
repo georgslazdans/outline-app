@@ -1,5 +1,4 @@
 import Item from "../../Item";
-import Gridfinity from "../../item/gridfinity/Gridfinity";
 import ItemType from "../../ItemType";
 
 const deleteById = (id: string, items: Item[]): Item[] => {
@@ -13,11 +12,10 @@ const deleteById = (id: string, items: Item[]): Item[] => {
             ...it,
             items: deleteById(id, it.items),
           };
-        } else if ((it.type == ItemType.Gridfinity)) {
-          const item = it as Gridfinity;
+        } else if (it.type == ItemType.Gridfinity && it.modifications) {
           return {
-            ...item,
-            modifications: deleteById(id, item.modifications),
+            ...it,
+            modifications: deleteById(id, it.modifications),
           };
         } else {
           return it;

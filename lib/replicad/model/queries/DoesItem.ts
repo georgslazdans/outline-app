@@ -53,7 +53,7 @@ const doesItemFor = (data: ModelData) => {
             const gridfinity = items.find(
               (it) => it.type == ItemType.Gridfinity
             ) as Item & Gridfinity;
-            if (gridfinity) {
+            if (gridfinity && gridfinity.modifications) {
               const result = checkItems(gridfinity.modifications);
               if (result) return true;
             }

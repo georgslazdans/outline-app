@@ -14,15 +14,15 @@ type Props = {
 };
 
 const EditGridfinityGroup = ({ dictionary, selectedItem }: Props) => {
-  const isContour = () => {
+  const canAddModification = () => {
     return (
       selectedItem?.type == ItemType.Gridfinity &&
-      selectedItem.modifications.length == 0
+      (!selectedItem.modifications || selectedItem.modifications.length == 0)
     );
   };
   return (
     <>
-      {selectedItem && isContour() && (
+      {selectedItem && canAddModification() && (
         <ActionGroup dictionary={dictionary} name={"Gridfinity"}>
           <SplitGridfinityBox
             dictionary={dictionary}

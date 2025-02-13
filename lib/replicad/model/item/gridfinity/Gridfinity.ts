@@ -10,10 +10,12 @@ const HEIGHT_UNIT = 7;
 type Gridfinity = {
   type: ItemType.Gridfinity;
   params: GridfinityParams;
-  modifications: (Item & Modification)[];
+  modifications?: (Item & Modification)[];
 };
 
-export const gridfinityItemOf = (params: GridfinityParams): Item => {
+export const gridfinityItemOf = (
+  params: GridfinityParams
+): Item & Gridfinity => {
   return {
     id: randomUUID(),
     type: ItemType.Gridfinity,

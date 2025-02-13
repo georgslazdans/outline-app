@@ -55,7 +55,7 @@ const processModifications = (
     (it) => it.type == ItemType.Gridfinity
   ) as Item & Gridfinity;
   const params = gridfinity?.params;
-  const splitModification = gridfinity?.modifications.find(
+  const splitModification = gridfinity?.modifications?.find(
     (it) => it.type == ItemType.GridfinitySplit
   );
   if (params && splitModification && splitModification.cuts.length > 0) {
