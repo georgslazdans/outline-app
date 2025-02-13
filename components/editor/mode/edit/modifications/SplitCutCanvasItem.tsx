@@ -27,8 +27,7 @@ const SplitCutCanvasItem = () => {
   }
 
   const hasSeparateHighlight =
-    highlighted && selected.find((it) => deepEqual(it, selected)) == null;
-
+    highlighted && selected.find((it) => deepEqual(it, highlighted)) == null;
   return (
     <>
       {selected.map((it, index) => {

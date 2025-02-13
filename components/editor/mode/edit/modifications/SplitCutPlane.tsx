@@ -5,7 +5,7 @@ import SplitCut, {
 } from "@/lib/replicad/model/item/gridfinity/SplitCut";
 import { toRadians } from "@/lib/utils/Math";
 import { useThree } from "@react-three/fiber";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   BufferGeometry,
   DoubleSide,
@@ -56,25 +56,40 @@ type Props = {
   splitCut: SplitCut;
   gridfinityParams: GridfinityParams;
 };
-const ThreejsPlane = function ThreejsPlane({
+const ThreejsPlane = ({
   color,
   opacity,
   selected,
   splitCut,
   gridfinityParams,
-}: Props) {
+}: Props) => {
   const { invalidate } = useThree();
+  const [isReady, setIsReady] = useState(false);
   const body = useRef<BufferGeometry>();
   const lines = useRef<BufferGeometry>();
 
+  useEffect(() => {
+    setIsReady(false);
+  }, [gridfinityParams, splitCut]);
+
+  const plane = useMemo(() => {
+    const planeGeometry = planeOf(splitCut, gridfinityParams);
+    return { geometry: planeGeometry, edges: new EdgesGeometry(planeGeometry) };
+  }, [gridfinityParams, splitCut]);
+
   useLayoutEffect(() => {
-    const faces = planeOf(splitCut, gridfinityParams);
-    body.current = faces;
-    lines.current = new EdgesGeometry(faces);
+    const { geometry, edges } = plane;
+    body.current = geometry;
+    lines.current = edges;
 
-    invalidate();
-  }, [gridfinityParams, invalidate, splitCut]);
+    setIsReady(true);
+  }, [plane]);
 
+  useEffect(() => {
+    if (isReady) {
+      requestAnimationFrame(() => invalidate());
+    }
+  }, [invalidate, isReady]);
   const outlineColor = selected ? "#DA4167" : "#1296b6";
 
   return (

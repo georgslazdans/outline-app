@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import HorizontalLine from "./HorizontalLine";
 import VerticalLine from "./VerticalLine";
 import SplitCut, {
@@ -36,111 +36,144 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
   const { highlighted, setHighlighted, selected, setSelected } =
     useGridfinitySplitContext();
 
-  const onVerticalHighlight = (x: number, y: number) => {
-    const existing = selected.find((it) =>
-      forSplitCut(it).containsVerticalLine(x, y)
-    );
-    if (existing) {
-      setHighlighted(existing);
-    } else {
-      setHighlighted(
-        splitCutUsing(xCount, yCount, selected).createVertical(x, y)
+  const onVerticalHighlight = useCallback(
+    (x: number, y: number) => {
+      const existing = selected.find((it) =>
+        forSplitCut(it).containsVerticalLine(x, y)
       );
-    }
-  };
+      if (existing) {
+        setHighlighted({ splitCut: existing, mousePoint: { x, y } });
+      } else {
+        const cut = splitCutUsing(xCount, yCount, selected).createVertical(
+          x,
+          y
+        );
+        setHighlighted({
+          splitCut: cut,
+          mousePoint: { x, y },
+        });
+      }
+    },
+    [selected, setHighlighted, xCount, yCount]
+  );
 
-  const onHorizontalHighlight = (x: number, y: number) => {
-    const existing = selected.find((it) =>
-      forSplitCut(it).containsHorizontalLine(x, y)
-    );
-    if (existing) {
-      setHighlighted(existing);
-    } else {
-      setHighlighted(
-        splitCutUsing(xCount, yCount, selected).createHorizontal(x, y)
+  const onHorizontalHighlight = useCallback(
+    (x: number, y: number) => {
+      const existing = selected.find((it) =>
+        forSplitCut(it).containsHorizontalLine(x, y)
       );
-    }
-  };
+      if (existing) {
+        setHighlighted({ splitCut: existing, mousePoint: { x, y } });
+      } else {
+        const cut = splitCutUsing(xCount, yCount, selected).createHorizontal(
+          x,
+          y
+        );
+        setHighlighted({ splitCut: cut, mousePoint: { x, y } });
+      }
+    },
+    [selected, setHighlighted, xCount, yCount]
+  );
 
-  const updateSelected = (cut: SplitCut) => {
-    const existing = selected.find((it) => deepEqual(it, cut));
-    if (existing) {
-      const updated = selected.filter((it) => it != existing);
-      setSelected(reconstructSplitCuts(xCount, yCount, updated));
-    } else {
-      setSelected([...selected, cut]);
-    }
-  };
+  const updateSelected = useCallback(
+    (cut: SplitCut) => {
+      const existing = selected.find((it) => deepEqual(it, cut));
+      if (existing) {
+        const updated = selected.filter((it) => it != existing);
+        setSelected(reconstructSplitCuts(xCount, yCount, updated));
+      } else {
+        setSelected([...selected, cut]);
+      }
+    },
+    [selected, setSelected, xCount, yCount]
+  );
 
-  const onVerticalSelect = (x: number, y: number) => {
-    const existing = selected.find((it) =>
-      forSplitCut(it).containsVerticalLine(x, y)
-    );
-    if (existing) {
-      updateSelected(existing);
-    } else {
-      updateSelected(
-        splitCutUsing(xCount, yCount, selected).createVertical(x, y)
+  const onVerticalSelect = useCallback(
+    (x: number, y: number) => {
+      const existing = selected.find((it) =>
+        forSplitCut(it).containsVerticalLine(x, y)
       );
-    }
-  };
+      if (existing) {
+        updateSelected(existing);
+      } else {
+        updateSelected(
+          splitCutUsing(xCount, yCount, selected).createVertical(x, y)
+        );
+      }
+    },
+    [selected, updateSelected, xCount, yCount]
+  );
 
-  const onHorizontalSelect = (x: number, y: number) => {
-    const existing = selected.find((it) =>
-      forSplitCut(it).containsHorizontalLine(x, y)
-    );
-    if (existing) {
-      updateSelected(existing);
-    } else {
-      updateSelected(
-        splitCutUsing(xCount, yCount, selected).createHorizontal(x, y)
+  const onHorizontalSelect = useCallback(
+    (x: number, y: number) => {
+      const existing = selected.find((it) =>
+        forSplitCut(it).containsHorizontalLine(x, y)
       );
-    }
-  };
+      if (existing) {
+        updateSelected(existing);
+      } else {
+        updateSelected(
+          splitCutUsing(xCount, yCount, selected).createHorizontal(x, y)
+        );
+      }
+    },
+    [selected, updateSelected, xCount, yCount]
+  );
 
-  const onHighlightLeave = () => {
+  const onHighlightLeave = useCallback(() => {
     setHighlighted(undefined);
-  };
+  }, [setHighlighted]);
 
-  const drawGrid = (
-    color: string,
-    drawVertical: (x: number, y: number) => boolean,
-    drawHorizontal: (x: number, y: number) => boolean
-  ) => {
-    return asGrid(xCount, yCount).forEach((x, y) => {
-      return (
-        <>
-          {drawVertical(x, y) && (
-            <VerticalLine
-              key={`v-${x}-${y}-${color}`}
-              x={x}
-              y={y}
-              xCount={xCount}
-              yCount={yCount}
-              color={color}
-              onHighlight={onVerticalHighlight}
-              onHighlightLeave={onHighlightLeave}
-              onSelect={onVerticalSelect}
-            ></VerticalLine>
-          )}
+  const drawGrid = useCallback(
+    (
+      color: string,
+      drawVertical: (x: number, y: number) => boolean,
+      drawHorizontal: (x: number, y: number) => boolean
+    ) => {
+      return asGrid(xCount, yCount).forEach((x, y) => {
+        return (
+          <>
+            {drawVertical(x, y) && (
+              <VerticalLine
+                key={`v-${x}-${y}-${color}`}
+                x={x}
+                y={y}
+                xCount={xCount}
+                yCount={yCount}
+                color={color}
+                onHighlight={onVerticalHighlight}
+                onHighlightLeave={onHighlightLeave}
+                onSelect={onVerticalSelect}
+              ></VerticalLine>
+            )}
 
-          {drawHorizontal(x, y) && (
-            <HorizontalLine
-              key={`h-${x}-${y}-${color}`}
-              x={x}
-              y={y}
-              xCount={xCount}
-              yCount={yCount}
-              color={color}
-              onHighlight={onHorizontalHighlight}
-              onHighlightLeave={onHighlightLeave}
-              onSelect={onHorizontalSelect}
-            ></HorizontalLine>
-          )}
-        </>
-      );
-    });
-  };
+            {drawHorizontal(x, y) && (
+              <HorizontalLine
+                key={`h-${x}-${y}-${color}`}
+                x={x}
+                y={y}
+                xCount={xCount}
+                yCount={yCount}
+                color={color}
+                onHighlight={onHorizontalHighlight}
+                onHighlightLeave={onHighlightLeave}
+                onSelect={onHorizontalSelect}
+              ></HorizontalLine>
+            )}
+          </>
+        );
+      });
+    },
+    [
+      onHighlightLeave,
+      onHorizontalHighlight,
+      onHorizontalSelect,
+      onVerticalHighlight,
+      onVerticalSelect,
+      xCount,
+      yCount,
+    ]
+  );
 
   const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -152,7 +185,7 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
         () => true
       );
     }
-  }, [isDark]);
+  }, [drawGrid, isDark]);
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} className="border scale-y-[-1]">
