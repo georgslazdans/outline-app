@@ -63,15 +63,13 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
   };
 
   const updateSelected = (cut: SplitCut) => {
-    setSelected((previous) => {
-      const existing = previous.find((it) => deepEqual(it, cut));
-      if (existing) {
-        const updated = previous.filter((it) => it != existing);
-        return reconstructSplitCuts(xCount, yCount, updated);
-      } else {
-        return [...previous, cut];
-      }
-    });
+    const existing = selected.find((it) => deepEqual(it, cut));
+    if (existing) {
+      const updated = selected.filter((it) => it != existing);
+      setSelected(reconstructSplitCuts(xCount, yCount, updated));
+    } else {
+      setSelected([...selected, cut]);
+    }
   };
 
   const onVerticalSelect = (x: number, y: number) => {
@@ -157,7 +155,7 @@ const GridfinityGrid = ({ xCount, yCount }: Props) => {
   }, [isDark]);
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="border">
+    <svg viewBox={`0 0 ${width} ${height}`} className="border scale-y-[-1]">
       {baseGrid}
       {drawGrid(
         "#1296b6",

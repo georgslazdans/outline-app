@@ -20,7 +20,7 @@ type GridfinitySplitContextType = {
   setHighlighted: React.Dispatch<React.SetStateAction<SplitCut | undefined>>;
 
   selected: SplitCut[];
-  setSelected: React.Dispatch<React.SetStateAction<SplitCut[]>>;
+  setSelected: (splitCuts: SplitCut[]) => void;
 };
 
 const GridfinitySplitContext = createContext<
@@ -49,23 +49,21 @@ export const GridfinitySplitContextProvider = ({
 
   useEffect(() => {
     const split = getSplitItem(modelData);
-    if (split && split.cuts.length > 0 && selected.length == 0) {
+    if (split && !deepEqual(split.cuts, selected)) {
       setSelected(split.cuts);
     }
-  }, [modelData, selected.length]);
+  }, [modelData, selected]);
 
-  useEffect(() => {
+  const updateSelected = (splitCuts: SplitCut[]) => {
     const { updateItem } = forModelData(modelData);
     const split = getSplitItem(modelData);
-    if (split && !deepEqual(split.cuts, selected)) {
-      const updatedSplit = { ...split, cuts: selected };
-      setModelData(
-        updateItem(updatedSplit),
-        EditorHistoryType.OBJ_UPDATED,
-        updatedSplit.id
-      );
-    }
-  }, [modelData, selected, setModelData]);
+    const updatedSplit = { ...split, cuts: splitCuts };
+    setModelData(
+      updateItem(updatedSplit),
+      EditorHistoryType.OBJ_UPDATED,
+      updatedSplit.id
+    );
+  };
 
   return (
     <GridfinitySplitContext.Provider
@@ -73,7 +71,7 @@ export const GridfinitySplitContextProvider = ({
         highlighted: highlighted,
         setHighlighted: setHighlighted,
         selected: selected,
-        setSelected: setSelected,
+        setSelected: updateSelected,
       }}
     >
       {children}

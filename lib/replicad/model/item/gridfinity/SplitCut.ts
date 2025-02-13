@@ -130,9 +130,15 @@ export const reconstructSplitCuts = (
   splitCuts.forEach((it) => {
     const { x, y } = it.start;
     if (forSplitCut(it).isVertical()) {
-      result.push(splitCutUsing(xCount, yCount, result).createVertical(x, y));
+      if (it.start.x < xCount) {
+        result.push(splitCutUsing(xCount, yCount, result).createVertical(x, y));
+      }
     } else {
-      result.push(splitCutUsing(xCount, yCount, result).createHorizontal(x, y));
+      if (it.start.y < yCount) {
+        result.push(
+          splitCutUsing(xCount, yCount, result).createHorizontal(x, y)
+        );
+      }
     }
   });
   return result.filter(
