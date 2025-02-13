@@ -7,7 +7,7 @@ import { useEditorContext } from "../../EditorContext";
 import Item, { modelKeyOf } from "@/lib/replicad/model/Item";
 import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelCache } from "../../cache/ModelCacheContext";
-import ReplicadResult from "@/lib/replicad/WorkerResult";
+import { ReplicadMeshData } from "@/lib/replicad/WorkerResult";
 import TransformControls from "./three/TransformControls";
 import { useModelDataContext } from "../../ModelDataContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
@@ -28,7 +28,7 @@ const CanvasItem = memo(function CanvasItem({
   const { modelData } = useModelDataContext();
   const { wireframe, selectedId } = useEditorContext();
   const { getModel } = useModelCache();
-  const [model, setModel] = useState<ReplicadResult>();
+  const [model, setModel] = useState<ReplicadMeshData>();
   const [modelKey, setModelKey] = useState<string>();
   const { showError } = useErrorModal();
 

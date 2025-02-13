@@ -39,15 +39,19 @@ const ResultViewer = ({ dictionary }: Props) => {
 
   return (
     <>
-      {modelResult && (
-        <ReplicadMesh
-          faces={modelResult.faces}
-          edges={modelResult.edges}
-          wireframe={wireframe}
-          opacity={1}
-          color="#5a8296"
-        ></ReplicadMesh>
-      )}
+      {modelResult &&
+        modelResult.models.map((meshData, index) => {
+          return (
+            <ReplicadMesh
+              key={index}
+              faces={meshData.faces}
+              edges={meshData.edges}
+              wireframe={wireframe}
+              opacity={1}
+              color="#5a8296"
+            ></ReplicadMesh>
+          );
+        })}
     </>
   );
 };

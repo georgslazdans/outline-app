@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo } from "react";
-import Svg from "@/lib/vector/svg/Svg";
+import Svg from "@/lib/export/svg/Svg";
 import {
   centerPoints,
   Context,
