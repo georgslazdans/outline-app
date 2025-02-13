@@ -19,6 +19,7 @@ import Item from "@/lib/replicad/model/Item";
 import deepEqual from "@/lib/utils/Objects";
 import ModelData from "@/lib/replicad/model/ModelData";
 import Point from "@/lib/data/Point";
+import Gridfinity from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 
 export type highlight = {
   splitCut: SplitCut;
@@ -40,7 +41,7 @@ const GridfinitySplitContext = createContext<
 const getSplitItem = (modelData: ModelData) => {
   const gridfinity = modelData.items.find(
     (it) => it.type == ItemType.Gridfinity
-  );
+  ) as Item & Gridfinity;
   const split = gridfinity?.modifications.find(
     (it) => it.type == ItemType.GridfinitySplit
   ) as Item & SplitModification;
@@ -66,9 +67,10 @@ export const GridfinitySplitContextProvider = ({
 
   const updateHighlight = useCallback(
     (modelData: ModelData, splitCuts: SplitCut[]) => {
-      const gridfinityParams = modelData.items.find(
+      const gridfinity = modelData.items.find(
         (it) => it.type == ItemType.Gridfinity
-      )?.params;
+      ) as Item & Gridfinity;
+      const gridfinityParams = gridfinity?.params;
       if (gridfinityParams && highlighted) {
         const { xSize, ySize } = gridfinityParams;
         const { x, y } = highlighted.mousePoint;

@@ -8,7 +8,8 @@ const COLORS = {
   [ItemType.Text]: "",
 };
 const getColorFor = (type: ItemType) => {
-  if (type != ItemType.Group) return `${COLORS[type]}`;
+  if (type != ItemType.Group && type != ItemType.GridfinitySplit)
+    return `${COLORS[type]}`;
 };
 
 // "black":"#0D0D0E",

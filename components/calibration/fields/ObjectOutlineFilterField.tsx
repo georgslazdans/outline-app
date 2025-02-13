@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useResultContext } from "../ResultContext";
 
 type Props = {

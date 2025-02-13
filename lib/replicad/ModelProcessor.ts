@@ -8,6 +8,7 @@ import rotateModel from "./transform/RotateModel";
 import translateModel from "./transform/TranslateModel";
 import processBooleanOperation from "./transform/BooleanOperation";
 import cutModel from "./CutModel";
+import Gridfinity from "./model/item/gridfinity/Gridfinity";
 
 const modelOf = (item: Item): ReplicadModelData | undefined => {
   let model;
@@ -50,7 +51,9 @@ const processModifications = (
   data: ModelData,
   result: ReplicadModelData
 ): ReplicadModelData[] => {
-  const gridfinity = data.items.find((it) => it.type == ItemType.Gridfinity);
+  const gridfinity = data.items.find(
+    (it) => it.type == ItemType.Gridfinity
+  ) as Item & Gridfinity;
   const params = gridfinity?.params;
   const splitModification = gridfinity?.modifications.find(
     (it) => it.type == ItemType.GridfinitySplit
