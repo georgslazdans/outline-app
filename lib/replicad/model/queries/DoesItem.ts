@@ -1,5 +1,6 @@
 import { forModelData } from "../ForModelData";
 import Item from "../Item";
+import Gridfinity from "../item/gridfinity/Gridfinity";
 import ItemGroup from "../item/ItemGroup";
 import ItemType from "../ItemType";
 import ModelData from "../ModelData";
@@ -51,7 +52,7 @@ const doesItemFor = (data: ModelData) => {
 
             const gridfinity = items.find(
               (it) => it.type == ItemType.Gridfinity
-            );
+            ) as Item & Gridfinity;
             if (gridfinity) {
               const result = checkItems(gridfinity.modifications);
               if (result) return true;

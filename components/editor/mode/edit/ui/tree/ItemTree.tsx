@@ -12,6 +12,7 @@ import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import GroupedItem from "./GroupedItem";
 import TreeElementList from "./TreeElementList";
 import ModelData from "@/lib/replicad/model/ModelData";
+import Gridfinity from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 
 type Props = {
   dictionary: Dictionary;
@@ -44,7 +45,9 @@ const ItemTree = ({ dictionary }: Props) => {
   }, [modelData]);
 
   const gridfinityIds: string[] = useMemo(() => {
-    const item = modelData.items.find((it) => it.type == ItemType.Gridfinity);
+    const item = modelData.items.find(
+      (it) => it.type == ItemType.Gridfinity
+    ) as Item & Gridfinity;
     if (item) {
       const modificationIds = item.modifications.map((it) => it.id);
       return [item.id, ...modificationIds];

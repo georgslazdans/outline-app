@@ -7,6 +7,8 @@ import { useEditorContext } from "@/components/editor/EditorContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import ItemType from "@/lib/replicad/model/ItemType";
 import deepEqual from "@/lib/utils/Objects";
+import Item from "@/lib/replicad/model/Item";
+import Gridfinity from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 
 const SplitCutCanvasItem = () => {
   const { modelData } = useModelDataContext();
@@ -15,7 +17,7 @@ const SplitCutCanvasItem = () => {
 
   const gridfinity = modelData.items.find(
     (it) => it.type == ItemType.Gridfinity
-  );
+  ) as Item & Gridfinity;
 
   const selectedObject = forModelData(modelData).findById(selectedId);
   if (
