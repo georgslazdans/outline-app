@@ -49,7 +49,7 @@ const updateSplitCuts = (
   const gridfinity = data.items.find(
     (it) => it.type == ItemType.Gridfinity
   ) as Item & Gridfinity;
-  const split = gridfinity?.modifications.find(
+  const split = gridfinity?.modifications?.find(
     (it) => it.type == ItemType.GridfinitySplit
   );
   if (split) {

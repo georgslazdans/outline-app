@@ -12,7 +12,7 @@ const updateItem = (item: Item, items: Item[]): Item[] => {
           ...it,
           items: updateItem(item, it.items),
         };
-      } else if (it.type == ItemType.Gridfinity) {
+      } else if (it.type == ItemType.Gridfinity && it.modifications) {
         return {
           ...it,
           modifications: updateItem(item, it.modifications) as (Item &

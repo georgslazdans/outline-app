@@ -17,7 +17,7 @@ const findById = (data: ModelData, id?: string) => {
           return result;
         }
       }
-      if (item.type == ItemType.Gridfinity) {
+      if (item.type == ItemType.Gridfinity && item.modifications) {
         const result = findInList(item.modifications);
         if (result) {
           return result;
