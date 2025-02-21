@@ -22,7 +22,7 @@ const AutoScaleAlongNormal = () => {
 
   const onAutoScaleValueChanged = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.value) {
-      const value = Number.parseInt(event.target.value);
+      const value = Number.parseFloat(event.target.value);
       updateAutoScaleValue(value);
     }
   };
@@ -41,6 +41,11 @@ const AutoScaleAlongNormal = () => {
           name={UserPreference.AUTO_RERUN_ON_SETTING_CHANGE_DEBOUNCE_TIME}
           value={autoScaleValue as number}
           onChange={onAutoScaleValueChanged}
+          numberRange={{
+            min: -9999999,
+            max: 99999999,
+            step: 0.05,
+          }}
         ></NumberField>
       )}
     </>
