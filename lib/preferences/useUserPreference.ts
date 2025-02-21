@@ -37,10 +37,7 @@ const onPreferenceChanged = (
   }
 };
 
-const DB_REQUEST_CACHE: Record<
-  string,
-  Promise<PreferenceEntry> | null
-> = {};
+const DB_REQUEST_CACHE: Record<string, Promise<PreferenceEntry> | null> = {};
 
 const initializeFromDb = (
   userPreference: UserPreference,
