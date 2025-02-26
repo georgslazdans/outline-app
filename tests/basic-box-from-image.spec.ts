@@ -39,6 +39,10 @@ test("E2E flow: upload image from home page", async ({ page }) => {
   await test.step("Await image processing and change threshold", async () => {
     await waitForImageProcessing();
 
+    await page.getByLabel("Select Paper Outline").fill("1");
+
+    await waitForImageProcessing();
+
     await page.getByRole("heading", { name: "Find Object" }).click();
     await page.getByLabel("Threshold Type").selectOption("binary");
     await waitForImageProcessing();
@@ -88,6 +92,11 @@ test("E2E flow: upload image from home page", async ({ page }) => {
     if (!downloadPath) {
       throw new Error("Failed to download the file.");
     }
+
+    // // Define the new file path in the same directory
+    // const newFilePath = path.resolve(__dirname, "downloaded.svg");
+    // // Copy the downloaded file to "downloaded.step"
+    // await fs.promises.copyFile(downloadPath, newFilePath);
 
     const downloadedContent = await fs.promises.readFile(downloadPath, "utf-8");
 
