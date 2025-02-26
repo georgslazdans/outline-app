@@ -64,7 +64,8 @@ const bilateralFilterStep: ProcessingStep<BilateralFilterSettings> = {
       display: displaySettings,
       min: 3,
       max: 50,
-      tooltip: "Warning: Values above 9 are slow, but greatly help with noisy pictures."
+      tooltip:
+        "Warning: High values are slow, but greatly help with noisy pictures. This step is reused for object outline.",
     },
     sigmaColor: {
       type: "number",
