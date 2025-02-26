@@ -27,11 +27,11 @@ const processImage = async (
       imageData: imageData,
       imageColorSpace: ColorSpace.RGBA,
     });
-    
+
     const image = imageOf(imageData, ColorSpace.RGBA);
 
     const steps = Steps.forSettings(settings);
-    processorOf(steps, settings, handleProcessing, signal)
+    await processorOf(steps, settings, handleProcessing, signal)
       .withPreviousSteps([inputStepOf(imageData)])
       .process(image);
 

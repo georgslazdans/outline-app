@@ -32,7 +32,9 @@ export const useOpenCvWorker = (
 ) => {
   const { detailsContext, contextImageData } = useDetails();
   const {
+    stepResults,
     setStepResults,
+    outdatedSteps,
     setOutdatedSteps,
     updateObjectOutlines,
     updatePaperOutlines,
@@ -97,7 +99,11 @@ export const useOpenCvWorker = (
   const updateCurrentStepData = useCallback(
     (stepName: StepName) => {
       setErrorMessage(undefined);
-      const workData = stepWorkOf(stepName, detailsContext?.settings);
+      const workData = stepWorkOf(
+        stepName,
+        detailsContext?.settings,
+        stepResults
+      );
       setPreviousSettings(workData.settings);
       const resultHandler = Comlink.proxy(handleWorkerResult);
       openCvApi.processOutlineStep(workData, resultHandler);
@@ -109,6 +115,7 @@ export const useOpenCvWorker = (
       openCvApi,
       setErrorMessage,
       setOutdatedSteps,
+      stepResults,
     ]
   );
 
@@ -135,7 +142,10 @@ export const useOpenCvWorker = (
     if (!previousSettings) {
       updateAllWorkData();
     } else if (!deepEqual(previousSettings, currentSettings)) {
-      let stepName = firstChangedStep(previousSettings, currentSettings);
+      let stepName = Steps.nonOutdatedStepOf(
+        firstChangedStep(previousSettings, currentSettings),
+        outdatedSteps
+      );
       if (
         stepName &&
         ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
@@ -147,6 +157,7 @@ export const useOpenCvWorker = (
     }
   }, [
     detailsContext,
+    outdatedSteps,
     previousSettings,
     updateAllWorkData,
     updateCurrentStepData,

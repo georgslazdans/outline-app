@@ -24,7 +24,7 @@ export const settingsOf = (context: Context) => {
 export const firstChangedStep = (
   previousSettings: Settings,
   settings: Settings
-): StepName | undefined => {
+): StepName => {
   for (const step of Steps.getAll()) {
     const currentStep = settings[step.name];
     const previousStep = previousSettings[step.name];
@@ -32,6 +32,7 @@ export const firstChangedStep = (
       return step.name;
     }
   }
+  throw new Error("No step has been changed!");
 };
 
 export const inSettings = (settings: Settings) => {

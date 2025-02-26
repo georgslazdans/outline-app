@@ -108,13 +108,14 @@ const processorOf = (
     };
   };
 
-  const process = (image: cv.Mat) => {
+  const process = async (image: cv.Mat) => {
     let errorMessage = undefined;
     let currentImage = image;
 
     for (const step of processingSteps) {
+      // Add a simple timeout to allow the job to be canceled
+      await new Promise((resolve) => setTimeout(resolve, 0));
       if (signal.aborted) {
-        console.warn("Processing aborted!");
         break;
       }
       const result = processStep(

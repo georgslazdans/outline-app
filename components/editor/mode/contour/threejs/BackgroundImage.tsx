@@ -58,14 +58,6 @@ const BackgroundImage = memo(function BackgroundImage({
       return new Vector3(0, 0, -0.01);
     }
   };
-  console.log(
-    "Image URL",
-    imageUrl,
-    "Position",
-    position(),
-    "scale",
-    calculateScale()
-  );
   return (
     <>
       {imageUrl && (
