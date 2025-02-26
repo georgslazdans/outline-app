@@ -57,9 +57,7 @@ const CalibrationComponent = ({ dictionary }: Props) => {
   const saveContext = useCallback(
     (contours?: ContourOutline[], paperImageId?: number) => {
       if (paperImageId && detailsContext.paperImage) {
-        deleteImageBlob(detailsContext.paperImage).then(() => {
-          console.warn("Old paper image deleted!", detailsContext.paperImage);
-        });
+        deleteImageBlob(detailsContext.paperImage).then(() => {});
       }
       const context: Context = {
         ...detailsContext,
