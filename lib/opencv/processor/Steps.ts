@@ -124,6 +124,7 @@ const mandatory = () => {
     StepName.BLUR_OBJECT,
     StepName.OBJECT_THRESHOLD,
     StepName.FIND_PAPER_OUTLINE,
+    StepName.FIND_OBJECT_OUTLINES,
   ];
   return mandatorySteps;
 };
