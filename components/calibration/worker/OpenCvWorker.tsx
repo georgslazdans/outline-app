@@ -32,9 +32,7 @@ export const useOpenCvWorker = (
 ) => {
   const { detailsContext, contextImageData } = useDetails();
   const {
-    stepResults,
     setStepResults,
-    outdatedSteps,
     setOutdatedSteps,
     updateObjectOutlines,
     updatePaperOutlines,
@@ -99,11 +97,7 @@ export const useOpenCvWorker = (
   const updateCurrentStepData = useCallback(
     (stepName: StepName) => {
       setErrorMessage(undefined);
-      const workData = stepWorkOf(
-        stepResults,
-        stepName,
-        detailsContext?.settings
-      );
+      const workData = stepWorkOf(stepName, detailsContext?.settings);
       setPreviousSettings(workData.settings);
       const resultHandler = Comlink.proxy(handleWorkerResult);
       openCvApi.processOutlineStep(workData, resultHandler);
@@ -115,7 +109,6 @@ export const useOpenCvWorker = (
       openCvApi,
       setErrorMessage,
       setOutdatedSteps,
-      stepResults,
     ]
   );
 

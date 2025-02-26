@@ -2,6 +2,7 @@ import objectOutlineImagesOf from "./processor/images/OutlineCheckImage";
 import paperOutlineImagesOf from "./processor/images/PaperOutlineImages";
 import StepName from "./processor/steps/StepName";
 import StepResult, { findStep } from "./StepResult";
+import { addToResultCache } from "./StepResultCache";
 import { WorkerResultCallback } from "./WorkerContext";
 
 export type HandleProcessingResult = (
@@ -23,6 +24,9 @@ const handleProcessingResult = (
   onResult: WorkerResultCallback
 ): HandleProcessingResult => {
   return (stepName: StepName, stepResults: StepResult[]) => {
+    const stepResult = findStep(stepName).in(stepResults);
+    addToResultCache(stepResult);
+    
     if (stepName == StepName.FIND_PAPER_OUTLINE) {
       onResult({
         status: "paperOutlines",
@@ -34,7 +38,6 @@ const handleProcessingResult = (
         objectOutlineImages: objectOutlineImagesOf(stepResults),
       });
     }
-    const stepResult = findStep(stepName).in(stepResults);
     onResult({
       status: "step",
       step: stepResult,
