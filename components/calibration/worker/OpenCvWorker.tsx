@@ -54,6 +54,8 @@ export const useOpenCvWorker = (
         setStepResults((previous) => {
           return previous.map((it) => {
             if (it.stepName == stepName) {
+              // @ts-expect-error: Dirty hack to manually remove memory. Needs further investigating...
+              it.imageData = null;
               return data.step;
             } else {
               return it;
