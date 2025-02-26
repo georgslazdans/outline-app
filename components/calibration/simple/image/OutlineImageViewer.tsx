@@ -106,7 +106,7 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
 
   return (
     <div className={className}>
-      <TransformWrapper>
+      <TransformWrapper panning={{ velocityDisabled: true }}>
         <div className="z-10 relative">
           <DrawOutlineButton
             icon={drawOutline ? "eye-slash" : "eye"}
