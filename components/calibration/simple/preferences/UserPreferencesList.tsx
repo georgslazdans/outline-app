@@ -19,6 +19,8 @@ const UserPreferencesList = ({}: Props) => {
   } = useUserPreference(
     UserPreference.AUTO_RERUN_ON_SETTING_CHANGE_DEBOUNCE_TIME
   );
+  const { value: outlineAlphaLevel, updateEntry: updateOutlineAlphaLevel } =
+    useUserPreference(UserPreference.OUTLINE_ALPHA_LEVEL);
 
   const onRerunSettingChanged = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.checked;
@@ -29,6 +31,13 @@ const UserPreferencesList = ({}: Props) => {
     if (event.target.value) {
       const value = Number.parseInt(event.target.value);
       updateAutoRerunDebounceTime(value);
+    }
+  };
+
+  const onOutlineAlphaLevelChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value) {
+      const value = Number.parseFloat(event.target.value);
+      updateOutlineAlphaLevel(value);
     }
   };
 
@@ -54,6 +63,18 @@ const UserPreferencesList = ({}: Props) => {
       >
         Number of milliseconds before executing rerun after config change
       </Tooltip>
+
+      <NumberField
+        label={"Outline Alpha Level"}
+        name={UserPreference.OUTLINE_ALPHA_LEVEL}
+        value={outlineAlphaLevel as number}
+        onChange={onOutlineAlphaLevelChanged}
+        numberRange={{
+          min: 0,
+          max: 1,
+          step: 0.01,
+        }}
+      ></NumberField>
     </>
   );
 };

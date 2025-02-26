@@ -32,6 +32,8 @@ const imageOptionsFor = (
       imageEntryFor(StepName.ADAPTIVE_THRESHOLD, dictionary),
       imageEntryFor(StepName.CANNY_PAPER, dictionary),
     ];
+  } else if (settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER) {
+    return [imageEntryFor(StepName.CLOSE_CORNERS_PAPER, dictionary)];
   } else if (settingStep == CalibrationSettingStep.FIND_OBJECT) {
     return [
       imageEntryFor(StepName.OBJECT_THRESHOLD, dictionary),
@@ -52,6 +54,23 @@ type Props = {
   dictionary: Dictionary;
 };
 
+const hasSameImages = (
+  previous: ImageData[],
+  newImages: ImageData[]
+): boolean => {
+  if (previous.length != newImages.length) {
+    return false;
+  }
+  let areEqual = true;
+  for (let i = 0; i < newImages.length; i++) {
+    if (previous[i] != newImages[i]) {
+      areEqual = false;
+      break;
+    }
+  }
+  return areEqual;
+};
+
 export const OutlineImageSelector = ({ dictionary }: Props) => {
   const { detailsContext } = useDetails();
   const { stepResults, objectOutlineImages, paperOutlineImages } =
@@ -67,34 +86,50 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
     Option[]
   >([]);
 
-  const outlineImagesForCurrentStep = useCallback((): ImageData[] => {
-    if (settingStep == CalibrationSettingStep.FIND_PAPER) {
-      if (paperOutlineImages.length > 0) {
-        const paperIndex =
-          detailsContext.settings[StepName.EXTRACT_PAPER]["paperIndex"];
-        const index =
-          paperIndex >= paperOutlineImages.length
-            ? paperOutlineImages.length - 1
-            : paperIndex;
-        return [paperOutlineImages[index]];
-      } else {
-        return [];
-      }
-    } else if (settingStep == CalibrationSettingStep.FILTER_OBJECTS) {
-      const objectIndexes =
-        detailsContext.settings[StepName.FILTER_OBJECTS]["objectIndexes"];
-      if (objectIndexes && objectIndexes.length > 0) {
-        const images = objectOutlineImages.filter((it, index) =>
-          objectIndexes.includes(index)
-        );
-        return images;
-      } else {
-        return objectOutlineImages;
-      }
+  const currentPaperOutlineImages = useCallback(() => {
+    if (paperOutlineImages.length > 0) {
+      const paperIndex =
+        detailsContext.settings[StepName.EXTRACT_PAPER]["paperIndex"];
+      const index =
+        paperIndex >= paperOutlineImages.length
+          ? paperOutlineImages.length - 1
+          : paperIndex;
+      return [paperOutlineImages[index]];
+    } else {
+      return [];
+    }
+  }, [detailsContext.settings, paperOutlineImages]);
+
+  const currentObjectOutlineImages = useCallback(() => {
+    const objectIndexes =
+      detailsContext.settings[StepName.FILTER_OBJECTS]["objectIndexes"];
+    if (objectIndexes && objectIndexes.length > 0) {
+      const images = objectOutlineImages.filter((it, index) =>
+        objectIndexes.includes(index)
+      );
+      return images;
     } else {
       return objectOutlineImages;
     }
-  }, [settingStep, detailsContext, paperOutlineImages, objectOutlineImages]);
+  }, [detailsContext.settings, objectOutlineImages]);
+
+  const outlineImagesForCurrentStep = useCallback((): ImageData[] => {
+    if (
+      settingStep == CalibrationSettingStep.FIND_PAPER ||
+      settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER
+    ) {
+      return currentPaperOutlineImages();
+    } else if (settingStep == CalibrationSettingStep.FILTER_OBJECTS) {
+      return currentObjectOutlineImages();
+    } else {
+      return objectOutlineImages;
+    }
+  }, [
+    settingStep,
+    currentPaperOutlineImages,
+    currentObjectOutlineImages,
+    objectOutlineImages,
+  ]);
 
   const newStepForAvailableOptions = useCallback((): StepResult | undefined => {
     if (backgroundImageOptions.length > 0) {
@@ -123,7 +158,11 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
       });
     } else {
       setDisplayImageInfo((previous) => {
-        return { ...previous, outlineImages: outlineImages };
+        if (hasSameImages(previous.outlineImages, outlineImages)) {
+          return previous;
+        } else {
+          return { ...previous, outlineImages: outlineImages };
+        }
       });
     }
   }, [newStepForAvailableOptions, outlineImagesForCurrentStep]);

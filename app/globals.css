@@ -134,3 +134,7 @@ input[type="range"]:focus::-moz-range-thumb {
   outline: 3px solid #da4167;
   outline-offset: 0.125rem;
 }
+
+.change-log-container ul ul {
+  margin-left: 2rem;
+}

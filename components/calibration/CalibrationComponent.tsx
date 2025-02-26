@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SimpleCalibration from "./simple/SimpleCalibration";
 import { AdvancedCalibration } from "./advanced/AdvancedCalibration";
 import { useOpenCvWorker } from "./worker/OpenCvWorker";
@@ -54,30 +54,39 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     setLoading(false);
   }, []);
 
-  const saveContext = (contours?: ContourOutline[], paperImageId?: number) => {
-    if (paperImageId && detailsContext.paperImage) {
-      deleteImageBlob(detailsContext.paperImage).then(() => {
-        console.warn("Old paper image deleted!", detailsContext.paperImage);
-      });
-    }
-    const context: Context = {
-      ...detailsContext,
-      contours: contours ? contours : [],
-      paperImage: paperImageId ? paperImageId : detailsContext.paperImage,
-    };
-    update(context).then(() => {
-      setLoading(false);
-      const lastRoute = getHistory().pop();
-      if (!lastRoute || lastRoute == "/details") {
-        router.push("/");
-      } else {
-        router.push(lastRoute);
+  const saveContext = useCallback(
+    (contours?: ContourOutline[], paperImageId?: number) => {
+      if (paperImageId && detailsContext.paperImage) {
+        deleteImageBlob(detailsContext.paperImage).then(() => {});
       }
-      clearHistory();
-    });
-  };
+      const context: Context = {
+        ...detailsContext,
+        contours: contours ? contours : [],
+        paperImage: paperImageId ? paperImageId : detailsContext.paperImage,
+      };
+      update(context).then(() => {
+        setLoading(false);
+        const lastRoute = getHistory().pop();
+        if (!lastRoute || lastRoute == "/details") {
+          router.push("/");
+        } else {
+          router.push(lastRoute);
+        }
+        clearHistory();
+      });
+    },
+    [
+      clearHistory,
+      deleteImageBlob,
+      detailsContext,
+      getHistory,
+      router,
+      setLoading,
+      update,
+    ]
+  );
 
-  const saveAndClose = () => {
+  const saveAndClose = useCallback(() => {
     setLoading(true);
     const contours = stepResults.pop()!.contours;
     const paperImage = stepResults.find(
@@ -92,7 +101,7 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     } else {
       saveContext(contours);
     }
-  };
+  }, [addImageBlob, saveContext, setLoading, stepResults]);
 
   useEffect(() => {
     // Fix for settings and their config changes between versions
@@ -103,6 +112,14 @@ const CalibrationComponent = ({ dictionary }: Props) => {
       );
     }
   });
+
+  const openDetailedSettings = useCallback(() => {
+    setSimpleMode(false);
+  }, []);
+
+  const onClose = useCallback(() => {
+    simpleMode ? saveAndClose() : setSimpleMode(true);
+  }, [saveAndClose, simpleMode]);
 
   const largeScreenErrorMessage = (
     <div className="hidden xl:block ml-4 mt-2">
@@ -126,8 +143,11 @@ const CalibrationComponent = ({ dictionary }: Props) => {
             <>
               <SimpleCalibration
                 dictionary={dictionary}
-                settings={detailsContext.settings}
-                openDetailedSettings={() => setSimpleMode(false)}
+                settings={applyDefaults(
+                  defaultSettings(),
+                  detailsContext.settings
+                )}
+                openDetailedSettings={openDetailedSettings}
               >
                 {largeScreenErrorMessage}
               </SimpleCalibration>
@@ -145,7 +165,7 @@ const CalibrationComponent = ({ dictionary }: Props) => {
           <BottomButtons
             dictionary={dictionary}
             rerun={rerunOpenCv}
-            onClose={() => (simpleMode ? saveAndClose() : setSimpleMode(true))}
+            onClose={onClose}
             settingsChanged={settingsChanged}
             simpleMode={simpleMode}
           ></BottomButtons>

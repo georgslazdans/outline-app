@@ -6,9 +6,9 @@ import HoleAndSmoothSettings from "./settings/HoleSettings";
 import FindObjectSettings from "./settings/FindObjectSettings";
 import FilterObjectOutlines from "./settings/FilterObjectOutlines";
 import PreferencesModal from "./preferences/PreferencesModal";
-import IconButton from "@/components/IconButton";
-import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import OpenDetailedSettings from "./preferences/OpenDetailedSettings";
+import StepName from "@/lib/opencv/processor/steps/StepName";
+import CalibrationSettingStep from "./settings/CalibrationSettingStep";
 
 type Props = {
   dictionary: Dictionary;
@@ -54,6 +54,13 @@ const SimpleSettingsEditor = ({
           settings={settings}
           onSettingsChange={onChange}
         />
+        <CloseCornerSettings
+          dictionary={dictionary}
+          settings={settings}
+          onSettingsChange={onChange}
+          stepName={StepName.CLOSE_CORNERS_PAPER}
+          settingStep={CalibrationSettingStep.CLOSE_CORNERS_PAPER}
+        />
         <FindObjectSettings
           dictionary={dictionary}
           settings={settings}
@@ -63,6 +70,8 @@ const SimpleSettingsEditor = ({
           dictionary={dictionary}
           settings={settings}
           onSettingsChange={onChange}
+          stepName={StepName.CLOSE_CORNERS}
+          settingStep={CalibrationSettingStep.CLOSE_CORNERS}
         />
         <HoleAndSmoothSettings
           dictionary={dictionary}

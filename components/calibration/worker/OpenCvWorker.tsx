@@ -54,6 +54,8 @@ export const useOpenCvWorker = (
         setStepResults((previous) => {
           return previous.map((it) => {
             if (it.stepName == stepName) {
+              // @ts-expect-error: Dirty hack to manually remove memory. Needs further investigating...
+              it.imageData = null;
               return data.step;
             } else {
               return it;
@@ -100,9 +102,9 @@ export const useOpenCvWorker = (
     (stepName: StepName) => {
       setErrorMessage(undefined);
       const workData = stepWorkOf(
-        stepResults,
         stepName,
-        detailsContext?.settings
+        detailsContext?.settings,
+        stepResults
       );
       setPreviousSettings(workData.settings);
       const resultHandler = Comlink.proxy(handleWorkerResult);
@@ -142,7 +144,10 @@ export const useOpenCvWorker = (
     if (!previousSettings) {
       updateAllWorkData();
     } else if (!deepEqual(previousSettings, currentSettings)) {
-      let stepName = firstChangedStep(previousSettings, currentSettings);
+      let stepName = Steps.nonOutdatedStepOf(
+        firstChangedStep(previousSettings, currentSettings),
+        outdatedSteps
+      );
       if (
         stepName &&
         ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
@@ -154,6 +159,7 @@ export const useOpenCvWorker = (
     }
   }, [
     detailsContext,
+    outdatedSteps,
     previousSettings,
     updateAllWorkData,
     updateCurrentStepData,

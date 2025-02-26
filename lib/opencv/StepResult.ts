@@ -64,5 +64,10 @@ export const inputStepOf = (image: ImageData): StepResult => {
   };
 };
 
+export const hasImageData = (stepResult: StepResult) => {
+  const isImageEmpty = (image: ImageData) =>
+    image.height === 1 && image.width === 1;
+  return stepResult.imageData && !isImageEmpty(stepResult.imageData);
+};
 
 export default StepResult;

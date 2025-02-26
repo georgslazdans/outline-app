@@ -1,10 +1,9 @@
 import { Context } from "@/context/DetailsContext";
-import StepResult from "./StepResult";
 import Settings, { settingsOf } from "./Settings";
 import { ProcessStep } from "./processor/ProcessStep";
 import { ProcessAll } from "./processor/ProcessAll";
 import StepName from "./processor/steps/StepName";
-import Steps from "./processor/Steps";
+import StepResult, { hasImageData } from "./StepResult";
 
 export const allWorkOf = (
   context: Context,
@@ -21,18 +20,26 @@ export const allWorkOf = (
 };
 
 export const stepWorkOf = (
-  stepResults: StepResult[],
   stepName: string,
-  settings: Settings
+  settings: Settings,
+  stepResults: StepResult[]
 ): ProcessStep => {
   const step = previousStepWithImageOf(stepResults, stepName);
   return {
     stepName: stepName as StepName,
+    settings: settings,
     imageData: step.imageData,
     imageColorSpace: step.imageColorSpace,
-    settings: settings,
-    previousData: filterMandatorySteps(stepResults, stepName, settings),
   };
+};
+
+const previousStepWithImageOf = (allSteps: StepResult[], stepName: string) => {
+  const stepIndex = indexOfStep(allSteps, stepName);
+  if (stepIndex == 0) {
+    return allSteps[stepIndex];
+  } else {
+    return getPreviousStepWithImage(allSteps, stepIndex);
+  }
 };
 
 const indexOfStep = (allSteps: StepResult[], stepName: string): number => {
@@ -49,15 +56,6 @@ const indexOfStep = (allSteps: StepResult[], stepName: string): number => {
   return index;
 };
 
-const previousStepWithImageOf = (allSteps: StepResult[], stepName: string) => {
-  const stepIndex = indexOfStep(allSteps, stepName);
-  if (stepIndex == 0) {
-    return allSteps[stepIndex];
-  } else {
-    return getPreviousStepWithImage(allSteps, stepIndex);
-  }
-};
-
 const getPreviousStepWithImage = (
   allSteps: StepResult[],
   stepIndex: number
@@ -69,23 +67,4 @@ const getPreviousStepWithImage = (
     previousStep = allSteps[i];
   }
   return previousStep;
-};
-
-const hasImageData = (stepResult: StepResult) => {
-  const isImageEmpty = (image: ImageData) =>
-    image.height === 1 && image.width === 1;
-  return stepResult.imageData && !isImageEmpty(stepResult.imageData);
-};
-
-const filterMandatorySteps = (
-  previousResult: StepResult[],
-  stepName: string,
-  settings: Settings
-): StepResult[] => {
-  const mandatorySteps = Steps.mandatoryStepsFor(settings);
-  const stepIndex = indexOfStep(previousResult, stepName);
-  const stepsUntil = previousResult
-    .slice(0, stepIndex - 1)
-    .filter((it) => mandatorySteps.includes(it.stepName));
-  return [...stepsUntil, previousResult[stepIndex - 1]];
 };

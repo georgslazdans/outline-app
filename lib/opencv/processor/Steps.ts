@@ -37,6 +37,13 @@ const withDisplayOverride = (
   return { ...processingStep, config: config };
 };
 
+const withDefaultSettings = (
+  processingStep: ProcessingStep<any>,
+  settings: any
+): ProcessingStep<any> => {
+  return { ...processingStep, settings: settings };
+};
+
 const INPUT: ProcessingStep<any> = {
   name: StepName.INPUT,
   settings: {},
@@ -52,6 +59,13 @@ const PROCESSING_STEPS = (): ProcessingStep<any>[] => [
   blurStep,
   adaptiveThresholdStep,
   cannyStep,
+  withStepName(
+    StepName.CLOSE_CORNERS_PAPER,
+    withDefaultSettings(closeContoursStep, {
+      kernelSize: 2,
+      iterations: 2,
+    })
+  ),
   findPaperOutlineStep,
   extractPaperStep,
   withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
@@ -100,25 +114,19 @@ const blurImageReused = (settings: Settings) => {
   };
 };
 
-const mandatoryFor = (settings: Settings) => {
+const mandatory = () => {
   const mandatorySteps = [
     StepName.INPUT,
+    StepName.BILATERAL_FILTER,
+    StepName.BLUR,
     StepName.FIND_PAPER_OUTLINE,
     StepName.EXTRACT_PAPER,
     StepName.BLUR_OBJECT,
     StepName.OBJECT_THRESHOLD,
     StepName.FIND_PAPER_OUTLINE,
+    StepName.FIND_OBJECT_OUTLINES,
   ];
-  mandatorySteps.push(extractPaperReuseStep(settings));
   return mandatorySteps;
-};
-
-const extractPaperReuseStep = (settings: Settings): StepName => {
-  if (inSettings(settings).isBlurReused()) {
-    return StepName.BLUR;
-  } else {
-    return StepName.BILATERAL_FILTER;
-  }
 };
 
 const allProcessingStepNames = (): StepName[] => {
@@ -158,13 +166,35 @@ const isStep = (stepName: StepName) => {
   };
 };
 
+const nonOutdatedStep = (
+  stepName: StepName,
+  outdatedSteps: StepName[]
+): StepName => {
+  if (!outdatedSteps.includes(stepName)) {
+    return stepName;
+  }
+  let result = StepName.INPUT;
+  const allSteps = allProcessingStepNames();
+  for (let i = 0; i < allSteps.length; i++) {
+    const step = allSteps[i];
+    if (!outdatedSteps.includes(step)) {
+      result = step;
+    }
+    if (step == stepName) {
+      break;
+    }
+  }
+  return result;
+};
+
 const Steps = {
   forSettings,
   getAll,
-  mandatoryStepsFor: mandatoryFor,
+  mandatorySteps: mandatory,
   allProcessingStepNames: allProcessingStepNames,
   allStepNamesAfter: allStepNamesAfter,
   is: isStep,
+  nonOutdatedStepOf: nonOutdatedStep,
 };
 
 export default Steps;

@@ -39,16 +39,16 @@ const NumberField = ({
   onFocus,
   onBlur,
 }: Props) => {
-  const [sliderValue, setSliderValue] = useState<number>(value as number);
+  const [inputValue, setInputValue] = useState<number>(value as number);
 
   const sliderSuffix = "-slider";
   const inputClass = slider ? "w-20" : "w-full";
 
   useEffect(() => {
-    setSliderValue(value as number);
+    setInputValue(value as number);
   }, [value]);
 
-  const { onChange: onChangeDebounced } = useDebounced(onChange, 100);
+  const { onChange: onChangeDebounced } = useDebounced(onChange, 150);
 
   const removeSuffix = (name: string) => {
     return name.replace(sliderSuffix, "");
@@ -63,12 +63,15 @@ const NumberField = ({
       },
     } as ChangeEvent<HTMLInputElement>;
     onChangeDebounced(event);
-    setSliderValue(Number.parseFloat(sliderEvent.target.value));
+    setInputValue(Number.parseFloat(sliderEvent.target.value));
   };
 
   const handleInput = (inputEvent: ChangeEvent<HTMLInputElement>) => {
-    setSliderValue(Number.parseFloat(inputEvent.target.value));
-    onChange(inputEvent);
+    const value = inputEvent.target.value;
+    setInputValue(Number.parseFloat(value));
+    if(value !== "") {
+      onChangeDebounced(inputEvent);
+    }
   };
 
   return (
@@ -89,7 +92,7 @@ const NumberField = ({
             max={numberRange.max}
             step={numberRange.step}
             onChange={(event) => handleSlider(event)}
-            value={sliderValue}
+            value={inputValue}
           />
         )}
 
@@ -100,7 +103,7 @@ const NumberField = ({
           }
           id={name}
           type="number"
-          value={sliderValue}
+          value={inputValue}
           name={name}
           min={numberRange.min}
           max={numberRange.max}

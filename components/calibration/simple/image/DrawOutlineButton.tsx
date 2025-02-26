@@ -56,11 +56,12 @@ const DrawOutlineButton = ({ icon, onClick }: Props) => {
         id={TOGGLE_OUTLINE_BUTTON}
         className="absolute px-3 py-3 mr-auto mt-2 ml-2"
         onClick={onClick}
+        hotkey="h"
       >
         {icon == "eye" ? eye : eyeSlash}
       </IconButton>
       <Tooltip anchorSelect={"#" + TOGGLE_OUTLINE_BUTTON}>
-        {icon == "eye" ? "Show Outline" : "Hide Outline"}
+        {icon == "eye" ? "Show Outline (H)" : "Hide Outline (H)"}
       </Tooltip>
     </>
   );

@@ -1,7 +1,8 @@
 import HandleProcessing from "../HandleProcessing";
 import handleOpenCvError from "../OpenCvError";
 import Settings from "../Settings";
-import StepResult, { stepResultsBefore } from "../StepResult";
+import { stepResultsBefore } from "../StepResult";
+import { getCacheResults } from "../StepResultCache";
 import ColorSpace from "../util/ColorSpace";
 import { imageOf } from "../util/ImageData";
 import processorOf from "./ImageProcessor";
@@ -11,10 +12,9 @@ import StepName from "./steps/StepName";
 
 export type ProcessStep = {
   stepName: StepName;
+  settings: Settings;
   imageData: ImageData;
   imageColorSpace: ColorSpace;
-  settings: Settings;
-  previousData: StepResult[];
 };
 
 const processStep = async (
@@ -26,10 +26,10 @@ const processStep = async (
     const image = imageOf(command.imageData, command.imageColorSpace);
     const previousSteps = stepResultsBefore(
       command.stepName,
-      command.previousData
+      getCacheResults()
     );
     const steps = stepsStartingFrom(command.stepName, command.settings);
-    processorOf(steps, command.settings, handleProcessing, signal)
+    await processorOf(steps, command.settings, handleProcessing, signal)
       .withPreviousSteps(previousSteps)
       .process(image);
     image.delete();
