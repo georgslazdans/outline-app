@@ -12,6 +12,8 @@ const LoadingSpinner = () => {
   const isLoaderVisible = useCallback(() => {
     if (settingStep == CalibrationSettingStep.FIND_PAPER) {
       return outdatedSteps.includes(StepName.FIND_PAPER_OUTLINE);
+    } else if (settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER) {
+      return outdatedSteps.includes(StepName.CLOSE_CORNERS_PAPER);
     } else {
       return outdatedSteps.includes(StepName.FIND_OBJECT_OUTLINES);
     }

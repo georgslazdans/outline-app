@@ -53,7 +53,8 @@
       "objectThreshold": "Object Threshold",
       "adaptiveThreshold": "Adaptive Threshold",
       "binaryThreshold": "Binary Threshold",
-      "closeCorners": "Close Corners"
+      "closeCorners": "Close Contours",
+      "closeCornersPaper": "Close Contours Paper"
     },
     "stepSettings": {
       "bilateralFilterPixelDiameter": "Bilateral Filter Pixel Diameter",
@@ -85,7 +86,7 @@
       "smoothSettings": "Smoothing Settings",
       "holeSettings": "Hole Settings",
       "iterations": "Iterations",
-      "closeCornerSettings": "Close Corners",
+      "closeCornerSettings": "Close Contours",
       "disabledBilateralFilter": "Disable Bilateral Filter",
       "reuseStep": "Reuse Step for Extract Paper",
       "paperIndex": "Select Paper Outline",
@@ -100,7 +101,8 @@
       "blur": "Blur",
       "findPaper": "Find Paper",
       "findObject": "Find Object",
-      "closeCorners": "Close Corners",
+      "closeCorners": "Close Contours",
+      "closeCornersPaper": "Close Contours Paper",
       "holeSettings": "Hole Settings And Smoothing",
       "filterObjects": "Filter Objects"
     },

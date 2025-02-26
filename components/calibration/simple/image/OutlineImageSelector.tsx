@@ -32,6 +32,8 @@ const imageOptionsFor = (
       imageEntryFor(StepName.ADAPTIVE_THRESHOLD, dictionary),
       imageEntryFor(StepName.CANNY_PAPER, dictionary),
     ];
+  } else if (settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER) {
+    return [imageEntryFor(StepName.CLOSE_CORNERS_PAPER, dictionary)];
   } else if (settingStep == CalibrationSettingStep.FIND_OBJECT) {
     return [
       imageEntryFor(StepName.OBJECT_THRESHOLD, dictionary),
@@ -68,7 +70,10 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
   >([]);
 
   const outlineImagesForCurrentStep = useCallback((): ImageData[] => {
-    if (settingStep == CalibrationSettingStep.FIND_PAPER) {
+    if (
+      settingStep == CalibrationSettingStep.FIND_PAPER ||
+      settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER
+    ) {
       if (paperOutlineImages.length > 0) {
         const paperIndex =
           detailsContext.settings[StepName.EXTRACT_PAPER]["paperIndex"];

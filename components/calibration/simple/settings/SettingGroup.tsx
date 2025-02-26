@@ -31,7 +31,10 @@ const SettingGroup = ({ name, dictionary, children, settingStep }: Props) => {
   };
 
   const isDisabled = useCallback((): boolean => {
-    if (settingStep == CalibrationSettingStep.FIND_PAPER) {
+    if (
+      settingStep == CalibrationSettingStep.FIND_PAPER ||
+      settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER
+    ) {
       return false;
     } else if (
       settingStep == CalibrationSettingStep.HOLE_AND_SMOOTHING ||

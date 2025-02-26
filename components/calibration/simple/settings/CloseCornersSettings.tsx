@@ -17,35 +17,34 @@ type Props = {
   dictionary: Dictionary;
   settings: Settings;
   onSettingsChange: (settings: Settings) => void;
+  stepName: StepName;
+  settingStep: CalibrationSettingStep;
 };
 
 const CloseCornerSettings = ({
   dictionary,
   settings,
   onSettingsChange,
+  stepName,
+  settingStep,
 }: Props) => {
-  const onChange = useStepChangeHandler(
-    StepName.CLOSE_CORNERS,
-    settings,
-    onSettingsChange
-  );
-
+  const onChange = useStepChangeHandler(stepName, settings, onSettingsChange);
   return (
     <>
       <SettingGroup
         dictionary={dictionary}
-        name="closeCorners"
-        settingStep={CalibrationSettingStep.CLOSE_CORNERS}
+        name={stepName}
+        settingStep={settingStep}
       >
         <StepSettingField
-          value={settings[StepName.CLOSE_CORNERS].kernelSize}
+          value={settings[stepName].kernelSize}
           name={KERNEL_SIZE}
           config={closeContoursStep.config![KERNEL_SIZE]}
           onChange={onChange(KERNEL_SIZE)}
           dictionary={dictionary}
         ></StepSettingField>
         <StepSettingField
-          value={settings[StepName.CLOSE_CORNERS].iterations}
+          value={settings[stepName].iterations}
           name={ITERATIONS}
           config={closeContoursStep.config![ITERATIONS]}
           onChange={onChange(ITERATIONS)}

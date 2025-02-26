@@ -16,6 +16,7 @@ enum StepName {
     OBJECT_THRESHOLD = "objectThreshold",
     BINARY_THRESHOLD = "binaryThreshold",
     CLOSE_CORNERS = "closeCorners",
+    CLOSE_CORNERS_PAPER = "closeCornersPaper",
 }
 
 export default StepName;

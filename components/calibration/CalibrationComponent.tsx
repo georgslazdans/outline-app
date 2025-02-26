@@ -126,7 +126,10 @@ const CalibrationComponent = ({ dictionary }: Props) => {
             <>
               <SimpleCalibration
                 dictionary={dictionary}
-                settings={detailsContext.settings}
+                settings={applyDefaults(
+                  defaultSettings(),
+                  detailsContext.settings
+                )}
                 openDetailedSettings={() => setSimpleMode(false)}
               >
                 {largeScreenErrorMessage}

@@ -37,6 +37,13 @@ const withDisplayOverride = (
   return { ...processingStep, config: config };
 };
 
+const withDefaultSettings = (
+  processingStep: ProcessingStep<any>,
+  settings: any
+  ): ProcessingStep<any> => {
+  return { ...processingStep, settings: settings };
+};
+
 const INPUT: ProcessingStep<any> = {
   name: StepName.INPUT,
   settings: {},
@@ -52,6 +59,13 @@ const PROCESSING_STEPS = (): ProcessingStep<any>[] => [
   blurStep,
   adaptiveThresholdStep,
   cannyStep,
+  withStepName(
+    StepName.CLOSE_CORNERS_PAPER,
+    withDefaultSettings(closeContoursStep, {
+      kernelSize: 2,
+      iterations: 2,
+    })
+  ),
   findPaperOutlineStep,
   extractPaperStep,
   withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
