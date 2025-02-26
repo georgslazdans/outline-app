@@ -54,6 +54,23 @@ type Props = {
   dictionary: Dictionary;
 };
 
+const hasSameImages = (
+  previous: ImageData[],
+  newImages: ImageData[]
+): boolean => {
+  if (previous.length != newImages.length) {
+    return false;
+  }
+  let areEqual = true;
+  for (let i = 0; i < newImages.length; i++) {
+    if (previous[i] != newImages[i]) {
+      areEqual = false;
+      break;
+    }
+  }
+  return areEqual;
+};
+
 export const OutlineImageSelector = ({ dictionary }: Props) => {
   const { detailsContext } = useDetails();
   const { stepResults, objectOutlineImages, paperOutlineImages } =
@@ -128,7 +145,11 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
       });
     } else {
       setDisplayImageInfo((previous) => {
-        return { ...previous, outlineImages: outlineImages };
+        if (hasSameImages(previous.outlineImages, outlineImages)) {
+          return previous;
+        } else {
+          return { ...previous, outlineImages: outlineImages };
+        }
       });
     }
   }, [newStepForAvailableOptions, outlineImagesForCurrentStep]);
