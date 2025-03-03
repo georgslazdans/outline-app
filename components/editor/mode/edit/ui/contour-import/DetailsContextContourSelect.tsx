@@ -3,12 +3,8 @@
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Context } from "@/context/DetailsContext";
-import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
 import SelectField, { Option } from "@/components/fields/SelectField";
 import { useContourCacheContext } from "../../../../cache/ContourCacheContext";
-import ContourPoints, {
-  modifyContourList,
-} from "@/lib/data/contour/ContourPoints";
 import NumberField from "@/components/fields/NumberField";
 
 type Props = {

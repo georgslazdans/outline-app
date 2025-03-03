@@ -35,7 +35,7 @@ export const ContourCacheProvider = ({ children }: { children: ReactNode }) => {
     getAll().then((allContexts: Context[]) => {
       if (allContexts && allContexts.length > 0) {
         const filteredItems = allContexts.filter((it) => hasContourOutline(it));
-        setItems(filteredItems);
+        setItems(filteredItems.toReversed());
       }
     });
   }, []);
