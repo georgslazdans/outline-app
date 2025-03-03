@@ -144,10 +144,12 @@ export const useOpenCvWorker = (
     if (!previousSettings) {
       updateAllWorkData();
     } else if (!deepEqual(previousSettings, currentSettings)) {
-      let stepName = Steps.nonOutdatedStepOf(
+      let stepName = Steps.stepWithNonOutdatedPreviousOf(
         firstChangedStep(previousSettings, currentSettings),
         outdatedSteps
       );
+      // TODO this is could be simplified, since worker side worker caches images and the job only sends previous image
+      // No "performance improvement" is got in either cases
       if (
         stepName &&
         ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
