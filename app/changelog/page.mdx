@@ -4,6 +4,13 @@
 
 # Changelog
 
+## Version 1.3.3 - 03.03.2025
+
+## Calibration
+
+- Fix issue when returned images might use old settings.
+- Fix worker jobs being executed concurrently and not being canceled. Out of memory errors should be rare now.
+
 ## Version 1.3.2 - 26.02.2025
 
 ## General
@@ -20,7 +27,7 @@
 - Improve performance
   - Correctly cancel running tasks when settings changed
   - Fix outline image redraw when a partial result is processed
-  - Improve memory leaks. It still leaks memory, but at least not raw images. ¯\\_(ツ)\_/¯
+  - Improve memory leaks. It still leaks memory, but at least not raw images. ¯\\\_(ツ)\_/¯
 
 ## Version 1.3.1 - 21.02.2025
 
