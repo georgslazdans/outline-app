@@ -166,18 +166,19 @@ const isStep = (stepName: StepName) => {
   };
 };
 
-const nonOutdatedStep = (
+const stepWithNonOutdatedPrevious = (
   stepName: StepName,
   outdatedSteps: StepName[]
 ): StepName => {
   if (!outdatedSteps.includes(stepName)) {
     return stepName;
   }
-  let result = StepName.INPUT;
+  let result = StepName.BILATERAL_FILTER;
   const allSteps = allProcessingStepNames();
-  for (let i = 0; i < allSteps.length; i++) {
+  for (let i = 1; i < allSteps.length; i++) {
     const step = allSteps[i];
-    if (!outdatedSteps.includes(step)) {
+    const previousStep = allSteps[i - 1];
+    if (!outdatedSteps.includes(previousStep)) {
       result = step;
     }
     if (step == stepName) {
@@ -194,7 +195,7 @@ const Steps = {
   allProcessingStepNames: allProcessingStepNames,
   allStepNamesAfter: allStepNamesAfter,
   is: isStep,
-  nonOutdatedStepOf: nonOutdatedStep,
+  stepWithNonOutdatedPreviousOf: stepWithNonOutdatedPrevious,
 };
 
 export default Steps;

@@ -11,6 +11,7 @@ Using OpenCV extract objects contours that are placed on top of a uniform paper.
 ### Box Editor
 
 - Gridfinity Box
+  - Box splitting
 - Contours
   - Point adding/removing and transformation
   - Offset along normals
@@ -65,3 +66,37 @@ npm run start
 If you find this project useful, consider supporting me on Ko-Fi.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/L3L41134QC)
+
+## Ideas for Future
+
+These are just here for my own brainstorming and I give **no promises** that any of these will actually be worked on.
+
+### Skip Paper Outline Detection
+
+Using a regular scanner has its benefits of not having distorted image. An option to skip the paper outline step would allow images from a scanner to be processed.
+
+### Automatic Detection of Settings
+
+Settings could be guessed by using Machine Learning algorithms and the trained model set could be plenty fast enough to be executed on each picture. If they are accurate enough, then calibration step might be even skipped. 
+
+- Create separate repository application, that can accept valid image and settings.
+  - Should be agreed on by the user
+  - Add automatic upload of individual contours or all contours that are actually used inside the editor
+- Train the model on the data
+  - Tensorflow.js seems like a good candidate, since there would be less glue code
+- Add option to details form to use the trained model
+
+### Bulk Processing
+
+If the machine learning algorithm works good, then having an option to bulk process images would speed up processing a lot. With many images having a CLI would be much easier to handle and optimize the workflow, e.g. download images from local/cloud storage, rename them and run processing on a folder.
+
+- Multi image upload to web app
+- CLI version
+  - Would require compatibility to import/export between the CLI and the web app
+
+### Automatic Box Creation
+
+Adjusting settings for the box shouldn't be hard when an outline is imported. Would be even nice, if a single image contains multiple objects, then those objects are rotated and moved to take least amount of space as possible. 
+
+This should allow to automate box creation for a fixed height boxes. In other cases where object height is important, then a manual edit or LIDAR based solution could be applied. At the moment there is no API for accessing LIDAR camera in the browsers, so a separate app for capturing the image and data could be created and then imported.
+

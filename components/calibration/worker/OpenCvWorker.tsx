@@ -144,18 +144,11 @@ export const useOpenCvWorker = (
     if (!previousSettings) {
       updateAllWorkData();
     } else if (!deepEqual(previousSettings, currentSettings)) {
-      let stepName = Steps.nonOutdatedStepOf(
+      let stepName = Steps.stepWithNonOutdatedPreviousOf(
         firstChangedStep(previousSettings, currentSettings),
         outdatedSteps
       );
-      if (
-        stepName &&
-        ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
-      ) {
-        updateCurrentStepData(stepName);
-      } else {
-        updateAllWorkData();
-      }
+      updateCurrentStepData(stepName);
     }
   }, [
     detailsContext,
