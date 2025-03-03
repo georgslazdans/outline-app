@@ -148,16 +148,7 @@ export const useOpenCvWorker = (
         firstChangedStep(previousSettings, currentSettings),
         outdatedSteps
       );
-      // TODO this is could be simplified, since worker side worker caches images and the job only sends previous image
-      // No "performance improvement" is got in either cases
-      if (
-        stepName &&
-        ![StepName.INPUT, StepName.BILATERAL_FILTER].includes(stepName)
-      ) {
-        updateCurrentStepData(stepName);
-      } else {
-        updateAllWorkData();
-      }
+      updateCurrentStepData(stepName);
     }
   }, [
     detailsContext,

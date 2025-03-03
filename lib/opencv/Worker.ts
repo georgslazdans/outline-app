@@ -1,9 +1,15 @@
 import * as cv from "@techstark/opencv-js";
-import processStep, { ProcessStep } from "./processor/ProcessStep";
+import { ProcessStep } from "./processor/ProcessStep";
 import processImage, { ProcessAll } from "./processor/ProcessAll";
 import * as Comlink from "comlink";
 import { processingResultHandlerFor } from "./HandleProcessing";
-import WorkerContext, { WorkerResultCallback } from "./WorkerContext";
+import { WorkerResultCallback } from "./WorkerContext";
+import {
+  addJob,
+  createContextFor,
+  doJob,
+  processQueuedJob,
+} from "./WorkerQueue";
 
 let initialized = false;
 
@@ -23,38 +29,17 @@ const waitForInitialization = async () => {
   await initializedPromise;
 };
 
-let workerContext: WorkerContext | undefined = undefined;
-
-const cancelPreviousJob = async () => {
-  if (workerContext) {
-    workerContext.abortController.abort();
-    await workerContext.jobPromise;
-  }
-};
-
-const createContextFor = (
-  processingFunction: (signal: AbortSignal) => Promise<void>
-): WorkerContext => {
-  const abortController = new AbortController();
-  const signal: AbortSignal = abortController.signal;
-  const jobPromise = processingFunction(signal);
-  return {
-    abortController: abortController,
-    jobPromise: jobPromise,
-  };
-};
-
 const processOutlineImage = async (
   data: ProcessAll,
   onResult: WorkerResultCallback
 ) => {
   await waitForInitialization();
-  await cancelPreviousJob();
-  workerContext = createContextFor((signal) => {
-    const handleProcessing = processingResultHandlerFor(onResult);
-    return processImage(data, handleProcessing, signal);
-  });
-  await workerContext.jobPromise;
+  await doJob(
+    createContextFor((signal) => {
+      const handleProcessing = processingResultHandlerFor(onResult);
+      return processImage(data, handleProcessing, signal);
+    })
+  );
 };
 
 const processOutlineStep = async (
@@ -62,12 +47,8 @@ const processOutlineStep = async (
   onResult: WorkerResultCallback
 ) => {
   await waitForInitialization();
-  await cancelPreviousJob();
-  workerContext = createContextFor((signal) => {
-    const handleProcessing = processingResultHandlerFor(onResult);
-    return processStep(data, handleProcessing, signal);
-  });
-  await workerContext.jobPromise;
+  addJob(data, onResult);
+  await processQueuedJob();
 };
 
 Comlink.expose({ processOutlineImage, processOutlineStep });

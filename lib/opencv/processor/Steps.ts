@@ -173,7 +173,7 @@ const stepWithNonOutdatedPrevious = (
   if (!outdatedSteps.includes(stepName)) {
     return stepName;
   }
-  let result = StepName.INPUT;
+  let result = StepName.BILATERAL_FILTER;
   const allSteps = allProcessingStepNames();
   for (let i = 1; i < allSteps.length; i++) {
     const step = allSteps[i];
