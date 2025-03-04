@@ -12,11 +12,12 @@ import { Dictionary } from "@/app/dictionaries";
 import findPaperOutlineStep from "@/lib/opencv/processor/steps/FindPaperOutline";
 import extractPaperStep from "@/lib/opencv/processor/steps/ExtractPaper";
 import findObjectOutlinesStep from "@/lib/opencv/processor/steps/FindObjectOutlines";
-import {
-  GroupConfig,
-} from "@/lib/opencv/processor/steps/StepSettings";
+import { GroupConfig } from "@/lib/opencv/processor/steps/StepSettings";
 import StepSettingGroup from "../../fields/StepSettingGroup";
 import bilateralFilterStep from "@/lib/opencv/processor/steps/BilateralFilter";
+import { INPUT } from "@/lib/opencv/processor/Steps";
+
+const SKIP_PAPER_DETECTION = "skipPaperDetection";
 
 const FILTER_SIMILAR_OUTLINES = "filterSimilarOutlines";
 const SIMILARITY_THRESHOLD = "similarityThreshold";
@@ -42,6 +43,12 @@ const AdditionalSettings = ({
   settings,
   onSettingsChanged,
 }: Props) => {
+  const onDisablePaperDetectionChange = useStepChangeHandler(
+    StepName.INPUT,
+    settings,
+    onSettingsChanged
+  );
+
   const onFindPaperOutlineChange = useStepChangeHandler(
     StepName.FIND_PAPER_OUTLINE,
     settings,
@@ -80,6 +87,13 @@ const AdditionalSettings = ({
       <h2 className="mb-2">Additional Settings</h2>
       <div className="mb-4">
         <h3 className="mb-2">Find Paper Outlines</h3>
+        <StepSettingField
+          value={settings[StepName.INPUT][SKIP_PAPER_DETECTION]}
+          name={SKIP_PAPER_DETECTION}
+          config={INPUT.config![SKIP_PAPER_DETECTION]}
+          onChange={onDisablePaperDetectionChange(SKIP_PAPER_DETECTION)}
+          dictionary={dictionary}
+        ></StepSettingField>
         <StepSettingField
           value={settings[StepName.FIND_PAPER_OUTLINE][FILTER_SIMILAR_OUTLINES]}
           name={FILTER_SIMILAR_OUTLINES}

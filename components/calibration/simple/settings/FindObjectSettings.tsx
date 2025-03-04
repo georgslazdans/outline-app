@@ -11,7 +11,13 @@ import adaptiveThresholdStep from "@/lib/opencv/processor/steps/AdaptiveThreshol
 import binaryThresholdStep from "@/lib/opencv/processor/steps/BinaryThreshold";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import thresholdStep from "@/lib/opencv/processor/steps/Threshold";
-import { useNestedStepChangeHandler, useStepChangeHandler } from "../../fields/ChangeHandler";
+import {
+  useNestedStepChangeHandler,
+  useStepChangeHandler,
+} from "../../fields/ChangeHandler";
+import bilateralFilterStep from "@/lib/opencv/processor/steps/BilateralFilter";
+
+const PIXEL_DIAMETER = "pixelDiameter";
 
 const BLUR_WIDTH = "blurWidth";
 const THRESHOLD_TYPE = "thresholdType";
@@ -30,6 +36,12 @@ const FindObjectSettings = ({
   settings,
   onSettingsChange,
 }: Props) => {
+  const onBilateralFilterChange = useStepChangeHandler(
+    StepName.BILATERAL_FILTER,
+    settings,
+    onSettingsChange
+  );
+
   const onBlurChange = useStepChangeHandler(
     StepName.BLUR_OBJECT,
     settings,
@@ -48,13 +60,27 @@ const FindObjectSettings = ({
     onSettingsChange
   );
 
+  const { isPaperDetectionSkipped, isBilateralFilterDisabled } =
+    inSettings(settings);
+
   return (
     <>
       <SettingGroup
         dictionary={dictionary}
         name="findObject"
         settingStep={CalibrationSettingStep.FIND_OBJECT}
+        settings={settings}
       >
+        {isPaperDetectionSkipped() && !isBilateralFilterDisabled() && (
+          <StepSettingField
+            value={settings[StepName.BILATERAL_FILTER][PIXEL_DIAMETER]}
+            name={"bilateralFilterPixelDiameter"}
+            config={bilateralFilterStep.config![PIXEL_DIAMETER]}
+            onChange={onBilateralFilterChange(PIXEL_DIAMETER)}
+            dictionary={dictionary}
+          ></StepSettingField>
+        )}
+
         {!inSettings(settings).isBlurReused() && (
           <StepSettingField
             value={settings[StepName.BLUR_OBJECT][BLUR_WIDTH]}

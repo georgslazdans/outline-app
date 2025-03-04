@@ -35,6 +35,7 @@ const CloseCornerSettings = ({
         dictionary={dictionary}
         name={stepName}
         settingStep={settingStep}
+        settings={settings}
       >
         <StepSettingField
           value={settings[stepName].kernelSize}

@@ -49,6 +49,9 @@ export const inSettings = (settings: Settings) => {
         ThresholdType.ADAPTIVE
       );
     },
+    isPaperDetectionSkipped: () => {
+      return settings[StepName.INPUT].skipPaperDetection;
+    },
   };
 };
 

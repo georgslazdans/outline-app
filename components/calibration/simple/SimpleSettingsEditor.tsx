@@ -1,4 +1,4 @@
-import Settings from "@/lib/opencv/Settings";
+import Settings, { inSettings } from "@/lib/opencv/Settings";
 import { Dictionary } from "@/app/dictionaries";
 import FindPaperSettings from "./settings/FindPaperSettings";
 import CloseCornerSettings from "./settings/CloseCornersSettings";
@@ -49,18 +49,23 @@ const SimpleSettingsEditor = ({
       </div>
 
       <div>
-        <FindPaperSettings
-          dictionary={dictionary}
-          settings={settings}
-          onSettingsChange={onChange}
-        />
-        <CloseCornerSettings
-          dictionary={dictionary}
-          settings={settings}
-          onSettingsChange={onChange}
-          stepName={StepName.CLOSE_CORNERS_PAPER}
-          settingStep={CalibrationSettingStep.CLOSE_CORNERS_PAPER}
-        />
+        {!inSettings(settings).isPaperDetectionSkipped() && (
+          <>
+            <FindPaperSettings
+              dictionary={dictionary}
+              settings={settings}
+              onSettingsChange={onChange}
+            />
+            <CloseCornerSettings
+              dictionary={dictionary}
+              settings={settings}
+              onSettingsChange={onChange}
+              stepName={StepName.CLOSE_CORNERS_PAPER}
+              settingStep={CalibrationSettingStep.CLOSE_CORNERS_PAPER}
+            />
+          </>
+        )}
+
         <FindObjectSettings
           dictionary={dictionary}
           settings={settings}

@@ -33,17 +33,16 @@ const SimpleCalibration = ({
 
   return (
     <>
-      <SettingStepProvider>
+      <SettingStepProvider settings={settings}>
         <div className="flex flex-col gap-4 xl:flex-row flex-grow">
           <div className="xl:w-1/2">
             <OutlineImageSelector
               dictionary={dictionary}
+              settings={settings}
             ></OutlineImageSelector>
             {children}
             <div className="hidden xl:flex flex-row gap-2 mt-3">
-              <ExportFileButtons
-                dictionary={dictionary}
-              ></ExportFileButtons>
+              <ExportFileButtons dictionary={dictionary}></ExportFileButtons>
             </div>
           </div>
           <div className="xl:h-[calc(100vh-15rem)] overflow-auto xl:w-1/2">
@@ -54,9 +53,7 @@ const SimpleCalibration = ({
               openDetailedSettings={openDetailedSettings}
             ></SimpleSettingsEditor>
             <div className="xl:hidden flex flex-col md:flex-row md:gap-2 mt-2">
-              <ExportFileButtons
-                dictionary={dictionary}
-              ></ExportFileButtons>
+              <ExportFileButtons dictionary={dictionary}></ExportFileButtons>
             </div>
           </div>
         </div>
