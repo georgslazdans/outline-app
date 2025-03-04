@@ -193,7 +193,7 @@ const findObjectOutlinesStep: ProcessingStep<FindObjectOutlineSettings> = {
     },
     areaThresholdSettings: {
       upperThreshold: 0.95,
-      lowerThreshold: 0.001,
+      lowerThreshold: 0.005,
     },
   },
   config: {
