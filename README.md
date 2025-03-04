@@ -71,10 +71,6 @@ If you find this project useful, consider supporting me on Ko-Fi.
 
 These are just here for my own brainstorming and I give **no promises** that any of these will actually be worked on.
 
-### Skip Paper Outline Detection
-
-Using a regular scanner has its benefits of not having distorted image. An option to skip the paper outline step would allow images from a scanner to be processed.
-
 ### Automatic Detection of Settings
 
 Settings could be guessed by using Machine Learning algorithms and the trained model set could be plenty fast enough to be executed on each picture. If they are accurate enough, then calibration step might be even skipped. 
