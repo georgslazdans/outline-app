@@ -3,7 +3,7 @@ import JsZip from "jszip";
 
 const downloadModelBlobs = (blobs: Blob[], name: string, extension: string) => {
   if (blobs.length == 1) {
-    downloadFile(blobs[0], `${name}${extension}`);
+    downloadFile(blobs[0], `${name}.${extension}`);
   } else {
     asZipFile(blobs, name, extension).then((zip) =>
       downloadFile(zip, `${name}_${extension}.zip`)

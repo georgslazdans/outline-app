@@ -19,7 +19,7 @@ const drawCutBoxes = (splitCut: SplitCut, params: GridfinityParams) => {
   const totalXSize = gridSize * xSize;
   const totalYSize = gridSize * ySize;
 
-  const totalHeight = 2 * height * 7 + 7;
+  const totalHeight = 2 * height * 7 + 7 * 100000;
 
   if (forSplitCut(splitCut).isVertical()) {
     const planeYSize = (splitCut.end.y - splitCut.start.y) * gridSize + OFFSET;
