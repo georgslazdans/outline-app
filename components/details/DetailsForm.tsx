@@ -23,6 +23,7 @@ import { useErrorModal } from "../error/ErrorContext";
 import { idQuery } from "@/lib/utils/UrlParams";
 import { useSavedFile } from "@/lib/SavedFile";
 import CheckboxField from "../fields/CheckboxField";
+import PaperSettings from "@/lib/opencv/PaperSettings";
 
 type Props = {
   dictionary: any;
@@ -57,6 +58,21 @@ const paperSizeOfContext = (detailsContext: Context) => {
   }
 };
 
+const initialFormDataOf = (context: Context): Form => {
+  const paperSettings = paperSettingsOf(context) as PaperSettings;
+  const previousSettings = context?.settings[StepName.INPUT];
+  const skipPaperDetection = previousSettings
+    ? previousSettings.skipPaperDetection === true
+    : false;
+  return {
+    name: "",
+    orientation: paperSettings.orientation,
+    width: paperSettings.width,
+    height: paperSettings.height,
+    skipPaperDetection: skipPaperDetection,
+  };
+};
+
 const DetailsForm = ({ dictionary }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
@@ -71,7 +87,7 @@ const DetailsForm = ({ dictionary }: Props) => {
   );
 
   const [formData, setFormData] = useState<Form>(
-    paperSettingsOf(detailsContext) || defaultSettings
+    initialFormDataOf(detailsContext)
   );
 
   // Remove loading from previous screen, but not on form save
@@ -124,9 +140,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       height: formData.height,
       orientation: formData.orientation as Orientation,
     };
-    settings.input.skipPaperDetection = {
-      skipPaperDetection: formData.skipPaperDetection,
-    };
+    settings.input.skipPaperDetection = formData.skipPaperDetection;
     const newContext: Context = {
       details: {
         ...formData,

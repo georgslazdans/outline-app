@@ -1,7 +1,7 @@
 import { Context } from "@/context/DetailsContext";
 import StepName from "./processor/steps/StepName";
 import deepEqual, { deepMerge } from "../utils/Objects";
-import StepSetting, { StepSettingConfig } from "./processor/steps/StepSettings";
+import StepSetting from "./processor/steps/StepSettings";
 import Steps from "./processor/Steps";
 import ThresholdType from "./processor/steps/ThresholdType";
 
