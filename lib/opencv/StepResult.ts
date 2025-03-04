@@ -18,11 +18,15 @@ export const stepResultsBefore = (
   stepData: StepResult[]
 ): StepResult[] => {
   const result: StepResult[] = [];
-  for (const step of stepData) {
-    if (step.stepName == stepName) {
+  const allSteps = Steps.getAll().map((it) => it.name);
+  for (const name of allSteps) {
+    if (name == stepName) {
       break;
     }
-    result.push(step);
+    const data = stepData.find((it) => it.stepName == name);
+    if (data) {
+      result.push(data);
+    }
   }
   return result;
 };
@@ -35,10 +39,7 @@ export const findStep = (stepName: StepName) => {
   };
 };
 
-
-export const placeholderSteps = (
-  context: Context
-): StepResult[] => {
+export const placeholderSteps = (context: Context): StepResult[] => {
   const settings = settingsOf(context);
   const allSteps = Steps.getAll();
   const result = [];
