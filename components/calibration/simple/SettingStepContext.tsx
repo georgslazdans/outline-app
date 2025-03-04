@@ -1,5 +1,11 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import CalibrationSettingStep from "./settings/CalibrationSettingStep";
 import Settings, { inSettings } from "@/lib/opencv/Settings";
 
@@ -23,6 +29,16 @@ export const SettingStepProvider = ({ settings, children }: Props) => {
       ? CalibrationSettingStep.FIND_OBJECT
       : CalibrationSettingStep.FIND_PAPER
   );
+
+  useEffect(() => {
+    if (
+      (settingStep == CalibrationSettingStep.FIND_PAPER ||
+        settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER) &&
+      inSettings(settings).isPaperDetectionSkipped()
+    ) {
+      setSettingStep(CalibrationSettingStep.FIND_OBJECT);
+    }
+  }, [settings, settingStep]);
 
   return (
     <SettingStepContext.Provider
