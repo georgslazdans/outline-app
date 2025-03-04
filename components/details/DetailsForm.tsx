@@ -60,7 +60,9 @@ const paperSizeOfContext = (detailsContext: Context) => {
 
 const initialFormDataOf = (context: Context): Form => {
   const paperSettings = paperSettingsOf(context) as PaperSettings;
-  const previousSettings = context?.settings[StepName.INPUT];
+  const previousSettings = context?.settings
+    ? context?.settings[StepName.INPUT]
+    : {};
   const skipPaperDetection = previousSettings
     ? previousSettings.skipPaperDetection === true
     : false;
