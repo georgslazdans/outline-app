@@ -148,6 +148,10 @@ export const useOpenCvWorker = (
         firstChangedStep(previousSettings, currentSettings),
         outdatedSteps
       );
+      // Input can't be processed, but has setting "skipPaperDetection"
+      if (stepName == StepName.INPUT) {
+        stepName = StepName.BILATERAL_FILTER;
+      }
       updateCurrentStepData(stepName);
     }
   }, [

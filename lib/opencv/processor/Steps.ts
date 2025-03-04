@@ -44,53 +44,82 @@ const withDefaultSettings = (
   return { ...processingStep, settings: settings };
 };
 
-const INPUT: ProcessingStep<any> = {
+export const INPUT: ProcessingStep<any> = {
   name: StepName.INPUT,
-  settings: {},
+  settings: {
+    skipPaperDetection: false,
+  },
   imageColorSpace: () => ColorSpace.RGBA,
   process: (image: Mat) => {
     return { image: image };
   },
+  config: {
+    skipPaperDetection: {
+      type: "checkbox",
+    },
+  },
 };
 
-const PROCESSING_STEPS = (): ProcessingStep<any>[] => [
-  bilateralFilterStep,
-  grayScaleStep,
-  blurStep,
-  adaptiveThresholdStep,
-  cannyStep,
-  withStepName(
-    StepName.CLOSE_CORNERS_PAPER,
-    withDefaultSettings(closeContoursStep, {
-      kernelSize: 2,
-      iterations: 2,
-    })
-  ),
-  findPaperOutlineStep,
-  extractPaperStep,
-  withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
-  withStepName(
-    StepName.BLUR_OBJECT,
-    withDisplayOverride(
-      blurStep,
-      (settings) => !inSettings(settings).isBlurReused()
-    )
-  ),
-  withStepName(StepName.OBJECT_THRESHOLD, thresholdStep),
-  withStepName(StepName.CANNY_OBJECT, cannyStep),
-  closeContoursStep,
-  findObjectOutlinesStep,
-  filterObjectsStep,
-];
+const PREPROCESSING_STEPS = (): ProcessingStep<any>[] => [bilateralFilterStep];
+
+const PAPER_DETECTION_STEPS = (): ProcessingStep<any>[] => {
+  return [
+    grayScaleStep,
+    blurStep,
+    adaptiveThresholdStep,
+    cannyStep,
+    withStepName(
+      StepName.CLOSE_CORNERS_PAPER,
+      withDefaultSettings(closeContoursStep, {
+        kernelSize: 2,
+        iterations: 2,
+      })
+    ),
+    findPaperOutlineStep,
+    extractPaperStep,
+  ];
+};
+
+const OBJECT_DETECTION_STEPS = (): ProcessingStep<any>[] => {
+  return [
+    withStepName(StepName.GRAY_SCALE_OBJECT, grayScaleStep),
+    withStepName(
+      StepName.BLUR_OBJECT,
+      withDisplayOverride(
+        blurStep,
+        (settings) => !inSettings(settings).isBlurReused()
+      )
+    ),
+    withStepName(StepName.OBJECT_THRESHOLD, thresholdStep),
+    withStepName(StepName.CANNY_OBJECT, cannyStep),
+    closeContoursStep,
+    findObjectOutlinesStep,
+    filterObjectsStep,
+  ];
+};
 
 const getAll = (): ProcessingStep<any>[] => {
-  return [INPUT, ...PROCESSING_STEPS()];
+  return [
+    INPUT,
+    ...PREPROCESSING_STEPS(),
+    ...PAPER_DETECTION_STEPS(),
+    ...OBJECT_DETECTION_STEPS(),
+  ];
+};
+
+const getAllProcessingSteps = (): ProcessingStep<any>[] => {
+  return [
+    ...PREPROCESSING_STEPS(),
+    ...PAPER_DETECTION_STEPS(),
+    ...OBJECT_DETECTION_STEPS(),
+  ];
 };
 
 const forSettings = (settings: Settings) => {
-  return PROCESSING_STEPS()
+  return getAllProcessingSteps()
     .filter(bilateralFilterDisabled(settings))
-    .filter(blurImageReused(settings));
+    .filter(blurImageReused(settings))
+    .filter(paperDetectionSkipped(settings));
 };
 
 const bilateralFilterDisabled = (settings: Settings) => {
@@ -114,19 +143,16 @@ const blurImageReused = (settings: Settings) => {
   };
 };
 
-const mandatory = () => {
-  const mandatorySteps = [
-    StepName.INPUT,
-    StepName.BILATERAL_FILTER,
-    StepName.BLUR,
-    StepName.FIND_PAPER_OUTLINE,
-    StepName.EXTRACT_PAPER,
-    StepName.BLUR_OBJECT,
-    StepName.OBJECT_THRESHOLD,
-    StepName.FIND_PAPER_OUTLINE,
-    StepName.FIND_OBJECT_OUTLINES,
-  ];
-  return mandatorySteps;
+const paperDetectionSkipped = (settings: Settings) => {
+  const paperDetectionSteps = PAPER_DETECTION_STEPS().map((it) => it.name);
+  const { isPaperDetectionSkipped } = inSettings(settings);
+  return (step: ProcessingStep<any>): boolean => {
+    if (paperDetectionSteps.includes(step.name)) {
+      return !isPaperDetectionSkipped();
+    } else {
+      return true;
+    }
+  };
 };
 
 const allProcessingStepNames = (): StepName[] => {
@@ -191,7 +217,6 @@ const stepWithNonOutdatedPrevious = (
 const Steps = {
   forSettings,
   getAll,
-  mandatorySteps: mandatory,
   allProcessingStepNames: allProcessingStepNames,
   allStepNamesAfter: allStepNamesAfter,
   is: isStep,

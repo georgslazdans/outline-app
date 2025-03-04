@@ -14,6 +14,7 @@
     "paperSize": "Paper Size",
     "width": "Width",
     "height": "Height",
+    "skipPaperDetection": "Skip Paper Detection",
     "findOutline": "Find Outline"
   },
   "orientation": {
@@ -94,7 +95,8 @@
       "similarityThreshold": "Similarity Threshold",
       "areaThresholdSettings": "Object Area Threshold Settings",
       "upperThreshold": "Upper Area Threshold",
-      "lowerThreshold": "Lower Area Threshold"
+      "lowerThreshold": "Lower Area Threshold",
+      "skipPaperDetection": "Skip Paper Detection"
     },
     "simpleSettings": {
       "title": "Settings",

@@ -22,6 +22,8 @@ import useNavigationHistory from "@/context/NavigationHistory";
 import { useErrorModal } from "../error/ErrorContext";
 import { idQuery } from "@/lib/utils/UrlParams";
 import { useSavedFile } from "@/lib/SavedFile";
+import CheckboxField from "../fields/CheckboxField";
+import PaperSettings from "@/lib/opencv/PaperSettings";
 
 type Props = {
   dictionary: any;
@@ -32,6 +34,7 @@ type Form = {
   orientation: string;
   width: number;
   height: number;
+  skipPaperDetection: boolean;
 };
 
 const paperSettingsOf = (context: Context) => {
@@ -55,6 +58,21 @@ const paperSizeOfContext = (detailsContext: Context) => {
   }
 };
 
+const initialFormDataOf = (context: Context): Form => {
+  const paperSettings = paperSettingsOf(context) as PaperSettings;
+  const previousSettings = context?.settings[StepName.INPUT];
+  const skipPaperDetection = previousSettings
+    ? previousSettings.skipPaperDetection === true
+    : false;
+  return {
+    name: "",
+    orientation: paperSettings.orientation,
+    width: paperSettings.width,
+    height: paperSettings.height,
+    skipPaperDetection: skipPaperDetection,
+  };
+};
+
 const DetailsForm = ({ dictionary }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
@@ -69,7 +87,7 @@ const DetailsForm = ({ dictionary }: Props) => {
   );
 
   const [formData, setFormData] = useState<Form>(
-    paperSettingsOf(detailsContext) || defaultSettings
+    initialFormDataOf(detailsContext)
   );
 
   // Remove loading from previous screen, but not on form save
@@ -103,6 +121,15 @@ const DetailsForm = ({ dictionary }: Props) => {
     handleChange(event);
   };
 
+  const handleSkipPaperDetectionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFormData({
+      ...formData,
+      skipPaperDetection: event.target.checked,
+    });
+  };
+
   const onFormSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -113,6 +140,7 @@ const DetailsForm = ({ dictionary }: Props) => {
       height: formData.height,
       orientation: formData.orientation as Orientation,
     };
+    settings.input.skipPaperDetection = formData.skipPaperDetection;
     const newContext: Context = {
       details: {
         ...formData,
@@ -161,23 +189,29 @@ const DetailsForm = ({ dictionary }: Props) => {
         required
       ></InputField>
 
-      <SelectField
-        label={dictionary.details.orientation}
-        name={"orientation"}
-        options={orientationOptionsFor(dictionary)}
-        value={formData.orientation}
-        onChange={handleChange}
-      ></SelectField>
-      <SelectField
-        label={dictionary.details.paperSize}
-        name={"paperSize"}
-        options={paperSizeOptionsFor(dictionary)}
-        value={paperSize}
-        onChange={handlePaperChange}
-      ></SelectField>
+      <div className="flex flex-col xl:flex-row w-full gap-2">
+        <SelectField
+          className="w-full"
+          label={dictionary.details.orientation}
+          name={"orientation"}
+          options={orientationOptionsFor(dictionary)}
+          value={formData.orientation}
+          onChange={handleChange}
+        ></SelectField>
+        <SelectField
+          className="w-full"
+          label={dictionary.details.paperSize}
+          name={"paperSize"}
+          options={paperSizeOptionsFor(dictionary)}
+          value={paperSize}
+          onChange={handlePaperChange}
+        ></SelectField>
+      </div>
+
       {paperSize == "custom" && (
-        <>
+        <div className="flex flex-col xl:flex-row w-full gap-2">
           <NumberField
+            className="w-full"
             value={formData.width}
             onChange={handlePaperSizeChange}
             label={dictionary.details.width}
@@ -185,14 +219,21 @@ const DetailsForm = ({ dictionary }: Props) => {
             numberRange={paperSizeNumberRange}
           ></NumberField>
           <NumberField
+            className="w-full"
             value={formData.height}
             onChange={handlePaperSizeChange}
             label={dictionary.details.height}
             name={"height"}
             numberRange={paperSizeNumberRange}
           ></NumberField>
-        </>
+        </div>
       )}
+      <CheckboxField
+        value={formData.skipPaperDetection}
+        onChange={handleSkipPaperDetectionChange}
+        label={dictionary.details.skipPaperDetection}
+        name="skipPaperDetection"
+      ></CheckboxField>
       <Button className="mt-4">
         <label>{dictionary.details.findOutline}</label>
       </Button>

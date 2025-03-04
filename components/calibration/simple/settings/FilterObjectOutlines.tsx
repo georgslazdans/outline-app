@@ -35,6 +35,7 @@ const FilterObjectOutlines = ({
         dictionary={dictionary}
         name="filterObjects"
         settingStep={CalibrationSettingStep.FILTER_OBJECTS}
+        settings={settings}
       >
         <StepSettingField
           value={settings[StepName.FILTER_OBJECTS]?.objectIndexes}

@@ -9,6 +9,7 @@ import { useSettingStepContext } from "../SettingStepContext";
 import CalibrationSettingStep from "../settings/CalibrationSettingStep";
 import { useDetails } from "@/context/DetailsContext";
 import { DisplayImageInfo } from "./DisplayImageInfo";
+import Settings, { inSettings } from "@/lib/opencv/Settings";
 
 interface Option {
   label: string;
@@ -23,6 +24,7 @@ const imageEntryFor = (stepName: StepName, dictionary: Dictionary): Option => {
 };
 
 const imageOptionsFor = (
+  settings: Settings,
   settingStep: CalibrationSettingStep,
   dictionary: Dictionary
 ): Option[] => {
@@ -35,23 +37,39 @@ const imageOptionsFor = (
   } else if (settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER) {
     return [imageEntryFor(StepName.CLOSE_CORNERS_PAPER, dictionary)];
   } else if (settingStep == CalibrationSettingStep.FIND_OBJECT) {
-    return [
-      imageEntryFor(StepName.OBJECT_THRESHOLD, dictionary),
-      imageEntryFor(StepName.BLUR_OBJECT, dictionary),
-      imageEntryFor(StepName.CANNY_OBJECT, dictionary),
-    ];
+    if (inSettings(settings).isPaperDetectionSkipped()) {
+      return [
+        imageEntryFor(StepName.INPUT, dictionary),
+        imageEntryFor(StepName.OBJECT_THRESHOLD, dictionary),
+        imageEntryFor(StepName.BLUR_OBJECT, dictionary),
+        imageEntryFor(StepName.CANNY_OBJECT, dictionary),
+      ];
+    } else {
+      return [
+        imageEntryFor(StepName.OBJECT_THRESHOLD, dictionary),
+        imageEntryFor(StepName.BLUR_OBJECT, dictionary),
+        imageEntryFor(StepName.CANNY_OBJECT, dictionary),
+        imageEntryFor(StepName.EXTRACT_PAPER, dictionary),
+      ];
+    }
   } else if (settingStep == CalibrationSettingStep.CLOSE_CORNERS) {
     return [imageEntryFor(StepName.CLOSE_CORNERS, dictionary)];
-  } else if (settingStep == CalibrationSettingStep.HOLE_AND_SMOOTHING) {
-    return [imageEntryFor(StepName.EXTRACT_PAPER, dictionary)];
-  } else if (settingStep == CalibrationSettingStep.FILTER_OBJECTS) {
-    return [imageEntryFor(StepName.EXTRACT_PAPER, dictionary)];
+  } else if (
+    settingStep == CalibrationSettingStep.HOLE_AND_SMOOTHING ||
+    settingStep == CalibrationSettingStep.FILTER_OBJECTS
+  ) {
+    if (inSettings(settings).isPaperDetectionSkipped()) {
+      return [imageEntryFor(StepName.INPUT, dictionary)];
+    } else {
+      return [imageEntryFor(StepName.EXTRACT_PAPER, dictionary)];
+    }
   }
   throw Error("Image entries not found for step: " + settingStep);
 };
 
 type Props = {
   dictionary: Dictionary;
+  settings: Settings;
 };
 
 const hasSameImages = (
@@ -71,7 +89,7 @@ const hasSameImages = (
   return areEqual;
 };
 
-export const OutlineImageSelector = ({ dictionary }: Props) => {
+export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
   const { detailsContext } = useDetails();
   const { stepResults, objectOutlineImages, paperOutlineImages } =
     useResultContext();
@@ -193,14 +211,14 @@ export const OutlineImageSelector = ({ dictionary }: Props) => {
   }, [displayImageInfo.baseImage, displayImageInfo.baseStepName, stepResults]);
 
   useEffect(() => {
-    const options = imageOptionsFor(settingStep, dictionary);
+    const options = imageOptionsFor(settings, settingStep, dictionary);
     const stepResultNames = stepResults.map((it) => it.stepName);
     const filteredOptions = options.filter((it) =>
       stepResultNames.includes(it.value)
     );
 
     setBackgroundImageOptions(filteredOptions);
-  }, [stepResults, settingStep, dictionary]);
+  }, [stepResults, settingStep, dictionary, settings]);
 
   return (
     <>

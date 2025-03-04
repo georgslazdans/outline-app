@@ -1,7 +1,7 @@
 "use client";
 
 import { Dictionary } from "@/app/dictionaries";
-import Settings from "@/lib/opencv/Settings";
+import Settings, { inSettings } from "@/lib/opencv/Settings";
 import React from "react";
 import SettingGroup from "./SettingGroup";
 import StepSettingField from "../../fields/StepSettingField";
@@ -13,7 +13,6 @@ import extractPaperStep from "@/lib/opencv/processor/steps/ExtractPaper";
 import CalibrationSettingStep from "./CalibrationSettingStep";
 import { useStepChangeHandler } from "../../fields/ChangeHandler";
 
-const DISABLED_BILATERAL_FILTER = "disabledBilateralFilter";
 const PIXEL_DIAMETER = "pixelDiameter";
 const BLUR_WIDTH = "blurWidth";
 const BLOCK_SIZE = "blockSize";
@@ -59,9 +58,9 @@ const FindPaperSettings = ({
         dictionary={dictionary}
         name="findPaper"
         settingStep={CalibrationSettingStep.FIND_PAPER}
+        settings={settings}
       >
-        {settings[StepName.BILATERAL_FILTER][DISABLED_BILATERAL_FILTER] ==
-          false && (
+        {!inSettings(settings).isBilateralFilterDisabled() && (
           <StepSettingField
             value={settings[StepName.BILATERAL_FILTER][PIXEL_DIAMETER]}
             name={"bilateralFilterPixelDiameter"}

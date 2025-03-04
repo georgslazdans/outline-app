@@ -14,6 +14,7 @@
     "paperSize": "Papīra Izmērs",
     "width": "Platums",
     "height": "Garums",
+    "skipPaperDetection": "Izlaist Papīra Konstatēšanu",
     "findOutline": "Atrast Kontūru"
   },
   "orientation": {
@@ -94,7 +95,8 @@
       "similarityThreshold": "Similarity Threshold",
       "areaThresholdSettings": "Object Area Threshold Settings",
       "upperThreshold": "Upper Area Threshold",
-      "lowerThreshold": "Lower Area Threshold"
+      "lowerThreshold": "Lower Area Threshold",
+      "skipPaperDetection": "Izlaist Papīra Konstatēšanu"
     },
     "simpleSettings": {
       "title": "Iestatījumi",

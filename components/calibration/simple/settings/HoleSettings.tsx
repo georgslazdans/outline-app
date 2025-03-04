@@ -47,6 +47,7 @@ const HoleAndSmoothSettings = ({
         dictionary={dictionary}
         name="holeSettings"
         settingStep={CalibrationSettingStep.HOLE_AND_SMOOTHING}
+        settings={settings}
       >
         <StepSettingField
           value={holeSettings?.meanThreshold}

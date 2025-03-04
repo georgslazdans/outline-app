@@ -5,15 +5,23 @@ import IconButton from "@/components/IconButton";
 import { useSettingStepContext } from "../SettingStepContext";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useResultContext } from "../../ResultContext";
+import Settings, { inSettings } from "@/lib/opencv/Settings";
 
 type Props = {
   name: string;
   dictionary: Dictionary;
   children: ReactNode;
   settingStep: CalibrationSettingStep;
+  settings: Settings;
 };
 
-const SettingGroup = ({ name, dictionary, children, settingStep }: Props) => {
+const SettingGroup = ({
+  name,
+  dictionary,
+  children,
+  settingStep,
+  settings,
+}: Props) => {
   const { paperOutlineImages, objectOutlineImages } = useResultContext();
   const {
     settingStep: currentSettingStep,
@@ -44,8 +52,11 @@ const SettingGroup = ({ name, dictionary, children, settingStep }: Props) => {
         return true;
       }
     }
-    return paperOutlineImages.length <= 0;
-  }, [objectOutlineImages, paperOutlineImages.length, settingStep]);
+    return (
+      paperOutlineImages.length <= 0 &&
+      !inSettings(settings).isPaperDetectionSkipped()
+    );
+  }, [objectOutlineImages, paperOutlineImages.length, settingStep, settings]);
 
   return (
     <>

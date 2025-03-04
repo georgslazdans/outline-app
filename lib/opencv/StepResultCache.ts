@@ -1,7 +1,5 @@
-import Steps from "./processor/Steps";
 import StepName from "./processor/steps/StepName";
-import Settings, { defaultSettings } from "./Settings";
-import StepResult, { hasImageData } from "./StepResult";
+import StepResult from "./StepResult";
 
 enum CacheStatus {
   VALID,
@@ -15,10 +13,20 @@ type CacheResult = {
 };
 
 let resultCache: CacheResult[] = [];
-let mandatorySteps = Steps.mandatorySteps();
+let cacheableSteps = [
+  StepName.INPUT,
+  StepName.BILATERAL_FILTER,
+  StepName.BLUR,
+  StepName.FIND_PAPER_OUTLINE,
+  StepName.EXTRACT_PAPER,
+  StepName.BLUR_OBJECT,
+  StepName.OBJECT_THRESHOLD,
+  StepName.FIND_PAPER_OUTLINE,
+  StepName.FIND_OBJECT_OUTLINES,
+];
 
 export const addToResultCache = (stepResult: StepResult) => {
-  if (!mandatorySteps.includes(stepResult.stepName)) {
+  if (!cacheableSteps.includes(stepResult.stepName)) {
     return;
   }
 
