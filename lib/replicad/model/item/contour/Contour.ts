@@ -1,6 +1,6 @@
-import ItemType from "../ItemType";
-import Item from "../Item";
-import BooleanOperation from "../BooleanOperation";
+import ItemType from "../../ItemType";
+import Item from "../../Item";
+import BooleanOperation from "../../BooleanOperation";
 import { v4 as randomUUID } from "uuid";
 import ContourPoints, {
   ContourOutline,
@@ -17,6 +17,7 @@ import {
 } from "@/context/DetailsContext";
 import Point from "@/lib/data/Point";
 import { paperDimensionsOfDetailsContext } from "@/lib/opencv/PaperSettings";
+import { ItemModification } from "../Modification";
 
 type Contour = {
   type: ItemType.Contour;
@@ -24,6 +25,7 @@ type Contour = {
   height: number;
   offset: Point;
   detailsContextId?: number;
+  modifications?: ItemModification[];
 };
 
 const offsetOf = (contourOutline: ContourOutline, context: Context): Point => {
@@ -70,6 +72,7 @@ export const contourItemOf = (
     rotation: zeroPoint(),
     booleanOperation: BooleanOperation.CUT,
     detailsContextId: detailsContextId,
+    modifications: [],
   };
 };
 

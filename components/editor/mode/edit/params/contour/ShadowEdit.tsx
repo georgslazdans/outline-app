@@ -2,11 +2,11 @@
 
 import { Dictionary } from "@/app/dictionaries";
 import React, { ChangeEvent } from "react";
-import TransformEdit from "./TransformEdit";
-import EditField from "../../EditField";
-import BooleanOperationEdit from "./BooleanOperationEdit";
+import TransformEdit from "../TransformEdit";
+import EditField from "../../../EditField";
+import BooleanOperationEdit from "../BooleanOperationEdit";
 import Item from "@/lib/replicad/model/Item";
-import Contour from "@/lib/replicad/model/item/Contour";
+import Contour from "@/lib/replicad/model/item/contour/Contour";
 
 type Props = {
   dictionary: Dictionary;

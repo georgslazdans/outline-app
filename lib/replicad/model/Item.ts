@@ -3,10 +3,10 @@ import BooleanOperation from "./BooleanOperation";
 import Gridfinity from "./item/gridfinity/Gridfinity";
 import ItemGroup from "./item/ItemGroup";
 import Primitive from "./item/Primitive";
-import Contour from "./item/Contour";
+import Contour from "./item/contour/Contour";
 import TextItem from "./item/TextItem";
 import ItemType from "./ItemType";
-import Modification from "./item/gridfinity/Modification";
+import Modification from "./item/Modification";
 
 type Item = {
   id: string;

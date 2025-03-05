@@ -1,5 +1,6 @@
 import { forModelData } from "../ForModelData";
 import Item from "../Item";
+import Contour from "../item/contour/Contour";
 import Gridfinity from "../item/gridfinity/Gridfinity";
 import ItemGroup from "../item/ItemGroup";
 import ItemType from "../ItemType";
@@ -57,6 +58,12 @@ const doesItemFor = (data: ModelData) => {
               const result = checkItems(gridfinity.modifications);
               if (result) return true;
             }
+
+            const contours = items.filter(
+              (it) => it.type == ItemType.Contour && it.modifications
+            ) as (Item & Contour)[];
+            const result = contours.find((it) => checkItems(it.modifications!));
+            if (result) return true;
           }
           return false;
         };

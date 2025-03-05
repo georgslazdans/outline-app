@@ -9,10 +9,14 @@ import translateModel from "./transform/TranslateModel";
 import processBooleanOperation from "./transform/BooleanOperation";
 import cutModel from "./CutModel";
 import Gridfinity from "./model/item/gridfinity/Gridfinity";
+import { SplitModification } from "./model/item/gridfinity/SplitModification";
 
 const modelOf = (item: Item): ReplicadModelData | undefined => {
   let model;
-  if (item.type == ItemType.GridfinitySplit) {
+  if (
+    item.type == ItemType.GridfinitySplit ||
+    item.type == ItemType.ContourShell
+  ) {
     return;
   }
   if (item.type == ItemType.Group) {
@@ -57,7 +61,7 @@ const processModifications = (
   const params = gridfinity?.params;
   const splitModification = gridfinity?.modifications?.find(
     (it) => it.type == ItemType.GridfinitySplit
-  );
+  ) as Item & SplitModification;
   if (params && splitModification && splitModification.cuts.length > 0) {
     return cutModel(result, splitModification.cuts, params);
   } else {

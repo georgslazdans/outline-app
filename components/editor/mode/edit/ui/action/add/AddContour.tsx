@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import ContourImportDialog from "../../contour-import/ContourImportDialog";
 import { gridfinityHeightOf } from "@/lib/replicad/model/item/gridfinity/Gridfinity";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
-import { contourItemFromContext } from "@/lib/replicad/model/item/Contour";
+import { contourItemFromContext } from "@/lib/replicad/model/item/contour/Contour";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
