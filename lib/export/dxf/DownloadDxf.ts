@@ -24,7 +24,7 @@ const asDxfFile = (
   paperDimensions: PaperDimensions
 ) => {
   const points = pointsOf(outline);
-  const contours = modifyContourList(points).centerPoints(paperDimensions);
+  const contours = modifyContourList(points).centerOnOrigin();
   const dxf = Dxf.from(contours, paperDimensions);
   return new Blob([dxf], {
     type: "image/x-dxf",

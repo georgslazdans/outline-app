@@ -32,7 +32,7 @@ const polyLineOf = (points: Point[], paperDimensions: PaperDimensions) => {
 
 const dxfPointOf = (point: Point, paperDimensions: PaperDimensions) => {
   const { x, y } = point;
-  return `10\n${x}\n20\n${paperDimensions.height - y}\n`;
+  return `10\n${x}\n20\n${y}\n`;
 };
 
 export default fromContours;
