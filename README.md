@@ -39,6 +39,8 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+Please read the `CONTRIBUTING.md` file before creating Pull Requests.
+
 ## Self Hosting
 
 Requirements: [Node.js](https://nodejs.org/en)
