@@ -8,7 +8,11 @@ const COLORS = {
   [ItemType.Text]: "",
 };
 const getColorFor = (type: ItemType) => {
-  if (type != ItemType.Group && type != ItemType.GridfinitySplit)
+  if (
+    type != ItemType.Group &&
+    type != ItemType.GridfinitySplit &&
+    type != ItemType.ContourShell
+  )
     return `${COLORS[type]}`;
 };
 

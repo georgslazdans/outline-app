@@ -2,10 +2,10 @@
 
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import Item from "@/lib/replicad/model/Item";
-import { SplitModification } from "@/lib/replicad/model/item/gridfinity/Modification";
 import ItemType from "@/lib/replicad/model/ItemType";
 import GridfinityGrid from "./grid/GridfinityGrid";
 import Gridfinity from "@/lib/replicad/model/item/gridfinity/Gridfinity";
+import { SplitModification } from "@/lib/replicad/model/item/gridfinity/SplitModification";
 
 type Props = {
   item: Item & SplitModification;

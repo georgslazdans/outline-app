@@ -1,5 +1,5 @@
 import Item from "../../Item";
-import Modification from "../../item/gridfinity/Modification";
+import Modification from "../../item/Modification";
 import ItemType from "../../ItemType";
 
 const updateItem = (item: Item, items: Item[]): Item[] => {
@@ -12,7 +12,10 @@ const updateItem = (item: Item, items: Item[]): Item[] => {
           ...it,
           items: updateItem(item, it.items),
         };
-      } else if (it.type == ItemType.Gridfinity && it.modifications) {
+      } else if (
+        (it.type == ItemType.Gridfinity || it.type == ItemType.Contour) &&
+        it.modifications
+      ) {
         return {
           ...it,
           modifications: updateItem(item, it.modifications) as (Item &

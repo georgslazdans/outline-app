@@ -9,7 +9,7 @@ import React, { useMemo } from "react";
 import EditorMode from "../../EditorMode";
 import { usePointClickContext } from "../selection/PointClickContext";
 import PointClickMode from "../selection/PointClickMode";
-import Contour, { contourItemOf } from "@/lib/replicad/model/item/Contour";
+import Contour, { contourItemOf } from "@/lib/replicad/model/item/contour/Contour";
 import Item from "@/lib/replicad/model/Item";
 import { queryContourList } from "@/lib/data/contour/ContourPoints";
 import { itemGroupOf } from "@/lib/replicad/model/item/ItemGroup";

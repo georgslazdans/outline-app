@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import GridfinityEdit from "./gridfinity/GridfinityEdit";
 import GroupEdit from "./GroupEdit";
 import PrimitiveEdit from "./primitive/PrimitiveEdit";
-import ContourEdit from "./ShadowEdit";
+import ContourEdit from "./contour/ShadowEdit";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
@@ -11,6 +11,7 @@ import ItemType from "@/lib/replicad/model/ItemType";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";
 import TextItemEdit from "./TextItemEdit";
 import SplitGridfinityBoxEdit from "./gridfinity/SplitGridfinityBoxEdit";
+import ShellModificationEdit from "./contour/ShellModificationEdit";
 
 type Props = {
   dictionary: Dictionary;
@@ -76,6 +77,13 @@ const ParamsEdit = ({ dictionary, item }: Props) => {
             item={item}
             onItemChange={(params) => onItemChanged(item.id, params)}
           ></SplitGridfinityBoxEdit>
+        );
+      case ItemType.ContourShell:
+        return (
+          <ShellModificationEdit
+            item={item}
+            onItemChange={(params) => onItemChanged(item.id, params)}
+          ></ShellModificationEdit>
         );
     }
   };

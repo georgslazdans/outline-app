@@ -5,6 +5,7 @@ enum ItemType {
   Group = "group",
   Text = "text",
   GridfinitySplit = "gridfinity-split",
+  ContourShell = "contour-shell",
 }
 
 export const nameItemTypeOf = (item: ItemType): string => {

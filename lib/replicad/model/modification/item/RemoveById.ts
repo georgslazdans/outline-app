@@ -12,7 +12,10 @@ const deleteById = (id: string, items: Item[]): Item[] => {
             ...it,
             items: deleteById(id, it.items),
           };
-        } else if (it.type == ItemType.Gridfinity && it.modifications) {
+        } else if (
+          (it.type == ItemType.Gridfinity || it.type == ItemType.Contour) &&
+          it.modifications
+        ) {
           return {
             ...it,
             modifications: deleteById(id, it.modifications),
