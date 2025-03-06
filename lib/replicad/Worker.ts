@@ -34,6 +34,9 @@ const processItem = async (item: Item) => {
   if (item.type == ItemType.GridfinitySplit) {
     throw new Error("Gridfinity split is not supported!");
   }
+  if (item.type == ItemType.ContourShell) {
+    throw new Error("Contour Shell is not supported!");
+  }
   console.debug("Processing item", item.id, item.type);
 
   return asResult([drawItem(item)]);

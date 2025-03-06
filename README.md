@@ -6,7 +6,7 @@ This is a app that creates an outline from an image using OpenCv and allows to c
 
 ### Contour Detection
 
-Using OpenCV extract objects contours that are placed on top of a uniform paper.
+Using OpenCV extract objects contours that are placed on top of a uniform paper. Paper detection can be skipped to use with scanned images.
 
 ### Box Editor
 
@@ -16,6 +16,7 @@ Using OpenCV extract objects contours that are placed on top of a uniform paper.
   - Point adding/removing and transformation
   - Offset along normals
   - Contour Splitting
+  - Shell
 - Text
 - Primitives
   - Cube

@@ -13,13 +13,14 @@ import React, {
 import { useModelDataContext } from "../../ModelDataContext";
 import { forModelData } from "@/lib/replicad/model/ForModelData";
 import ItemType from "@/lib/replicad/model/ItemType";
-import { SplitModification } from "@/lib/replicad/model/item/gridfinity/Modification";
 import EditorHistoryType from "../../history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 import deepEqual from "@/lib/utils/Objects";
 import ModelData from "@/lib/replicad/model/ModelData";
 import Point from "@/lib/data/Point";
 import Gridfinity from "@/lib/replicad/model/item/gridfinity/Gridfinity";
+import { SplitModification } from "@/lib/replicad/model/item/gridfinity/SplitModification";
+import Modification from "@/lib/replicad/model/item/Modification";
 
 export type highlight = {
   splitCut: SplitCut;
@@ -38,13 +39,15 @@ const GridfinitySplitContext = createContext<
   GridfinitySplitContextType | undefined
 >(undefined);
 
-const getSplitItem = (modelData: ModelData) => {
+const getSplitItem = (
+  modelData: ModelData
+): Modification & SplitModification => {
   const gridfinity = modelData.items.find(
     (it) => it.type == ItemType.Gridfinity
   ) as Item & Gridfinity;
   const split = gridfinity?.modifications?.find(
     (it) => it.type == ItemType.GridfinitySplit
-  ) as Item & SplitModification;
+  ) as Modification & SplitModification;
   return split;
 };
 
@@ -102,7 +105,8 @@ export const GridfinitySplitContextProvider = ({
     (splitCuts: SplitCut[]) => {
       const { updateItem } = forModelData(modelData);
       const split = getSplitItem(modelData);
-      const updatedSplit = { ...split, cuts: splitCuts };
+      const updatedSplit = { ...split, cuts: splitCuts } as Item &
+        SplitModification;
       setModelData(
         updateItem(updatedSplit),
         EditorHistoryType.OBJ_UPDATED,

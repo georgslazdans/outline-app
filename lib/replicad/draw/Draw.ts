@@ -1,6 +1,6 @@
 import Gridfinity from "../model/item/gridfinity/Gridfinity";
 import Primitive from "../model/item/Primitive";
-import Contour from "../model/item/Contour";
+import Contour from "../model/item/contour/Contour";
 import ItemType from "../model/ItemType";
 import gridfinityBox from "./Gridfinity";
 import drawShadow from "./OutlineShadow";
@@ -16,8 +16,8 @@ export const drawItem = (item: DrawableItem): ReplicadModelData => {
     case ItemType.Gridfinity:
       return gridfinityBox(item.params);
     case ItemType.Contour:
-      const { points, height } = item;
-      return drawShadow(points, height);
+      const { points, height, modifications } = item;
+      return drawShadow(points, height, modifications);
     case ItemType.Primitive:
       return drawPrimitive(item.params);
     case ItemType.Text:

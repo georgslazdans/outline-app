@@ -7,7 +7,7 @@ import deepEqual from "@/lib/utils/Objects";
 import { Intersection, ThreeEvent } from "@react-three/fiber";
 import { PointClickHandler } from "../PointClickContext";
 import SplitPoints from "../SplitPoints";
-import Contour from "@/lib/replicad/model/item/Contour";
+import Contour from "@/lib/replicad/model/item/contour/Contour";
 import Item from "@/lib/replicad/model/Item";
 import { queryContourList } from "@/lib/data/contour/ContourPoints";
 import { useModelDataContext } from "@/components/editor/ModelDataContext";

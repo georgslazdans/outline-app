@@ -14,8 +14,8 @@ import EditorHistoryType from "@/components/editor/history/EditorHistoryType";
 import Item from "@/lib/replicad/model/Item";
 import ModelData from "@/lib/replicad/model/ModelData";
 import ItemType from "@/lib/replicad/model/ItemType";
-import { SplitModification } from "@/lib/replicad/model/item/gridfinity/Modification";
 import { reconstructSplitCuts } from "@/lib/replicad/model/item/gridfinity/SplitCut";
+import { SplitModification } from "@/lib/replicad/model/item/gridfinity/SplitModification";
 
 type Props = {
   dictionary: Dictionary;
@@ -51,7 +51,7 @@ const updateSplitCuts = (
   ) as Item & Gridfinity;
   const split = gridfinity?.modifications?.find(
     (it) => it.type == ItemType.GridfinitySplit
-  );
+  ) as Item & SplitModification;
   if (split) {
     const { updateItem } = forModelData(data);
     const newSplit: Item & SplitModification = {

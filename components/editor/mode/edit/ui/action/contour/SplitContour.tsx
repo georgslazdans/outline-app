@@ -16,7 +16,7 @@ type Props = {
 
 const icon = (
   <svg
-    viewBox="0 -1 6.35 5.35"
+    viewBox="-0.5 0 7.5 6.5"
     version="1.1"
     id="svg1"
     xmlns="http://www.w3.org/2000/svg"

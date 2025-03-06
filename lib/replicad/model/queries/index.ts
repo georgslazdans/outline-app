@@ -5,6 +5,7 @@ import ModelData from "../ModelData";
 import doesItemFor from "./DoesItem";
 import _findAlignedItems from "./FindAlignedItems";
 import findById from "./FindById";
+import findByType from "./FindByType";
 import findParentGroupId from "./FindParentId";
 import _parentTotalHeight from "./ParentTotalHeight";
 
@@ -22,6 +23,9 @@ const queriesFor = (data: ModelData) => {
     },
     findParentId: (id: string): string | undefined => {
       return findParentGroupId(data, id);
+    },
+    findByType: (type: ItemType): Item[] => {
+      return findByType(data, type);
     },
     doesItem: doesItemFor(data),
     getParentIdForObjectCreation: (selectedItem?: Item): string | undefined => {
