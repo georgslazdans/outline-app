@@ -3,6 +3,7 @@ import Item from "../../Item";
 import ItemType from "../../ItemType";
 import ModelData from "../../ModelData";
 import { forModelData } from "../../ForModelData";
+import { ItemModification } from "../../item/Modification";
 
 const duplicateItemFor = (data: ModelData) => {
   const duplicateItem = (item: Item): Item => {
@@ -11,6 +12,15 @@ const duplicateItemFor = (data: ModelData) => {
         ...item,
         id: randomUUID(),
         items: item.items.map(duplicateItem),
+      };
+    }
+    if (item.type == ItemType.Contour && item.modifications) {
+      return {
+        ...item,
+        id: randomUUID(),
+        modifications: item.modifications.map(
+          duplicateItem
+        ) as ItemModification[],
       };
     }
     return {

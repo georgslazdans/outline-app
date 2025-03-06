@@ -59,7 +59,8 @@ export const contourItemOf = (
   name: string,
   height: number,
   offset: Point,
-  detailsContextId?: number
+  detailsContextId?: number,
+  modifications?: ItemModification[]
 ): Item & Contour => {
   return {
     id: randomUUID(),
@@ -72,7 +73,7 @@ export const contourItemOf = (
     rotation: zeroPoint(),
     booleanOperation: BooleanOperation.CUT,
     detailsContextId: detailsContextId,
-    modifications: [],
+    modifications: modifications ? modifications : [],
   };
 };
 

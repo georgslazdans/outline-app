@@ -9,7 +9,11 @@ type ItemGroup = {
   items: Item[];
 };
 
-export const itemGroupOf = (items: Item[], name?: string): Item & ItemGroup => {
+export const itemGroupOf = (
+  items: Item[],
+  name?: string,
+  operation?: BooleanOperation
+): Item & ItemGroup => {
   return {
     id: randomUUID(),
     type: ItemType.Group,
@@ -17,7 +21,7 @@ export const itemGroupOf = (items: Item[], name?: string): Item & ItemGroup => {
     items: items,
     translation: zeroPoint(),
     rotation: zeroPoint(),
-    booleanOperation: BooleanOperation.CUT,
+    booleanOperation: operation ? operation : BooleanOperation.CUT,
   };
 };
 
