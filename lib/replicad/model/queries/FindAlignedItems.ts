@@ -1,19 +1,25 @@
+import BooleanOperation from "../BooleanOperation";
 import Item from "../Item";
 import { defaultPrimitiveHeightOf } from "../item/PrimitiveParams";
 import ItemType from "../ItemType";
 import ModelData from "../ModelData";
 
+const itemHeightOf = (item: Item): number => {
+  const itemHeight = item.translation?.z ? item.translation?.z : 0;
+  if (item.booleanOperation == BooleanOperation.UNION) {
+    if (item.type == ItemType.Contour) {
+      return itemHeight - item.height;
+    }
+  } else {
+    if (item.type == ItemType.Primitive) {
+      return itemHeight - defaultPrimitiveHeightOf(item.params);
+    }
+  }
+  return itemHeight;
+};
+
 const _findAlignedItems = (data: ModelData) => {
   return (height: number) => {
-    const itemHeightOf = (item: Item): number => {
-      const itemHeight = item.translation?.z ? item.translation?.z : 0;
-      if (item.type == ItemType.Primitive) {
-        return itemHeight - defaultPrimitiveHeightOf(item.params);
-      } else {
-        return itemHeight;
-      }
-    };
-
     const areAligned = (items: Item[], offset: number) => {
       const result: string[] = [];
       items.forEach((item) => {
