@@ -11,7 +11,6 @@ type Props = {
 };
 
 const ShellModificationEdit = ({ item, onItemChange }: Props) => {
-  console.log("Shell modification!", item);
   const handleNumberChange = (name: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = Number.parseFloat(event.target.value);
