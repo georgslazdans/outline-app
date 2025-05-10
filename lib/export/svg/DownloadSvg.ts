@@ -24,7 +24,7 @@ const asXmlFile = (
   paperDimensions: PaperDimensions
 ) => {
   const points = pointsOf(outline);
-  const contours = modifyContourList(points).centerPoints(paperDimensions);
+  const contours = modifyContourList(points).centerOnOrigin();
   const svg = Svg.from(contours, paperDimensions);
   return new Blob([svg], {
     type: "image/svg+xml",

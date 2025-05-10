@@ -30,10 +30,9 @@ const ExportFileButtons = ({ dictionary }: Props) => {
 
   const exportDxf = useCallback(() => {
     const lastStep = stepResults[stepResults.length - 1];
-    const paperDimensions = paperDimensionsOfDetailsContext(detailsContext);
     const contourOutlines = lastStep.contours ? lastStep.contours : [];
     const exportName = exportNameOf(detailsContext.details.name);
-    Dxf.download(contourOutlines, paperDimensions, exportName);
+    Dxf.download(contourOutlines, exportName);
   }, [detailsContext, stepResults]);
 
   if (

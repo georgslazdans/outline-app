@@ -54,7 +54,7 @@ export const centerPoints = (
   if (contourPoints && contourPoints.length > 0) {
     const contours =
       modifyContourList(contourPoints).centerPoints(paperDimensions);
-    return modifyContourList(contours).mirrorPointsOnXAxis();
+    return modifyContourList(contours).flipYPoints();
   }
   return [];
 };
