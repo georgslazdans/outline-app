@@ -2,34 +2,35 @@
 import JsZip from "jszip";
 import Dxf from "./Dxf";
 import ContourPoints, { ContourOutline, modifyContourList } from "@/lib/data/contour/ContourPoints";
-import { PaperDimensions } from "@/lib/opencv/PaperSettings";
 import { downloadFile } from "@/lib/utils/Download";
 
 export const downloadAsDxf = (
   contourOutlines: ContourOutline[],
-  paperDimensions: PaperDimensions,
   fileName: string
 ) => {
   if (contourOutlines.length == 1) {
-    const blob = asDxfFile(contourOutlines[0], paperDimensions);
+    const blob = asDxfFile(contourOutlines[0]);
     downloadFile(blob, `${fileName}.dxf`);
   } else {
-    const blobs = contourOutlines.map((it) => asDxfFile(it, paperDimensions));
+    const blobs = contourOutlines.map((it) => asDxfFile(it));
     asZipFile(blobs).then((zip) => downloadFile(zip, `${fileName}_dxf.zip`));
   }
 };
 
 const asDxfFile = (
-  outline: ContourOutline,
-  paperDimensions: PaperDimensions
+  outline: ContourOutline
 ) => {
   const points = pointsOf(outline);
-  const contours = modifyContourList(points).centerOnOrigin();
-  const dxf = Dxf.from(contours, paperDimensions);
+  const dxf = Dxf.from(centerAndFlip(points));
   return new Blob([dxf], {
     type: "image/x-dxf",
   });
 };
+
+const centerAndFlip = (points: ContourPoints[]) => {
+  const contours = modifyContourList(points).centerOnOrigin();
+  return modifyContourList(contours).flipYPoints();
+}
 
 const pointsOf = (outline: ContourOutline): ContourPoints[] => {
   const holes = outline.holes ? outline.holes : [];

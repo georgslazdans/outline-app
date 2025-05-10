@@ -31,9 +31,8 @@ const ExportDropdown = ({ context, dictionary }: Props) => {
 
   const exportDxf = () => {
     if (hasExportableContours) {
-      const paperDimensions = paperDimensionsOfDetailsContext(context);
       const exportName = exportNameOf(context.details.name);
-      Dxf.download(context.contours, paperDimensions, exportName);
+      Dxf.download(context.contours, exportName);
     }
   };
 
