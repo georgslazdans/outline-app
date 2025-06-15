@@ -21,6 +21,7 @@ const defaultParams = {
   magnetHeight: 2,
   screwRadius: 1.5,
   keepFull: false,
+  insideHeight: 0,
   wallThickness: 1.2,
   gridSize: 42.0,
   includeLip: true,
@@ -189,6 +190,7 @@ function gridfinityBox({
   ySize = 1,
   height = 3,
   keepFull = false,
+  insideHeight = 0,
   wallThickness = 1.2,
   withMagnet = false,
   withScrew = false,
@@ -199,6 +201,7 @@ function gridfinityBox({
   includeLip = true,
 } = {}): ReplicadModelData {
   const stdHeight = height * 7;
+  const insideStdHeight = insideHeight * 7;
 
   let box = drawRoundedRectangle(
     xSize * gridSize - CLEARANCE,
@@ -210,6 +213,17 @@ function gridfinityBox({
 
   if (!keepFull) {
     box = box.shell(wallThickness, (f) => f.inPlane("XY", stdHeight));
+    if (insideHeight > 0) {
+      box = box.fuse(
+        drawRoundedRectangle(
+          xSize * gridSize - CLEARANCE,
+          ySize * gridSize - CLEARANCE,
+          CORNER_RADIUS
+        )
+          .sketchOnPlane()
+          .extrude(insideStdHeight)
+      );
+    }
   }
 
   const socket = buildSocket({
@@ -239,9 +253,12 @@ function gridfinityBox({
       gridSize,
     }).translateZ(stdHeight);
 
+    // The optimization will not fuse correctly intersecting inside with the lip
+    const isInsideCollidingWithLip = (stdHeight - insideStdHeight) < SOCKET_VERTICAL_PART;
+    const fuseOptions = !isInsideCollidingWithLip ? { optimisation: "commonFace" } : {};
     return base
       .fuse(box, { optimisation: "commonFace" })
-      .fuse(top, { optimisation: "commonFace" });
+      .fuse(top, fuseOptions);
   } else {
     return base.fuse(box, { optimisation: "commonFace" });
   }
