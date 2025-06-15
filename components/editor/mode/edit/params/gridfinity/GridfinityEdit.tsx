@@ -142,7 +142,7 @@ const GridfinityEdit = ({ dictionary, item }: Props) => {
         label={"Height"}
         name={"height"}
         numberRange={{ min: 0, max: 99999, step: 1 }}
-        tooltip="Standard Gridfinity height units of 7mm. Defines the inside of the bin."
+        tooltip="Standard Gridfinity height units of 7mm. Defines the height of the bin."
       ></EditField>
       <CheckboxField
         value={params.keepFull}
@@ -150,6 +150,16 @@ const GridfinityEdit = ({ dictionary, item }: Props) => {
         label={"Keep Full"}
         name={"keepFull"}
       ></CheckboxField>
+      {!params.keepFull && (
+        <EditField
+          value={params.insideHeight}
+          onChange={handleNumberChange("insideHeight")}
+          label={"Inside Height"}
+          name={"insideHeight"}
+          numberRange={{ min: 0, max: 99999, step: 1 }}
+          tooltip="Standard Gridfinity height units of 7mm. Defines the inside height of the bin."
+        ></EditField>
+      )}
       <CheckboxField
         value={params.includeLip != undefined ? params.includeLip : true}
         onChange={handleCheckboxChange("includeLip")}
