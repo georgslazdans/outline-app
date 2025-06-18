@@ -20,7 +20,7 @@ export const defaultGridfinityParams = (): GridfinityParams => {
     ySize: 2,
     height: 3,
     keepFull: true,
-    insideHeight: 0,
+    insideHeight: 1,
     wallThickness: 1.2,
     withMagnet: false,
     withScrew: false,

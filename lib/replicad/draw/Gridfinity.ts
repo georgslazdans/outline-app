@@ -185,6 +185,12 @@ const buildTopShape = ({
     );
 };
 
+// Base is always 1u = 7mm. Height shouldn't be lower than 1
+// Socket is 5mm. Add 2mm to complete the 1u
+const gridfinityHeightOf = (zValue: number) => {
+  return (zValue - 1) * 7 + 2;
+}
+
 function gridfinityBox({
   xSize = 2,
   ySize = 1,
@@ -200,8 +206,8 @@ function gridfinityBox({
   gridSize = 42.0,
   includeLip = true,
 } = {}): ReplicadModelData {
-  const stdHeight = height * 7;
-  const insideStdHeight = insideHeight * 7;
+  const stdHeight = gridfinityHeightOf(height);
+  const insideStdHeight = gridfinityHeightOf(insideHeight);
 
   let box = drawRoundedRectangle(
     xSize * gridSize - CLEARANCE,
