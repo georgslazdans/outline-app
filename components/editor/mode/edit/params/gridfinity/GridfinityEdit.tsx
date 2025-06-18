@@ -141,7 +141,7 @@ const GridfinityEdit = ({ dictionary, item }: Props) => {
         onChange={handleNumberChange("height")}
         label={"Height"}
         name={"height"}
-        numberRange={{ min: 0, max: 99999, step: 1 }}
+        numberRange={{ min: 1, max: 99999, step: 1 }}
         tooltip="Standard Gridfinity height units of 7mm. Defines the height of the bin."
       ></EditField>
       <CheckboxField
@@ -156,7 +156,7 @@ const GridfinityEdit = ({ dictionary, item }: Props) => {
           onChange={handleNumberChange("insideHeight")}
           label={"Inside Height"}
           name={"insideHeight"}
-          numberRange={{ min: 0, max: 99999, step: 1 }}
+          numberRange={{ min: 1, max: 99999, step: 1 }}
           tooltip="Standard Gridfinity height units of 7mm. Defines the inside height of the bin."
         ></EditField>
       )}

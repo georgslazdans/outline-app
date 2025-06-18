@@ -69,6 +69,7 @@ test("E2E flow: upload image from home page", async ({ page }) => {
   await test.step("Assert that there are 3 objects to filter", async () => {
     await page.getByTestId("tail-spin-svg").waitFor({ state: "hidden" });
     await page.getByRole("heading", { name: "Filter Objects" }).click();
+    await waitForImageProcessing();
     const contourLabels = page.locator("text=/Contour (1|2|3)/");
     await expect(contourLabels).toHaveCount(3);
   });
