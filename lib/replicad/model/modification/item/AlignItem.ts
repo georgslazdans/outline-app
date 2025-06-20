@@ -8,6 +8,9 @@ const heightOf = (item: Item): number => {
     if (item.type == ItemType.Contour) {
       return item.height;
     }
+    if(item.type == ItemType.Text) {
+      return item.height;
+    }
   } else {
     if (item.type == ItemType.Primitive) {
       return defaultPrimitiveHeightOf(item.params);
