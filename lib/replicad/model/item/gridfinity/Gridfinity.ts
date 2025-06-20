@@ -29,11 +29,15 @@ export const gridfinityHeightOf = (modelData: ModelData) => {
   const item = modelData.items.find(
     (it) => it.type == ItemType.Gridfinity
   ) as Gridfinity;
-  return convertGridfinityHeightUnits(item.params.height);
+  if (item.params.keepFull) {
+    return convertGridfinityHeightUnits(item.params.height);
+  } else {
+    return convertGridfinityHeightUnits(item.params.insideHeight);
+  }
 };
 
 export const convertGridfinityHeightUnits = (gridfinityHeightUnit: number) => {
-  return gridfinityHeightUnit * HEIGHT_UNIT;
+  return (gridfinityHeightUnit - 1) * HEIGHT_UNIT + 2;
 };
 
 export default Gridfinity;
