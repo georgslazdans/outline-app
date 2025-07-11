@@ -133,7 +133,7 @@ const buildTopShape = ({
   wallThickness = 1.2,
   gridSize,
 }) => {
-  const topShape = (basePlane, startPosition) => {
+  const topShape = (basePlane) => {
     const sketcher = draw([-SOCKET_TAPER_WIDTH, 0])
       .line(SOCKET_SMALL_TAPER, SOCKET_SMALL_TAPER)
       .vLine(SOCKET_VERTICAL_PART)
@@ -167,7 +167,7 @@ const buildTopShape = ({
       );
     }
 
-    return topProfile.sketchOnPlane("XZ", startPosition);
+    return topProfile.sketchOnPlane(basePlane);
   };
 
   const boxSketch = drawRoundedRectangle(
