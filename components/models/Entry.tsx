@@ -10,6 +10,7 @@ import Model from "@/lib/Model";
 import EntryField from "../contours/EntryField";
 import { idQuery } from "@/lib/utils/UrlParams";
 import LazyLoadImage from "../image/lazy/LazyLoadedImage";
+import { addCopyName } from "@/lib/utils/EntryDuplicateName";
 
 type Props = {
   dictionary: Dictionary;
@@ -20,12 +21,36 @@ type Props = {
 const Entry = ({ dictionary, model, onDelete }: Props) => {
   const router = useRouter();
   const { addHistory } = useNavigationHistory();
-  const { deleteRecord } = useIndexedDB("models");
-  const { deleteRecord: deleteFile } = useIndexedDB("files");
+  const { getByID, add, deleteRecord } = useIndexedDB("models");
+  const {
+    deleteRecord: deleteFile,
+    getByID: getFileById,
+    add: addFile,
+  } = useIndexedDB("files");
 
   const openModelEditor = () => {
     addHistory("/models");
     router.push("/editor" + "?" + idQuery(model.id!.toString()));
+  };
+
+  const duplicateEntry = async () => {
+    const dbEntry = (await getByID(model.id!)) as Model;
+    const copyImage = async (imageId?: number) => {
+      if (imageId) {
+        const imageFile = await getFileById(imageId);
+        delete imageFile.id;
+        return await addFile(imageFile);
+      }
+    };
+    const newEntry = {
+      ...dbEntry,
+      name: addCopyName(dbEntry.name),
+      imageFile: await copyImage(dbEntry.imageFile),
+    };
+    delete newEntry.id;
+    const newEntryId = await add(newEntry);
+    addHistory("/models");
+    router.push("/editor" + "?" + idQuery(newEntryId.toString()));
   };
 
   const deleteEntry = () => {
@@ -55,6 +80,11 @@ const Entry = ({ dictionary, model, onDelete }: Props) => {
           style="secondary"
         >
           <label className="cursor-pointer">{dictionary.models.editor}</label>
+        </Button>
+        <Button onClick={duplicateEntry} className="h-16 p-0" style="secondary">
+          <label className="cursor-pointer">
+            {dictionary.models.duplicate}
+          </label>
         </Button>
         <Button onClick={deleteEntry} className={buttonClass} style="red">
           <label className="cursor-pointer">{dictionary.models.delete}</label>
