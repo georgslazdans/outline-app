@@ -16,7 +16,8 @@ import SaveModel from "./ui/SaveModel";
 import WireframeButton from "./ui/canvas/WireframeButton";
 import RenderButton from "./ui/RenderButton";
 import LoadingIndicator from "./ui/canvas/LoadingIndicator";
-import NameEditField from "../fields/NameEditField";
+import { useModelContext } from "./ModelContext";
+import DuplicateModel from "./ui/DuplicateModel";
 
 type Props = {
   dictionary: Dictionary;
@@ -28,6 +29,7 @@ const EditorComponent = ({ dictionary }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { editorMode } = useEditorContext();
+  const { model } = useModelContext();
 
   const editorModes = {
     [EditorMode.EDIT]: EditMode({
@@ -42,12 +44,19 @@ const EditorComponent = ({ dictionary }: Props) => {
   };
 
   const currentEditorMode = editorModes[editorMode];
-    
+
   const content = (
     <>
       <div className="flex flex-col h-[95vh] xl:h-full">
-        <ModelName dictionary={dictionary}></ModelName>
-       
+        <div className="relative">
+          <ModelName dictionary={dictionary}></ModelName>
+          {model.id && (
+            <div className="absolute right-12 xl:right-0 top-1/2 -translate-y-1/2 hidden sm:block">
+              <DuplicateModel dictionary={dictionary} canvasRef={canvasRef} />
+            </div>
+          )}
+        </div>
+
         <div className="flex flex-col xl:flex-row gap-2 flex-grow">
           <div className="w-full xl:w-1/2">
             <div className="w-full h-[52vh] xl:h-[60vh]">
@@ -81,7 +90,7 @@ const EditorComponent = ({ dictionary }: Props) => {
     </>
   );
 
-  return currentEditorMode.contextProvider(content)
+  return currentEditorMode.contextProvider(content);
 };
 
 export default EditorComponent;

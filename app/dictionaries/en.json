@@ -136,6 +136,7 @@
     "date": "Date",
     "searchByName": "Search by Name",
     "editor": "Editor",
+    "duplicate": "Copy",
     "delete": "Delete"
   },
   "instructions": {
