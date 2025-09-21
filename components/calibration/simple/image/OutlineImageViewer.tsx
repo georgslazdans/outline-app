@@ -5,6 +5,7 @@ import { DisplayImageInfo } from "./DisplayImageInfo";
 import LoadingSpinner from "./LoadingSpinner";
 import { useUserPreference } from "@/lib/preferences/useUserPreference";
 import UserPreference from "@/lib/preferences/UserPreference";
+import { decodePngToImageData } from "@/lib/utils/ImagePng";
 
 type Props = {
   className?: string;
@@ -76,10 +77,18 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
     return canvas?.getContext("2d", { willReadFrequently: true });
   };
 
-  const drawImage = useCallback(() => {
+  const drawImage = useCallback(async () => {
     const canvas = canvasRef.current;
     const ctx = getContext();
-    const { baseImage, outlineImages } = displayImageInfo;
+    const { baseImage: baseImagePng, outlineImages: outlineImagesPng } =
+      displayImageInfo;
+
+    if (baseImagePng.byteLength === 0) return;
+
+    const baseImage = await decodePngToImageData(baseImagePng);
+    const outlineImages = await Promise.all(
+      outlineImagesPng.map(async (it) => await decodePngToImageData(it))
+    );
     if (canvas && ctx && baseImage) {
       canvas.width = baseImage.width;
       canvas.height = baseImage.height;

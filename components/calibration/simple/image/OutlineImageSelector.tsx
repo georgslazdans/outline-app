@@ -73,8 +73,8 @@ type Props = {
 };
 
 const hasSameImages = (
-  previous: ImageData[],
-  newImages: ImageData[]
+  previous: ArrayBuffer[],
+  newImages: ArrayBuffer[]
 ): boolean => {
   if (previous.length != newImages.length) {
     return false;
@@ -96,7 +96,7 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
   const { settingStep } = useSettingStepContext();
   const [displayImageInfo, setDisplayImageInfo] = useState<DisplayImageInfo>({
     baseStepName: StepName.INPUT,
-    baseImage: new ImageData(1, 1),
+    baseImage: new ArrayBuffer(0),
     outlineImages: [],
   });
 
@@ -131,7 +131,7 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     }
   }, [detailsContext.settings, objectOutlineImages]);
 
-  const outlineImagesForCurrentStep = useCallback((): ImageData[] => {
+  const outlineImagesForCurrentStep = useCallback((): ArrayBuffer[] => {
     if (
       settingStep == CalibrationSettingStep.FIND_PAPER ||
       settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER
@@ -170,7 +170,7 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
       setDisplayImageInfo((previous) => {
         return {
           baseStepName: newStep.stepName,
-          baseImage: newStep.imageData,
+          baseImage: newStep.pngBuffer,
           outlineImages: outlineImages,
         };
       });
@@ -192,7 +192,7 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
         return {
           ...previous,
           baseStepName: step.stepName,
-          baseImage: step.imageData,
+          baseImage: step.pngBuffer,
         };
       });
     },
@@ -203,9 +203,9 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     const step = stepResults.find(
       (it) => it.stepName == displayImageInfo.baseStepName
     );
-    if (step && displayImageInfo.baseImage != step.imageData) {
+    if (step && displayImageInfo.baseImage != step.pngBuffer) {
       setDisplayImageInfo((previous) => {
-        return { ...previous, baseImage: step.imageData };
+        return { ...previous, baseImage: step.pngBuffer };
       });
     }
   }, [displayImageInfo.baseImage, displayImageInfo.baseStepName, stepResults]);

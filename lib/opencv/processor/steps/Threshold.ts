@@ -20,11 +20,11 @@ type ThresholdSettings = {
   adaptiveSettings: AdaptiveThresholdSettings;
 };
 
-const thresholdOf: Process<ThresholdSettings> = (
+const thresholdOf: Process<ThresholdSettings> = async (
   image: cv.Mat,
   settings: ThresholdSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   if (settings.thresholdType == ThresholdType.ADAPTIVE) {
     return adaptiveThresholdStep.process(
       image,

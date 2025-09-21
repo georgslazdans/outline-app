@@ -55,7 +55,7 @@ const ObjectOutlineFilterField = ({
         </label>
       )}
 
-      {objectOutlineImages.map((_: ImageData, index: number) => (
+      {objectOutlineImages.map((_: ArrayBuffer, index: number) => (
         <div key={index} className="flex mb-2 w-full">
           <label className="ml-4 my-auto" htmlFor={`${name}-${index}`}>
             Contour {index + 1}

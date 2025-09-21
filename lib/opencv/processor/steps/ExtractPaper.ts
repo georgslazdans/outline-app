@@ -33,11 +33,11 @@ type ExtractPaperSettings = {
   paperIndex: number;
 };
 
-const extractPaperFrom: Process<ExtractPaperSettings> = (
+const extractPaperFrom: Process<ExtractPaperSettings> = async (
   image: cv.Mat,
   settings: ExtractPaperSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   const paperOutlineContours = previous.contoursOf(
     StepName.FIND_PAPER_OUTLINE
   )!;
@@ -51,12 +51,13 @@ const extractPaperFrom: Process<ExtractPaperSettings> = (
   const scaledPoints = handlePaperShrinking(cornerPoints, settings.shrinkPaper);
 
   const previousStep = stepNameOfReuseStep(settings.reuseStep);
-  const previousImage = previous.intermediateImageOf(previousStep);
+  const previousImage = await previous.intermediateImageOf(previousStep);
   const result = warpedImageOf(
     scaledPoints.points,
     previousImage,
     settings.paperSettings
   );
+  previousImage.delete();
   return { image: result, contours: [{ outline: scaledPoints }] };
 };
 

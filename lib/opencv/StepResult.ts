@@ -8,7 +8,7 @@ import { Context } from "@/context/DetailsContext";
 
 export type StepResult = {
   stepName: StepName;
-  imageData: ImageData;
+  pngBuffer: ArrayBuffer;
   imageColorSpace: ColorSpace;
   contours?: ContourOutline[];
 };
@@ -52,23 +52,21 @@ export const placeholderSteps = (context: Context): StepResult[] => {
 const emptyStepResultFor = (step: ProcessingStep<any>, settings: Settings) => {
   return {
     stepName: step.name,
-    imageData: new ImageData(1, 1),
+    pngBuffer: new ArrayBuffer(0),
     imageColorSpace: step.imageColorSpace(settings),
   };
 };
 
-export const inputStepOf = (image: ImageData): StepResult => {
+export const inputStepOf = (pngBuffer: ArrayBuffer): StepResult => {
   return {
     stepName: StepName.INPUT,
-    imageData: image,
+    pngBuffer: pngBuffer,
     imageColorSpace: ColorSpace.RGBA,
   };
 };
 
 export const hasImageData = (stepResult: StepResult) => {
-  const isImageEmpty = (image: ImageData) =>
-    image.height === 1 && image.width === 1;
-  return stepResult.imageData && !isImageEmpty(stepResult.imageData);
+  return stepResult.pngBuffer && stepResult.pngBuffer.byteLength > 0;
 };
 
 export default StepResult;

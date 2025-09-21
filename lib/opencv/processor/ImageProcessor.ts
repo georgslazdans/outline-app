@@ -4,12 +4,13 @@ import { StepResult } from "../StepResult";
 import ProcessingStep, {
   ProcessFunctionSuccess,
 } from "./steps/ProcessingFunction";
-import imageDataOf, { imageOf } from "../util/ImageData";
+import { imageOfPng, pngBufferOf } from "../util/ImageData";
 import StepSetting from "./steps/StepSettings";
 import handleOpenCvError from "../OpenCvError";
 import StepName from "./steps/StepName";
 import { previousDataOf } from "./PreviousData";
 import HandleProcessing from "../HandleProcessing";
+import ColorSpace from "../util/ColorSpace";
 
 export type IntermediateImages = {
   [key in StepName]?: cv.Mat;
@@ -35,18 +36,17 @@ const processorOf = (
     throw new Error("No functions supplied to image processor");
   }
 
-  const processStep = (
+  const processStep = async (
     image: cv.Mat,
     step: ProcessingStep<any>,
-    intermediateImages: IntermediateImages,
     stepData: StepResult[]
-  ): ProcessStepResult => {
+  ): Promise<ProcessStepResult> => {
     try {
       const stepSettings = settingsFor(step);
-      const result = step.process(
+      const result = await step.process(
         image,
         stepSettings,
-        previousDataOf(intermediateImages, settings, stepData)
+        previousDataOf(settings, stepData)
       );
       if ("errorMessage" in result) {
         return {
@@ -76,41 +76,28 @@ const processorOf = (
   };
 
   const stepData: StepResult[] = [];
-  let intermediateImages: IntermediateImages = {};
 
   const withPreviousSteps = (stepResults: StepResult[]) => {
-    intermediateImages = stepResults
-      .map((it) => {
-        return { [it.stepName]: imageOf(it.imageData, it.imageColorSpace) };
-      })
-      .reduce((acc, curr) => {
-        return { ...acc, ...curr };
-      }, {});
-
     stepResults.forEach((it) => stepData.push(it));
     return result;
   };
 
-  const addSuccessResult = (
+  const addSuccessResult = async (
     step: ProcessingStep<any>,
     processResult: ProcessFunctionSuccess
   ) => {
     const stepResult = {
       stepName: step.name,
-      imageData: imageDataOf(processResult.image),
+      pngBuffer: await pngBufferOf(processResult.image),
       imageColorSpace: step.imageColorSpace(settings),
       contours: processResult.contours,
     };
     stepData.push(stepResult);
-    intermediateImages = {
-      ...intermediateImages,
-      [step.name]: processResult.image,
-    };
   };
 
-  const process = async (image: cv.Mat) => {
+  const process = async (pngBuffer: ArrayBuffer, colorSpace: ColorSpace) => {
     let errorMessage = undefined;
-    let currentImage = image;
+    let currentImage = await imageOfPng(pngBuffer, colorSpace);
 
     for (const step of processingSteps) {
       // Add a simple timeout to allow the job to be canceled
@@ -118,16 +105,13 @@ const processorOf = (
       if (signal.aborted) {
         break;
       }
-      const result = processStep(
-        currentImage,
-        step,
-        intermediateImages,
-        stepData
-      );
+      const result = await processStep(currentImage, step, stepData);
+
       if (result.type == "success") {
         const functionResult = result.functionResult;
+        currentImage.delete();
         currentImage = functionResult.image;
-        addSuccessResult(step, functionResult);
+        await addSuccessResult(step, functionResult);
         onResult(step.name, stepData);
       } else {
         errorMessage = result.error;
@@ -135,10 +119,7 @@ const processorOf = (
         break;
       }
     }
-
-    Object.values(intermediateImages).forEach((value) => {
-      value.delete();
-    });
+    currentImage.delete();
   };
 
   const result = {

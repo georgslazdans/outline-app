@@ -30,7 +30,7 @@ export interface WorkerApi {
 export const useOpenCvWorker = (
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
-  const { detailsContext, contextImageData } = useDetails();
+  const { detailsContext, contextImagePng: contextImagePng } = useDetails();
   const {
     stepResults,
     setStepResults,
@@ -123,15 +123,15 @@ export const useOpenCvWorker = (
 
   const updateAllWorkData = useCallback(() => {
     setErrorMessage(undefined);
-    if (detailsContext && contextImageData) {
-      const workData = allWorkOf(detailsContext, contextImageData);
+    if (detailsContext && contextImagePng) {
+      const workData = allWorkOf(detailsContext, contextImagePng);
       setPreviousSettings(workData.settings);
       const resultHandler = Comlink.proxy(handleWorkerResult);
       openCvApi.processOutlineImage(workData, resultHandler);
       setOutdatedSteps(Steps.allProcessingStepNames());
     }
   }, [
-    contextImageData,
+    contextImagePng,
     detailsContext,
     handleWorkerResult,
     openCvApi,

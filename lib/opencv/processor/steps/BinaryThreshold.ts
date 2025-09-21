@@ -13,11 +13,11 @@ type BinaryThresholdSettings = {
   maxValue: number;
 };
 
-const binaryThresholdOf: Process<BinaryThresholdSettings> = (
+const binaryThresholdOf: Process<BinaryThresholdSettings> = async (
   image: cv.Mat,
   settings: BinaryThresholdSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   const threshold = new cv.Mat();
   const inverseThreshold = new cv.Mat();
 

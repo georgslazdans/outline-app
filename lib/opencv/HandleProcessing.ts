@@ -23,19 +23,19 @@ type HandleProcessing = {
 const handleProcessingResult = (
   onResult: WorkerResultCallback
 ): HandleProcessingResult => {
-  return (stepName: StepName, stepResults: StepResult[]) => {
+  return async (stepName: StepName, stepResults: StepResult[]) => {
     const stepResult = findStep(stepName).in(stepResults);
     addToResultCache(stepResult);
-    
+
     if (stepName == StepName.FIND_PAPER_OUTLINE) {
       onResult({
         status: "paperOutlines",
-        paperOutlineImages: paperOutlineImagesOf(stepResults),
+        paperOutlineImages: await paperOutlineImagesOf(stepResults),
       });
     } else if (stepName == StepName.FIND_OBJECT_OUTLINES) {
       onResult({
         status: "objectOutlines",
-        objectOutlineImages: objectOutlineImagesOf(stepResults),
+        objectOutlineImages: await objectOutlineImagesOf(stepResults),
       });
     }
     onResult({

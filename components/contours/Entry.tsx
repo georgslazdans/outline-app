@@ -14,6 +14,7 @@ import LazyLoadImage from "../image/lazy/LazyLoadedImage";
 import SavedFile from "@/lib/SavedFile";
 import getImageData from "@/lib/utils/ImageData";
 import { useLoading } from "@/context/LoadingContext";
+import { encodeImageDataToPngBuffer } from "@/lib/utils/ImagePng";
 
 type Props = {
   context: Context;
@@ -27,19 +28,17 @@ const Entry = ({ context, dictionary, onDelete }: Props) => {
   const { deleteRecord } = useIndexedDB("details");
   const { getByID: getFileById, deleteRecord: deleteFile } =
     useIndexedDB("files");
-  const { setDetailsContext, setContextImageData } = useDetails();
+  const { setDetailsContext, setContextImagePng } = useDetails();
   const { setLoading } = useLoading();
 
   const openSettings = async () => {
     setLoading(true);
-    getFileById(context.imageFile).then((savedFile: SavedFile) => {
-      getImageData(savedFile.blob).then((data) => {
-        setDetailsContext(context);
-        setContextImageData(data);
-        addHistory("/contours");
-        router.push("/calibration" + "?" + idQuery(context.id!.toString()));
-      });
-    });
+    const savedFile = await getFileById(context.imageFile);
+    const imageData = await getImageData(savedFile.blob);
+    setDetailsContext(context);
+    setContextImagePng(await encodeImageDataToPngBuffer(imageData));
+    addHistory("/contours");
+    router.push("/calibration" + "?" + idQuery(context.id!.toString()));
   };
 
   const deleteEntry = () => {

@@ -50,7 +50,7 @@ export const INPUT: ProcessingStep<any> = {
     skipPaperDetection: false,
   },
   imageColorSpace: () => ColorSpace.RGBA,
-  process: (image: Mat) => {
+  process: async (image: Mat) => {
     return { image: image };
   },
   config: {

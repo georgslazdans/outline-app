@@ -12,11 +12,11 @@ type CloseContoursSettings = {
   iterations: number;
 };
 
-const closeContours: Process<CloseContoursSettings> = (
+const closeContours: Process<CloseContoursSettings> = async (
   image: cv.Mat,
   settings: CloseContoursSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   const closed = new cv.Mat();
 
   const kernel = cv.getStructuringElement(

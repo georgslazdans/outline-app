@@ -19,11 +19,11 @@ type FilterObjectSettings = {
   objectIndexes: number[];
 };
 
-const filterObjects: Process<FilterObjectSettings> = (
+const filterObjects: Process<FilterObjectSettings> = async (
   image: cv.Mat,
   settings: FilterObjectSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   const outlines = previous.contoursOf(StepName.FIND_OBJECT_OUTLINES);
   if (!outlines || outlines.length == 0) {
     const result = new cv.Mat();
@@ -43,8 +43,10 @@ const filterObjects: Process<FilterObjectSettings> = (
   }
 
   const resultImage = drawContourOutlines(filteredContours, image.size());
+  const scaleFactor = await scaleFactorFrom(previous);
+
   const scaledContours = filteredContours.map((it) =>
-    scaledResultOf(it, previous)
+    scaledResultOf(it, scaleFactor)
   );
   return {
     image: resultImage,
@@ -54,10 +56,8 @@ const filterObjects: Process<FilterObjectSettings> = (
 
 const scaledResultOf = (
   contour: ContourOutline,
-  previous: PreviousData
+  scaleFactor: number
 ): ContourOutline => {
-  const scaleFactor = scaleFactorFrom(previous);
-
   const holes = contour.holes ? contour.holes : [];
   const scaledHoles = modifyContourList(holes).scalePoints(1 / scaleFactor);
   const scaledOutline = modifyContour(contour.outline).scalePoints(
@@ -69,12 +69,15 @@ const scaledResultOf = (
   };
 };
 
-const scaleFactorFrom = (previous: PreviousData) => {
+const scaleFactorFrom = async (previous: PreviousData) => {
   const paperDimensions = paperDimensionsOf(
     previous.settingsOf(StepName.EXTRACT_PAPER).paperSettings
   );
-  const imageSize = previous.intermediateImageOf(StepName.INPUT).size();
-  return scaleFactorOf(imageSize, paperDimensions);
+  const inputImage = await previous.intermediateImageOf(StepName.INPUT);
+  const imageSize = inputImage.size();
+  const result = scaleFactorOf(imageSize, paperDimensions);
+  inputImage.delete();
+  return result;
 };
 
 const filterObjectsStep: ProcessingStep<FilterObjectSettings> = {
@@ -84,8 +87,8 @@ const filterObjectsStep: ProcessingStep<FilterObjectSettings> = {
   },
   config: {
     objectIndexes: {
-      type:"objectOutlineFilter"
-    }
+      type: "objectOutlineFilter",
+    },
   },
   imageColorSpace: () => ColorSpace.RGB,
   process: filterObjects,
