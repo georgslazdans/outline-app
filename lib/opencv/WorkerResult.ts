@@ -1,4 +1,3 @@
-import handleOpenCvError from "./OpenCvError";
 import StepName from "./processor/steps/StepName";
 import StepResult from "./StepResult";
 
@@ -9,12 +8,12 @@ export type SuccessStepResult = {
 
 export type ObjectOutlinesResult = {
   status: "objectOutlines";
-  objectOutlineImages: ImageData[];
+  objectOutlineImages: ArrayBuffer[];
 };
 
 export type PaperOutlinesResult = {
   status: "paperOutlines";
-  paperOutlineImages: ImageData[];
+  paperOutlineImages: ArrayBuffer[];
 };
 
 export type ErrorResult = {

@@ -13,11 +13,11 @@ type AdaptiveThresholdSettings = {
   c: number;
 };
 
-const thresholdOf: Process<AdaptiveThresholdSettings> = (
+const thresholdOf: Process<AdaptiveThresholdSettings> = async (
   image: cv.Mat,
   settings: AdaptiveThresholdSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   let threshold = new cv.Mat();
   cv.adaptiveThreshold(
     image,

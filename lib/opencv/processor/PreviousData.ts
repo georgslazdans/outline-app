@@ -1,19 +1,18 @@
 import * as cv from "@techstark/opencv-js";
 import { ContourOutline } from "@/lib/data/contour/ContourPoints";
 import Settings, { inSettings } from "../Settings";
-import StepResult from "../StepResult";
-import { IntermediateImages } from "./ImageProcessor";
+import StepResult, { findStep } from "../StepResult";
 import StepName from "./steps/StepName";
 import StepSetting from "./steps/StepSettings";
+import { imageOfPng } from "../util/ImageData";
 
 type PreviousData = {
-  intermediateImageOf: (stepName: StepName) => cv.Mat;
+  intermediateImageOf: (stepName: StepName) => Promise<cv.Mat>;
   settingsOf: (stepName: StepName) => StepSetting;
   contoursOf: (stepName: StepName) => ContourOutline[] | undefined;
 };
 
 export const previousDataOf = (
-  intermediateImages: IntermediateImages,
   settings: Settings,
   stepData: StepResult[]
 ): PreviousData => {
@@ -28,15 +27,14 @@ export const previousDataOf = (
       stepName == StepName.BILATERAL_FILTER &&
       inSettings(settings).isBilateralFilterDisabled()
     ) {
-      stepName = StepName.INPUT;
+      stepName = StepName.RESIZE_IMAGE;
     }
     return stepName;
   };
-  const intermediateImageOf = (stepName: StepName) => {
+  const intermediateImageOf = async (stepName: StepName) => {
     stepName = handleImageSettingsFor(stepName);
-    return Object.entries(intermediateImages).findLast(
-      ([key]) => key === stepName
-    )![1];
+    const step = findStep(stepName).in(stepData);
+    return await imageOfPng(step.pngBuffer, step.imageColorSpace)
   };
   const settingsOf = (stepName: StepName): StepSetting => {
     return settings[stepName];

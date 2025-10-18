@@ -15,6 +15,7 @@ type CacheResult = {
 let resultCache: CacheResult[] = [];
 let cacheableSteps = [
   StepName.INPUT,
+  StepName.RESIZE_IMAGE,
   StepName.BILATERAL_FILTER,
   StepName.BLUR,
   StepName.FIND_PAPER_OUTLINE,

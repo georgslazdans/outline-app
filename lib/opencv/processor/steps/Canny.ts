@@ -12,11 +12,11 @@ type CannySettings = {
   secondThreshold: number;
 };
 
-const cannyOf: Process<CannySettings> = (
+const cannyOf: Process<CannySettings> = async (
   image: cv.Mat,
   settings: CannySettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   let canny = new cv.Mat();
   cv.Canny(image, canny, settings.firstThreshold, settings.secondThreshold);
   return { image: canny };

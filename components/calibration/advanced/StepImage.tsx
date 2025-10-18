@@ -1,5 +1,5 @@
 import StepResult from "@/lib/opencv/StepResult";
-import { ImageViewer } from "../ImageViewer";
+import { PngImageViewer } from "../ImageViewer";
 import { TailSpin } from "react-loader-spinner";
 import { useCallback } from "react";
 import { useResultContext } from "../ResultContext";
@@ -18,10 +18,10 @@ const StepImage = ({ currentStep }: Props) => {
   return (
     <>
       <div className="relative">
-        <ImageViewer
+        <PngImageViewer
           className=""
-          imageData={currentStep?.imageData}
-        ></ImageViewer>
+          pngBuffer={currentStep?.pngBuffer}
+        ></PngImageViewer>
         <div className="absolute top-0 w-full">
           <div className="ml-auto mt-2 mr-2">
             <TailSpin

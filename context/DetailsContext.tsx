@@ -12,7 +12,6 @@ import {
   useEffect,
 } from "react";
 import { useIndexedDB } from "react-indexed-db-hook";
-import getImageData from "@/lib/utils/ImageData";
 import ContourPoints, {
   ContourOutline,
   modifyContourList,
@@ -61,7 +60,7 @@ export const centerPoints = (
 
 const DetailsProvider = ({ children }: Props) => {
   const [detailsContext, setDetailsContext] = useState<Context>();
-  const [contextImageData, setContextImageData] = useState<ImageData>();
+  const [contextImagePng, setContextImagePng] = useState<ArrayBuffer>();
   const { getAll, getByID } = useIndexedDB("details");
   const { getByID: getFileById } = useIndexedDB("files");
   const searchParams = useSearchParams();
@@ -74,9 +73,9 @@ const DetailsProvider = ({ children }: Props) => {
         getByID(id).then((dbModel: Context) => {
           if (dbModel) {
             getFileById(dbModel.imageFile).then((savedFile: SavedFile) => {
-              getImageData(savedFile.blob).then((data) => {
+              savedFile.blob.arrayBuffer().then((buffer) => {
                 setDetailsContext(dbModel);
-                setContextImageData(data);
+                setContextImagePng(buffer);
               });
             });
           }
@@ -89,9 +88,9 @@ const DetailsProvider = ({ children }: Props) => {
             const loadedContext = allContexts.pop();
             if (loadedContext) {
               getFileById(loadedContext.imageFile).then((it: SavedFile) => {
-                getImageData(it.blob).then((data) => {
+                it.blob.arrayBuffer().then((buffer) => {
                   setDetailsContext(loadedContext);
-                  setContextImageData(data);
+                  setContextImagePng(buffer);
                 });
               });
             }
@@ -106,8 +105,8 @@ const DetailsProvider = ({ children }: Props) => {
       value={{
         detailsContext,
         setDetailsContext,
-        contextImageData,
-        setContextImageData,
+        contextImagePng,
+        setContextImagePng,
       }}
     >
       {children}
@@ -118,8 +117,8 @@ const DetailsProvider = ({ children }: Props) => {
 export const useDetails = (): {
   detailsContext: Context;
   setDetailsContext: Dispatch<SetStateAction<Context>>;
-  contextImageData: ImageData;
-  setContextImageData: Dispatch<SetStateAction<ImageData>>;
+  contextImagePng: ArrayBuffer;
+  setContextImagePng: Dispatch<SetStateAction<ArrayBuffer>>;
 } => useContext(DetailsContext);
 
 export default DetailsProvider;

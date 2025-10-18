@@ -1,6 +1,6 @@
 {
   "name": "outline-app",
-  "version": "1.4.10",
+  "version": "1.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,6 +20,7 @@
     "@react-three/drei": "^9.109.2",
     "@react-three/fiber": "^8.16.8",
     "@serwist/next": "^9.0.3",
+    "@tarikjabiri/dxf": "^2.8.9",
     "@techstark/opencv-js": "^4.9.0-release.3",
     "@types/mdx": "^2.0.13",
     "@types/three": "^0.167.1",

@@ -5,6 +5,7 @@ import { DisplayImageInfo } from "./DisplayImageInfo";
 import LoadingSpinner from "./LoadingSpinner";
 import { useUserPreference } from "@/lib/preferences/useUserPreference";
 import UserPreference from "@/lib/preferences/UserPreference";
+import { decodePngToImageData } from "@/lib/utils/ImagePng";
 
 type Props = {
   className?: string;
@@ -65,6 +66,17 @@ const blendImageData = (
   return blendedImageData;
 };
 
+const decodeImages = async (displayImageInfo: DisplayImageInfo) => {
+  return {
+    baseImage: await decodePngToImageData(displayImageInfo.baseImage),
+    outlineImages: await Promise.all(
+      displayImageInfo.outlineImages.map(
+        async (it) => await decodePngToImageData(it)
+      )
+    ),
+  };
+};
+
 export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -76,33 +88,62 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
     return canvas?.getContext("2d", { willReadFrequently: true });
   };
 
-  const drawImage = useCallback(() => {
-    const canvas = canvasRef.current;
-    const ctx = getContext();
-    const { baseImage, outlineImages } = displayImageInfo;
-    if (canvas && ctx && baseImage) {
-      canvas.width = baseImage.width;
-      canvas.height = baseImage.height;
+  const getDrawImage = useCallback(
+    async (baseImage: ImageData, outlineImages: ImageData[]) => {
       if (drawOutline && outlineImages && outlineImages.length != 0) {
         let blendedImage = baseImage;
         for (const outlineImage of outlineImages) {
           blendedImage = blendImageData(
-            ctx,
+            getContext()!!,
             blendedImage,
             outlineImage,
             outlineAlphaLevel as number
           );
         }
-        ctx.putImageData(blendedImage, 0, 0);
+        return blendedImage;
       } else {
-        ctx.putImageData(baseImage, 0, 0);
+        return baseImage;
       }
+    },
+    [drawOutline, outlineAlphaLevel]
+  );
+
+  const drawImage = useCallback((image: ImageData) => {
+    const canvas = canvasRef.current;
+    const ctx = getContext();
+    if (canvas && ctx && image) {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.putImageData(image, 0, 0);
     }
-  }, [displayImageInfo, drawOutline, outlineAlphaLevel]);
+  }, []);
 
   useEffect(() => {
-    drawImage();
-  }, [drawImage]);
+    let cancelled = false;
+
+    (async () => {
+      if (displayImageInfo.baseImage.byteLength === 0) {
+        console.log("No base image found");
+        return;
+      }
+      const images = await decodeImages(displayImageInfo);
+      if (!images.baseImage || cancelled) return;
+      const canvas = canvasRef.current;
+      const ctx = getContext();
+      if (canvas && ctx) {
+        const image = await getDrawImage(
+          images.baseImage,
+          images.outlineImages
+        );
+        if (cancelled) return;
+        drawImage(image);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [displayImageInfo, getDrawImage, drawImage]);
 
   return (
     <div className={className}>

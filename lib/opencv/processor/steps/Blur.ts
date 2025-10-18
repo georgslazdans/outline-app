@@ -11,11 +11,11 @@ type BlurSettings = {
   blurWidth: number;
 };
 
-const blurOf: Process<BlurSettings> = (
+const blurOf: Process<BlurSettings> = async(
   image: cv.Mat,
   settings: BlurSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   const blurWidth = settings.blurWidth;
   let blurred = new cv.Mat();
   cv.GaussianBlur(

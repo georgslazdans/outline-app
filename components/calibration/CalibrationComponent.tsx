@@ -18,6 +18,8 @@ import { useResultContext } from "./ResultContext";
 import { imageDataToBlob } from "@/lib/utils/ImageData";
 import { ContourOutline } from "@/lib/data/contour/ContourPoints";
 import ContextDetailsName from "./ContextDetailsName";
+import { findStep } from "@/lib/opencv/StepResult";
+import { decodePngToImageData as decodePngToImageData } from "@/lib/utils/ImagePng";
 
 type Props = {
   dictionary: Dictionary;
@@ -86,18 +88,17 @@ const CalibrationComponent = ({ dictionary }: Props) => {
     ]
   );
 
-  const saveAndClose = useCallback(() => {
+  const saveAndClose = useCallback(async () => {
     setLoading(true);
     const contours = stepResults.pop()!.contours;
     const paperImage = stepResults.find(
       (it) => it.stepName == StepName.EXTRACT_PAPER
-    )?.imageData;
+    )?.pngBuffer;
     if (paperImage) {
-      imageDataToBlob(paperImage).then((paperImageBlob) => {
-        addImageBlob({ blob: paperImageBlob }).then((paperImageId) => {
-          saveContext(contours, paperImageId);
-        });
-      });
+      const imageData = await decodePngToImageData(paperImage);
+      const paperImageBlob = await imageDataToBlob(imageData);
+      const paperImageId = await addImageBlob({ blob: paperImageBlob });
+      saveContext(contours, paperImageId);
     } else {
       saveContext(contours);
     }

@@ -1,6 +1,7 @@
 import * as cv from "@techstark/opencv-js";
 import ColorSpace, { conversionCodeOf } from "./ColorSpace";
 import handleOpenCvError from "../OpenCvError";
+import { decodePngToImageData, encodeImageDataToPngBuffer } from "@/lib/utils/ImagePng";
 
 export const imageOf = (
   imageData: ImageData,
@@ -25,6 +26,31 @@ export const imageOf = (
   }
 };
 
+export const imageOfPng = async (
+  pngBuffer: ArrayBuffer,
+  colorSpace: ColorSpace
+): Promise<cv.Mat> => {
+  try {
+    const imageData = await decodePngToImageData(pngBuffer);
+    const image = cv.matFromImageData(imageData);
+    if (colorSpace == ColorSpace.RGBA) {
+      return image;
+    }
+    let destination = new cv.Mat();
+    image.convertTo(destination, cv.CV_8U);
+    const conversionCode = conversionCodeOf(colorSpace);
+    cv.cvtColor(destination, destination, conversionCode);
+
+    image.delete();
+    return destination;
+  } catch (e) {
+    const message = "Failed to convert image";
+    console.error(message, colorSpace, e);
+    throw new Error(message);
+  }
+};
+
+
 const asImageData = (image: cv.Mat): ImageData => {
   return new ImageData(
     new Uint8ClampedArray(image.data),
@@ -32,6 +58,23 @@ const asImageData = (image: cv.Mat): ImageData => {
     image.rows,
     { colorSpace: "srgb" }
   );
+};
+
+export const pngBufferOf = async (image: cv.Mat): Promise<ArrayBuffer> => {
+  try {
+    if (image.channels() == 4) {
+      const imageData = asImageData(image);
+      return encodeImageDataToPngBuffer(imageData);
+    } else {
+      const convertedImage = convertToRGBA(image);
+      const imageData = asImageData(convertedImage);
+      convertedImage.delete();
+      return encodeImageDataToPngBuffer(imageData);
+    }
+  } catch (e) {
+    const error = handleOpenCvError(e);
+    throw new Error("Failed to convert image: " + error);
+  }
 };
 
 const imageDataOf = (image: cv.Mat): ImageData => {

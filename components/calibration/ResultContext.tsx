@@ -13,29 +13,28 @@ import StepResult, {
 } from "@/lib/opencv/StepResult";
 import { useDetails } from "@/context/DetailsContext";
 import StepName from "@/lib/opencv/processor/steps/StepName";
-import { isImageDataEmpty } from "@/lib/utils/ImageData";
 
 type ResultContextType = {
   stepResults: StepResult[];
   setStepResults: React.Dispatch<React.SetStateAction<StepResult[]>>;
   outdatedSteps: StepName[];
   setOutdatedSteps: React.Dispatch<React.SetStateAction<StepName[]>>;
-  objectOutlineImages: ImageData[];
-  updateObjectOutlines: (objectOutlines: ImageData[]) => void;
-  paperOutlineImages: ImageData[];
-  updatePaperOutlines: (paperOutlines: ImageData[]) => void;
+  objectOutlineImages: ArrayBuffer[];
+  updateObjectOutlines: (objectOutlines: ArrayBuffer[]) => void;
+  paperOutlineImages: ArrayBuffer[];
+  updatePaperOutlines: (paperOutlines: ArrayBuffer[]) => void;
 };
 
 const ResultContext = createContext<ResultContextType | undefined>(undefined);
 
 export const ResultProvider = ({ children }: { children: ReactNode }) => {
-  const { detailsContext, contextImageData } = useDetails();
+  const { detailsContext, contextImagePng: contextImageData } = useDetails();
   const [stepResults, setStepResults] = useState<StepResult[]>(
     placeholderSteps(detailsContext)
   );
   const [outdatedSteps, setOutdatedSteps] = useState<StepName[]>([]);
-  const [paperOutlineImages, setPaperOutlineImages] = useState<ImageData[]>([]);
-  const [objectOutlineImages, setObjectOutlineImages] = useState<ImageData[]>(
+  const [paperOutlineImages, setPaperOutlineImages] = useState<ArrayBuffer[]>([]);
+  const [objectOutlineImages, setObjectOutlineImages] = useState<ArrayBuffer[]>(
     []
   );
 
@@ -43,7 +42,7 @@ export const ResultProvider = ({ children }: { children: ReactNode }) => {
     const input = findStep(StepName.INPUT).in(stepResults);
     if (
       contextImageData &&
-      (!input.imageData || isImageDataEmpty(input.imageData))
+      (!input.pngBuffer || input.pngBuffer.byteLength == 0)
     ) {
       setStepResults((previous) => {
         return previous.map((it) => {
