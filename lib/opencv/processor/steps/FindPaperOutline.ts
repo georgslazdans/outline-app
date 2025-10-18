@@ -24,11 +24,11 @@ type FindPaperOutlineSettings = {
 const PAPER_NOT_FOUND_MESSAGE =
   'Paper contours not found! Ensure that the paper outline is fully visible and uninterrupted in "Adaptive Threshold" step!';
 
-const findPaperOutline: Process<FindPaperOutlineSettings> = (
+const findPaperOutline: Process<FindPaperOutlineSettings> = async (
   image: cv.Mat,
   settings: FindPaperOutlineSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   const imageContours = paperContoursOf(image);
 
   const contours = imageContours.contours;

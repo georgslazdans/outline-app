@@ -99,7 +99,7 @@ const NumberField = ({
         <input
           className={
             `border-4 rounded-[64px] bg-white dark:bg-black border-black dark:border-white 
-          p-1.5 pl-6 w-20 ` + inputClass
+          p-1.5 pl-4 w-20 ` + inputClass
           }
           id={name}
           type="number"

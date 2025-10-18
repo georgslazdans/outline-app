@@ -5,40 +5,43 @@ import { downloadFile } from "@/lib/utils/Download";
 
 type Props = {
   className?: string;
-  imageData?: ImageData;
+  pngBuffer?: ArrayBuffer;
   showDownload?: boolean;
 };
-export const ImageViewer = ({
-  imageData,
+export const PngImageViewer = ({
+  pngBuffer,
   className,
   showDownload = false,
 }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const getContext = () => {
-    const canvas = canvasRef.current;
-    return canvas?.getContext("2d", { willReadFrequently: true });
-  };
+  const drawImage = useCallback(async () => {
+    if (!pngBuffer || pngBuffer.byteLength === 0) return;
+    const blob = new Blob([pngBuffer], { type: "image/png" });
+    const bitmap = await createImageBitmap(blob);
 
-  const drawImage = useCallback(() => {
-    const ctx = getContext();
-    if (ctx && imageData) {
-      ctx.putImageData(imageData, 0, 0);
-    }
-  }, [imageData]);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    canvas.width = bitmap.width;
+    canvas.height = bitmap.height;
+
+    const ctx = canvas.getContext("2d");
+    ctx?.drawImage(bitmap, 0, 0);
+  }, [pngBuffer]);
 
   useEffect(() => {
     drawImage();
-  });
+  }, [drawImage]);
 
   const downloadImage = useCallback(() => {
     const canvas = canvasRef.current;
-    if (canvas && imageData) {
+    if (canvas && pngBuffer) {
       canvas.toBlob((blob) => {
         downloadFile(blob!, "TestImage.png");
       });
     }
-  }, [imageData]);
+  }, [pngBuffer]);
 
   return (
     <div className={className}>
@@ -48,8 +51,6 @@ export const ImageViewer = ({
             id="image-viewer"
             className="max-w-full max-h-[40vh] mx-auto"
             ref={canvasRef}
-            width={imageData?.width}
-            height={imageData?.height}
           />
         </TransformComponent>
       </TransformWrapper>

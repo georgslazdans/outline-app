@@ -7,14 +7,14 @@ import StepResult, { hasImageData } from "./StepResult";
 
 export const allWorkOf = (
   context: Context,
-  contextImageData: ImageData
+  contextImagePng: ArrayBuffer
 ): ProcessAll => {
-  const imageData =
-    contextImageData ||
-    (typeof window !== "undefined" ? new ImageData(1, 1) : null);
+  const imagePng =
+    contextImagePng ||
+    (typeof window !== "undefined" ? new ArrayBuffer(0) : null);
 
   return {
-    imageData: imageData,
+    pngBuffer: imagePng,
     settings: settingsOf(context),
   };
 };
@@ -28,7 +28,7 @@ export const stepWorkOf = (
   return {
     stepName: stepName as StepName,
     settings: settings,
-    imageData: step.imageData,
+    pngBuffer: step.pngBuffer,
     imageColorSpace: step.imageColorSpace,
   };
 };

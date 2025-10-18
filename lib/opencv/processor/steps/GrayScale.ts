@@ -6,11 +6,11 @@ import PreviousData from "../PreviousData";
 
 type GrayScaleSettings = {};
 
-const grayScaleOf: Process<GrayScaleSettings> = (
+const grayScaleOf: Process<GrayScaleSettings> = async (
   image: cv.Mat,
   settings: GrayScaleSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   let gray = new cv.Mat();
   cv.cvtColor(image, gray, cv.COLOR_RGBA2GRAY, 0);
   return { image: gray };

@@ -15,11 +15,11 @@ type BilateralFilterSettings = {
   disabledBilateralFilter: boolean;
 };
 
-const bilateralFilter: Process<BilateralFilterSettings> = (
+const bilateralFilter: Process<BilateralFilterSettings> = async (
   image: cv.Mat,
   settings: BilateralFilterSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   if (settings.disabledBilateralFilter) {
     const result = new cv.Mat();
     image.copyTo(result);

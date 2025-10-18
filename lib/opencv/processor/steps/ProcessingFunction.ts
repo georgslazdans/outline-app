@@ -23,7 +23,7 @@ export type Process<T extends StepSetting> = (
   image: cv.Mat,
   settings: T,
   previous: PreviousData
-) => ProcessFunctionResult;
+) => Promise<ProcessFunctionResult>;
 
 interface ProcessingStep<T extends StepSetting> {
   name: StepName;

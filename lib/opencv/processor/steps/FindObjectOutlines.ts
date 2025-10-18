@@ -41,11 +41,11 @@ type FindObjectOutlineSettings = {
 
 const OBJECT_NOT_FOUND_MESSAGE = "Object contours not found!";
 
-const findObjectOutlinesFrom: Process<FindObjectOutlineSettings> = (
+const findObjectOutlinesFrom: Process<FindObjectOutlineSettings> = async (
   image: cv.Mat,
   settings: FindObjectOutlineSettings,
   previous: PreviousData
-): ProcessFunctionResult => {
+): Promise<ProcessFunctionResult> => {
   const objectContours = fullHierarchyContoursOf(image);
 
   const outlineContours = findTopLevelContours(
@@ -58,11 +58,16 @@ const findObjectOutlinesFrom: Process<FindObjectOutlineSettings> = (
     return { errorMessage: OBJECT_NOT_FOUND_MESSAGE };
   }
 
+  const blurObjectImage = await previous.intermediateImageOf(
+    StepName.BLUR_OBJECT
+  );
   const contourPoints = outlineContours
     .sort((a, b) => (a.area > b.area ? -1 : 1))
     .map((it) =>
-      contourAndHolesOf(it.index, objectContours, previous, settings)
+      contourAndHolesOf(it.index, objectContours, settings, blurObjectImage)
     );
+  blurObjectImage.delete();
+
   const resultImage = drawContourOutlines(contourPoints, image.size());
 
   objectContours.delete();
@@ -115,8 +120,8 @@ const isTopLevelContour = (i: number, hierarchy: cv.Mat): boolean => {
 const contourAndHolesOf = (
   outlineContourIndex: number,
   objectContours: ImageContours,
-  previous: PreviousData,
-  settings: FindObjectOutlineSettings
+  settings: FindObjectOutlineSettings,
+  blurObjectImage: cv.Mat
 ): ContourOutline => {
   const handleSmoothing = handleContourSmoothing(settings);
 
@@ -125,7 +130,7 @@ const contourAndHolesOf = (
   );
 
   const holeIndexes = holeFinder()
-    .withImage(previous.intermediateImageOf(StepName.BLUR_OBJECT))
+    .withImage(blurObjectImage)
     .withSettings(settings.holeSettings)
     .findHolesInContour(objectContours, outlineContourIndex);
 

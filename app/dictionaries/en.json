@@ -39,6 +39,7 @@
     "title": "OpenCv Calibration",
     "step": {
       "input": "Input",
+      "resizeImage": "Resize Image",
       "bilateralFilter": "Bilateral Filter",
       "blur": "Blur",
       "blurObject": "Blur Object",
@@ -96,7 +97,8 @@
       "areaThresholdSettings": "Object Area Threshold Settings",
       "upperThreshold": "Upper Area Threshold",
       "lowerThreshold": "Lower Area Threshold",
-      "skipPaperDetection": "Skip Paper Detection"
+      "skipPaperDetection": "Skip Paper Detection",
+      "maxImageResolution": "Max Image Resolution"
     },
     "simpleSettings": {
       "title": "Settings",
