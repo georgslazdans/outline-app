@@ -27,7 +27,7 @@ export const previousDataOf = (
       stepName == StepName.BILATERAL_FILTER &&
       inSettings(settings).isBilateralFilterDisabled()
     ) {
-      stepName = StepName.INPUT;
+      stepName = StepName.RESIZE_IMAGE;
     }
     return stepName;
   };

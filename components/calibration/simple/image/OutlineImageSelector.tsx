@@ -30,7 +30,7 @@ const imageOptionsFor = (
 ): Option[] => {
   if (settingStep == CalibrationSettingStep.FIND_PAPER) {
     return [
-      imageEntryFor(StepName.INPUT, dictionary),
+      imageEntryFor(StepName.RESIZE_IMAGE, dictionary),
       imageEntryFor(StepName.ADAPTIVE_THRESHOLD, dictionary),
       imageEntryFor(StepName.CANNY_PAPER, dictionary),
     ];
@@ -39,7 +39,7 @@ const imageOptionsFor = (
   } else if (settingStep == CalibrationSettingStep.FIND_OBJECT) {
     if (inSettings(settings).isPaperDetectionSkipped()) {
       return [
-        imageEntryFor(StepName.INPUT, dictionary),
+        imageEntryFor(StepName.RESIZE_IMAGE, dictionary),
         imageEntryFor(StepName.OBJECT_THRESHOLD, dictionary),
         imageEntryFor(StepName.BLUR_OBJECT, dictionary),
         imageEntryFor(StepName.CANNY_OBJECT, dictionary),
@@ -59,7 +59,7 @@ const imageOptionsFor = (
     settingStep == CalibrationSettingStep.FILTER_OBJECTS
   ) {
     if (inSettings(settings).isPaperDetectionSkipped()) {
-      return [imageEntryFor(StepName.INPUT, dictionary)];
+      return [imageEntryFor(StepName.RESIZE_IMAGE, dictionary)];
     } else {
       return [imageEntryFor(StepName.EXTRACT_PAPER, dictionary)];
     }
@@ -95,7 +95,7 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     useResultContext();
   const { settingStep } = useSettingStepContext();
   const [displayImageInfo, setDisplayImageInfo] = useState<DisplayImageInfo>({
-    baseStepName: StepName.INPUT,
+    baseStepName: StepName.RESIZE_IMAGE,
     baseImage: new ArrayBuffer(0),
     outlineImages: [],
   });

@@ -39,6 +39,7 @@
     "title": "OpenCv Kalibrēšana",
     "step": {
       "input": "Ievaddati",
+      "resizeImage": "Mainīt Izmēru",
       "bilateralFilter": "Bilateral Filter",
       "blur": "Aizmiglojums",
       "blurObject": "Objekta Aizmiglojums",
@@ -96,7 +97,8 @@
       "areaThresholdSettings": "Object Area Threshold Settings",
       "upperThreshold": "Upper Area Threshold",
       "lowerThreshold": "Lower Area Threshold",
-      "skipPaperDetection": "Izlaist Papīra Konstatēšanu"
+      "skipPaperDetection": "Izlaist Papīra Konstatēšanu",
+      "maxImageResolution": "Maksimālā attēla izšķirtspēja"
     },
     "simpleSettings": {
       "title": "Iestatījumi",

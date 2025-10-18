@@ -1,6 +1,6 @@
-import { Mat } from "@techstark/opencv-js";
+
 import Settings, { inSettings } from "../Settings";
-import ColorSpace from "../util/ColorSpace";
+
 import adaptiveThresholdStep from "./steps/AdaptiveThreshold";
 import bilateralFilterStep from "./steps/BilateralFilter";
 import blurStep from "./steps/Blur";
@@ -14,6 +14,8 @@ import thresholdStep from "./steps/Threshold";
 import findPaperOutlineStep from "./steps/FindPaperOutline";
 import extractPaperStep from "./steps/ExtractPaper";
 import findObjectOutlinesStep from "./steps/FindObjectOutlines";
+import { INPUT } from "./steps/Input";
+import resizeImageStep from "./steps/ResizeImage";
 
 const withStepName = (
   stepName: StepName,
@@ -44,23 +46,9 @@ const withDefaultSettings = (
   return { ...processingStep, settings: settings };
 };
 
-export const INPUT: ProcessingStep<any> = {
-  name: StepName.INPUT,
-  settings: {
-    skipPaperDetection: false,
-  },
-  imageColorSpace: () => ColorSpace.RGBA,
-  process: async (image: Mat) => {
-    return { image: image };
-  },
-  config: {
-    skipPaperDetection: {
-      type: "checkbox",
-    },
-  },
-};
 
-const PREPROCESSING_STEPS = (): ProcessingStep<any>[] => [bilateralFilterStep];
+
+const PREPROCESSING_STEPS = (): ProcessingStep<any>[] => [resizeImageStep, bilateralFilterStep];
 
 const PAPER_DETECTION_STEPS = (): ProcessingStep<any>[] => {
   return [

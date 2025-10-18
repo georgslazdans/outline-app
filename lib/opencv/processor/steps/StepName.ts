@@ -1,5 +1,6 @@
 enum StepName {
     INPUT = "input",
+    RESIZE_IMAGE = "resizeImage",
     BILATERAL_FILTER = "bilateralFilter",
     BLUR = "blur",
     BLUR_OBJECT = "blurObject",

@@ -15,7 +15,8 @@ import findObjectOutlinesStep from "@/lib/opencv/processor/steps/FindObjectOutli
 import { GroupConfig } from "@/lib/opencv/processor/steps/StepSettings";
 import StepSettingGroup from "../../fields/StepSettingGroup";
 import bilateralFilterStep from "@/lib/opencv/processor/steps/BilateralFilter";
-import { INPUT } from "@/lib/opencv/processor/Steps";
+import { INPUT } from "@/lib/opencv/processor/steps/Input";
+import resizeImageStep from "@/lib/opencv/processor/steps/ResizeImage";
 
 const SKIP_PAPER_DETECTION = "skipPaperDetection";
 
@@ -28,6 +29,8 @@ const PAPER_SETTINGS = "paperSettings";
 const AREA_THRESHOLD_SETTINGS = "areaThresholdSettings";
 const LOWER_THRESHOLD = "lowerThreshold";
 const UPPER_THRESHOLD = "upperThreshold";
+
+const MAX_IMAGE_RESOLUTION = "maxImageResolution";
 
 const DISABLED_BILATERAL_FILTER = "disabledBilateralFilter";
 const REUSE_STEP = "reuseStep";
@@ -54,6 +57,13 @@ const AdditionalSettings = ({
     settings,
     onSettingsChanged
   );
+
+  const onResizeImageChange = useStepChangeHandler(
+    StepName.RESIZE_IMAGE,
+    settings,
+    onSettingsChanged
+  );
+
   const onExtractPaperChange = useStepChangeHandler(
     StepName.EXTRACT_PAPER,
     settings,
@@ -81,6 +91,12 @@ const AdditionalSettings = ({
   ).config;
   const areaThresholdSettings =
     settings[StepName.FIND_OBJECT_OUTLINES][AREA_THRESHOLD_SETTINGS];
+
+  const resizeImageConfig = (
+    resizeImageStep.config![MAX_IMAGE_RESOLUTION] as GroupConfig
+  ).config;
+  const resizeImageSettings =
+    settings[StepName.RESIZE_IMAGE][MAX_IMAGE_RESOLUTION];
 
   return (
     <>
@@ -150,6 +166,18 @@ const AdditionalSettings = ({
           )}
           dictionary={dictionary}
         ></StepSettingField>
+      </div>
+      <div className="mb-4">
+        <h3 className="mb-2">Resize Image</h3>
+        <StepSettingGroup
+          name={MAX_IMAGE_RESOLUTION}
+          settings={resizeImageSettings}
+          settingsConfig={resizeImageConfig}
+          onChange={onResizeImageChange(MAX_IMAGE_RESOLUTION)}
+          dictionary={dictionary}
+          stepName={StepName.RESIZE_IMAGE}
+          allSettings={settings}
+        ></StepSettingGroup>
       </div>
       <div className="mb-4">
         <h3 className="mb-2">Disable Steps</h3>

@@ -12,7 +12,7 @@ import { decodePngToImageData, encodeImageDataToPngBuffer } from "@/lib/utils/Im
 const paperOutlineImagesOf = async (
   steps: StepResult[]
 ): Promise<ArrayBuffer[]> => {
-  const input = findStep(StepName.INPUT).in(steps);
+  const input = findStep(StepName.RESIZE_IMAGE).in(steps);
   const findPaper = findStep(StepName.FIND_PAPER_OUTLINE).in(steps);
 
   const contourOutlines = findPaper?.contours;

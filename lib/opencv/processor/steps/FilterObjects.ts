@@ -73,7 +73,7 @@ const scaleFactorFrom = async (previous: PreviousData) => {
   const paperDimensions = paperDimensionsOf(
     previous.settingsOf(StepName.EXTRACT_PAPER).paperSettings
   );
-  const inputImage = await previous.intermediateImageOf(StepName.INPUT);
+  const inputImage = await previous.intermediateImageOf(StepName.RESIZE_IMAGE);
   const imageSize = inputImage.size();
   const result = scaleFactorOf(imageSize, paperDimensions);
   inputImage.delete();
