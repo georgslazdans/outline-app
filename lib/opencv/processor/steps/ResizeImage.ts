@@ -26,8 +26,11 @@ const resizeImageStep: ProcessingStep<any> = {
     } else if (isLargerThanMax(image, settings)) {
       const scale = scaleOf(image, settings);
       return { image: resizeImage(image, scale) };
+    } else {
+      const result = new cv.Mat();
+      image.copyTo(result);
+      return { image: result };
     }
-    return { image: image };
   },
   config: {
     maxImageResolution: {
@@ -56,7 +59,10 @@ const isPortrait = (image: cv.Mat) => {
   return originalH > originalW;
 };
 
-const isPortraitLargerThanMax = (image: cv.Mat, settings: ResizeImageSettings) => {
+const isPortraitLargerThanMax = (
+  image: cv.Mat,
+  settings: ResizeImageSettings
+) => {
   const { width: maxH, height: maxW } = settings.maxImageResolution;
   const w = image.cols;
   const h = image.rows;
