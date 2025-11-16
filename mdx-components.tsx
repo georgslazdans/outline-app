@@ -9,11 +9,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h3: ({ children }) => <h3 className="mt-2 mb-1"> {children}</h3>,
     h4: ({ children }) => <h4 className="mb-1"> {children}</h4>,
     p: ({ children }) => <p className="mb-1"> {children}</p>,
-    a: ({ children, href }) => (
-      <a style={{ color: "revert", textDecoration: "revert" }} href={href}>
-        {children}
-      </a>
-    ),
     ul: ({ children }) => <ul style={{listStyle: ""}} className="list-inside list-disc my-1">{children}</ul>,
     ...components,
   };

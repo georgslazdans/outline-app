@@ -8,7 +8,7 @@ const GitHubLink = ({}: Props) => {
   return (
     <a href="https://github.com/georgslazdans/outline-app" className="max-h-8">
       <ExportedImage
-        className="object-contain relative"
+        className="object-contain relative dark:invert"
         src={githubLogo}
         alt={"GitHub Logo"}
         priority

@@ -52,6 +52,14 @@ label {
   line-height: 1.25;
 }
 
+main a {
+    color: theme(colors.blue);
+    text-decoration: underline;
+}
+main a:visited {
+    color: theme(colors.dark-blue);
+}
+
 p {
   font-size: 1rem;
 }
