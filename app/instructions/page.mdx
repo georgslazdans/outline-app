@@ -34,7 +34,7 @@ import "./page.css";
   - [Find Object Outlines](#find-object-outlines)
   - [Filter Objects](#filter-objects)
 
-## <a name="quick-start">Quick Start</a>
+## <span id="quick-start">Quick Start</span>
 
 ### 1. Set up environment
 
@@ -130,17 +130,17 @@ Select which contours will be exported and available in editor.
 
 **Note**: After selecting contours "Rerun" should be pressed to apply selected contours.
 
-## <a name="environment-setup">Environment Setup</a>
+## <span id="environment-setup">Environment Setup</span>
 
 Setting up the environment perfectly will save a lot of time adjusting settings later.
 
-### <a name="basic-setup">Basic Setup</a>
+### <span id="basic-setup">Basic Setup</span>
 
 - Ensure your lighting is consistent.
 - Avoid reflections as much as possible to get a clear image.
 - Zoom in when taking the photo to minimize distortion.
 
-### <a name="recommended-setup">Recommended Setup</a>
+### <span id="recommended-setup">Recommended Setup</span>
 
 For easiest and most accurate results, it's recommended to use a transparent backlight source, e.g. giant tablet, monitor or glass/plastic sheet with lights under.
 Calibration then is straightforward by using "Binary" threshold in **Find Object** and using low **Blur Size** and **Close Corners** values for the best accuracy.
@@ -153,9 +153,9 @@ Calibration then is straightforward by using "Binary" threshold in **Find Object
   fill
 ></ExportedImage>
 
-## <a name="detailed-settings">Detailed Settings</a>
+## <span id="detailed-settings">Detailed Settings</span>
 
-### <a name="bilateral-filter">Bilateral Filter</a>
+### <span id="bilateral-filter">Bilateral Filter</span>
 
 Applies a bilateral filter to the image to reduce noise while keeping edges sharp. Can be disabled to improve performance.
 
@@ -166,11 +166,11 @@ Applies a bilateral filter to the image to reduce noise while keeping edges shar
 
 For more details, see the [OpenCV Bilateral Filter documentation](https://docs.opencv.org/4.10.0/d4/d86/group__imgproc__filter.html#ga9d7064d478c95d60003cf839430737ed).
 
-### <a name="gray-scale">Gray Scale</a>
+### <span id="gray-scale">Gray Scale</span>
 
 Converts the input image to grayscale, reducing it to a single color channel.
 
-### <a name="blur-setting">Blur</a>
+### <span id="blur-setting">Blur</span>
 
 Blurs the image to reduce noise and details.
 
@@ -178,7 +178,7 @@ Blurs the image to reduce noise and details.
 
 For more details, see the [OpenCV Gaussian Blur documentation](https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#gae8bdcd9154ed5ca3cbc1766d960f45c1).
 
-### <a name="adaptive-threshold">Adaptive Threshold</a>
+### <span id="adaptive-threshold">Adaptive Threshold</span>
 
 Applies adaptive threshold to binarize the image based on local neighborhood.
 
@@ -188,7 +188,7 @@ Applies adaptive threshold to binarize the image based on local neighborhood.
 
 For more details, see the [OpenCV Adaptive Threshold documentation](https://docs.opencv.org/4.10.0/d7/d1b/group__imgproc__misc.html#ga72b913f352e4a1b1b397736707afcde3).
 
-### <a name="canny-paper">Canny Paper</a>
+### <span id="canny-paper">Canny Paper</span>
 
 Uses the Canny edge detector to find edges in the image.
 
@@ -197,14 +197,14 @@ Uses the Canny edge detector to find edges in the image.
 
 For more details, see the [OpenCV Canny Edge Detection documentation](https://docs.opencv.org/4.10.0/dd/d1a/group__imgproc__feature.html#ga04723e007ed888ddf11d9ba04e2232de).
 
-### <a name="find-paper-outlines">Find Paper Outlines</a>
+### <span id="find-paper-outlines">Find Paper Outlines</span>
 
 Finds all rectangles with 4 points inside the image.
 
 - **Filter Similar Outlines** - Filters out similar paper outlines leaving behind the one with smallest area.
 - **Similarity Threshold** - Similarity percentage based on the image resolution.
 
-### <a name="extract-paper">Extract Paper</a>
+### <span id="extract-paper">Extract Paper</span>
 
 Extracts one of the paper outlines found in the previous step.
 
@@ -231,7 +231,7 @@ Disabled if **Reuse Step** is set to _Blur_
 
 See [Blur](#blur-setting) section.
 
-### <a name="object-threshold">Object Threshold</a>
+### <span id="object-threshold">Object Threshold</span>
 
 Applies threshold to binarize the object.
 
@@ -253,7 +253,7 @@ For more details, see the [OpenCV Threshold documentation](https://docs.opencv.o
 
 Uses the Canny edge detector to find edges of the object. See [Canny Paper](#canny-paper) section.
 
-### <a name="close-corners">Close Corners</a>
+### <span id="close-corners">Close Corners</span>
 
 Uses morphological operations to close gaps in corners.
 
@@ -262,7 +262,7 @@ Uses morphological operations to close gaps in corners.
 
 For more details, see the [OpenCV Morphological Transformations documentation](https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html).
 
-### <a name="find-object-outlines">Find Object Outlines</a>
+### <span id="find-object-outlines">Find Object Outlines</span>
 
 Finds objects contours and identifies possible holes in the object.
 
@@ -283,7 +283,7 @@ Filters very large and very small contours based on it's area relative to the im
 - **Upper Area Threshold** - Upper threshold for area filtering
 - **Lower Area Threshold** - Lower threshold for area filtering
 
-### <a name="filter-objects">Filter Objects</a>
+### <span id="filter-objects">Filter Objects</span>
 
 Filters out unselected outlines.
 
