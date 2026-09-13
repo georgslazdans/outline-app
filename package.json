@@ -1,6 +1,6 @@
 {
   "name": "outline-app",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "ui-test": "npx playwright test"
+    "ui-test": "npx playwright test",
+    "postinstall": "cp node_modules/replicad-opencascadejs/dist/replicad_single.wasm public/"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -25,7 +26,6 @@
     "@types/mdx": "^2.0.13",
     "@types/three": "^0.167.1",
     "comlink": "^4.4.1",
-    "file-loader": "^6.2.0",
     "jszip": "^3.10.1",
     "next": "^14.2.6",
     "next-image-export-optimizer": "^1.14.1",
@@ -35,15 +35,15 @@
     "react-loader-spinner": "^6.1.6",
     "react-tooltip": "^5.28.0",
     "react-zoom-pan-pinch": "^3.4.4",
-    "replicad": "^0.17.1",
-    "replicad-opencascadejs": "^0.17.1",
-    "replicad-threejs-helper": "^0.17.0",
+    "replicad": "^1.1.0",
+    "replicad-opencascadejs": "^1.1.0",
+    "replicad-threejs-helper": "^1.0.0",
     "sharp": "^0.33.4",
     "three": "^0.167.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.50.1",
+    "@playwright/test": "^1.63.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
