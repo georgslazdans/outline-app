@@ -47,3 +47,6 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Replicad hack
+/public/replicad_single.wasm

@@ -1,5 +1,6 @@
 import withSerwistInit from "@serwist/next";
 import nextMDX from "@next/mdx";
+import webpack from "webpack";
 
 const withMDX = nextMDX();
 
@@ -31,17 +32,45 @@ const nextConfig = {
       },
     });
 
-    // https://ocjs.org/docs/app-dev-workflow/pre-built
-    config.module.rules.push({
-      test: /\.wasm$/,
-      type: "javascript/auto",
-      loader: "file-loader",
-      options: {
-        name: "static/chunks/[name].[hash].[ext]",
-      },
-    });
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      os: false,
+      crypto: false,
+      stream: false,
+      http: false,
+      https: false,
+      zlib: false,
+      url: false,
+      assert: false,
+      buffer: false,
+      querystring: false,
+      util: false,
+      net: false,
+      tls: false,
+      child_process: false,
+      cluster: false,
+      console: false,
+      dgram: false,
+      dns: false,
+      domain: false,
+      events: false,
+      inspector: false,
+      worker_threads: false,
+      readfileasync: false,
+      process: false,
+      module: false,
+    };
 
-    config.resolve.fallback = { fs: false };
+    config.plugins = [
+      ...config.plugins,
+      new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+        const name = resource.request.replace(/^node:/, "");
+        resource.request = name;
+      }),
+    ];
+
     config.experiments = { ...config.experiments, asyncWebAssembly: true };
 
     return config;
