@@ -2,7 +2,7 @@ import SelectField from "@/components/fields/SelectField";
 import StepName from "@/lib/opencv/processor/steps/StepName";
 import { OutlineImageViewer } from "./OutlineImageViewer";
 import StepResult from "@/lib/opencv/StepResult";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useResultContext } from "../../ResultContext";
 import { Dictionary } from "@/app/dictionaries";
 import { useSettingStepContext } from "../SettingStepContext";
@@ -10,6 +10,11 @@ import CalibrationSettingStep from "../settings/CalibrationSettingStep";
 import { useDetails } from "@/context/DetailsContext";
 import { DisplayImageInfo } from "./DisplayImageInfo";
 import Settings, { inSettings } from "@/lib/opencv/Settings";
+import ContourPoints, {
+  ContourOutline,
+  contourPointsOf,
+} from "@/lib/data/contour/ContourPoints";
+import { pxPerMmFor } from "@/lib/measure/PaperScale";
 
 interface Option {
   label: string;
@@ -98,25 +103,32 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     baseStepName: StepName.RESIZE_IMAGE,
     baseImage: new ArrayBuffer(0),
     outlineImages: [],
+    outlinePoints: [],
   });
 
   const [backgroundImageOptions, setBackgroundImageOptions] = useState<
     Option[]
   >([]);
 
-  const currentPaperOutlineImages = useCallback(() => {
+  const currentPaperIndex = useCallback(() => {
     if (paperOutlineImages.length > 0) {
       const paperIndex =
         detailsContext.settings[StepName.EXTRACT_PAPER]["paperIndex"];
-      const index =
-        paperIndex >= paperOutlineImages.length
-          ? paperOutlineImages.length - 1
-          : paperIndex;
-      return [paperOutlineImages[index]];
+      return paperIndex >= paperOutlineImages.length
+        ? paperOutlineImages.length - 1
+        : paperIndex;
+    } else {
+      return 0;
+    }
+  }, [detailsContext.settings, paperOutlineImages]);
+
+  const currentPaperOutlineImages = useCallback(() => {
+    if (paperOutlineImages.length > 0) {
+      return [paperOutlineImages[currentPaperIndex()]];
     } else {
       return [];
     }
-  }, [detailsContext.settings, paperOutlineImages]);
+  }, [paperOutlineImages, currentPaperIndex]);
 
   const currentObjectOutlineImages = useCallback(() => {
     const objectIndexes =
@@ -149,6 +161,60 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     objectOutlineImages,
   ]);
 
+  // Contour points that back the displayed outline images, picked with the same
+  // branch logic as outlineImagesForCurrentStep() so the two always correspond.
+  // The result is cached on the identity of the source contour objects: the
+  // details/step contexts hand out fresh wrapper objects on many renders, but
+  // the contour objects themselves only change when their step is reprocessed,
+  // and the viewer relies on the array identity to detect real geometry changes.
+  const pointsCache = useRef<{
+    sources: ContourOutline[];
+    points: ContourPoints[];
+  }>({ sources: [], points: [] });
+
+  const outlinePointsForCurrentStep = useCallback((): ContourPoints[] => {
+    let sources: ContourOutline[];
+    if (
+      settingStep == CalibrationSettingStep.FIND_PAPER ||
+      settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER
+    ) {
+      const contours = contoursOfStep(stepResults, StepName.FIND_PAPER_OUTLINE);
+      sources =
+        contours.length == 0
+          ? []
+          : [contours[Math.min(currentPaperIndex(), contours.length - 1)]];
+    } else {
+      const contours = contoursOfStep(
+        stepResults,
+        StepName.FIND_OBJECT_OUTLINES
+      );
+      const objectIndexes =
+        settingStep == CalibrationSettingStep.FILTER_OBJECTS
+          ? detailsContext.settings[StepName.FILTER_OBJECTS]["objectIndexes"]
+          : undefined;
+      sources =
+        objectIndexes && objectIndexes.length > 0
+          ? contours.filter((_, index) => objectIndexes.includes(index))
+          : contours;
+    }
+
+    const cached = pointsCache.current;
+    if (
+      cached.sources.length === sources.length &&
+      cached.sources.every((source, i) => source === sources[i])
+    ) {
+      return cached.points;
+    }
+    const points = sources.flatMap(contourPointsOf);
+    pointsCache.current = { sources, points };
+    return points;
+  }, [
+    settingStep,
+    stepResults,
+    detailsContext.settings,
+    currentPaperIndex,
+  ]);
+
   const newStepForAvailableOptions = useCallback((): StepResult | undefined => {
     if (backgroundImageOptions.length > 0) {
       const hasElementSelected = !!backgroundImageOptions.find(
@@ -165,25 +231,38 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
 
   useEffect(() => {
     const outlineImages = outlineImagesForCurrentStep();
+    const outlinePoints = outlinePointsForCurrentStep();
     const newStep = newStepForAvailableOptions();
     if (newStep) {
-      setDisplayImageInfo((previous) => {
+      setDisplayImageInfo(() => {
         return {
           baseStepName: newStep.stepName,
           baseImage: newStep.pngBuffer,
           outlineImages: outlineImages,
+          outlinePoints: outlinePoints,
         };
       });
     } else {
       setDisplayImageInfo((previous) => {
-        if (hasSameImages(previous.outlineImages, outlineImages)) {
+        if (
+          hasSameImages(previous.outlineImages, outlineImages) &&
+          previous.outlinePoints === outlinePoints
+        ) {
           return previous;
         } else {
-          return { ...previous, outlineImages: outlineImages };
+          return {
+            ...previous,
+            outlineImages: outlineImages,
+            outlinePoints: outlinePoints,
+          };
         }
       });
     }
-  }, [newStepForAvailableOptions, outlineImagesForCurrentStep]);
+  }, [
+    newStepForAvailableOptions,
+    outlineImagesForCurrentStep,
+    outlinePointsForCurrentStep,
+  ]);
 
   const updateBackgroundStep = useCallback(
     (stepName: StepName) => {
@@ -220,6 +299,11 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     setBackgroundImageOptions(filteredOptions);
   }, [stepResults, settingStep, dictionary, settings]);
 
+  const pxPerMm = useMemo(
+    () => pxPerMmFor({ settingStep, stepResults, settings }),
+    [settingStep, stepResults, settings]
+  );
+
   return (
     <>
       <div className="mb-2">
@@ -236,7 +320,17 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
       <OutlineImageViewer
         className="max-h-[30vh] xl:max-h-[45vh]"
         displayImageInfo={displayImageInfo}
+        dictionary={dictionary}
+        pxPerMm={pxPerMm}
       ></OutlineImageViewer>
     </>
   );
+};
+
+const contoursOfStep = (
+  stepResults: StepResult[],
+  stepName: StepName
+) => {
+  const step = stepResults.find((it) => it.stepName == stepName);
+  return step?.contours ?? [];
 };

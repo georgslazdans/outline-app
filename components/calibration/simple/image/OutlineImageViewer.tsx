@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DrawOutlineButton from "./DrawOutlineButton";
+import MeasureButton from "./MeasureButton";
+import MeasureOverlay from "./MeasureOverlay";
+import MeasureReadout from "./MeasureReadout";
 import { DisplayImageInfo } from "./DisplayImageInfo";
 import LoadingSpinner from "./LoadingSpinner";
+import { Dictionary } from "@/app/dictionaries";
+import Point, { lengthOf } from "@/lib/data/Point";
+import { distancePx, formatMeasurement } from "@/lib/measure/Measure";
 import { useUserPreference } from "@/lib/preferences/useUserPreference";
 import UserPreference from "@/lib/preferences/UserPreference";
 import { decodePngToImageData } from "@/lib/utils/ImagePng";
@@ -10,6 +16,8 @@ import { decodePngToImageData } from "@/lib/utils/ImagePng";
 type Props = {
   className?: string;
   displayImageInfo: DisplayImageInfo;
+  dictionary: Dictionary;
+  pxPerMm?: number;
 };
 
 const blendImageData = (
@@ -77,8 +85,19 @@ const decodeImages = async (displayImageInfo: DisplayImageInfo) => {
   };
 };
 
-export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
+const isSamePoint = (a: Point, b: Point) => lengthOf(a, b) < 1;
+
+export const OutlineImageViewer = ({
+  className,
+  displayImageInfo,
+  dictionary,
+  pxPerMm,
+}: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
+  const [measureMode, setMeasureMode] = useState(false);
+  const [pointA, setPointA] = useState<Point | undefined>();
+  const [pointB, setPointB] = useState<Point | undefined>();
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { value: outlineAlphaLevel } = useUserPreference(
     UserPreference.OUTLINE_ALPHA_LEVEL
@@ -115,6 +134,7 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
       canvas.width = image.width;
       canvas.height = image.height;
       ctx.putImageData(image, 0, 0);
+      setCanvasSize({ width: image.width, height: image.height });
     }
   }, []);
 
@@ -145,23 +165,112 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
     };
   }, [displayImageInfo, getDrawImage, drawImage]);
 
+  // The measurement is tied to the geometry it was taken on: clear it (and any
+  // in-progress pick) whenever the outline points change identity.
+  useEffect(() => {
+    setPointA(undefined);
+    setPointB(undefined);
+  }, [displayImageInfo.outlinePoints]);
+
+  // Escape leaves measure mode.
+  useEffect(() => {
+    if (!measureMode) {
+      return;
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMeasureMode(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [measureMode]);
+
+  const hasOutlinePoints = displayImageInfo.outlinePoints.some(
+    (contour) => contour.points.length > 0
+  );
+
+  const toggleMeasureMode = () => {
+    if (measureMode) {
+      setMeasureMode(false);
+    } else {
+      setMeasureMode(true);
+      // The ruler is usable even while the outline is hidden: reveal it.
+      setDrawOutline(true);
+    }
+  };
+
+  const handlePick = (point: Point) => {
+    if (!pointA) {
+      setPointA(point);
+    } else if (!pointB) {
+      if (!isSamePoint(point, pointA)) {
+        setPointB(point);
+      }
+    } else {
+      setPointA(point);
+      setPointB(undefined);
+    }
+  };
+
+  const measurement =
+    pointA && pointB
+      ? formatMeasurement(distancePx(pointA, pointB), pxPerMm)
+      : undefined;
+
+  const hint =
+    measureMode && !measurement
+      ? pointA
+        ? dictionary.calibration.measure.pickSecond
+        : dictionary.calibration.measure.pickFirst
+      : undefined;
+
   return (
     <div className={className}>
-      <TransformWrapper panning={{ velocityDisabled: true }}>
+      <TransformWrapper
+        panning={{ velocityDisabled: true, disabled: measureMode }}
+      >
         <div className="z-10 relative">
-          <DrawOutlineButton
-            icon={drawOutline ? "eye-slash" : "eye"}
-            onClick={() => setDrawOutline(!drawOutline)}
-          ></DrawOutlineButton>
+          <div className="absolute left-2 top-2 flex flex-col gap-2">
+            <DrawOutlineButton
+              icon={drawOutline ? "eye-slash" : "eye"}
+              onClick={() => setDrawOutline(!drawOutline)}
+            ></DrawOutlineButton>
+            {hasOutlinePoints && (
+              <MeasureButton
+                active={measureMode}
+                onClick={toggleMeasureMode}
+                tooltip={dictionary.calibration.measure.tooltip}
+              ></MeasureButton>
+            )}
+          </div>
           <LoadingSpinner></LoadingSpinner>
         </div>
         <TransformComponent wrapperClass="!mx-auto">
-          <canvas
-            className="max-w-full max-h-[30vh] xl:max-h-[40vh]"
-            ref={canvasRef}
-          />
+          <div className="relative inline-block">
+            <canvas
+              className="block max-w-full max-h-[30vh] xl:max-h-[40vh]"
+              ref={canvasRef}
+            />
+            {measureMode && (
+              <MeasureOverlay
+                canvasWidth={canvasSize.width}
+                canvasHeight={canvasSize.height}
+                contours={displayImageInfo.outlinePoints}
+                pointA={pointA}
+                pointB={pointB}
+                measurement={measurement}
+                onPick={handlePick}
+              ></MeasureOverlay>
+            )}
+          </div>
         </TransformComponent>
       </TransformWrapper>
+      <MeasureReadout
+        dictionary={dictionary}
+        measurement={measurement}
+        hint={hint}
+      ></MeasureReadout>
     </div>
   );
 };
