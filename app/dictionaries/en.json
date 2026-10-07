@@ -120,7 +120,7 @@
     "close": "Close",
     "saveAndClose": "Save and Close",
     "measure": {
-      "tooltip": "Measure distance",
+      "tooltip": "Measure distance (M)",
       "pickFirst": "Click the first point on the outline",
       "pickSecond": "Click the second point on the outline",
       "distance": "Distance",

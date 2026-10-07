@@ -304,6 +304,13 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     [settingStep, stepResults, settings]
   );
 
+  // On the paper steps the displayed image is the (resized) photo, not the
+  // extracted deskewed paper, so mm readouts would only be approximate: the
+  // measure tool is not offered there. Same branch as PaperScale.isPaperStep.
+  const isPaperStep =
+    settingStep == CalibrationSettingStep.FIND_PAPER ||
+    settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER;
+
   return (
     <>
       <div className="mb-2">
@@ -322,6 +329,7 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
         displayImageInfo={displayImageInfo}
         dictionary={dictionary}
         pxPerMm={pxPerMm}
+        canMeasure={!isPaperStep}
       ></OutlineImageViewer>
     </>
   );

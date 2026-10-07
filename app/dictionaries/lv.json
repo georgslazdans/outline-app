@@ -120,7 +120,7 @@
     "close": "Aizvērt",
     "saveAndClose": "Saglabāt un Aizvērt",
     "measure": {
-      "tooltip": "Mērīt attālumu",
+      "tooltip": "Mērīt attālumu (M)",
       "pickFirst": "Klikšķini uz pirmā punkta uz kontūras",
       "pickSecond": "Klikšķini uz otrā punkta uz kontūras",
       "distance": "Attālums",

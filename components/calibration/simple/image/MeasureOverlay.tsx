@@ -18,10 +18,14 @@ type Props = {
 
 // Hit radius, in screen pixels, within which a pointer snaps to the contour.
 const SNAP_RADIUS_SCREEN_PX = 12;
-// Vertex hit circles are only rendered as real, clickable elements when the
-// contour is sparse enough (the paper quad qualifies; dense object contours do
-// not) so the E2E test has stable points to target without cluttering the view.
+// Upper bound on rendered vertex handles: dense contours (thousands of points)
+// are sampled down to roughly this many circles so the view stays readable
+// while the E2E test (and the user) still has stable points to target.
 const MAX_RENDERED_VERTICES = 64;
+// A pointer that travelled more than this many screen pixels between down and
+// up was a pan-drag, not a pick-click: the pick is ignored (panning stays
+// enabled in measure mode, so drags move the content).
+const DRAG_THRESHOLD_SCREEN_PX = 4;
 
 const MeasureOverlay = ({
   canvasWidth,
@@ -33,6 +37,7 @@ const MeasureOverlay = ({
   onPick,
 }: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const pointerDown = useRef<{ x: number; y: number } | undefined>();
   const [candidate, setCandidate] = useState<MeasureCandidate | undefined>();
   // On-screen size of one image pixel (accounts for fit-to-box + zoom), used to
   // keep marker sizes constant on screen regardless of zoom level.
@@ -82,7 +87,22 @@ const MeasureOverlay = ({
     setCandidate(resolve(event.clientX, event.clientY, event.ctrlKey));
   };
 
+  const handlePointerDown = (event: React.PointerEvent<SVGSVGElement>) => {
+    pointerDown.current = { x: event.clientX, y: event.clientY };
+  };
+
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
+    // Panning is enabled in measure mode, so a drag that moved the content
+    // must not also pick a point: only treat (nearly) still clicks as picks.
+    const down = pointerDown.current;
+    pointerDown.current = undefined;
+    if (
+      down &&
+      Math.hypot(event.clientX - down.x, event.clientY - down.y) >
+        DRAG_THRESHOLD_SCREEN_PX
+    ) {
+      return;
+    }
     const resolved = resolve(event.clientX, event.clientY, event.ctrlKey);
     if (resolved) {
       onPick(resolved.point);
@@ -95,7 +115,13 @@ const MeasureOverlay = ({
     (sum, contour) => sum + contour.points.length,
     0
   );
-  const renderVertices = totalVertices > 0 && totalVertices <= MAX_RENDERED_VERTICES;
+  // Dense contours are sampled down instead of hiding the handles entirely:
+  // every k-th point is rendered so up to ~MAX_RENDERED_VERTICES handles exist
+  // on any outline (the paper quad, with a stride of 1, keeps all four).
+  const vertexStride = Math.max(
+    1,
+    Math.ceil(totalVertices / MAX_RENDERED_VERTICES)
+  );
 
   let vertexIndex = 0;
 
@@ -108,13 +134,17 @@ const MeasureOverlay = ({
       viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
       preserveAspectRatio="none"
       onPointerMove={handlePointerMove}
+      onPointerDown={handlePointerDown}
       onPointerLeave={() => setCandidate(undefined)}
       onClick={handleClick}
     >
-      {renderVertices &&
+      {totalVertices > 0 &&
         contours.flatMap((contour) =>
           contour.points.map((point) => {
             const index = vertexIndex++;
+            if (index % vertexStride !== 0) {
+              return null;
+            }
             return (
               <circle
                 key={`vertex-${index}`}
@@ -143,6 +173,7 @@ const MeasureOverlay = ({
           strokeWidth={2}
           strokeDasharray="6 4"
           vectorEffect="non-scaling-stroke"
+          style={{ pointerEvents: "none" }}
         />
       )}
 
@@ -156,6 +187,7 @@ const MeasureOverlay = ({
           stroke="#ffffff"
           strokeWidth={1.5}
           vectorEffect="non-scaling-stroke"
+          style={{ pointerEvents: "none" }}
         />
       )}
 
@@ -169,6 +201,7 @@ const MeasureOverlay = ({
           stroke="#ffffff"
           strokeWidth={1.5}
           vectorEffect="non-scaling-stroke"
+          style={{ pointerEvents: "none" }}
         />
       )}
 
@@ -182,6 +215,7 @@ const MeasureOverlay = ({
           stroke="#2563eb"
           strokeWidth={2}
           vectorEffect="non-scaling-stroke"
+          style={{ pointerEvents: "none" }}
         />
       )}
 

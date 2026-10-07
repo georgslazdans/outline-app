@@ -18,6 +18,8 @@ type Props = {
   displayImageInfo: DisplayImageInfo;
   dictionary: Dictionary;
   pxPerMm?: number;
+  /** Whether the measure tool is offered for the displayed image. */
+  canMeasure?: boolean;
 };
 
 const blendImageData = (
@@ -92,6 +94,7 @@ export const OutlineImageViewer = ({
   displayImageInfo,
   dictionary,
   pxPerMm,
+  canMeasure = true,
 }: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
   const [measureMode, setMeasureMode] = useState(false);
@@ -172,6 +175,15 @@ export const OutlineImageViewer = ({
     setPointB(undefined);
   }, [displayImageInfo.outlinePoints]);
 
+  // Measure mode is not available on paper steps: leave it when the button
+  // disappears so a session started on an object step does not leave a
+  // floating overlay behind after switching steps.
+  useEffect(() => {
+    if (!canMeasure) {
+      setMeasureMode(false);
+    }
+  }, [canMeasure]);
+
   // Escape leaves measure mode.
   useEffect(() => {
     if (!measureMode) {
@@ -227,16 +239,14 @@ export const OutlineImageViewer = ({
 
   return (
     <div className={className}>
-      <TransformWrapper
-        panning={{ velocityDisabled: true, disabled: measureMode }}
-      >
+      <TransformWrapper panning={{ velocityDisabled: true }}>
         <div className="z-10 relative">
           <div className="absolute left-2 top-2 flex flex-col gap-2">
             <DrawOutlineButton
               icon={drawOutline ? "eye-slash" : "eye"}
               onClick={() => setDrawOutline(!drawOutline)}
             ></DrawOutlineButton>
-            {hasOutlinePoints && (
+            {hasOutlinePoints && canMeasure && (
               <MeasureButton
                 active={measureMode}
                 onClick={toggleMeasureMode}
