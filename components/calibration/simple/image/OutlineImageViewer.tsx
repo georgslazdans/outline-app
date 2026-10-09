@@ -3,12 +3,10 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DrawOutlineButton from "./DrawOutlineButton";
 import MeasureButton from "./MeasureButton";
 import MeasureOverlay from "./MeasureOverlay";
-import MeasureReadout from "./MeasureReadout";
 import { DisplayImageInfo } from "./DisplayImageInfo";
 import LoadingSpinner from "./LoadingSpinner";
 import { Dictionary } from "@/app/dictionaries";
-import Point, { lengthOf } from "@/lib/data/Point";
-import { distancePx, formatMeasurementForDisplay } from "@/lib/measure/Measure";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 import { useUserPreference } from "@/lib/preferences/useUserPreference";
 import UserPreference from "@/lib/preferences/UserPreference";
 import { decodePngToImageData } from "@/lib/utils/ImagePng";
@@ -16,6 +14,8 @@ import { decodePngToImageData } from "@/lib/utils/ImagePng";
 type Props = {
   className?: string;
   displayImageInfo: DisplayImageInfo;
+  /** Contour points backing the displayed outline, the ruler picks on these. */
+  outlinePoints: ContourPoints[];
   dictionary: Dictionary;
   pxPerMm?: number;
   /** Whether the measure tool is offered for the displayed image. */
@@ -87,19 +87,16 @@ const decodeImages = async (displayImageInfo: DisplayImageInfo) => {
   };
 };
 
-const isSamePoint = (a: Point, b: Point) => lengthOf(a, b) < 1;
-
 export const OutlineImageViewer = ({
   className,
   displayImageInfo,
+  outlinePoints,
   dictionary,
   pxPerMm,
   canMeasure = true,
 }: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
   const [measureMode, setMeasureMode] = useState(false);
-  const [pointA, setPointA] = useState<Point | undefined>();
-  const [pointB, setPointB] = useState<Point | undefined>();
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { value: outlineAlphaLevel } = useUserPreference(
@@ -168,13 +165,6 @@ export const OutlineImageViewer = ({
     };
   }, [displayImageInfo, getDrawImage, drawImage]);
 
-  // The measurement is tied to the geometry it was taken on: clear it (and any
-  // in-progress pick) whenever the outline points change identity.
-  useEffect(() => {
-    setPointA(undefined);
-    setPointB(undefined);
-  }, [displayImageInfo.outlinePoints]);
-
   // Measure mode is not available on paper steps: leave it when the button
   // disappears so a session started on an object step does not leave a
   // floating overlay behind after switching steps.
@@ -184,21 +174,11 @@ export const OutlineImageViewer = ({
     }
   }, [canMeasure]);
 
-  // Escape leaves measure mode.
-  useEffect(() => {
-    if (!measureMode) {
-      return;
-    }
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMeasureMode(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [measureMode]);
+  // Leaving measure mode unmounts the overlay, which owns the picked points and
+  // the readout: the next entry always starts from a clean slate.
+  const exitMeasureMode = useCallback(() => setMeasureMode(false), []);
 
-  const hasOutlinePoints = displayImageInfo.outlinePoints.some(
+  const hasOutlinePoints = outlinePoints.some(
     (contour) => contour.points.length > 0
   );
 
@@ -207,35 +187,9 @@ export const OutlineImageViewer = ({
       setMeasureMode(false);
     } else {
       setMeasureMode(true);
-      // The ruler is usable even while the outline is hidden: reveal it.
       setDrawOutline(true);
     }
   };
-
-  const handlePick = (point: Point) => {
-    if (!pointA) {
-      setPointA(point);
-    } else if (!pointB) {
-      if (!isSamePoint(point, pointA)) {
-        setPointB(point);
-      }
-    } else {
-      setPointA(point);
-      setPointB(undefined);
-    }
-  };
-
-  const measurement =
-    pointA && pointB
-      ? formatMeasurementForDisplay(distancePx(pointA, pointB), pxPerMm)
-      : undefined;
-
-  const hint =
-    measureMode && !measurement
-      ? pointA
-        ? dictionary.calibration.measure.pickSecond
-        : dictionary.calibration.measure.pickFirst
-      : undefined;
 
   return (
     <div className={className}>
@@ -266,21 +220,15 @@ export const OutlineImageViewer = ({
               <MeasureOverlay
                 canvasWidth={canvasSize.width}
                 canvasHeight={canvasSize.height}
-                contours={displayImageInfo.outlinePoints}
-                pointA={pointA}
-                pointB={pointB}
-                measurement={measurement}
-                onPick={handlePick}
+                contours={outlinePoints}
+                dictionary={dictionary}
+                pxPerMm={pxPerMm}
+                onExit={exitMeasureMode}
               ></MeasureOverlay>
             )}
           </div>
         </TransformComponent>
       </TransformWrapper>
-      <MeasureReadout
-        dictionary={dictionary}
-        measurement={measurement}
-        hint={hint}
-      ></MeasureReadout>
     </div>
   );
 };

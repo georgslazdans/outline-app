@@ -61,17 +61,22 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
   await test.step("Measure between two outline points shows mm", async () => {
     await measureButton.click();
     await expect(overlay).toBeVisible();
+    // The readout chip is part of the overlay: it appears with the mode and
+    // shows the "pick the first point" hint before anything is clicked.
+    await expect(readout).toBeVisible();
 
     // Object contours are dense (thousands of points): the overlay samples
     // them down to at most ~64 clickable handles instead of hiding them.
     expect(await vertices.count()).toBeGreaterThanOrEqual(4);
 
-    // The eye/measure buttons float over the top-left of the image; skip any
-    // vertex hidden underneath them or overlapping another vertex handle.
+    // The eye/measure buttons float over the top-left of the image and the
+    // readout chip over the bottom centre: skip any vertex hidden underneath
+    // them or overlapping another vertex handle.
     const obstacles = (
       await Promise.all([
         eyeButton.boundingBox(),
         measureButton.boundingBox(),
+        readout.boundingBox(),
       ])
     ).filter(
       (b): b is { x: number; y: number; width: number; height: number } =>
@@ -94,7 +99,7 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
           cy > b.y - 8 &&
           cy < b.y + b.height + 8
       );
-      // Vertex handles have a 7 px radius: skip any that another handle
+      // Vertex handles have a 3 px radius: skip any that another handle
       // overlaps so clicks land unambiguously on the intended one.
       const crowded = centers.some(
         (c, j) => j !== i && Math.hypot(c.x - cx, c.y - cy) < 20
@@ -133,18 +138,22 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
     expect(Math.abs(pointACx - parseFloat(thirdCx!))).toBeLessThan(1);
     await expect(readout).not.toHaveText(firstReadout!);
 
-    // Complete the second measurement so the readout survives leaving measure mode.
+    // Complete the second measurement: leaving measure mode right after hides
+    // the readout together with the overlay, so it has to show a distance now.
     const fourthVertex =
       freeVertices.length > 3 ? freeVertices[3] : freeVertices[0];
     await vertices.nth(fourthVertex).click();
     await expect(readout).toHaveText(/\d+\.\d{2} mm/);
   });
 
-  await test.step("Escape leaves measure mode, readout stays", async () => {
-    await page.keyboard.press("Escape");
-    await expect(overlay).toHaveCount(0);
-    await expect(readout).toHaveText(/\d+\.\d{2} mm/);
-  });
+  await test.step(
+    "Escape leaves measure mode and hides the readout",
+    async () => {
+      await page.keyboard.press("Escape");
+      await expect(overlay).toHaveCount(0);
+      await expect(readout).toHaveCount(0);
+    }
+  );
 
   await test.step("M hotkey toggles measure mode", async () => {
     await page.keyboard.press("m");
