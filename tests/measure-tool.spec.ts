@@ -120,9 +120,11 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
     await vertices.nth(freeVertices[1]).click();
     await expect(page.getByTestId("measure-point-b")).toBeVisible();
     // The value is now drawn inline on the measurement line, and the readout
-    // chip shows it too (the hint stays: the next click starts a new measure).
+    // chip shows it too, replacing the pick hint (the next click starts a new
+    // measurement from A).
     await expect(inlineLabel).toHaveText(/\d+\.\d{2} mm/);
     await expect(readout).toContainText(/\d+\.\d{2} mm/);
+    await expect(readout).not.toContainText(/Click the/i);
   });
 
   await test.step("Third click starts a new measurement", async () => {
@@ -145,7 +147,7 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
     );
     expect(Math.abs(pointACx - parseFloat(thirdCx!))).toBeLessThan(1);
     await expect(inlineLabel).toHaveCount(0);
-    await expect(readout).toContainText(/second/i);
+    await expect(readout).toContainText(/Click the second point/i);
     await expect(readout).not.toContainText(/mm/);
 
     // Completing the next measurement puts the value back on the line and in the

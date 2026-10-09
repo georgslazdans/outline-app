@@ -264,9 +264,9 @@ export const OutlineImageViewer = ({
         </TransformComponent>
       </TransformWrapper>
       {/* The hint chip lives outside the transformed content: it stays put and
-          clickable while the image pans and zooms. It shows the pick hints and,
-          once both endpoints are picked, the measurement too (the next click
-          starts a new measurement from A, so the hint stays accurate). */}
+          clickable while the image pans and zooms. It shows the pick hints, and
+          once both endpoints are picked the measurement replaces the hint while
+          it is on screen (the next click starts a new measurement from A). */}
       {measureMode && (
         <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center pb-2">
           <MeasureReadout
