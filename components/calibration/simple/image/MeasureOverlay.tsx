@@ -1,19 +1,10 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTransformContext } from "react-zoom-pan-pinch";
 import Point from "@/lib/data/Point";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
-import { useResultContext } from "../../ResultContext";
-import { useDetails } from "@/context/DetailsContext";
-import { applyDefaults, defaultSettings } from "@/lib/opencv/Settings";
-import { pxPerMmFor } from "@/lib/measure/PaperScale";
-import {
-  candidateFor,
-  distancePx,
-  formatMeasurementForDisplay,
-  MeasureCandidate,
-} from "@/lib/measure/Measure";
+import { candidateFor, MeasureCandidate } from "@/lib/measure/Measure";
 
 type Props = {
   canvasWidth: number;
@@ -22,6 +13,8 @@ type Props = {
   /** Picked endpoints, owned by the viewer's measure session. */
   pointA?: Point;
   pointB?: Point;
+  /** Formatted distance for the inline label, computed by the viewer. */
+  measurement?: string;
   /** A pointer landed on the contour: the session rotates A/B. */
   onPick: (point: Point) => void;
   /** Measure mode was left (Escape): the viewer turns the mode off. */
@@ -45,6 +38,7 @@ const MeasureOverlay = ({
   contours,
   pointA,
   pointB,
+  measurement,
   onPick,
   onExit,
 }: Props) => {
@@ -55,20 +49,6 @@ const MeasureOverlay = ({
   // keep marker sizes constant on screen regardless of zoom level.
   const [screenScale, setScreenScale] = useState(1);
   const core = useTransformContext();
-
-  const { stepResults } = useResultContext();
-  const { detailsContext } = useDetails();
-  // Pixels per millimetre of the displayed image, normalised the same way the
-  // calibration page does so stored details behave identically. Undefined when
-  // the paper scale is unknown, and the readout falls back to pixels.
-  const pxPerMm = useMemo(
-    () =>
-      pxPerMmFor({
-        stepResults,
-        settings: applyDefaults(defaultSettings(), detailsContext.settings),
-      }),
-    [stepResults, detailsContext.settings]
-  );
 
   useLayoutEffect(() => {
     const svg = svgRef.current;
@@ -162,11 +142,6 @@ const MeasureOverlay = ({
   );
 
   let vertexIndex = 0;
-
-  const measurement =
-    pointA && pointB
-      ? formatMeasurementForDisplay(distancePx(pointA, pointB), pxPerMm)
-      : undefined;
 
   return (
     <svg

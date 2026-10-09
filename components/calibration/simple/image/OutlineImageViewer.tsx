@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DrawOutlineButton from "./DrawOutlineButton";
 import MeasureButton from "./MeasureButton";
@@ -12,6 +12,14 @@ import ContourPoints from "@/lib/data/contour/ContourPoints";
 import { useUserPreference } from "@/lib/preferences/useUserPreference";
 import UserPreference from "@/lib/preferences/UserPreference";
 import { decodePngToImageData } from "@/lib/utils/ImagePng";
+import { useResultContext } from "../../ResultContext";
+import { useDetails } from "@/context/DetailsContext";
+import { applyDefaults, defaultSettings } from "@/lib/opencv/Settings";
+import { pxPerMmFor } from "@/lib/measure/PaperScale";
+import {
+  distancePx,
+  formatMeasurementForDisplay,
+} from "@/lib/measure/Measure";
 
 type Props = {
   className?: string;
@@ -175,9 +183,28 @@ export const OutlineImageViewer = ({
   const exitMeasureMode = useCallback(() => setMeasureMode(false), []);
 
   const { pointA, pointB, pick } = useMeasureSession(outlinePoints);
-  const hasMeasurement = !!pointA && !!pointB;
-  // The chip only carries the pick hints. Once both points are picked the value
-  // is shown inline on the line, so the chip steps aside.
+
+  const { stepResults } = useResultContext();
+  const { detailsContext } = useDetails();
+  // Pixels per millimetre of the displayed image, normalised the same way the
+  // calibration page does so stored details behave identically. Undefined when
+  // the paper scale is unknown, and the readout falls back to pixels.
+  const pxPerMm = useMemo(
+    () =>
+      pxPerMmFor({
+        stepResults,
+        settings: applyDefaults(defaultSettings(), detailsContext.settings),
+      }),
+    [stepResults, detailsContext.settings]
+  );
+
+  // The formatted distance, computed once here so both the inline label on the
+  // line and the readout chip show the same value.
+  const measurement =
+    pointA && pointB
+      ? formatMeasurementForDisplay(distancePx(pointA, pointB), pxPerMm)
+      : undefined;
+
   const hint =
     pointA && !pointB
       ? dictionary.calibration.measure.pickSecond
@@ -228,6 +255,7 @@ export const OutlineImageViewer = ({
                 contours={outlinePoints}
                 pointA={pointA}
                 pointB={pointB}
+                measurement={measurement}
                 onPick={pick}
                 onExit={exitMeasureMode}
               ></MeasureOverlay>
@@ -236,11 +264,16 @@ export const OutlineImageViewer = ({
         </TransformComponent>
       </TransformWrapper>
       {/* The hint chip lives outside the transformed content: it stays put and
-          clickable while the image pans and zooms, and steps aside once a
-          measurement exists (the value is shown inline on the line). */}
-      {measureMode && !hasMeasurement && (
+          clickable while the image pans and zooms. It shows the pick hints and,
+          once both endpoints are picked, the measurement too (the next click
+          starts a new measurement from A, so the hint stays accurate). */}
+      {measureMode && (
         <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center pb-2">
-          <MeasureReadout dictionary={dictionary} hint={hint}></MeasureReadout>
+          <MeasureReadout
+            dictionary={dictionary}
+            hint={hint}
+            measurement={measurement}
+          ></MeasureReadout>
         </div>
       )}
     </div>

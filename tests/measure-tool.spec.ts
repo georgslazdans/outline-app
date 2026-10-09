@@ -119,10 +119,10 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
 
     await vertices.nth(freeVertices[1]).click();
     await expect(page.getByTestId("measure-point-b")).toBeVisible();
-    // The value is now drawn inline on the measurement line, and the hint chip
-    // steps aside (there is nothing left to hint at).
+    // The value is now drawn inline on the measurement line, and the readout
+    // chip shows it too (the hint stays: the next click starts a new measure).
     await expect(inlineLabel).toHaveText(/\d+\.\d{2} mm/);
-    await expect(readout).toHaveCount(0);
+    await expect(readout).toContainText(/\d+\.\d{2} mm/);
   });
 
   await test.step("Third click starts a new measurement", async () => {
@@ -137,7 +137,8 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
 
     // B is cleared and A moves onto the clicked vertex (within a fraction of a
     // pixel: the default mode interpolates on the segment instead of snapping),
-    // so the inline label disappears and the chip returns with the second hint.
+    // so the inline label disappears and the chip shows the second hint without
+    // a value.
     await expect(page.getByTestId("measure-point-b")).toHaveCount(0);
     const pointACx = parseFloat(
       (await page.getByTestId("measure-point-a").getAttribute("cx"))!
@@ -145,12 +146,15 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
     expect(Math.abs(pointACx - parseFloat(thirdCx!))).toBeLessThan(1);
     await expect(inlineLabel).toHaveCount(0);
     await expect(readout).toContainText(/second/i);
+    await expect(readout).not.toContainText(/mm/);
 
-    // Completing the next measurement puts the value back on the line.
+    // Completing the next measurement puts the value back on the line and in the
+    // readout chip.
     const fourthVertex =
       freeVertices.length > 3 ? freeVertices[3] : freeVertices[0];
     await vertices.nth(fourthVertex).click();
     await expect(inlineLabel).toHaveText(/\d+\.\d{2} mm/);
+    await expect(readout).toContainText(/\d+\.\d{2} mm/);
   });
 
   await test.step(
