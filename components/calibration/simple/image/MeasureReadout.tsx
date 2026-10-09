@@ -5,17 +5,9 @@ import { Dictionary } from "@/app/dictionaries";
 type Props = {
   dictionary: Dictionary;
   hint?: string;
-  /** Formatted distance; once it is present it replaces the hint. */
   measurement?: string;
 };
 
-/**
- * Presentational chip for the measuring tool. It carries the pick hints and,
- * once both endpoints are picked, the measurement replaces the hint. It is
- * rendered by `OutlineImageViewer` outside the transformed content, so — unlike
- * the markers on the image — it stays put and clickable while the image pans and
- * zooms beneath it. The translucent background keeps it legible over any photo.
- */
 const MeasureReadout = ({ dictionary, hint, measurement }: Props) => {
   if (!hint && !measurement) {
     return null;

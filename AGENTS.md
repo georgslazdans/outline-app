@@ -23,6 +23,10 @@ Next.js 14 (App Router) static-export PWA that detects contours in images with O
 - Static content pages are MDX: `app/about/page.mdx`, `app/changelog/page.mdx`, `app/instructions/page.mdx`.
 - PWA via Serwist: service worker source is `app/sw.ts`, built to `public/sw.js`. `next.config.mjs` has hand-tuned webpack config for WASM (`asset/resource`, `asyncWebAssembly`) and browserified node-module fallbacks — treat changes there carefully.
 
+## Code style
+
+- Keep comments to a minimum — code should read on its own. A comment explains *why* something is done (a non-obvious constraint, a workaround, an assumption), never restating *what* the code already says.
+
 ## Workflow
 
 - PRs target `develop`, not `master`. Merging to `master` redeploys the live app (see `CONTRIBUTING.md`).

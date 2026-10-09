@@ -157,7 +157,6 @@ const candidateWithInterpolation = (
   return undefined;
 };
 
-/** Straight-line distance between two points, in image pixels. */
 export const distancePx = (a: Point, b: Point): number => lengthOf(a, b);
 
 export const formatMeasurementForDisplay = (

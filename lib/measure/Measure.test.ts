@@ -24,8 +24,7 @@ describe("candidateFor", () => {
   });
 
   test("snaps to the nearest real vertex when snapToVertices is set", () => {
-    // Raw point is closest to the middle of the bottom edge, but Ctrl-snap must
-    // return an actual vertex instead of an interpolated point.
+    // Raw point sits mid-edge; snap must still return a real vertex.
     const candidate = candidateFor(p(5, 1), square(), 12, true);
     expect(candidate).toBeDefined();
     expect(candidate!.isInterpolated).toBe(false);
