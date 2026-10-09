@@ -16,6 +16,7 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
   const measureButton = page.getByTestId("measure-button");
   const overlay = page.getByTestId("measure-overlay");
   const readout = page.getByTestId("measure-readout");
+  const inlineLabel = page.getByTestId("measure-inline-label");
   const vertices = page.getByTestId("measure-vertex");
   // Indices of contour vertices that are safe to click: not hidden under the
   // floating buttons and not overlapping any other vertex handle.
@@ -61,8 +62,8 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
   await test.step("Measure between two outline points shows mm", async () => {
     await measureButton.click();
     await expect(overlay).toBeVisible();
-    // The readout chip is part of the overlay: it appears with the mode and
-    // shows the "pick the first point" hint before anything is clicked.
+    // The hint chip appears with the mode and shows the "pick the first point"
+    // hint before anything is clicked.
     await expect(readout).toBeVisible();
 
     // Object contours are dense (thousands of points): the overlay samples
@@ -118,32 +119,38 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
 
     await vertices.nth(freeVertices[1]).click();
     await expect(page.getByTestId("measure-point-b")).toBeVisible();
-    await expect(readout).toHaveText(/\d+\.\d{2} mm/);
+    // The value is now drawn inline on the measurement line, and the hint chip
+    // steps aside (there is nothing left to hint at).
+    await expect(inlineLabel).toHaveText(/\d+\.\d{2} mm/);
+    await expect(readout).toHaveCount(0);
   });
 
   await test.step("Third click starts a new measurement", async () => {
-    const firstReadout = await readout.textContent();
+    // The measurement from the previous step is shown inline on the line.
+    const baseline = await inlineLabel.textContent();
+    expect(baseline).toMatch(/\d+\.\d{2} mm/);
+
     const thirdVertex = vertices.nth(freeVertices[2]);
     const thirdCx = await thirdVertex.getAttribute("cx");
 
     await thirdVertex.click();
 
-    // B is cleared, A moved onto the clicked vertex (within a fraction of a
+    // B is cleared and A moves onto the clicked vertex (within a fraction of a
     // pixel: the default mode interpolates on the segment instead of snapping),
-    // readout switched to the "pick second point" hint.
+    // so the inline label disappears and the chip returns with the second hint.
     await expect(page.getByTestId("measure-point-b")).toHaveCount(0);
     const pointACx = parseFloat(
       (await page.getByTestId("measure-point-a").getAttribute("cx"))!
     );
     expect(Math.abs(pointACx - parseFloat(thirdCx!))).toBeLessThan(1);
-    await expect(readout).not.toHaveText(firstReadout!);
+    await expect(inlineLabel).toHaveCount(0);
+    await expect(readout).toContainText(/second/i);
 
-    // Complete the second measurement: leaving measure mode right after hides
-    // the readout together with the overlay, so it has to show a distance now.
+    // Completing the next measurement puts the value back on the line.
     const fourthVertex =
       freeVertices.length > 3 ? freeVertices[3] : freeVertices[0];
     await vertices.nth(fourthVertex).click();
-    await expect(readout).toHaveText(/\d+\.\d{2} mm/);
+    await expect(inlineLabel).toHaveText(/\d+\.\d{2} mm/);
   });
 
   await test.step(

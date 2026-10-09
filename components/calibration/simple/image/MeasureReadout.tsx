@@ -4,27 +4,25 @@ import { Dictionary } from "@/app/dictionaries";
 
 type Props = {
   dictionary: Dictionary;
-  measurement?: string;
   hint?: string;
 };
 
 /**
- * Presentational chip for the measuring tool, rendered by `MeasureOverlay`
- * on top of the image. The translucent background keeps it legible over any
- * photo; `pointer-events-none` lets clicks and drags reach the overlay below.
+ * Presentational hint chip for the measuring tool. It is rendered by
+ * `OutlineImageViewer` outside the transformed content, so — unlike the markers
+ * on the image — it stays put and clickable while the image pans and zooms
+ * beneath it. The translucent background keeps it legible over any photo.
  */
-const MeasureReadout = ({ dictionary, measurement, hint }: Props) => {
-  if (!measurement && !hint) {
+const MeasureReadout = ({ hint }: Props) => {
+  if (!hint) {
     return null;
   }
   return (
     <p
       data-testid="measure-readout"
-      className="pointer-events-none rounded-md bg-white/85 px-3 py-1.5 text-sm font-medium text-neutral-900 shadow dark:bg-neutral-900/85 dark:text-neutral-100"
+      className="select-text rounded-md bg-white/85 px-3 py-1.5 text-sm font-medium text-neutral-900 shadow dark:bg-neutral-900/85 dark:text-neutral-100"
     >
-      {measurement
-        ? `${dictionary.calibration.measure.distance}: ${measurement}`
-        : hint}
+      {hint}
     </p>
   );
 };

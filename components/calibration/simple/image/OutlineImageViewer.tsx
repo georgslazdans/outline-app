@@ -3,6 +3,8 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DrawOutlineButton from "./DrawOutlineButton";
 import MeasureButton from "./MeasureButton";
 import MeasureOverlay from "./MeasureOverlay";
+import MeasureReadout from "./MeasureReadout";
+import { useMeasureSession } from "./useMeasureSession";
 import { DisplayImageInfo } from "./DisplayImageInfo";
 import LoadingSpinner from "./LoadingSpinner";
 import { Dictionary } from "@/app/dictionaries";
@@ -17,7 +19,6 @@ type Props = {
   /** Contour points backing the displayed outline, the ruler picks on these. */
   outlinePoints: ContourPoints[];
   dictionary: Dictionary;
-  pxPerMm?: number;
   /** Whether the measure tool is offered for the displayed image. */
   canMeasure?: boolean;
 };
@@ -92,7 +93,6 @@ export const OutlineImageViewer = ({
   displayImageInfo,
   outlinePoints,
   dictionary,
-  pxPerMm,
   canMeasure = true,
 }: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
@@ -165,18 +165,23 @@ export const OutlineImageViewer = ({
     };
   }, [displayImageInfo, getDrawImage, drawImage]);
 
-  // Measure mode is not available on paper steps: leave it when the button
-  // disappears so a session started on an object step does not leave a
-  // floating overlay behind after switching steps.
   useEffect(() => {
     if (!canMeasure) {
       setMeasureMode(false);
     }
   }, [canMeasure]);
 
-  // Leaving measure mode unmounts the overlay, which owns the picked points and
-  // the readout: the next entry always starts from a clean slate.
+  // Escape (from the overlay) or the toggle button leaves measure mode.
   const exitMeasureMode = useCallback(() => setMeasureMode(false), []);
+
+  const { pointA, pointB, pick } = useMeasureSession(outlinePoints);
+  const hasMeasurement = !!pointA && !!pointB;
+  // The chip only carries the pick hints. Once both points are picked the value
+  // is shown inline on the line, so the chip steps aside.
+  const hint =
+    pointA && !pointB
+      ? dictionary.calibration.measure.pickSecond
+      : dictionary.calibration.measure.pickFirst;
 
   const hasOutlinePoints = outlinePoints.some(
     (contour) => contour.points.length > 0
@@ -192,7 +197,7 @@ export const OutlineImageViewer = ({
   };
 
   return (
-    <div className={className}>
+    <div className={`relative ${className ?? ""}`}>
       <TransformWrapper panning={{ velocityDisabled: true }}>
         <div className="z-10 relative">
           <div className="absolute left-2 top-2 flex flex-col gap-2">
@@ -221,14 +226,23 @@ export const OutlineImageViewer = ({
                 canvasWidth={canvasSize.width}
                 canvasHeight={canvasSize.height}
                 contours={outlinePoints}
-                dictionary={dictionary}
-                pxPerMm={pxPerMm}
+                pointA={pointA}
+                pointB={pointB}
+                onPick={pick}
                 onExit={exitMeasureMode}
               ></MeasureOverlay>
             )}
           </div>
         </TransformComponent>
       </TransformWrapper>
+      {/* The hint chip lives outside the transformed content: it stays put and
+          clickable while the image pans and zooms, and steps aside once a
+          measurement exists (the value is shown inline on the line). */}
+      {measureMode && !hasMeasurement && (
+        <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center pb-2">
+          <MeasureReadout dictionary={dictionary} hint={hint}></MeasureReadout>
+        </div>
+      )}
     </div>
   );
 };

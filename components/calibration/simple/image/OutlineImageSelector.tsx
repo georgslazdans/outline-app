@@ -14,7 +14,6 @@ import {
   ContourOutline,
   contourPointsOf,
 } from "@/lib/data/contour/ContourPoints";
-import { pxPerMmFor } from "@/lib/measure/PaperScale";
 
 interface Option {
   label: string;
@@ -160,12 +159,6 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     objectOutlineImages,
   ]);
 
-  // Contour points that back the displayed outline images, picked with the same
-  // branch logic as outlineImagesForCurrentStep() so the two always correspond.
-  // The memo is keyed on the source contours themselves: the details/step
-  // contexts hand out fresh wrapper objects on many renders, but the contour
-  // objects only change when their step is reprocessed, and the measure tool
-  // relies on the resulting array identity to detect real geometry changes.
   const isPaperStep =
     settingStep == CalibrationSettingStep.FIND_PAPER ||
     settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER;
@@ -266,11 +259,6 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
     setBackgroundImageOptions(filteredOptions);
   }, [stepResults, settingStep, dictionary, settings]);
 
-  const pxPerMm = useMemo(
-    () => pxPerMmFor({ stepResults, settings }),
-    [stepResults, settings]
-  );
-
   return (
     <>
       <div className="mb-2">
@@ -289,7 +277,6 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
         displayImageInfo={displayImageInfo}
         outlinePoints={outlinePoints}
         dictionary={dictionary}
-        pxPerMm={pxPerMm}
         canMeasure={!isPaperStep}
       ></OutlineImageViewer>
     </>
