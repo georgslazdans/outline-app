@@ -50,3 +50,4 @@ node_modules/
 
 # Replicad hack
 /public/replicad_single.wasm
+.agent/orchestrator/

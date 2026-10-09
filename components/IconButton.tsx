@@ -9,6 +9,7 @@ type Props = {
   hotkey?: string;
   hotkeyCtrl?: boolean;
   id?: string;
+  dataTestId?: string;
 };
 
 const IconButton = ({
@@ -18,6 +19,7 @@ const IconButton = ({
   className,
   hotkey,
   hotkeyCtrl,
+  dataTestId,
 }: Props) => {
   useEffect(() => {
     const handleControlKey = (event: KeyboardEvent) =>
@@ -41,6 +43,7 @@ const IconButton = ({
   return (
     <button
       id={id}
+      data-testid={dataTestId}
       onClick={onClick}
       className={`flex items-center border-4 rounded-full 
         text-white dark:text-black border-white dark:border-black bg-black dark:bg-white 

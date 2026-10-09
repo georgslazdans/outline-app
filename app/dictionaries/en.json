@@ -118,7 +118,15 @@
     "rerun": "Rerun",
     "done": "Done",
     "close": "Close",
-    "saveAndClose": "Save and Close"
+    "saveAndClose": "Save and Close",
+    "measure": {
+      "tooltip": "Measure distance (M)",
+      "pickFirst": "Click the first point on the outline",
+      "pickSecond": "Click the second point on the outline",
+      "distance": "Distance",
+      "unitMm": "mm",
+      "unitPx": "px"
+    }
   },
   "contours": {
     "title": "Contours",

@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import DrawOutlineButton from "./DrawOutlineButton";
+import MeasureButton from "./MeasureButton";
+import MeasureOverlay from "./MeasureOverlay";
+import MeasureReadout from "./MeasureReadout";
+import { useMeasureSession } from "./useMeasureSession";
 import { DisplayImageInfo } from "./DisplayImageInfo";
 import LoadingSpinner from "./LoadingSpinner";
+import { Dictionary } from "@/app/dictionaries";
+import ContourPoints from "@/lib/data/contour/ContourPoints";
 import { useUserPreference } from "@/lib/preferences/useUserPreference";
 import UserPreference from "@/lib/preferences/UserPreference";
 import { decodePngToImageData } from "@/lib/utils/ImagePng";
@@ -10,6 +16,11 @@ import { decodePngToImageData } from "@/lib/utils/ImagePng";
 type Props = {
   className?: string;
   displayImageInfo: DisplayImageInfo;
+  /** Contour points backing the displayed outline, the ruler picks on these. */
+  outlinePoints: ContourPoints[];
+  dictionary: Dictionary;
+  /** Whether the measure tool is offered for the displayed image. */
+  canMeasure?: boolean;
 };
 
 const blendImageData = (
@@ -77,8 +88,16 @@ const decodeImages = async (displayImageInfo: DisplayImageInfo) => {
   };
 };
 
-export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
+export const OutlineImageViewer = ({
+  className,
+  displayImageInfo,
+  outlinePoints,
+  dictionary,
+  canMeasure = true,
+}: Props) => {
   const [drawOutline, setDrawOutline] = useState(true);
+  const [measureMode, setMeasureMode] = useState(false);
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { value: outlineAlphaLevel } = useUserPreference(
     UserPreference.OUTLINE_ALPHA_LEVEL
@@ -115,6 +134,7 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
       canvas.width = image.width;
       canvas.height = image.height;
       ctx.putImageData(image, 0, 0);
+      setCanvasSize({ width: image.width, height: image.height });
     }
   }, []);
 
@@ -145,23 +165,81 @@ export const OutlineImageViewer = ({ className, displayImageInfo }: Props) => {
     };
   }, [displayImageInfo, getDrawImage, drawImage]);
 
+  useEffect(() => {
+    if (!canMeasure) {
+      setMeasureMode(false);
+    }
+  }, [canMeasure]);
+
+  const exitMeasureMode = useCallback(() => setMeasureMode(false), []);
+
+  const { pointA, pointB, pick, measurement, hint } = useMeasureSession(
+    outlinePoints,
+    dictionary
+  );
+
+  const hasOutlinePoints = outlinePoints.some(
+    (contour) => contour.points.length > 0
+  );
+
+  const toggleMeasureMode = () => {
+    if (measureMode) {
+      setMeasureMode(false);
+    } else {
+      setMeasureMode(true);
+      setDrawOutline(true);
+    }
+  };
+
   return (
-    <div className={className}>
+    <div className={`relative ${className ?? ""}`}>
       <TransformWrapper panning={{ velocityDisabled: true }}>
         <div className="z-10 relative">
-          <DrawOutlineButton
-            icon={drawOutline ? "eye-slash" : "eye"}
-            onClick={() => setDrawOutline(!drawOutline)}
-          ></DrawOutlineButton>
+          <div className="absolute left-2 top-2 flex flex-col gap-2">
+            <DrawOutlineButton
+              icon={drawOutline ? "eye-slash" : "eye"}
+              onClick={() => setDrawOutline(!drawOutline)}
+            ></DrawOutlineButton>
+            {hasOutlinePoints && canMeasure && (
+              <MeasureButton
+                active={measureMode}
+                onClick={toggleMeasureMode}
+                tooltip={dictionary.calibration.measure.tooltip}
+              ></MeasureButton>
+            )}
+          </div>
           <LoadingSpinner></LoadingSpinner>
         </div>
         <TransformComponent wrapperClass="!mx-auto">
-          <canvas
-            className="max-w-full max-h-[30vh] xl:max-h-[40vh]"
-            ref={canvasRef}
-          />
+          <div className="relative inline-block">
+            <canvas
+              className="block max-w-full max-h-[30vh] xl:max-h-[40vh]"
+              ref={canvasRef}
+            />
+            {measureMode && (
+              <MeasureOverlay
+                canvasWidth={canvasSize.width}
+                canvasHeight={canvasSize.height}
+                contours={outlinePoints}
+                pointA={pointA}
+                pointB={pointB}
+                measurement={measurement}
+                onPick={pick}
+                onExit={exitMeasureMode}
+              ></MeasureOverlay>
+            )}
+          </div>
         </TransformComponent>
       </TransformWrapper>
+      {measureMode && (
+        <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center pb-2">
+          <MeasureReadout
+            dictionary={dictionary}
+            hint={hint}
+            measurement={measurement}
+          ></MeasureReadout>
+        </div>
+      )}
     </div>
   );
 };

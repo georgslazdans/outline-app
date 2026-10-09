@@ -9,9 +9,10 @@ const TOGGLE_OUTLINE_BUTTON = "toggle-outline-overlay";
 type Props = {
   icon: "eye" | "eye-slash";
   onClick: () => void;
+  className?: string;
 };
 
-const DrawOutlineButton = ({ icon, onClick }: Props) => {
+const DrawOutlineButton = ({ icon, onClick, className }: Props) => {
   const eye = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +55,7 @@ const DrawOutlineButton = ({ icon, onClick }: Props) => {
     <>
       <IconButton
         id={TOGGLE_OUTLINE_BUTTON}
-        className="absolute px-3 py-3 mr-auto mt-2 ml-2"
+        className={`px-3 py-3 ${className ?? ""}`}
         onClick={onClick}
         hotkey="h"
       >
