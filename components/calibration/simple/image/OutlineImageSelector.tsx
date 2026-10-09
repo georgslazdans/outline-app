@@ -300,13 +300,10 @@ export const OutlineImageSelector = ({ settings, dictionary }: Props) => {
   }, [stepResults, settingStep, dictionary, settings]);
 
   const pxPerMm = useMemo(
-    () => pxPerMmFor({ settingStep, stepResults, settings }),
-    [settingStep, stepResults, settings]
+    () => pxPerMmFor({ stepResults, settings }),
+    [stepResults, settings]
   );
 
-  // On the paper steps the displayed image is the (resized) photo, not the
-  // extracted deskewed paper, so mm readouts would only be approximate: the
-  // measure tool is not offered there. Same branch as PaperScale.isPaperStep.
   const isPaperStep =
     settingStep == CalibrationSettingStep.FIND_PAPER ||
     settingStep == CalibrationSettingStep.CLOSE_CORNERS_PAPER;

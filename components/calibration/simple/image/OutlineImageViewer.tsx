@@ -8,7 +8,7 @@ import { DisplayImageInfo } from "./DisplayImageInfo";
 import LoadingSpinner from "./LoadingSpinner";
 import { Dictionary } from "@/app/dictionaries";
 import Point, { lengthOf } from "@/lib/data/Point";
-import { distancePx, formatMeasurement } from "@/lib/measure/Measure";
+import { distancePx, formatMeasurementForDisplay } from "@/lib/measure/Measure";
 import { useUserPreference } from "@/lib/preferences/useUserPreference";
 import UserPreference from "@/lib/preferences/UserPreference";
 import { decodePngToImageData } from "@/lib/utils/ImagePng";
@@ -227,7 +227,7 @@ export const OutlineImageViewer = ({
 
   const measurement =
     pointA && pointB
-      ? formatMeasurement(distancePx(pointA, pointB), pxPerMm)
+      ? formatMeasurementForDisplay(distancePx(pointA, pointB), pxPerMm)
       : undefined;
 
   const hint =

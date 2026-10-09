@@ -25,8 +25,12 @@ const MeasureButton = ({ active, onClick, tooltip }: Props) => {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+        d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"
       />
+      <path strokeLinecap="round" strokeLinejoin="round" d="m14.5 12.5 2-2" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="m11.5 9.5 2-2" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="m8.5 6.5 2-2" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="m17.5 15.5 2-2" />
     </svg>
   );
 

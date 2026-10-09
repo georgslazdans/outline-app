@@ -1,18 +1,29 @@
-import { describe, expect, test } from "vitest";
-import { pxPerMmFor, pxPerMmFromPaperQuad } from "./PaperScale";
+import { describe, expect, test, vi } from "vitest";
+
+// pxPerMmFor only does PNG/scale math, but it imports Settings, which pulls in
+// the OpenCV processing steps. Stub the WASM module so the unit test does not
+// have to initialise OpenCV (which never resolves under jsdom). Only the
+// constructors used at module top level need to be real.
+vi.mock("@techstark/opencv-js", () => ({
+  Scalar: class {
+    constructor(..._args: unknown[]) {}
+  },
+  Mat: class {
+    constructor(..._args: unknown[]) {}
+  },
+  MatVector: class {
+    constructor(..._args: unknown[]) {}
+  },
+}));
+
+import { pxPerMmFor } from "./PaperScale";
 import { pngSizeOf } from "@/lib/utils/ImagePng";
 import StepName from "@/lib/opencv/processor/steps/StepName";
-import CalibrationSettingStep from "@/components/calibration/simple/settings/CalibrationSettingStep";
 import Settings from "@/lib/opencv/Settings";
 import StepResult from "@/lib/opencv/StepResult";
 import Orientation from "@/lib/Orientation";
 
-const p = (x: number, y: number) => ({ x, y });
-
 const a4Portrait = { width: 210, height: 297, orientation: Orientation.PORTRAIT };
-
-// A 210x297mm paper quad drawn at 2 px/mm.
-const quadAt2pxPerMm = [p(0, 0), p(420, 0), p(420, 594), p(0, 594)];
 
 const settingsWith = (overrides: {
   skipPaperDetection?: boolean;
@@ -41,40 +52,24 @@ const pngHeader = (width: number, height: number): ArrayBuffer => {
   return buffer;
 };
 
-describe("pxPerMmFromPaperQuad", () => {
-  test("derives the scale from the quad perimeter over the paper perimeter", () => {
-    expect(
-      pxPerMmFromPaperQuad(quadAt2pxPerMm, { width: 210, height: 297 })
-    ).toBeCloseTo(2, 5);
-  });
-
-  test("returns undefined for fewer than three points", () => {
-    expect(
-      pxPerMmFromPaperQuad([p(0, 0), p(1, 1)], { width: 210, height: 297 })
-    ).toBeUndefined();
-  });
-});
-
 describe("pxPerMmFor", () => {
-  test("paper step derives the scale from the paper quad", () => {
+  test("object step uses the extracted-paper image scale factor", () => {
     const stepResults = [
       {
-        stepName: StepName.FIND_PAPER_OUTLINE,
-        pngBuffer: new ArrayBuffer(0),
+        stepName: StepName.EXTRACT_PAPER,
+        pngBuffer: pngHeader(420, 594),
         imageColorSpace: undefined,
-        contours: [{ outline: { points: quadAt2pxPerMm } }],
       },
     ] as unknown as StepResult[];
 
     const result = pxPerMmFor({
-      settingStep: CalibrationSettingStep.FIND_PAPER,
       stepResults,
       settings: settingsWith({}),
     });
     expect(result).toBeCloseTo(2, 5);
   });
 
-  test("object step uses the resize-image scale factor", () => {
+  test("derives a scale from the resized image when paper detection is skipped", () => {
     const stepResults = [
       {
         stepName: StepName.RESIZE_IMAGE,
@@ -84,34 +79,31 @@ describe("pxPerMmFor", () => {
     ] as unknown as StepResult[];
 
     const result = pxPerMmFor({
-      settingStep: CalibrationSettingStep.FIND_OBJECT,
-      stepResults,
-      settings: settingsWith({}),
-    });
-    expect(result).toBeCloseTo(2, 5);
-  });
-
-  test("returns undefined when paper detection is skipped", () => {
-    const stepResults = [
-      {
-        stepName: StepName.RESIZE_IMAGE,
-        pngBuffer: pngHeader(420, 594),
-        imageColorSpace: undefined,
-      },
-    ] as unknown as StepResult[];
-
-    const result = pxPerMmFor({
-      settingStep: CalibrationSettingStep.FIND_OBJECT,
       stepResults,
       settings: settingsWith({ skipPaperDetection: true }),
+    });
+    expect(result).toBeCloseTo(2, 5);
+  });
+
+  test("returns undefined when the relevant step is missing", () => {
+    const result = pxPerMmFor({
+      stepResults: [],
+      settings: settingsWith({}),
     });
     expect(result).toBeUndefined();
   });
 
-  test("returns undefined for a paper step with no detected contours", () => {
+  test("returns undefined for an empty placeholder buffer", () => {
+    const stepResults = [
+      {
+        stepName: StepName.EXTRACT_PAPER,
+        pngBuffer: new ArrayBuffer(0),
+        imageColorSpace: undefined,
+      },
+    ] as unknown as StepResult[];
+
     const result = pxPerMmFor({
-      settingStep: CalibrationSettingStep.FIND_PAPER,
-      stepResults: [],
+      stepResults,
       settings: settingsWith({}),
     });
     expect(result).toBeUndefined();
@@ -126,13 +118,13 @@ describe("pngSizeOf", () => {
     });
   });
 
-  test("returns undefined for a buffer that is too short", () => {
-    expect(pngSizeOf(new ArrayBuffer(10))).toBeUndefined();
+  test("throws for a buffer that is too short", () => {
+    expect(() => pngSizeOf(new ArrayBuffer(10))).toThrow();
   });
 
-  test("returns undefined when the PNG signature is missing", () => {
+  test("throws when the PNG signature is missing", () => {
     const buffer = pngHeader(640, 480);
     new DataView(buffer).setUint8(0, 0x00);
-    expect(pngSizeOf(buffer)).toBeUndefined();
+    expect(() => pngSizeOf(buffer)).toThrow();
   });
 });

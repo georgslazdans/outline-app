@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { candidateFor, distancePx, formatMeasurement } from "./Measure";
+import { candidateFor, distancePx, formatMeasurementForDisplay } from "./Measure";
 import ContourPoints from "@/lib/data/contour/ContourPoints";
 
 const p = (x: number, y: number) => ({ x, y });
@@ -13,14 +13,14 @@ describe("candidateFor", () => {
     const candidate = candidateFor(p(5, 1), square(), 12, false);
     expect(candidate).toBeDefined();
     expect(candidate!.point).toStrictEqual(p(5, 0));
-    expect(candidate!.isVertex).toBe(false);
+    expect(candidate!.isInterpolated).toBe(true);
   });
 
   test("clamps to a vertex when the projection falls past a segment end", () => {
     const candidate = candidateFor(p(11, 11), square(), 12, false);
     expect(candidate).toBeDefined();
     expect(candidate!.point).toStrictEqual(p(10, 10));
-    expect(candidate!.isVertex).toBe(true);
+    expect(candidate!.isInterpolated).toBe(false);
   });
 
   test("snaps to the nearest real vertex when snapToVertices is set", () => {
@@ -28,7 +28,7 @@ describe("candidateFor", () => {
     // return an actual vertex instead of an interpolated point.
     const candidate = candidateFor(p(5, 1), square(), 12, true);
     expect(candidate).toBeDefined();
-    expect(candidate!.isVertex).toBe(true);
+    expect(candidate!.isInterpolated).toBe(false);
     expect([p(0, 0), p(10, 0)]).toContainEqual(candidate!.point);
   });
 
@@ -59,17 +59,17 @@ describe("distancePx", () => {
   });
 });
 
-describe("formatMeasurement", () => {
-  test("converts to millimetres with one decimal when a scale is given", () => {
-    expect(formatMeasurement(85, 2)).toBe("42.5 mm");
+describe("formatMeasurementForDisplay", () => {
+  test("converts to millimetres with two decimals when a scale is given", () => {
+    expect(formatMeasurementForDisplay(85, 2)).toBe("42.50 mm");
   });
 
   test("rounds to whole pixels when no scale is available", () => {
-    expect(formatMeasurement(128, undefined)).toBe("128 px");
-    expect(formatMeasurement(127.6, undefined)).toBe("128 px");
+    expect(formatMeasurementForDisplay(128, undefined)).toBe("128 px");
+    expect(formatMeasurementForDisplay(127.6, undefined)).toBe("128 px");
   });
 
   test("falls back to pixels for a zero scale", () => {
-    expect(formatMeasurement(10, 0)).toBe("10 px");
+    expect(formatMeasurementForDisplay(10, 0)).toBe("10 px");
   });
 });

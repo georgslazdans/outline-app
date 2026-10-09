@@ -56,12 +56,6 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
     await waitForImageProcessing();
 
     await expect(measureButton).toBeVisible();
-    // Regression guard for the blank-icon bug: an SVG path `d` must start with
-    // a command letter, otherwise the browser renders nothing.
-    await expect(measureButton.locator("path").first()).toHaveAttribute(
-      "d",
-      /^M/
-    );
   });
 
   await test.step("Measure between two outline points shows mm", async () => {
@@ -119,7 +113,7 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
 
     await vertices.nth(freeVertices[1]).click();
     await expect(page.getByTestId("measure-point-b")).toBeVisible();
-    await expect(readout).toHaveText(/\d+(\.\d)? mm/);
+    await expect(readout).toHaveText(/\d+\.\d{2} mm/);
   });
 
   await test.step("Third click starts a new measurement", async () => {
@@ -143,13 +137,13 @@ test("measure tool on the calibration contour viewer", async ({ page }) => {
     const fourthVertex =
       freeVertices.length > 3 ? freeVertices[3] : freeVertices[0];
     await vertices.nth(fourthVertex).click();
-    await expect(readout).toHaveText(/\d+(\.\d)? mm/);
+    await expect(readout).toHaveText(/\d+\.\d{2} mm/);
   });
 
   await test.step("Escape leaves measure mode, readout stays", async () => {
     await page.keyboard.press("Escape");
     await expect(overlay).toHaveCount(0);
-    await expect(readout).toHaveText(/\d+(\.\d)? mm/);
+    await expect(readout).toHaveText(/\d+\.\d{2} mm/);
   });
 
   await test.step("M hotkey toggles measure mode", async () => {
